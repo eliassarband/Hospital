@@ -25,13 +25,13 @@
                     <MudCardContent>
                         <MudGrid>
                             <MudItem md="12">
-                                <MudTextField T="string" Class="mt-3" @bind-Value="@room.Code" Required="true" RequiredError="Please Enter Code" MaxLength="100" Label="Code" Placeholder="Room Code" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@room.Code" Required="true" RequiredError="Please Enter Code" MaxLength="100" Label="Code" Placeholder="Room Code" Variant="Variant.Outlined"></MudTextField>
                             </MudItem>
                             <MudItem md="12">
-                                <MudTextField T="string" Class="mt-3" @bind-Value="@room.Name" Required="true" RequiredError="Please Enter Name" MaxLength="200" Label="Name" Placeholder="Room Name" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@room.Name" Required="true" RequiredError="Please Enter Name" MaxLength="200" Label="Name" Placeholder="Room Name" Variant="Variant.Outlined"></MudTextField>
                             </MudItem>
                             <MudItem md="12">
-                                <MudSelect Class="mt-3" T="int" Label="Room Type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Room Type" @bind-value="@room.RoomTypeId" @bind-Text="@room.RoomTypeName">
+                                <MudSelect Class="mt-1" T="int" Label="Room Type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Room Type" @bind-value="@room.RoomTypeId" @bind-Text="@room.RoomTypeName">
                                     @foreach (var r in roomTypes)
                                     {
                                         <MudSelectItem T="int" Value="@r.Id">@r.Name</MudSelectItem>
@@ -39,13 +39,13 @@
                                 </MudSelect>
                             </MudItem>
                             <MudItem md="12">
-                                <MudNumericField T="int" Class="mt-3" @bind-Value="@room.Rest" Label="Room Rest" Placeholder="Room Rest" Required="true" RequiredError="Please Enter Room Rest" Variant="Variant.Outlined"></MudNumericField>
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@room.Rest" Label="Room Rest" Placeholder="Room Rest" Required="true" RequiredError="Please Enter Room Rest" Variant="Variant.Outlined"></MudNumericField>
                             </MudItem>
                             <MudItem md="12">
-                                <MudNumericField T="int" Class="mt-3" @bind-Value="@room.Cost" Label="Cost" Placeholder="Cost" Required="true" RequiredError="Please Enter Cost" Variant="Variant.Outlined"></MudNumericField>
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@room.Cost" Label="Cost" Placeholder="Cost" Required="true" RequiredError="Please Enter Cost" Variant="Variant.Outlined"></MudNumericField>
                             </MudItem>
                             <MudItem md="12">
-                                <MudSwitch T="bool" Class="mt-3" @bind-Checked="@room.NotInUse" Label="Not In Use" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
+                                <MudSwitch T="bool" Class="mt-1" @bind-Checked="@room.NotInUse" Label="Not In Use" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
                             </MudItem>
                         </MudGrid>
                     </MudCardContent>

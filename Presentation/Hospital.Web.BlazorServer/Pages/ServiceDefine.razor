@@ -25,13 +25,13 @@
                     <MudCardContent>
                         <MudGrid>
                             <MudItem md="6">
-                                <MudTextField T="string" Class="mt-3" @bind-Value="@service.Code" Required="true" RequiredError="Please Enter Code" MaxLength="100" Label="Code" Placeholder="Service Code" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@service.Code" Required="true" RequiredError="Please Enter Code" MaxLength="100" Label="Code" Placeholder="Service Code" Variant="Variant.Outlined"></MudTextField>
                             </MudItem>
                             <MudItem md="6">
-                                <MudTextField T="string" Class="mt-3" @bind-Value="@service.Name" Required="true" RequiredError="Please Enter Name" MaxLength="200" Label="Name" Placeholder="Service Name" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@service.Name" Required="true" RequiredError="Please Enter Name" MaxLength="200" Label="Name" Placeholder="Service Name" Variant="Variant.Outlined"></MudTextField>
                             </MudItem>
                             <MudItem md="12">
-                                <MudSelect Class="mt-3" T="int" Label="Department" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Department" @bind-value="@service.DepartmentId" @bind-Text="@service.DepartmentName">
+                                <MudSelect Class="mt-1" T="int" Label="Department" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Department" @bind-value="@service.DepartmentId" @bind-Text="@service.DepartmentName">
                                     @foreach (var d in departments)
                                     {
                                         <MudSelectItem T="int" Value="@d.Id">@d.Name</MudSelectItem>
@@ -39,31 +39,31 @@
                                 </MudSelect>
                             </MudItem>
                             <MudItem md="6">
-                                <MudNumericField T="int" Class="mt-3" @bind-Value="@service.OPDRate" Label="OPD Rate" Placeholder="OPD Rate" Variant="Variant.Outlined"></MudNumericField>
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@service.OPDRate" Label="OPD Rate" Placeholder="OPD Rate" Variant="Variant.Outlined"></MudNumericField>
                             </MudItem>
                             <MudItem md="6">
-                                <MudNumericField T="int" Class="mt-3" @bind-Value="@service.IPDRate" Label="IPD Rate" Placeholder="IPD Rate" Variant="Variant.Outlined"></MudNumericField>
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@service.IPDRate" Label="IPD Rate" Placeholder="IPD Rate" Variant="Variant.Outlined"></MudNumericField>
                             </MudItem>
                             <MudItem md="6">
-                                <MudNumericField T="int" Class="mt-3" @bind-Value="@service.AddPercentage" Label="Add Percentage" Placeholder="Add Percentage" Variant="Variant.Outlined"></MudNumericField>
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@service.AddPercentage" Label="Add Percentage" Placeholder="Add Percentage" Variant="Variant.Outlined"></MudNumericField>
                             </MudItem>
                             <MudItem md="6">
-                                <MudNumericField T="int" Class="mt-3" @bind-Value="@service.AddAmount" Label="Add Amount" Placeholder="Add Amount" Variant="Variant.Outlined"></MudNumericField>
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@service.AddAmount" Label="Add Amount" Placeholder="Add Amount" Variant="Variant.Outlined"></MudNumericField>
                             </MudItem>
                             <MudItem md="6">
-                                <MudNumericField T="int" Class="mt-3" @bind-Value="@service.DiscountPercentage" Label="Discount Percentage" Placeholder="Discount Percentage" Variant="Variant.Outlined"></MudNumericField>
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@service.DiscountPercentage" Label="Discount Percentage" Placeholder="Discount Percentage" Variant="Variant.Outlined"></MudNumericField>
                             </MudItem>
                             <MudItem md="6">
-                                <MudNumericField T="int" Class="mt-3" @bind-Value="@service.DiscountAmount" Label="Discount Amount" Placeholder="Discount Amount" Variant="Variant.Outlined"></MudNumericField>
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@service.DiscountAmount" Label="Discount Amount" Placeholder="Discount Amount" Variant="Variant.Outlined"></MudNumericField>
                             </MudItem>
                             <MudItem md="12">
-                                <MudTextField T="string" Class="mt-3" @bind-Value="@service.Remark" Label="Remark" Placeholder="Remark" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@service.Remark" Label="Remark" Placeholder="Remark" Variant="Variant.Outlined"></MudTextField>
                             </MudItem>
                             <MudItem md="6">
-                                <MudNumericField T="int" Class="mt-3" @bind-Value="@service.Cost" Label="Cost" Placeholder="Cost" Variant="Variant.Outlined"></MudNumericField>
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@service.Cost" Label="Cost" Placeholder="Cost" Variant="Variant.Outlined"></MudNumericField>
                             </MudItem>
                             <MudItem md="6">
-                                <MudSwitch T="bool" Class="mt-3" @bind-Checked="@service.NotInUse" Label="Not In Use" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
+                                <MudSwitch T="bool" Class="mt-1" @bind-Checked="@service.NotInUse" Label="Not In Use" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
                             </MudItem>
                         </MudGrid>
                     </MudCardContent>

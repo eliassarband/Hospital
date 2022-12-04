@@ -25,19 +25,19 @@
                     <MudCardContent>
                         <MudGrid>
                             <MudItem md="12">
-                                <MudTextField T="string" Class="mt-3" @bind-Value="@department.Code" Required="true" RequiredError="Please Enter Code" MaxLength="100" Label="Code" Placeholder="Department Code" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@department.Code" Required="true" RequiredError="Please Enter Code" MaxLength="100" Label="Code" Placeholder="Department Code" Variant="Variant.Outlined"></MudTextField>
                             </MudItem>
                             <MudItem md="12">
-                                <MudTextField T="string" Class="mt-3" @bind-Value="@department.Name" Required="true" RequiredError="Please Enter Name" MaxLength="200" Label="Name" Placeholder="Department Name" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@department.Name" Required="true" RequiredError="Please Enter Name" MaxLength="200" Label="Name" Placeholder="Department Name" Variant="Variant.Outlined"></MudTextField>
                             </MudItem>
                             <MudItem md="12">
-                                <MudSwitch T="bool" Class="mt-3" @bind-Checked="@department.IsMain" Label="Is Main" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
+                                <MudSwitch T="bool" Class="mt-1" @bind-Checked="@department.IsMain" Label="Is Main" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
                             </MudItem>
                             <MudItem md="12">
-                                <MudTextField T="string" Class="mt-3" @bind-Value="@department.MainDeptartment" Required="true" RequiredError="Please Enter Main Department" MaxLength="200" Label="MainDeptartment" Placeholder="Main Deptartment" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@department.MainDeptartment" Required="true" RequiredError="Please Enter Main Department" MaxLength="200" Label="MainDeptartment" Placeholder="Main Deptartment" Variant="Variant.Outlined"></MudTextField>
                             </MudItem>
                             <MudItem md="12">
-                                <MudSwitch T="bool" Class="mt-3" @bind-Checked="@department.NotInUse" Label="Not In Use" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
+                                <MudSwitch T="bool" Class="mt-1" @bind-Checked="@department.NotInUse" Label="Not In Use" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
                             </MudItem>
                         </MudGrid>
                     </MudCardContent>
