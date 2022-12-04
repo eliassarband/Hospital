@@ -1,0 +1,57 @@
+﻿@using Hospital.Application.Queries
+@using Hospital.Web.BlazorServer.Models.Auth
+@using MediatR
+@inherits LayoutComponentBase
+@inject NavigationManager NavManager
+@inject IHttpContextAccessor accessor
+@inject Hospital.Web.BlazorServer.Models.TokenProvider _tokenProvider;
+@inject IMediator mediator;
+
+<PageTitle>Hospital.Web.BlazorServer</PageTitle>
+
+<MudRTLProvider RightToLeft="false">
+    <MudThemeProvider />
+    <MudDialogProvider />
+    <MudSnackbarProvider />
+
+    <MudLayout>
+        <MudAppBar Elevation="1" Color="Color.Tertiary">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+            <MudImage Src="images/stethoscope_white.png" Class="mr-1" Height="30"></MudImage>
+            <MudText Typo="Typo.h5">HMIS System</MudText>
+            <MudSpacer />
+            <MudBadge Content="300" Overlap="true" Color="Color.Warning" Visible="true" Class="mr-2" Origin="Origin.TopLeft">
+                <MudIconButton Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit"/>
+            </MudBadge>
+            <MudBadge Content="4" Overlap="true" Color="Color.Warning" Visible="true" Class="mr-2">
+                <MudIconButton Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Email" Color="Color.Inherit" />
+            </MudBadge>
+            <MudIconButton Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Settings" Color="Color.Inherit" Class="mr-2" />
+            <MudForm method="post" action="/identiy/account/logout">
+                <input name="__RequestVerificationToken" type="hidden" value="@_tokenProvider.AntiForgeryToken" />
+                     
+                <MudIconButton Variant="Variant.Outlined" ButtonType="ButtonType.Submit" Color="Color.Inherit" Title="Logout" Icon="@Icons.Material.Filled.Logout"></MudIconButton>
+            </MudForm>
+        </MudAppBar>
+        <MudDrawer Color="Color.Dark" @bind-Open="@_drawerOpen" Fixed="true" ClipMode="DrawerClipMode.Docked" Elevation="2" Anchor="Anchor.Left" Variant="DrawerVariant.Mini" OpenMiniOnHover="false">
+            <MudNavMenu Color="Color.Info" Bordered="true" Rounded="true">
+                <NavMenu/>
+            </MudNavMenu>
+        </MudDrawer>
+        <MudMainContent>
+            <MudContainer MaxWidth="MaxWidth.Large">
+                @*<CascadingValue Value="@userInfo">*@
+                    @Body
+                @*</CascadingValue>*@
+            </MudContainer>
+        </MudMainContent>
+    </MudLayout>
+</MudRTLProvider>
+@code {
+    bool _drawerOpen = true;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}

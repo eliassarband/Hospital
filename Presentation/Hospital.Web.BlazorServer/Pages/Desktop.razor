@@ -1,0 +1,86 @@
+﻿@page "/desktop"
+@using Hospital.Web.BlazorServer.Models.Auth
+@inject NavigationManager navManager
+
+@attribute [Authorize]
+
+<style>
+.zoom {
+  transition: transform .2s; /* Animation */
+        background-size: cover;
+ }
+
+.zoom:hover {
+  transform: scale(1.1); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+</style>
+<PageTitle>Index</PageTitle>
+
+<MudContainer Class="mt-8 px-8" MaxWidth="MaxWidth.False">
+    <MudGrid>
+        <MudItem xs="12" sm="6" md="4">
+            <MudPaper Elevation="2" Class="pa-1" Style="height: 200px;" @onclick="( () => AppointmentClick())">
+                <MudImage Src="images/Dashboard/Appointment.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img zoom"></MudImage>
+                <MudText Class="text-secondary mt-2">Appointment</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudPaper Elevation="2" Class="pa-1" Style="height: 200px;">
+                <MudImage Src="images/Dashboard/registerform.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
+                <MudText Class="text-secondary mt-2">OPD / IPD</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudPaper Elevation="2" Class="pa-1" Style="height: 200px;">
+                <MudImage Src="images/Dashboard/Precryption.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
+                <MudText Class="text-secondary mt-2">E-Precryption</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudPaper Elevation="2" Class="pa-1" Style="height: 200px;">
+                <MudImage Src="images/Dashboard/Laboratory.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
+                <MudText Class="text-secondary mt-2">Labratory</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudPaper Elevation="2" Class="pa-1" Style="height: 200px;">
+                <MudImage Src="images/Dashboard/Pharmacy.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
+                <MudText Class="text-secondary mt-2">Pharmacy</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudPaper Elevation="2" Class="pa-1" Style="height: 200px;">
+                <MudImage Src="images/Dashboard/Financial.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
+                <MudText Class="text-secondary mt-2">Financial</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudPaper Elevation="2" Class="pa-1" Style="height: 200px;">
+                <MudImage Src="images/Dashboard/Setting.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
+                <MudText Class="text-secondary mt-2">Setting</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudPaper Elevation="2" Class="pa-1" Style="height: 200px;">
+                <MudImage Src="images/Dashboard/Reports.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
+                <MudText Class="text-secondary mt-2">Reports</MudText>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code
+{
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+    }
+
+    protected async Task AppointmentClick()
+    {
+        navManager.NavigateTo("/Appointment");
+    }
+}

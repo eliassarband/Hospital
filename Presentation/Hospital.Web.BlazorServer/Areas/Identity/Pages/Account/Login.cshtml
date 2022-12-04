@@ -1,0 +1,81 @@
+﻿@page "/identity/account/login"
+@model LoginModel
+
+
+
+<div class="container">
+    <div class="row mt-5">
+        <div class="col col-lg-4 col-md-2">
+        </div>
+        <div class="col col-lg-4 col-md-8 col-sm-12 col-12">
+            <div class="row">
+                <div class="col-12">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card-text text-danger text-center">
+                                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                                    {
+                                        <div class="alert alert-danger" role="alert">
+                                            @Model.ErrorMessage
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-12 text-center">
+                                <img src="~/images/loginLogo.png" alt="Afghan Hospital" title="Afghan Hospital" />
+                            </div>
+                            <div class="col-12 mb-3">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <hr />
+                                    </div>
+                                    <div class="col-6 text-center">
+                                        <img src="~/images/stethoscope.png" style="height:20px" />
+                                        <span>HMIS Login</span>
+                                    </div>
+                                    <div class="col-3">
+                                        <hr />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 form-floating mb-3">
+                                <input asp-for="LoginVm.Username" type="text" class="form-control" id="floatingInput" placeholder="Username">
+                                <label for="floatingInput">Username</label>
+                            </div>
+                            <div class="col-12 form-floating mb-3">
+                                <input asp-for="LoginVm.Password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                                <label for="floatingPassword">Password</label>
+                            </div>
+                            <div class="col-4">
+                                <button type="submit" class="btn btn-secondary w-100">Log in</button>
+                            </div>
+                            <div class="col-8 text-end" style="font-size:0.75rem">
+                                <a href=""><span>Lost your password?</span></a>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <hr />
+                        </div>
+                        <div class="col-md-12 text-center text-secondary mt-5">
+                            Accurate Afghanistan ltd
+                        </div>
+                        <div class="col-md-12 text-center text-secondary" style="font-size:0.80rem">
+                            4th Floor, Mirwais Plaza , Kabul , Afghanistan
+                        </div>
+                        <div class="col-12 text-center text-secondary mt-5" style="font-size:0.75rem">
+                            ©2021 All Rights Reserved for Accurate Afghanistan ltd
+                        </div>
+                       
+
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col col-lg-4 col-md-2">
+        </div>
+    </div>
+
+
+</div>

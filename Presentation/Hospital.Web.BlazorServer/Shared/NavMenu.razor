@@ -1,0 +1,51 @@
+﻿<AuthorizeView Roles="Super">
+
+    <Authorized>
+        <MudNavGroup Icon="@Icons.Material.Filled.Dashboard" IconColor="Color.Inherit" Title="Dashboard">
+            <MudNavLink Href="desktop" Icon="@Icons.Material.Filled.DesktopWindows" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Desktop</MudNavLink>
+        </MudNavGroup>
+        
+        <MudNavGroup Icon="@Icons.Material.Filled.DateRange" IconColor="Color.Inherit" Title="Appointment" >
+
+        </MudNavGroup>
+        <MudNavGroup Icon="@Icons.Material.Filled.AssignmentInd" IconColor="Color.Inherit" Title="OPD / IPD">
+
+        </MudNavGroup>
+        <MudNavGroup Icon="@Icons.Material.Filled.PersonalVideo" IconColor="Color.Inherit" Title="E-Precryption">
+            
+        </MudNavGroup>
+        <MudNavGroup Icon="@Icons.Material.Filled.MedicationLiquid" IconColor="Color.Inherit" Title="Labratory">
+
+        </MudNavGroup>
+        <MudNavGroup Icon="@Icons.Material.Filled.LocalHospital" IconColor="Color.Inherit" Title="Pharmacy">
+            
+        </MudNavGroup>
+        <MudNavGroup Icon="@Icons.Material.Filled.AccountBalanceWallet" IconColor="Color.Inherit" Title="Financial">
+
+        </MudNavGroup>
+        <MudNavGroup Icon="@Icons.Material.Filled.BarChart" IconColor="Color.Inherit" Title="Reports">
+
+        </MudNavGroup>
+        <MudNavGroup Icon="@Icons.Material.Filled.Security" IconColor="Color.Inherit" Title="Security">
+            <MudNavLink Href="Users" Icon="@Icons.Material.Filled.People" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Users</MudNavLink>
+            <MudNavLink Href="ChangePassword" Icon="@Icons.Material.Filled.Password" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Change Password</MudNavLink>
+
+        </MudNavGroup>
+        <MudNavGroup Icon="@Icons.Material.Filled.Settings" IconColor="Color.Inherit" Title="Setting">
+            <MudNavLink Href="Departments" Icon="@Icons.Material.Filled.LocalHospital" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Department</MudNavLink>
+            <MudNavLink Href="Services" Icon="@Icons.Material.Filled.MedicalServices" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Service</MudNavLink>
+            <MudNavLink Href="ConsultantMasters" Icon="@Icons.Material.Filled.People" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Consultant Master</MudNavLink>
+            <MudNavLink Href="Medicines" Icon="@Icons.Material.Filled.Medication" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Medicines</MudNavLink>
+            <MudNavLink Href="RoomTypes" Icon="@Icons.Material.Filled.Room" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Room Types</MudNavLink>
+            <MudNavLink Href="Rooms" Icon="@Icons.Material.Filled.Room" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Rooms</MudNavLink>
+            <MudNavLink Href="Panels" Icon="@Icons.Material.Filled.AdminPanelSettings" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Panel</MudNavLink>
+
+            <MudNavLink Href="Settings" Icon="@Icons.Material.Filled.Settings" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Setting</MudNavLink>
+            <MudNavLink Href="BasicInformationCategories" Icon="@Icons.Material.Sharp.Category" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Basic Information Category</MudNavLink>
+            <MudNavLink Href="BasicInformations" Icon="@Icons.Material.Filled.Workspaces" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Basic Information</MudNavLink>
+        </MudNavGroup>
+    </Authorized>
+    <NotAuthorized>
+        <MudNavLink Href="Identity/account/login" Icon="@Icons.Filled.Login" IconColor="Color.Surface" Match="NavLinkMatch.Prefix">Log in</MudNavLink>
+    </NotAuthorized>
+</AuthorizeView>

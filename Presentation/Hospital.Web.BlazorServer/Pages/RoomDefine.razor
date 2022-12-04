@@ -1,0 +1,177 @@
+﻿@page "/RoomDefine/{Id}"
+
+@using Hospital.Application.Commands
+@using Hospital.Application.Mapper
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Models.Auth
+@using MediatR
+@using System.ComponentModel.DataAnnotations
+@inject IMediator mediator
+@inject NavigationManager navManager
+@inject ISnackbar Snackbar
+
+@attribute [Authorize(Roles = "Super,Admin")]
+
+<MudGrid Class="mt-2">
+    <MudItem md="3"></MudItem>
+    <MudItem md="6">
+        <MudPaper Class="mt-2" Elevation="10">
+            <MudForm @ref="form" @bind-IsValid="@success">
+                <MudCard Class="mt-2">
+                    <MudCardHeader>@caption</MudCardHeader>
+                    <MudCardContent>
+                        <MudGrid>
+                            <MudItem md="12">
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@room.Code" Required="true" RequiredError="Please Enter Code" MaxLength="100" Label="Code" Placeholder="Room Code" Variant="Variant.Outlined"></MudTextField>
+                            </MudItem>
+                            <MudItem md="12">
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@room.Name" Required="true" RequiredError="Please Enter Name" MaxLength="200" Label="Name" Placeholder="Room Name" Variant="Variant.Outlined"></MudTextField>
+                            </MudItem>
+                            <MudItem md="12">
+                                <MudSelect Class="mt-3" T="int" Label="Room Type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Room Type" @bind-value="@room.RoomTypeId" @bind-Text="@room.RoomTypeName">
+                                    @foreach (var r in roomTypes)
+                                    {
+                                        <MudSelectItem T="int" Value="@r.Id">@r.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="12">
+                                <MudNumericField T="int" Class="mt-3" @bind-Value="@room.Rest" Label="Room Rest" Placeholder="Room Rest" Required="true" RequiredError="Please Enter Room Rest" Variant="Variant.Outlined"></MudNumericField>
+                            </MudItem>
+                            <MudItem md="12">
+                                <MudNumericField T="int" Class="mt-3" @bind-Value="@room.Cost" Label="Cost" Placeholder="Cost" Required="true" RequiredError="Please Enter Cost" Variant="Variant.Outlined"></MudNumericField>
+                            </MudItem>
+                            <MudItem md="12">
+                                <MudSwitch T="bool" Class="mt-3" @bind-Checked="@room.NotInUse" Label="Not In Use" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
+                            </MudItem>
+                        </MudGrid>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Class="mr-2" ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveRoom" Disabled="@(!success)">Save</MudButton>
+                        <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="Rooms">Return</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+    <MudItem md="3"></MudItem>
+</MudGrid>
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
+    private string caption = "Add Room";
+    private RoomViewModel room = new RoomViewModel();
+    private List<RoomTypeViewModel> roomTypes;
+    bool success;
+    MudForm form;
+
+    protected override async Task OnInitializedAsync()
+    {
+        roomTypes = await mediator.Send(new GetAllRoomTypesQuery());
+
+        if (!String.IsNullOrEmpty(Id))
+        {
+            if (Convert.ToInt32(Id) > 0)
+            {
+                caption = "Edit Room";
+
+                room = await mediator.Send(new GetRoomByIdQuery(Convert.ToInt32(Id)));
+
+                if (room != null)
+                {
+
+                }
+            }
+        }
+
+    }
+
+    protected async Task SaveRoom()
+    {
+        form.Validate();
+
+        if (form.IsValid)
+        {
+            CommandResponse result;
+
+
+            if (room.Id > 0)
+            {
+                try
+                {
+                    room.ModifiedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<EditRoomCommand>(room);
+
+                    if (command.Id > 0)
+                    {
+                        result = await mediator.Send(command);
+
+                        if (result.ResultType == ResultType.Success)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                            navManager.NavigateTo("/Rooms");
+                        }
+                        else if (result.ResultType == ResultType.Warning)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Warning);
+                        }
+                        else if (result.ResultType == ResultType.Error)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Error);
+                        }
+
+                    }
+                    else
+                    {
+                        Snackbar.Add("Error in selected Room", Severity.Warning);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+            else
+            {
+                try
+                {
+                    room.CreatedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<CreateRoomCommand>(room);
+
+                    result = await mediator.Send(command);
+
+                    if (result.ResultType == ResultType.Success)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                        navManager.NavigateTo("/Rooms");
+                    }
+                    else if (result.ResultType == ResultType.Warning)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Warning);
+                    }
+                    else if (result.ResultType == ResultType.Error)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Error);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+        }
+
+    }
+
+}
+

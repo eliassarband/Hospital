@@ -1,0 +1,709 @@
+﻿using Hospital.Application.Commands;
+using Hospital.Application.Mapper;
+using Hospital.Application.Responses;
+using Hospital.Domain.Core.Entities;
+using Hospital.Domain.Core.Repositories.Commands;
+using Hospital.Domain.Core.Repositories.Queries;
+using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Hospital.Application.Handlers.CommandHandlers
+{
+
+    #region Department
+    public class CreateDepartmentHandler : IRequestHandler<CreateDepartmentCommand, CommandResponse>
+    {
+        private readonly IDepartmentCommandRepository _DepartmentCommandRepository;
+
+        public CreateDepartmentHandler(IDepartmentCommandRepository DepartmentCommandRepository)
+        {
+            _DepartmentCommandRepository = DepartmentCommandRepository;
+        }
+
+        public async Task<CommandResponse> Handle(CreateDepartmentCommand request, CancellationToken cancellationToken)
+        {
+            var DepartmentEntity = MapperConfig.Mapper.Map<Department>(request);
+            DepartmentEntity.CreatedDate = DateTime.Now;
+
+
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (DepartmentEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+            else
+            {
+                try
+                {
+                    var newDepartment = await _DepartmentCommandRepository.AddAsync(DepartmentEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = newDepartment.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Saved successfully"
+                    };
+
+                }
+                catch (Exception exp)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = -1,
+                        ResultType = ResultType.Error,
+                        ResultMessage = "Error in operation\n" + exp.Message
+                    };
+                }
+
+            }
+
+            return response;
+        }
+    }
+
+    public class EditDepartmentHandler : IRequestHandler<EditDepartmentCommand, CommandResponse>
+    {
+        private readonly IDepartmentCommandRepository _DepartmentCommandRepository;
+        private readonly IDepartmentQueryRepository _DepartmentQueryRepository;
+
+        public EditDepartmentHandler(IDepartmentCommandRepository DepartmentCommandRepository, IDepartmentQueryRepository DepartmentQueryRepository)
+        {
+            _DepartmentCommandRepository = DepartmentCommandRepository;
+            _DepartmentQueryRepository = DepartmentQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(EditDepartmentCommand request, CancellationToken cancellationToken)
+        {
+            var DepartmentEntity = MapperConfig.Mapper.Map<Department>(request);
+            DepartmentEntity.ModifiedDate = DateTime.Now;
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (DepartmentEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+
+            try
+            {
+                await _DepartmentCommandRepository.UpdateAsync(DepartmentEntity);
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            var modifiedDepartment = await _DepartmentQueryRepository.GetByIdAsync(request.Id);
+
+            response = new CommandResponse()
+            {
+                Id = modifiedDepartment.Id,
+                ResultType = ResultType.Success,
+                ResultMessage = "Updated successfully"
+            };
+
+            return response;
+        }
+    }
+
+    public class DeleteDepartmentHandler : IRequestHandler<DeleteDepartmentCommand, CommandResponse>
+    {
+        private readonly IDepartmentCommandRepository _DepartmentCommandRepository;
+        private readonly IDepartmentQueryRepository _DepartmentQueryRepository;
+
+        public DeleteDepartmentHandler(IDepartmentCommandRepository DepartmentCommandRepository, IDepartmentQueryRepository DepartmentQueryRepository)
+        {
+            _DepartmentCommandRepository = DepartmentCommandRepository;
+            _DepartmentQueryRepository = DepartmentQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(DeleteDepartmentCommand request, CancellationToken cancellationToken)
+        {
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            try
+            {
+                var DepartmentEntity = await _DepartmentQueryRepository.GetByIdAsync(request.Id);
+
+
+                await _DepartmentCommandRepository.DeleteAsync(DepartmentEntity);
+
+                response = new CommandResponse()
+                {
+                    Id = request.Id,
+                    ResultType = ResultType.Success,
+                    ResultMessage = "Removed successfully"
+                };
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            return response;
+        }
+    }
+
+    #endregion
+
+    #region Service
+    public class CreateServiceHandler : IRequestHandler<CreateServiceCommand, CommandResponse>
+    {
+        private readonly IServiceCommandRepository _ServiceCommandRepository;
+
+        public CreateServiceHandler(IServiceCommandRepository ServiceCommandRepository)
+        {
+            _ServiceCommandRepository = ServiceCommandRepository;
+        }
+
+        public async Task<CommandResponse> Handle(CreateServiceCommand request, CancellationToken cancellationToken)
+        {
+            var ServiceEntity = MapperConfig.Mapper.Map<Service>(request);
+            ServiceEntity.CreatedDate = DateTime.Now;
+
+
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (ServiceEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+            else
+            {
+                try
+                {
+                    var newService = await _ServiceCommandRepository.AddAsync(ServiceEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = newService.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Saved successfully"
+                    };
+
+                }
+                catch (Exception exp)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = -1,
+                        ResultType = ResultType.Error,
+                        ResultMessage = "Error in operation\n" + exp.Message
+                    };
+                }
+
+            }
+
+            return response;
+        }
+    }
+
+    public class EditServiceHandler : IRequestHandler<EditServiceCommand, CommandResponse>
+    {
+        private readonly IServiceCommandRepository _ServiceCommandRepository;
+        private readonly IServiceQueryRepository _ServiceQueryRepository;
+
+        public EditServiceHandler(IServiceCommandRepository ServiceCommandRepository, IServiceQueryRepository ServiceQueryRepository)
+        {
+            _ServiceCommandRepository = ServiceCommandRepository;
+            _ServiceQueryRepository = ServiceQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(EditServiceCommand request, CancellationToken cancellationToken)
+        {
+            var ServiceEntity = MapperConfig.Mapper.Map<Service>(request);
+            ServiceEntity.ModifiedDate = DateTime.Now;
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (ServiceEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+
+            try
+            {
+                await _ServiceCommandRepository.UpdateAsync(ServiceEntity);
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            var modifiedService = await _ServiceQueryRepository.GetByIdAsync(request.Id);
+
+            response = new CommandResponse()
+            {
+                Id = modifiedService.Id,
+                ResultType = ResultType.Success,
+                ResultMessage = "Updated successfully"
+            };
+
+            return response;
+        }
+    }
+
+    public class DeleteServiceHandler : IRequestHandler<DeleteServiceCommand, CommandResponse>
+    {
+        private readonly IServiceCommandRepository _ServiceCommandRepository;
+        private readonly IServiceQueryRepository _ServiceQueryRepository;
+
+        public DeleteServiceHandler(IServiceCommandRepository ServiceCommandRepository, IServiceQueryRepository ServiceQueryRepository)
+        {
+            _ServiceCommandRepository = ServiceCommandRepository;
+            _ServiceQueryRepository = ServiceQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(DeleteServiceCommand request, CancellationToken cancellationToken)
+        {
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            try
+            {
+                var ServiceEntity = await _ServiceQueryRepository.GetByIdAsync(request.Id);
+
+
+                await _ServiceCommandRepository.DeleteAsync(ServiceEntity);
+
+                response = new CommandResponse()
+                {
+                    Id = request.Id,
+                    ResultType = ResultType.Success,
+                    ResultMessage = "Removed successfully"
+                };
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            return response;
+        }
+    }
+
+    #endregion
+
+    #region RoomType
+    public class CreateRoomTypeHandler : IRequestHandler<CreateRoomTypeCommand, CommandResponse>
+    {
+        private readonly IRoomTypeCommandRepository _RoomTypeCommandRepository;
+
+        public CreateRoomTypeHandler(IRoomTypeCommandRepository RoomTypeCommandRepository)
+        {
+            _RoomTypeCommandRepository = RoomTypeCommandRepository;
+        }
+
+        public async Task<CommandResponse> Handle(CreateRoomTypeCommand request, CancellationToken cancellationToken)
+        {
+            var RoomTypeEntity = MapperConfig.Mapper.Map<RoomType>(request);
+            RoomTypeEntity.CreatedDate = DateTime.Now;
+
+
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (RoomTypeEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+            else
+            {
+                try
+                {
+                    var newRoomType = await _RoomTypeCommandRepository.AddAsync(RoomTypeEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = newRoomType.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Saved successfully"
+                    };
+
+                }
+                catch (Exception exp)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = -1,
+                        ResultType = ResultType.Error,
+                        ResultMessage = "Error in operation\n" + exp.Message
+                    };
+                }
+
+            }
+
+            return response;
+        }
+    }
+
+    public class EditRoomTypeHandler : IRequestHandler<EditRoomTypeCommand, CommandResponse>
+    {
+        private readonly IRoomTypeCommandRepository _RoomTypeCommandRepository;
+        private readonly IRoomTypeQueryRepository _RoomTypeQueryRepository;
+
+        public EditRoomTypeHandler(IRoomTypeCommandRepository RoomTypeCommandRepository, IRoomTypeQueryRepository RoomTypeQueryRepository)
+        {
+            _RoomTypeCommandRepository = RoomTypeCommandRepository;
+            _RoomTypeQueryRepository = RoomTypeQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(EditRoomTypeCommand request, CancellationToken cancellationToken)
+        {
+            var RoomTypeEntity = MapperConfig.Mapper.Map<RoomType>(request);
+            RoomTypeEntity.ModifiedDate = DateTime.Now;
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (RoomTypeEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+
+            try
+            {
+                await _RoomTypeCommandRepository.UpdateAsync(RoomTypeEntity);
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            var modifiedRoomType = await _RoomTypeQueryRepository.GetByIdAsync(request.Id);
+
+            response = new CommandResponse()
+            {
+                Id = modifiedRoomType.Id,
+                ResultType = ResultType.Success,
+                ResultMessage = "Updated successfully"
+            };
+
+            return response;
+        }
+    }
+
+    public class DeleteRoomTypeHandler : IRequestHandler<DeleteRoomTypeCommand, CommandResponse>
+    {
+        private readonly IRoomTypeCommandRepository _RoomTypeCommandRepository;
+        private readonly IRoomTypeQueryRepository _RoomTypeQueryRepository;
+
+        public DeleteRoomTypeHandler(IRoomTypeCommandRepository RoomTypeCommandRepository, IRoomTypeQueryRepository RoomTypeQueryRepository)
+        {
+            _RoomTypeCommandRepository = RoomTypeCommandRepository;
+            _RoomTypeQueryRepository = RoomTypeQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(DeleteRoomTypeCommand request, CancellationToken cancellationToken)
+        {
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            try
+            {
+                var RoomTypeEntity = await _RoomTypeQueryRepository.GetByIdAsync(request.Id);
+
+
+                await _RoomTypeCommandRepository.DeleteAsync(RoomTypeEntity);
+
+                response = new CommandResponse()
+                {
+                    Id = request.Id,
+                    ResultType = ResultType.Success,
+                    ResultMessage = "Removed successfully"
+                };
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            return response;
+        }
+    }
+
+    #endregion
+
+    #region Room
+    public class CreateRoomHandler : IRequestHandler<CreateRoomCommand, CommandResponse>
+    {
+        private readonly IRoomCommandRepository _RoomCommandRepository;
+
+        public CreateRoomHandler(IRoomCommandRepository RoomCommandRepository)
+        {
+            _RoomCommandRepository = RoomCommandRepository;
+        }
+
+        public async Task<CommandResponse> Handle(CreateRoomCommand request, CancellationToken cancellationToken)
+        {
+            var RoomEntity = MapperConfig.Mapper.Map<Room>(request);
+            RoomEntity.CreatedDate = DateTime.Now;
+
+
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (RoomEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+            else
+            {
+                try
+                {
+                    var newRoom = await _RoomCommandRepository.AddAsync(RoomEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = newRoom.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Saved successfully"
+                    };
+
+                }
+                catch (Exception exp)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = -1,
+                        ResultType = ResultType.Error,
+                        ResultMessage = "Error in operation\n" + exp.Message
+                    };
+                }
+
+            }
+
+            return response;
+        }
+    }
+
+    public class EditRoomHandler : IRequestHandler<EditRoomCommand, CommandResponse>
+    {
+        private readonly IRoomCommandRepository _RoomCommandRepository;
+        private readonly IRoomQueryRepository _RoomQueryRepository;
+
+        public EditRoomHandler(IRoomCommandRepository RoomCommandRepository, IRoomQueryRepository RoomQueryRepository)
+        {
+            _RoomCommandRepository = RoomCommandRepository;
+            _RoomQueryRepository = RoomQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(EditRoomCommand request, CancellationToken cancellationToken)
+        {
+            var RoomEntity = MapperConfig.Mapper.Map<Room>(request);
+            RoomEntity.ModifiedDate = DateTime.Now;
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (RoomEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+
+            try
+            {
+                await _RoomCommandRepository.UpdateAsync(RoomEntity);
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            var modifiedRoom = await _RoomQueryRepository.GetByIdAsync(request.Id);
+
+            response = new CommandResponse()
+            {
+                Id = modifiedRoom.Id,
+                ResultType = ResultType.Success,
+                ResultMessage = "Updated successfully"
+            };
+
+            return response;
+        }
+    }
+
+    public class DeleteRoomHandler : IRequestHandler<DeleteRoomCommand, CommandResponse>
+    {
+        private readonly IRoomCommandRepository _RoomCommandRepository;
+        private readonly IRoomQueryRepository _RoomQueryRepository;
+
+        public DeleteRoomHandler(IRoomCommandRepository RoomCommandRepository, IRoomQueryRepository RoomQueryRepository)
+        {
+            _RoomCommandRepository = RoomCommandRepository;
+            _RoomQueryRepository = RoomQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(DeleteRoomCommand request, CancellationToken cancellationToken)
+        {
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            try
+            {
+                var RoomEntity = await _RoomQueryRepository.GetByIdAsync(request.Id);
+
+
+                await _RoomCommandRepository.DeleteAsync(RoomEntity);
+
+                response = new CommandResponse()
+                {
+                    Id = request.Id,
+                    ResultType = ResultType.Success,
+                    ResultMessage = "Removed successfully"
+                };
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            return response;
+        }
+    }
+
+    #endregion
+
+}

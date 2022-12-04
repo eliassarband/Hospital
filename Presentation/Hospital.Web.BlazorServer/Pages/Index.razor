@@ -1,0 +1,38 @@
+﻿@page "/"
+@using Hospital.Web.BlazorServer.Models.Auth
+
+@inject IHttpContextAccessor accessor
+@inject NavigationManager navManager
+
+@attribute [Authorize]
+
+<PageTitle>Index</PageTitle>
+
+
+@code
+{
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (accessor.HttpContext != null)
+            {
+                if (accessor.HttpContext.User.Identity.IsAuthenticated)
+                {
+                    navManager.NavigateTo("/desktop");
+                }
+                else
+                {
+                    navManager.NavigateTo("Identity/Account/Login", true);
+                }
+            }
+
+        }
+
+    }
+
+    
+}
