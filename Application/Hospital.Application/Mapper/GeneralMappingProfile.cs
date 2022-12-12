@@ -81,6 +81,20 @@ namespace Hospital.Application.Mapper
 
             #endregion
 
+            #region HospitalInformation
+
+            CreateMap<HospitalInformation, CreateHospitalInformationCommand>().ReverseMap();
+
+            CreateMap<HospitalInformation, EditHospitalInformationCommand>().ReverseMap();
+
+            CreateMap<HospitalInformation, HospitalInformationViewModel>().ReverseMap();
+
+            CreateMap<CreateHospitalInformationCommand, HospitalInformationViewModel>().ReverseMap();
+
+            CreateMap<EditHospitalInformationCommand, HospitalInformationViewModel>().ReverseMap();
+
+            #endregion
+
         }
     }
 }

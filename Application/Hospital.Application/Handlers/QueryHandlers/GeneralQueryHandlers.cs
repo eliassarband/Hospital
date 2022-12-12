@@ -277,4 +277,22 @@ namespace Hospital.Application.Handlers.QueryHandlers
 
     #endregion
 
+    #region HospitalInformation
+
+    public class GetHospitalInformationByIdHandler : IRequestHandler<GetHospitalInformationByIdQuery, HospitalInformationViewModel>
+    {
+        private readonly IHospitalInformationQueryRepository _HospitalInformationQueryRepository;
+
+        public GetHospitalInformationByIdHandler(IHospitalInformationQueryRepository HospitalInformationQueryRepository)
+        {
+            _HospitalInformationQueryRepository = HospitalInformationQueryRepository;
+        }
+
+        public async Task<HospitalInformationViewModel> Handle(GetHospitalInformationByIdQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<HospitalInformationViewModel>(await _HospitalInformationQueryRepository.GetByIdAsync(request.Id));
+        }
+    }
+        
+    #endregion
 }

@@ -4,6 +4,7 @@ using Hospital.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Infrastructure.Migrations
 {
     [DbContext(typeof(HospitalContext))]
-    partial class HospitalContextModelSnapshot : ModelSnapshot
+    [Migration("20221212074217_addHospitalInformation")]
+    partial class addHospitalInformation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -187,10 +190,6 @@ namespace Hospital.Infrastructure.Migrations
                     b.Property<int>("SessionTimeout")
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("WhiteLogo")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("HospitalInformation", "Gnr");
@@ -240,30 +239,30 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 1,
                             Code = "Super",
-                            CreatedDate = new DateTime(2022, 12, 12, 13, 31, 56, 822, DateTimeKind.Local).AddTicks(8792),
+                            CreatedDate = new DateTime(2022, 12, 12, 11, 12, 17, 769, DateTimeKind.Local).AddTicks(7050),
                             CreatedUser = "elias.sarband",
                             Description = "",
-                            ModifiedDate = new DateTime(2022, 12, 12, 13, 31, 56, 822, DateTimeKind.Local).AddTicks(8739),
+                            ModifiedDate = new DateTime(2022, 12, 12, 11, 12, 17, 769, DateTimeKind.Local).AddTicks(7001),
                             Name = "Super Admin"
                         },
                         new
                         {
                             Id = 2,
                             Code = "Admin",
-                            CreatedDate = new DateTime(2022, 12, 12, 13, 31, 56, 822, DateTimeKind.Local).AddTicks(8796),
+                            CreatedDate = new DateTime(2022, 12, 12, 11, 12, 17, 769, DateTimeKind.Local).AddTicks(7054),
                             CreatedUser = "elias.sarband",
                             Description = "",
-                            ModifiedDate = new DateTime(2022, 12, 12, 13, 31, 56, 822, DateTimeKind.Local).AddTicks(8794),
+                            ModifiedDate = new DateTime(2022, 12, 12, 11, 12, 17, 769, DateTimeKind.Local).AddTicks(7052),
                             Name = "Administrator"
                         },
                         new
                         {
                             Id = 3,
                             Code = "Operator",
-                            CreatedDate = new DateTime(2022, 12, 12, 13, 31, 56, 822, DateTimeKind.Local).AddTicks(8799),
+                            CreatedDate = new DateTime(2022, 12, 12, 11, 12, 17, 769, DateTimeKind.Local).AddTicks(7057),
                             CreatedUser = "elias.sarband",
                             Description = "",
-                            ModifiedDate = new DateTime(2022, 12, 12, 13, 31, 56, 822, DateTimeKind.Local).AddTicks(8797),
+                            ModifiedDate = new DateTime(2022, 12, 12, 11, 12, 17, 769, DateTimeKind.Local).AddTicks(7055),
                             Name = "Operator"
                         });
                 });
@@ -503,12 +502,12 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 1,
                             Active = true,
-                            CreatedDate = new DateTime(2022, 12, 12, 13, 31, 56, 824, DateTimeKind.Local).AddTicks(882),
+                            CreatedDate = new DateTime(2022, 12, 12, 11, 12, 17, 770, DateTimeKind.Local).AddTicks(7638),
                             CreatedUser = "elias.sarband",
                             Email = "elias.sarband@gmail.com",
                             FirstName = "Elias",
                             LastName = "Sarband",
-                            ModifiedDate = new DateTime(2022, 12, 12, 13, 31, 56, 822, DateTimeKind.Local).AddTicks(8948),
+                            ModifiedDate = new DateTime(2022, 12, 12, 11, 12, 17, 769, DateTimeKind.Local).AddTicks(7169),
                             Password = "SEIE/b+BtdSahkhMsl4KK3SuEjCF1OKUEn4oQYMaYSc=",
                             PhoneNumber = "9125056182",
                             Theme = "Light",
@@ -554,9 +553,9 @@ namespace Hospital.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2022, 12, 12, 13, 31, 56, 824, DateTimeKind.Local).AddTicks(943),
+                            CreatedDate = new DateTime(2022, 12, 12, 11, 12, 17, 770, DateTimeKind.Local).AddTicks(7690),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2022, 12, 12, 13, 31, 56, 824, DateTimeKind.Local).AddTicks(936),
+                            ModifiedDate = new DateTime(2022, 12, 12, 11, 12, 17, 770, DateTimeKind.Local).AddTicks(7688),
                             RoleId = 1,
                             UserId = 1
                         });

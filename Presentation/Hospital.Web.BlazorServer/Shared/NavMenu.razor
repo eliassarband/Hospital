@@ -1,4 +1,5 @@
-﻿<AuthorizeView Roles="Super">
+﻿<MudImage Src="images/HMISSystem.png" Class="mr-1" Height="50"></MudImage>
+<AuthorizeView Roles="Super">
 
     <Authorized>
         <MudNavGroup Icon="@Icons.Material.Filled.Dashboard" IconColor="Color.Inherit" Title="Dashboard">
@@ -32,6 +33,7 @@
 
         </MudNavGroup>
         <MudNavGroup Icon="@Icons.Material.Filled.Settings" IconColor="Color.Inherit" Title="Setting">
+            <MudNavLink Href="HospitalInformation" Icon="@Icons.Material.Filled.Apartment" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Hospital Information</MudNavLink>
             <MudNavLink Href="Departments" Icon="@Icons.Material.Filled.LocalHospital" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Department</MudNavLink>
             <MudNavLink Href="Services" Icon="@Icons.Material.Filled.MedicalServices" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Service</MudNavLink>
             <MudNavLink Href="ConsultantMasters" Icon="@Icons.Material.Filled.People" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Consultant Master</MudNavLink>

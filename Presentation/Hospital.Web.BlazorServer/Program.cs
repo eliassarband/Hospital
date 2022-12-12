@@ -82,6 +82,9 @@ builder.Services.AddTransient<IRoomTypeCommandRepository, RoomTypeCommandReposit
 builder.Services.AddTransient<IRoomQueryRepository, RoomQueryRepository>();
 builder.Services.AddTransient<IRoomCommandRepository, RoomCommandRepository>();
 
+builder.Services.AddTransient<IHospitalInformationQueryRepository, HospitalInformationQueryRepository>();
+builder.Services.AddTransient<IHospitalInformationCommandRepository, HospitalInformationCommandRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -92,7 +95,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 

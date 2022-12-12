@@ -1,3 +1,4 @@
+using Hospital.Application.ViewModels;
 using Hospital.Web.BlazorServer.Logic;
 using Hospital.Web.BlazorServer.Models.Auth;
 using Microsoft.AspNetCore.Mvc;
@@ -18,14 +19,18 @@ namespace Market.Web.BlazorServer.Areas.Identity.Pages.Account
             _accountLogic = accountLogic;
         }
 
-        [BindProperty] public LoginVm LoginVm { get; set; }
+        [BindProperty] 
+        public LoginVm LoginVm { get; set; }
+        [BindProperty]
+        public HospitalInformationViewModel hospitalInformation { get; set; }
         public string ErrorMessage;
 
         public async Task<IActionResult> OnGetAsync()
         {
+            hospitalInformation = await _accountLogic.GetHospitalInformation(1);
             if (_accessor.HttpContext.User.Identity.IsAuthenticated)
             {
-                return Redirect("/");
+                return Redirect("~/");
             }
 
             return Page();
@@ -39,7 +44,7 @@ namespace Market.Web.BlazorServer.Areas.Identity.Pages.Account
                 return Page();
             }
 
-            return Redirect("/");
+            return Redirect("~/");
         }
 
     }

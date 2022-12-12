@@ -17,26 +17,26 @@
 
 <MudGrid Class="mt-2">
     <MudItem md="3"></MudItem>
-    <MudItem md="6">
+    <MudItem md="6" sm="12">
         <MudPaper Class="mt-2" Elevation="10">
             <MudForm @ref="form" @bind-IsValid="@success">
                 <MudCard Class="mt-2">
                     <MudCardHeader>@caption</MudCardHeader>
                     <MudCardContent>
                         <MudGrid>
-                            <MudItem md="12">
+                            <MudItem md="12" sm="12" xs="12">
                                 <MudTextField T="string" Class="mt-1" @bind-Value="@department.Code" Required="true" RequiredError="Please Enter Code" MaxLength="100" Label="Code" Placeholder="Department Code" Variant="Variant.Outlined"></MudTextField>
                             </MudItem>
-                            <MudItem md="12">
+                            <MudItem md="12" sm="12" xs="12">
                                 <MudTextField T="string" Class="mt-1" @bind-Value="@department.Name" Required="true" RequiredError="Please Enter Name" MaxLength="200" Label="Name" Placeholder="Department Name" Variant="Variant.Outlined"></MudTextField>
                             </MudItem>
-                            <MudItem md="12">
+                            <MudItem md="12" sm="12" xs="12">
                                 <MudSwitch T="bool" Class="mt-1" @bind-Checked="@department.IsMain" Label="Is Main" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
                             </MudItem>
-                            <MudItem md="12">
+                            <MudItem md="12" sm="12" xs="12">
                                 <MudTextField T="string" Class="mt-1" @bind-Value="@department.MainDeptartment" Required="true" RequiredError="Please Enter Main Department" MaxLength="200" Label="MainDeptartment" Placeholder="Main Deptartment" Variant="Variant.Outlined"></MudTextField>
                             </MudItem>
-                            <MudItem md="12">
+                            <MudItem md="12" sm="12" xs="12">
                                 <MudSwitch T="bool" Class="mt-1" @bind-Checked="@department.NotInUse" Label="Not In Use" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
                             </MudItem>
                         </MudGrid>
@@ -107,7 +107,7 @@
                         {
                             Snackbar.Add(result.ResultMessage, Severity.Success);
 
-                            navManager.NavigateTo("/Departments");
+                            navManager.NavigateTo("Departments");
                         }
                         else if (result.ResultType == ResultType.Warning)
                         {
@@ -142,7 +142,7 @@
                     {
                         Snackbar.Add(result.ResultMessage, Severity.Success);
 
-                        navManager.NavigateTo("/Departments");
+                        navManager.NavigateTo("Departments");
                     }
                     else if (result.ResultType == ResultType.Warning)
                     {

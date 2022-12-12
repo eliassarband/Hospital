@@ -221,4 +221,71 @@ namespace Hospital.Application.Commands
     }
 
     #endregion
+
+    #region HospitalInformation
+    public class CreateHospitalInformationCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string? Address { get; set; }
+        public string? Phone { get; set; }
+        public string? Mobile { get; set; }
+        public byte[] Logo { get; set; }
+        public byte[] WhiteLogo { get; set; }
+        public string? RegisterationNumber { get; set; }
+        public string? Email { get; set; }
+        public string? BackupDirectory1 { get; set; }
+        public string? BackupDirectory2 { get; set; }
+        public string? CurrencyName { get; set; }
+        public string? CurrencySymbol { get; set; }
+        public string? CurrencyCents { get; set; }
+        public int SessionTimeout { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedHospitalInformation { get; set; }
+
+        public CreateHospitalInformationCommand()
+        {
+            this.CreatedDate = DateTime.Now;
+        }
+    }
+
+    public class EditHospitalInformationCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string? Address { get; set; }
+        public string? Phone { get; set; }
+        public string? Mobile { get; set; }
+        public byte[] Logo { get; set; }
+        public byte[] WhiteLogo { get; set; }
+        public string? RegisterationNumber { get; set; }
+        public string? Email { get; set; }
+        public string? BackupDirectory1 { get; set; }
+        public string? BackupDirectory2 { get; set; }
+        public string? CurrencyName { get; set; }
+        public string? CurrencySymbol { get; set; }
+        public string? CurrencyCents { get; set; }
+        public int SessionTimeout { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedHospitalInformation { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string? ModifiedHospitalInformation { get; set; }
+
+        public EditHospitalInformationCommand()
+        {
+            this.ModifiedDate = DateTime.Now;
+        }
+    }
+
+    public class DeleteHospitalInformationCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+
+        public DeleteHospitalInformationCommand(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
 }

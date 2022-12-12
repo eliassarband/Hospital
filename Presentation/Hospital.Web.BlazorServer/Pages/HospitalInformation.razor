@@ -1,0 +1,259 @@
+﻿@page "/HospitalInformation"
+
+@using Hospital.Application.Commands
+@using Hospital.Application.Mapper
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Models.Auth
+@using MediatR
+@using System.ComponentModel.DataAnnotations
+@inject IMediator mediator
+@inject NavigationManager navManager
+@inject ISnackbar Snackbar
+
+@attribute [Authorize(Roles = "Super,Admin")]
+
+<MudGrid Class="mt-2">
+    <MudItem md="1"></MudItem>
+    <MudItem md="10" sm="12">
+        <MudPaper Class="mt-2" Elevation="10">
+            <MudForm @ref="form" @bind-IsValid="@success">
+                <MudCard Class="mt-2">
+                    <MudCardHeader>@caption</MudCardHeader>
+                    <MudCardContent>
+                        <MudGrid>
+                            <MudItem md="12" sm="12" xs="12">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.Name" Required="true" RequiredError="Please Enter Name" MaxLength="200" Label="Name" Placeholder="Hospital Name" Variant="Variant.Outlined"></MudTextField>
+                            </MudItem>
+                            <MudItem md="12" sm="12" xs="12">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.Address" Label="Address" Placeholder="Hospital Address" Variant="Variant.Outlined" Lines="2"></MudTextField>
+                            </MudItem>
+                            <MudItem md="6" sm="12" xs="12">
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@hospitalInformation.Phone" MaxLength="20" Label="Phone" Placeholder="Hospital Phone" Variant="Variant.Outlined" Mask="@(new PatternMask("00000000000"))"></MudTextField>
+                            </MudItem>
+                            <MudItem md="6" sm="12" xs="12">
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@hospitalInformation.Mobile" MaxLength="20" Label="Mobile" Placeholder="Hospital Mobile" Variant="Variant.Outlined" Mask="@(new PatternMask("00000000000"))"></MudTextField>
+                            </MudItem>
+                            <MudItem md="2" sm="12" xs="12">
+        
+                                <MudFileUpload T="IBrowserFile" FilesChanged="UploadLogo" Accept=".png">
+                                    <ButtonTemplate>
+                                        <MudButton HtmlTag="label"
+                                                   Variant="Variant.Filled"
+                                                   Color="Color.Primary"
+                                                   StartIcon="@Icons.Filled.CloudUpload"
+                                                   for="@context">
+                                            Upload Logo File
+                                        </MudButton>
+                                    </ButtonTemplate>
+                                </MudFileUpload>
+                            </MudItem>
+                            <MudItem md="4" sm="12" xs="12">
+                                <MudImage Src=@String.Format("data:image/png;base64,{0}",image) Height="70"></MudImage>
+                            </MudItem>
+                            <MudItem md="2" sm="12" xs="12">
+
+                                <MudFileUpload T="IBrowserFile" FilesChanged="UploadWhiteLogo" Accept=".png">
+                                    <ButtonTemplate>
+                                        <MudButton HtmlTag="label"
+                                                   Variant="Variant.Filled"
+                                                   Color="Color.Primary"
+                                                   StartIcon="@Icons.Filled.CloudUpload"
+                                                   for="@context">
+                                            Upload White Logo File
+                                        </MudButton>
+                                    </ButtonTemplate>
+                                </MudFileUpload>
+                            </MudItem>
+                            <MudItem md="4" sm="12" xs="12" Class="bg-dark">
+                                <MudImage Src=@String.Format("data:image/png;base64,{0}",whiteImage) Height="70"></MudImage>
+                            </MudItem>
+                            <MudItem md="6" sm="12" xs="12">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.RegisterationNumber" MaxLength="20" Label="Registeration Number" Placeholder="Hospital Registeration Number" Variant="Variant.Outlined"></MudTextField>
+                            </MudItem>
+                            <MudItem md="6" sm="12" xs="12">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.Email" MaxLength="50" Label="Email" Placeholder="Hospital Email" Variant="Variant.Outlined" Mask="@emailMask" HelperText="@emailMask.Mask"></MudTextField>
+                            </MudItem>
+                            <MudItem md="6" sm="12" xs="12">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.BackupDirectory1" MaxLength="100" Label="Backup Directory 1" Placeholder="Backup Directory 1" Variant="Variant.Outlined"></MudTextField>
+                            </MudItem>
+                            <MudItem md="6" sm="12" xs="12">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.BackupDirectory2" MaxLength="100" Label="Backup Directory 2" Placeholder="Backup Directory 2" Variant="Variant.Outlined"></MudTextField>
+                            </MudItem>
+                            <MudItem md="6" sm="12" xs="12">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.CurrencyName" MaxLength="20" Label="Currency Name" Placeholder="Currency Name" Variant="Variant.Outlined"></MudTextField>
+                            </MudItem>
+                            <MudItem md="6" sm="12" xs="12">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.CurrencySymbol" MaxLength="10" Label="Currency Symbol" Placeholder="Currency Symbol" Variant="Variant.Outlined"></MudTextField>
+                            </MudItem>
+                            <MudItem md="6" sm="12" xs="12">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.CurrencyCents" MaxLength="20" Label="Currency Cents" Placeholder="Currency Cents" Variant="Variant.Outlined"></MudTextField>
+                            </MudItem>
+                            <MudItem md="6" sm="12" xs="12">
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@hospitalInformation.SessionTimeout" Min="0" Max="20" Label="Session Timeout" Placeholder="Session Timeout" Variant="Variant.Outlined"></MudNumericField>
+                            </MudItem>
+                        </MudGrid>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Class="mr-2" ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveHospitalInformation" Disabled="@(!success)">Save</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+    <MudItem md="1"></MudItem>
+</MudGrid>
+
+
+@code {
+
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
+    private string caption = "Define Hospital Information";
+    private HospitalInformationViewModel hospitalInformation = new HospitalInformationViewModel();
+    bool success;
+    MudForm form;
+    public IMask emailMask = RegexMask.Email();
+    private string image;
+    private string whiteImage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        caption = "Edit Hospital Information";
+
+        hospitalInformation = await mediator.Send(new GetHospitalInformationByIdQuery(Convert.ToInt32(1)));
+
+        if (hospitalInformation == null)
+        {
+            hospitalInformation = new HospitalInformationViewModel();
+        }
+        else
+        {
+            image = Convert.ToBase64String(hospitalInformation.Logo);
+            whiteImage = Convert.ToBase64String(hospitalInformation.WhiteLogo);
+        }
+
+    }
+
+    protected async Task UploadLogo(IBrowserFile file)
+    {
+        long maxFileSize = 1024 * 1024 * 5; // 5 MB or whatever, don't just use max int
+
+        var readStream = file.OpenReadStream(maxFileSize);
+
+        var buf = new byte[readStream.Length];
+
+        var ms = new MemoryStream(buf);
+
+        await readStream.CopyToAsync(ms);
+
+        var buffer = ms.ToArray();
+
+        image = Convert.ToBase64String(buffer);
+
+        hospitalInformation.Logo = buffer;
+    }
+
+    protected async Task UploadWhiteLogo(IBrowserFile file)
+    {
+        long maxFileSize = 1024 * 1024 * 5; // 5 MB or whatever, don't just use max int
+
+        var readStream = file.OpenReadStream(maxFileSize);
+
+        var buf = new byte[readStream.Length];
+
+        var ms = new MemoryStream(buf);
+
+        await readStream.CopyToAsync(ms);
+
+        var buffer = ms.ToArray();
+
+        whiteImage = Convert.ToBase64String(buffer);
+
+        hospitalInformation.WhiteLogo = buffer;
+    }
+
+    protected async Task SaveHospitalInformation()
+    {
+        form.Validate();
+
+        if (form.IsValid)
+        {
+            CommandResponse result;
+
+
+            if (hospitalInformation.Id > 0)
+            {
+                try
+                {
+                    hospitalInformation.ModifiedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<EditHospitalInformationCommand>(hospitalInformation);
+
+                    if (command.Id > 0)
+                    {
+                        result = await mediator.Send(command);
+
+                        if (result.ResultType == ResultType.Success)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                            navManager.NavigateTo("HospitalInformation");
+                        }
+                        else if (result.ResultType == ResultType.Warning)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Warning);
+                        }
+                        else if (result.ResultType == ResultType.Error)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Error);
+                        }
+
+                    }
+                    else
+                    {
+                        Snackbar.Add("Error in selected Hospital Information", Severity.Warning);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+            else
+            {
+                try
+                {
+                    hospitalInformation.CreatedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<CreateHospitalInformationCommand>(hospitalInformation);
+
+                    result = await mediator.Send(command);
+
+                    if (result.ResultType == ResultType.Success)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                        navManager.NavigateTo("HospitalInformation");
+                    }
+                    else if (result.ResultType == ResultType.Warning)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Warning);
+                    }
+                    else if (result.ResultType == ResultType.Error)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Error);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+        }
+
+    }
+
+}
+

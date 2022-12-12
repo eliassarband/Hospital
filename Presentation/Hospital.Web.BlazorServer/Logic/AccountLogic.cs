@@ -6,6 +6,7 @@ using Hospital.Web.BlazorServer.Models.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Web.BlazorServer.Logic
 {
@@ -21,6 +22,10 @@ namespace Hospital.Web.BlazorServer.Logic
             _accessor = accessor;
         }
 
+        public async Task<HospitalInformationViewModel> GetHospitalInformation(int Id)
+        { 
+            return await _mediator.Send(new GetHospitalInformationByIdQuery(Id));
+        }
         public async Task<string> UserLoginAsyn(LoginVm loginVm)
         {
             UserViewModel user = await _mediator.Send(new GetUserByUsernameQuery(loginVm.Username));

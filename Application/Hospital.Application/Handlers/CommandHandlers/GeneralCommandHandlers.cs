@@ -706,4 +706,176 @@ namespace Hospital.Application.Handlers.CommandHandlers
 
     #endregion
 
+    #region HospitalInformation
+    public class CreateHospitalInformationHandler : IRequestHandler<CreateHospitalInformationCommand, CommandResponse>
+    {
+        private readonly IHospitalInformationCommandRepository _HospitalInformationCommandRepository;
+
+        public CreateHospitalInformationHandler(IHospitalInformationCommandRepository HospitalInformationCommandRepository)
+        {
+            _HospitalInformationCommandRepository = HospitalInformationCommandRepository;
+        }
+
+        public async Task<CommandResponse> Handle(CreateHospitalInformationCommand request, CancellationToken cancellationToken)
+        {
+            var HospitalInformationEntity = MapperConfig.Mapper.Map<HospitalInformation>(request);
+            HospitalInformationEntity.CreatedDate = DateTime.Now;
+
+
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (HospitalInformationEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+            else
+            {
+                try
+                {
+                    var newHospitalInformation = await _HospitalInformationCommandRepository.AddAsync(HospitalInformationEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = newHospitalInformation.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Saved successfully"
+                    };
+
+                }
+                catch (Exception exp)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = -1,
+                        ResultType = ResultType.Error,
+                        ResultMessage = "Error in operation\n" + exp.Message
+                    };
+                }
+
+            }
+
+            return response;
+        }
+    }
+
+    public class EditHospitalInformationHandler : IRequestHandler<EditHospitalInformationCommand, CommandResponse>
+    {
+        private readonly IHospitalInformationCommandRepository _HospitalInformationCommandRepository;
+        private readonly IHospitalInformationQueryRepository _HospitalInformationQueryRepository;
+
+        public EditHospitalInformationHandler(IHospitalInformationCommandRepository HospitalInformationCommandRepository, IHospitalInformationQueryRepository HospitalInformationQueryRepository)
+        {
+            _HospitalInformationCommandRepository = HospitalInformationCommandRepository;
+            _HospitalInformationQueryRepository = HospitalInformationQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(EditHospitalInformationCommand request, CancellationToken cancellationToken)
+        {
+            var HospitalInformationEntity = MapperConfig.Mapper.Map<HospitalInformation>(request);
+            HospitalInformationEntity.ModifiedDate = DateTime.Now;
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (HospitalInformationEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+
+            try
+            {
+                await _HospitalInformationCommandRepository.UpdateAsync(HospitalInformationEntity);
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            var modifiedHospitalInformation = await _HospitalInformationQueryRepository.GetByIdAsync(request.Id);
+
+            response = new CommandResponse()
+            {
+                Id = modifiedHospitalInformation.Id,
+                ResultType = ResultType.Success,
+                ResultMessage = "Updated successfully"
+            };
+
+            return response;
+        }
+    }
+
+    public class DeleteHospitalInformationHandler : IRequestHandler<DeleteHospitalInformationCommand, CommandResponse>
+    {
+        private readonly IHospitalInformationCommandRepository _HospitalInformationCommandRepository;
+        private readonly IHospitalInformationQueryRepository _HospitalInformationQueryRepository;
+
+        public DeleteHospitalInformationHandler(IHospitalInformationCommandRepository HospitalInformationCommandRepository, IHospitalInformationQueryRepository HospitalInformationQueryRepository)
+        {
+            _HospitalInformationCommandRepository = HospitalInformationCommandRepository;
+            _HospitalInformationQueryRepository = HospitalInformationQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(DeleteHospitalInformationCommand request, CancellationToken cancellationToken)
+        {
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            try
+            {
+                var HospitalInformationEntity = await _HospitalInformationQueryRepository.GetByIdAsync(request.Id);
+
+
+                await _HospitalInformationCommandRepository.DeleteAsync(HospitalInformationEntity);
+
+                response = new CommandResponse()
+                {
+                    Id = request.Id,
+                    ResultType = ResultType.Success,
+                    ResultMessage = "Removed successfully"
+                };
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            return response;
+        }
+    }
+
+    #endregion
 }

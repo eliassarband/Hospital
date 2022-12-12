@@ -16,7 +16,7 @@ namespace Hospital.Infrastructure.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Role>().HasData(
-                new Role() { Id = 1, Code = "Super", Name = "Super Admin", Description = "", CreatedDate = DateTime.Now, CreatedUser = "elias.sarband"},
+                new Role() { Id = 1, Code = "Super", Name = "Super Admin", Description = "", CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
                 new Role() { Id = 2, Code = "Admin", Name = "Administrator", Description = "", CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
                 new Role() { Id = 3, Code = "Operator", Name = "Operator", Description = "", CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" }
             );
@@ -26,7 +26,7 @@ namespace Hospital.Infrastructure.Data
             );
 
             modelBuilder.Entity<UserRole>().HasData(
-                new UserRole() {Id = 1, UserId = 1, RoleId = 1, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" }
+                new UserRole() { Id = 1, UserId = 1, RoleId = 1, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" }
             );
 
         }
@@ -36,7 +36,9 @@ namespace Hospital.Infrastructure.Data
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Service> Services { get; set; }
-        public DbSet<RoomType> RoomTypes { get; set; }  
+        public DbSet<RoomType> RoomTypes { get; set; }
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<HospitalInformation> HospitalInformations {get;set;}
+
     }
 }

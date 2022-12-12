@@ -164,4 +164,18 @@ namespace Hospital.Application.Queries
     }
 
     #endregion
+
+    #region HospitalInformation
+    
+    public record GetHospitalInformationByIdQuery : IRequest<HospitalInformationViewModel>
+    {
+        public int Id { get; private set; }
+
+        public GetHospitalInformationByIdQuery(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
 }

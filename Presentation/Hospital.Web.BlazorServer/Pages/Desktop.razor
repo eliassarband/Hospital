@@ -1,5 +1,7 @@
 ﻿@page "/desktop"
 @using Hospital.Web.BlazorServer.Models.Auth
+@using System.Threading
+@implements IDisposable
 @inject NavigationManager navManager
 
 @attribute [Authorize]
@@ -18,50 +20,58 @@
 
 <MudContainer Class="mt-8 px-8" MaxWidth="MaxWidth.False">
     <MudGrid>
+        <MudItem xs="12" sm="12" md="12">
+            <MudText Typo="Typo.h6">
+                @theDate
+            </MudText>
+            <MudText Typo="Typo.h6">
+                @theTime
+            </MudText>
+        </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-1" Style="height: 200px;" @onclick="( () => AppointmentClick())">
-                <MudImage Src="images/Dashboard/Appointment.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img zoom"></MudImage>
+            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;" @onclick="( () => AppointmentClick())">
+                <MudImage Src="images/Dashboard/Appointment.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
                 <MudText Class="text-secondary mt-2">Appointment</MudText>
             </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-1" Style="height: 200px;">
+            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;">
                 <MudImage Src="images/Dashboard/registerform.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
                 <MudText Class="text-secondary mt-2">OPD / IPD</MudText>
             </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-1" Style="height: 200px;">
+            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;">
                 <MudImage Src="images/Dashboard/Precryption.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
                 <MudText Class="text-secondary mt-2">E-Precryption</MudText>
             </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-1" Style="height: 200px;">
+            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;">
                 <MudImage Src="images/Dashboard/Laboratory.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
                 <MudText Class="text-secondary mt-2">Labratory</MudText>
             </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-1" Style="height: 200px;">
+            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;">
                 <MudImage Src="images/Dashboard/Pharmacy.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
                 <MudText Class="text-secondary mt-2">Pharmacy</MudText>
             </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-1" Style="height: 200px;">
+            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;">
                 <MudImage Src="images/Dashboard/Financial.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
                 <MudText Class="text-secondary mt-2">Financial</MudText>
             </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-1" Style="height: 200px;">
+            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;">
                 <MudImage Src="images/Dashboard/Setting.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
                 <MudText Class="text-secondary mt-2">Setting</MudText>
             </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-1" Style="height: 200px;">
+            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;">
                 <MudImage Src="images/Dashboard/Reports.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
                 <MudText Class="text-secondary mt-2">Reports</MudText>
             </MudPaper>
@@ -74,6 +84,27 @@
     [CascadingParameter]
     public LoginedUser? userInfo { get; set; }
 
+    string theTime;
+    string theDate;
+    Timer aTimer;
+
+    protected override void OnInitialized()
+    {
+        aTimer = new Timer(Tick, null, 0, 1000);
+        theDate = DateTime.Now.ToLongDateString();
+    }
+
+    private void Tick(object _)
+    {
+        theTime = DateTime.Now.ToLongTimeString();
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        aTimer?.Dispose();
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
 
@@ -81,6 +112,6 @@
 
     protected async Task AppointmentClick()
     {
-        navManager.NavigateTo("/Appointment");
+        navManager.NavigateTo("Appointment");
     }
 }
