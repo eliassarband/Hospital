@@ -8,7 +8,131 @@ using Hospital.Application.ViewModels;
 
 namespace Hospital.Application.Queries
 {
-    
+
+    #region BasicInformationCategory
+    public record GetAllBasicInformationCategoriesQuery : IRequest<List<BasicInformationCategoryViewModel>>
+    {
+
+    }
+
+    public record GetViewableBasicInformationCategoriesQuery : IRequest<List<BasicInformationCategoryViewModel>>
+    {
+        public bool Viewable { get; private set; }
+
+        public GetViewableBasicInformationCategoriesQuery(bool Viewable)
+        {
+            this.Viewable = Viewable;
+        }
+    }
+
+    public record GetBasicInformationCategoriesByRelatedCategoryIdQuery : IRequest<List<BasicInformationCategoryViewModel>>
+    {
+        public int CategoryId { get; private set; }
+
+        public GetBasicInformationCategoriesByRelatedCategoryIdQuery(int CategoryId)
+        {
+            this.CategoryId = CategoryId;
+        }
+    }
+
+    public class GetBasicInformationCategoryByIdQuery : IRequest<BasicInformationCategoryViewModel>
+    {
+        public int Id { get; private set; }
+
+        public GetBasicInformationCategoryByIdQuery(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    public class GetBasicInformationCategoryByCodeQuery : IRequest<BasicInformationCategoryViewModel>
+    {
+        public string Code { get; private set; }
+
+        public GetBasicInformationCategoryByCodeQuery(string Code)
+        {
+            this.Code = Code;
+        }
+    }
+    #endregion
+
+    #region BasicInformation
+    public record GetAllBasicInformationsQuery : IRequest<List<BasicInformationViewModel>>
+    {
+
+    }
+
+    public record GetBasicInformationsByCategoryIdQuery : IRequest<List<BasicInformationViewModel>>
+    {
+        public int CategoryId { get; private set; }
+
+        public GetBasicInformationsByCategoryIdQuery(int CategoryId)
+        {
+            this.CategoryId = CategoryId;
+        }
+    }
+
+    public class GetBasicInformationsByCategoryCodeQuery : IRequest<List<BasicInformationViewModel>>
+    {
+        public string CategoryCode { get; private set; }
+
+        public GetBasicInformationsByCategoryCodeQuery(string CategoryCode)
+        {
+            this.CategoryCode = CategoryCode;
+        }
+    }
+
+    public class GetActiveBasicInformationsQuery : IRequest<List<BasicInformationViewModel>>
+    {
+        public bool Active { get; private set; }
+
+        public GetActiveBasicInformationsQuery(bool Active)
+        {
+            this.Active = Active;
+        }
+    }
+
+    public class GetBasicInformationsByRelatedBasicInformationIdQuery : IRequest<List<BasicInformationViewModel>>
+    {
+        public int BasicInformationId { get; private set; }
+
+        public GetBasicInformationsByRelatedBasicInformationIdQuery(int BasicInformationId)
+        {
+            this.BasicInformationId = BasicInformationId;
+        }
+    }
+
+    public class GetBasicInformationByIdQuery : IRequest<BasicInformationViewModel>
+    {
+        public int Id { get; private set; }
+
+        public GetBasicInformationByIdQuery(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    public class GetBasicInformationByCodeQuery : IRequest<BasicInformationViewModel>
+    {
+        public int Code { get; private set; }
+
+        public GetBasicInformationByCodeQuery(int Code)
+        {
+            this.Code = Code;
+        }
+    }
+
+    public class GetBasicInformationByStrCodeQuery : IRequest<BasicInformationViewModel>
+    {
+        public string StrCode { get; private set; }
+
+        public GetBasicInformationByStrCodeQuery(string StrCode)
+        {
+            this.StrCode = StrCode;
+        }
+    }
+    #endregion
+
     #region Department
     public record GetAllDepartmentsQuery : IRequest<List<DepartmentViewModel>>
     {
@@ -174,6 +298,35 @@ namespace Hospital.Application.Queries
         public GetHospitalInformationByIdQuery(int Id)
         {
             this.Id = Id;
+        }
+    }
+
+    #endregion
+
+    #region Attachment
+    public record GetAllAttachmentsQuery : IRequest<List<AttachmentViewModel>>
+    {
+
+    }
+
+
+    public record GetAttachmentByIdQuery : IRequest<AttachmentViewModel>
+    {
+        public int Id { get; private set; }
+
+        public GetAttachmentByIdQuery(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    public record GetAttachmentByNameQuery : IRequest<AttachmentViewModel>
+    {
+        public string Name { get; private set; }
+
+        public GetAttachmentByNameQuery(string Name)
+        {
+            this.Name = Name;
         }
     }
 

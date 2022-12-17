@@ -10,7 +10,53 @@ namespace Hospital.Application.Mapper
     {
         public GeneralMappingProfile()
         {
-            
+
+            #region BasicInformationCategory
+
+            CreateMap<BasicInformationCategory, CreateBSCategoryCommand>().ReverseMap()
+                .ForMember(dest => dest.RelatedCategoryId, opt => opt.MapFrom(src => (src.RelatedCategoryId == 0 ? null : src.RelatedCategoryId)));
+
+            CreateMap<BasicInformationCategory, EditBSCategoryCommand>().ReverseMap()
+                .ForMember(dest => dest.RelatedCategoryId, opt => opt.MapFrom(src => (src.RelatedCategoryId == 0 ? null : src.RelatedCategoryId)));
+
+            CreateMap<BasicInformationCategory, BasicInformationCategoryViewModel>()
+                .ForMember(dest => dest.RelatedCategoryId, opt => opt.MapFrom(src => (src.RelatedCategory != null ? src.RelatedCategory.Id : 0)))
+                .ForMember(dest => dest.RelatedCategoryCode, opt => opt.MapFrom(src => (src.RelatedCategory != null ? src.RelatedCategory.Code : "")))
+                .ForMember(dest => dest.RelatedCategoryName, opt => opt.MapFrom(src => (src.RelatedCategory != null ? src.RelatedCategory.Name : "")));
+
+            CreateMap<BasicInformationCategoryViewModel, BasicInformationCategory>();
+
+            CreateMap<CreateBSCategoryCommand, BasicInformationCategoryViewModel>().ReverseMap();
+
+            CreateMap<EditBSCategoryCommand, BasicInformationCategoryViewModel>().ReverseMap();
+
+            #endregion
+
+            #region BasicInformation
+
+            CreateMap<BasicInformation, CreateBasicInformationCommand>().ReverseMap()
+                .ForMember(dest => dest.RelatedBasicInformationId, opt => opt.MapFrom(src => (src.RelatedBasicInformationId == 0 ? null : src.RelatedBasicInformationId)));
+
+            CreateMap<BasicInformation, EditBasicInformationCommand>().ReverseMap()
+                .ForMember(dest => dest.RelatedBasicInformationId, opt => opt.MapFrom(src => (src.RelatedBasicInformationId == 0 ? null : src.RelatedBasicInformationId)));
+
+            CreateMap<BasicInformation, BasicInformationViewModel>()
+                .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => (src.Category != null ? src.Category.Id : 0)))
+                .ForMember(dest => dest.CategoryCode, opt => opt.MapFrom(src => (src.Category != null ? src.Category.Code : "")))
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => (src.Category != null ? src.Category.Name : "")))
+                .ForMember(dest => dest.RelatedBasicInformationId, opt => opt.MapFrom(src => (src.RelatedBasicInformation != null ? src.RelatedBasicInformation.Id : 0)))
+                .ForMember(dest => dest.RelatedBasicInformationCode, opt => opt.MapFrom(src => (src.RelatedBasicInformation != null ? src.RelatedBasicInformation.Code : 0)))
+                .ForMember(dest => dest.RelatedBasicInformationStrCode, opt => opt.MapFrom(src => (src.RelatedBasicInformation != null ? src.RelatedBasicInformation.StrCode : "")))
+                .ForMember(dest => dest.RelatedBasicInformationName, opt => opt.MapFrom(src => (src.RelatedBasicInformation != null ? src.RelatedBasicInformation.Name : "")));
+
+            CreateMap<BasicInformationViewModel, BasicInformation>();
+
+            CreateMap<CreateBasicInformationCommand, BasicInformationViewModel>().ReverseMap();
+
+            CreateMap<EditBasicInformationCommand, BasicInformationViewModel>().ReverseMap();
+
+            #endregion
+
             #region Department
 
             CreateMap<Department, CreateDepartmentCommand>().ReverseMap();
@@ -94,6 +140,21 @@ namespace Hospital.Application.Mapper
             CreateMap<EditHospitalInformationCommand, HospitalInformationViewModel>().ReverseMap();
 
             #endregion
+
+            #region Attachment
+
+            CreateMap<Attachment, CreateAttachmentCommand>().ReverseMap();
+
+            CreateMap<Attachment, EditAttachmentCommand>().ReverseMap();
+
+            CreateMap<Attachment, AttachmentViewModel>().ReverseMap();
+
+            CreateMap<CreateAttachmentCommand, AttachmentViewModel>().ReverseMap();
+
+            CreateMap<EditAttachmentCommand, AttachmentViewModel>().ReverseMap();
+
+            #endregion
+
 
         }
     }

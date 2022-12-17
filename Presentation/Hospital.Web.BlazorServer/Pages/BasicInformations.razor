@@ -1,0 +1,170 @@
+﻿@page "/BasicInformations"
+@using Hospital.Application.Commands
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using MediatR
+@inject IMediator mediator;
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+@attribute [Authorize(Roles = "Super,Admin")]
+
+<MudGrid Class="mt-2">
+    <MudItem md="12">
+        <MudPaper Class="mt-2" Elevation="10">
+            <MudCard Class="pl-2 pr-2 mt-2">
+                <MudCardHeader>Basic Information</MudCardHeader>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("BasicInformationDefine/0")>Add Basic Information</MudButton>
+                </MudCardActions>
+                <MudCardContent>
+                    <MudTable FixedHeader="true" FixedFooter="true" @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info">
+                        <HeaderContent>
+                            <MudTh>Code</MudTh>
+                            <MudTh>String Code</MudTh>
+                            <MudTh>Name</MudTh>
+                            <MudTh>Category</MudTh>
+                            <MudTh>Priority</MudTh>
+                            <MudTh>Related Basic Information</MudTh>
+                            <MudTh>Active</MudTh>
+                            <MudTh>Is Deleted</MudTh>
+                            <MudTh>Editable</MudTh>
+                            <MudTh>Deletable</MudTh>
+                            <MudTh>Edit</MudTh>
+                            <MudTh>Delete</MudTh>
+                        </HeaderContent>
+                        
+                        <RowTemplate>
+                            <MudTd DataLabel="Code">@context.Code</MudTd>
+                            <MudTd DataLabel="StrCode">@context.StrCode</MudTd>
+                            <MudTd DataLabel="Name">@context.Name</MudTd>
+                            <MudTd DataLabel="Category">@context.Category?.Name</MudTd>
+                            <MudTd DataLabel="Priority">@context.Priority</MudTd>
+                            <MudTd DataLabel="RelatedBasicInformation">@context.RelatedBasicInformation?.Name</MudTd>
+                            <MudTd DataLabel="Active">
+                                @if (context.Active)
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Done" Color="Color.Success" Title="Active"></MudIcon>
+                                }
+                                else
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Clear" Color="Color.Error" Title="Inactive"></MudIcon>
+                                }
+                            </MudTd>
+                            <MudTd DataLabel="IsDeleted">
+                                @if (context.IsDeleted)
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Done" Color="Color.Error" Title="Deleted"></MudIcon>
+                                }
+                            </MudTd>
+                            <MudTd DataLabel="AllowChange">
+                                @if (context.AllowChange)
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Done" Color="Color.Success" Title="Editable"></MudIcon>
+                                }
+                                else
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Clear" Color="Color.Error" Title="Uneditable"></MudIcon>
+                                }
+                            </MudTd>
+                            <MudTd DataLabel="AllowDelete">
+                                @if (context.AllowDelete)
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Done" Color="Color.Success" Title="Deletable"></MudIcon>
+                                }
+                                else
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Clear" Color="Color.Error" Title="Undeletable"></MudIcon>
+                                }
+                            </MudTd>
+                            <MudTd DataLabel="Edit">
+                                <MudIconButton ButtonType="ButtonType.Button" Disabled="!context.AllowChange" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("BasicInformationDefine/{0}",context.Id)></MudIconButton>
+                            </MudTd>
+                            <MudTd DataLabel="Delete">
+                                <MudIconButton ButtonType="ButtonType.Button" Disabled="!context.AllowDelete" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteBasicInformation(@context.Id))"></MudIconButton>
+                            </MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudPagination ShowFirstButton="true" ShowLastButton="true" SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
+                        </PagerContent>
+                    </MudTable>
+                </MudCardContent>
+                
+            </MudCard>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+
+@code {
+    private MudTable<BasicInformationViewModel> _table;
+    private List<BasicInformationViewModel> Elements;
+    private bool loading = false;
+
+    private int FilterCode = 0;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Elements = await mediator.Send(new GetAllBasicInformationsQuery());
+    }
+
+    private void PageChanged(int i)
+    {
+        _table.NavigateTo(i - 1);
+    }
+
+    protected async Task CodeChanged()
+    {
+        if (FilterCode > 0)
+            Elements.Where(e => e.Code == FilterCode);
+
+    }
+
+    protected async Task DeleteBasicInformation(int Id)
+    {
+        bool? dialogResult = await DialogService.ShowMessageBox(
+            "Delete Basic Information",
+            "Are You Sure?",
+            yesText: "Delete!", cancelText: "No");
+
+        if (dialogResult == true)
+        {
+            loading = true;
+            try
+            {
+                CommandResponse result;
+
+                result = await mediator.Send(new DeleteBasicInformationCommand(Id));
+
+                if (result.ResultType == ResultType.Success)
+                {
+                    Elements = await mediator.Send(new GetAllBasicInformationsQuery());
+                    Snackbar.Add(result.ResultMessage, Severity.Success);
+                }
+                else if (result.ResultType == ResultType.Warning)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Warning);
+                }
+                else if (result.ResultType == ResultType.Error)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Error);
+                }
+
+
+
+            }
+            catch (Exception exp)
+            {
+                Snackbar.Add(exp.Message, Severity.Error);
+            }
+            loading = false;
+
+        }
+
+
+    }
+
+}

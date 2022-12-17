@@ -12,6 +12,224 @@ using System.Threading.Tasks;
 
 namespace Hospital.Application.Handlers.QueryHandlers
 {
+    #region BasicInformationCategory
+
+    public class GetAllBasicInformationCategoriesHandler : IRequestHandler<GetAllBasicInformationCategoriesQuery, List<BasicInformationCategoryViewModel>>
+    {
+        private readonly IBasicInformationCategoryQueryRepository _BasicInformationCategoryQueryRepository;
+
+        public GetAllBasicInformationCategoriesHandler(IBasicInformationCategoryQueryRepository BSCategoryQueryRepository)
+        {
+            _BasicInformationCategoryQueryRepository = BSCategoryQueryRepository;
+        }
+
+        public async Task<List<BasicInformationCategoryViewModel>> Handle(GetAllBasicInformationCategoriesQuery request, CancellationToken cancellationToken)
+        {
+            var BICs = (List<BasicInformationCategory>)await _BasicInformationCategoryQueryRepository.GetAllAsync();
+
+            return MapperConfig.Mapper.Map<List<BasicInformationCategoryViewModel>>(BICs);
+        }
+    }
+
+    public class GetViewableBasicInformationCategoriesHandler : IRequestHandler<GetViewableBasicInformationCategoriesQuery, List<BasicInformationCategoryViewModel>>
+    {
+        private readonly IBasicInformationCategoryQueryRepository _BasicInformationCategoryQueryRepository;
+
+        public GetViewableBasicInformationCategoriesHandler(IBasicInformationCategoryQueryRepository BSCategoryQueryRepository)
+        {
+            _BasicInformationCategoryQueryRepository = BSCategoryQueryRepository;
+        }
+
+        public async Task<List<BasicInformationCategoryViewModel>> Handle(GetViewableBasicInformationCategoriesQuery request, CancellationToken cancellationToken)
+        {
+            var BICs = (List<BasicInformationCategory>)await _BasicInformationCategoryQueryRepository.GetViewablesAsync(request.Viewable);
+
+            return MapperConfig.Mapper.Map<List<BasicInformationCategoryViewModel>>(BICs);
+        }
+    }
+
+    public class GetBasicInformationCategoriesByRelatedCategoryIdHandler : IRequestHandler<GetBasicInformationCategoriesByRelatedCategoryIdQuery, List<BasicInformationCategoryViewModel>>
+    {
+        private readonly IBasicInformationCategoryQueryRepository _BasicInformationCategoryQueryRepository;
+
+        public GetBasicInformationCategoriesByRelatedCategoryIdHandler(IBasicInformationCategoryQueryRepository BSCategoryQueryRepository)
+        {
+            _BasicInformationCategoryQueryRepository = BSCategoryQueryRepository;
+        }
+
+        public async Task<List<BasicInformationCategoryViewModel>> Handle(GetBasicInformationCategoriesByRelatedCategoryIdQuery request, CancellationToken cancellationToken)
+        {
+            var BICs = (List<BasicInformationCategory>)await _BasicInformationCategoryQueryRepository.GetByRelatedCategoryIdAsync(request.CategoryId);
+
+            return MapperConfig.Mapper.Map<List<BasicInformationCategoryViewModel>>(BICs);
+        }
+    }
+
+    public class GetBasicInformationCategoryByIdHandler : IRequestHandler<GetBasicInformationCategoryByIdQuery, BasicInformationCategoryViewModel>
+    {
+        private readonly IBasicInformationCategoryQueryRepository _BasicInformationCategoryQueryRepository;
+
+        public GetBasicInformationCategoryByIdHandler(IBasicInformationCategoryQueryRepository BSCategoryQueryRepository)
+        {
+            _BasicInformationCategoryQueryRepository = BSCategoryQueryRepository;
+        }
+
+        public async Task<BasicInformationCategoryViewModel> Handle(GetBasicInformationCategoryByIdQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<BasicInformationCategoryViewModel>(await _BasicInformationCategoryQueryRepository.GetByIdAsync(request.Id));
+        }
+    }
+
+    public class GetBasicInformationCategoryByCodeHandler : IRequestHandler<GetBasicInformationCategoryByCodeQuery, BasicInformationCategoryViewModel>
+    {
+        private readonly IBasicInformationCategoryQueryRepository _BasicInformationCategoryQueryRepository;
+
+        public GetBasicInformationCategoryByCodeHandler(IBasicInformationCategoryQueryRepository BSCategoryQueryRepository)
+        {
+            _BasicInformationCategoryQueryRepository = BSCategoryQueryRepository;
+        }
+
+        public async Task<BasicInformationCategoryViewModel> Handle(GetBasicInformationCategoryByCodeQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<BasicInformationCategoryViewModel>(await _BasicInformationCategoryQueryRepository.GetByCodeAsync(request.Code));
+        }
+    }
+
+    #endregion
+
+    #region BasicInformation
+
+    public class GetAllBasicInformationsHandler : IRequestHandler<GetAllBasicInformationsQuery, List<BasicInformationViewModel>>
+    {
+        private readonly IBasicInformationQueryRepository _BasicInformationQueryRepository;
+
+        public GetAllBasicInformationsHandler(IBasicInformationQueryRepository BasicInformationQueryRepository)
+        {
+            _BasicInformationQueryRepository = BasicInformationQueryRepository;
+        }
+
+        public async Task<List<BasicInformationViewModel>> Handle(GetAllBasicInformationsQuery request, CancellationToken cancellationToken)
+        {
+            var BIs = (List<BasicInformation>)await _BasicInformationQueryRepository.GetAllAsync();
+
+            return MapperConfig.Mapper.Map<List<BasicInformationViewModel>>(BIs);
+        }
+    }
+
+    public class GetBasicInformationsByCategoryIdHandler : IRequestHandler<GetBasicInformationsByCategoryIdQuery, List<BasicInformationViewModel>>
+    {
+        private readonly IBasicInformationQueryRepository _BasicInformationQueryRepository;
+
+        public GetBasicInformationsByCategoryIdHandler(IBasicInformationQueryRepository BasicInformationQueryRepository)
+        {
+            _BasicInformationQueryRepository = BasicInformationQueryRepository;
+        }
+
+        public async Task<List<BasicInformationViewModel>> Handle(GetBasicInformationsByCategoryIdQuery request, CancellationToken cancellationToken)
+        {
+            var BIs = (List<BasicInformation>)await _BasicInformationQueryRepository.GetByCategoryIdAsync(request.CategoryId);
+
+            return MapperConfig.Mapper.Map<List<BasicInformationViewModel>>(BIs);
+        }
+    }
+
+    public class GetBasicInformationsByCategoryCodeHandler : IRequestHandler<GetBasicInformationsByCategoryCodeQuery, List<BasicInformationViewModel>>
+    {
+        private readonly IBasicInformationQueryRepository _BasicInformationQueryRepository;
+
+        public GetBasicInformationsByCategoryCodeHandler(IBasicInformationQueryRepository BasicInformationQueryRepository)
+        {
+            _BasicInformationQueryRepository = BasicInformationQueryRepository;
+        }
+
+        public async Task<List<BasicInformationViewModel>> Handle(GetBasicInformationsByCategoryCodeQuery request, CancellationToken cancellationToken)
+        {
+            var BIs = (List<BasicInformation>)await _BasicInformationQueryRepository.GetByCategoryCodeAsync(request.CategoryCode);
+
+            return MapperConfig.Mapper.Map<List<BasicInformationViewModel>>(BIs);
+        }
+    }
+
+    public class GetActiveBasicInformationsHandler : IRequestHandler<GetActiveBasicInformationsQuery, List<BasicInformationViewModel>>
+    {
+        private readonly IBasicInformationQueryRepository _BasicInformationQueryRepository;
+
+        public GetActiveBasicInformationsHandler(IBasicInformationQueryRepository BasicInformationQueryRepository)
+        {
+            _BasicInformationQueryRepository = BasicInformationQueryRepository;
+        }
+
+        public async Task<List<BasicInformationViewModel>> Handle(GetActiveBasicInformationsQuery request, CancellationToken cancellationToken)
+        {
+            var BIs = (List<BasicInformation>)await _BasicInformationQueryRepository.GetByActiveAsync(request.Active);
+
+            return MapperConfig.Mapper.Map<List<BasicInformationViewModel>>(BIs);
+        }
+    }
+
+    public class GetBasicInformationsByRelatedBasicInformationIdHandler : IRequestHandler<GetBasicInformationsByRelatedBasicInformationIdQuery, List<BasicInformationViewModel>>
+    {
+        private readonly IBasicInformationQueryRepository _BasicInformationQueryRepository;
+
+        public GetBasicInformationsByRelatedBasicInformationIdHandler(IBasicInformationQueryRepository BasicInformationQueryRepository)
+        {
+            _BasicInformationQueryRepository = BasicInformationQueryRepository;
+        }
+
+        public async Task<List<BasicInformationViewModel>> Handle(GetBasicInformationsByRelatedBasicInformationIdQuery request, CancellationToken cancellationToken)
+        {
+            var BIs = (List<BasicInformation>)await _BasicInformationQueryRepository.GetByRelatedBasicInformationIdAsync(request.BasicInformationId);
+
+            return MapperConfig.Mapper.Map<List<BasicInformationViewModel>>(BIs);
+        }
+    }
+
+    public class GetBasicInformationByIdHandler : IRequestHandler<GetBasicInformationByIdQuery, BasicInformationViewModel>
+    {
+        private readonly IBasicInformationQueryRepository _BasicInformationQueryRepository;
+
+        public GetBasicInformationByIdHandler(IBasicInformationQueryRepository BasicInformationQueryRepository)
+        {
+            _BasicInformationQueryRepository = BasicInformationQueryRepository;
+        }
+
+        public async Task<BasicInformationViewModel> Handle(GetBasicInformationByIdQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<BasicInformationViewModel>(await _BasicInformationQueryRepository.GetByIdAsync(request.Id));
+        }
+    }
+
+    public class GetBasicInformationByCodeHandler : IRequestHandler<GetBasicInformationByCodeQuery, BasicInformationViewModel>
+    {
+        private readonly IBasicInformationQueryRepository _BasicInformationQueryRepository;
+
+        public GetBasicInformationByCodeHandler(IBasicInformationQueryRepository BasicInformationQueryRepository)
+        {
+            _BasicInformationQueryRepository = BasicInformationQueryRepository;
+        }
+
+        public async Task<BasicInformationViewModel> Handle(GetBasicInformationByCodeQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<BasicInformationViewModel>(await _BasicInformationQueryRepository.GetByCodeAsync(request.Code));
+        }
+    }
+
+    public class GetBasicInformationByStrCodeHandler : IRequestHandler<GetBasicInformationByStrCodeQuery, BasicInformationViewModel>
+    {
+        private readonly IBasicInformationQueryRepository _BasicInformationQueryRepository;
+
+        public GetBasicInformationByStrCodeHandler(IBasicInformationQueryRepository BasicInformationQueryRepository)
+        {
+            _BasicInformationQueryRepository = BasicInformationQueryRepository;
+        }
+
+        public async Task<BasicInformationViewModel> Handle(GetBasicInformationByStrCodeQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<BasicInformationViewModel>(await _BasicInformationQueryRepository.GetByStrCodeAsync(request.StrCode));
+        }
+    }
+
+    #endregion
 
     #region Department
 
@@ -293,6 +511,57 @@ namespace Hospital.Application.Handlers.QueryHandlers
             return MapperConfig.Mapper.Map<HospitalInformationViewModel>(await _HospitalInformationQueryRepository.GetByIdAsync(request.Id));
         }
     }
-        
+
+    #endregion
+
+    #region Attachment
+
+    public class GetAllAttachmentsHandler : IRequestHandler<GetAllAttachmentsQuery, List<AttachmentViewModel>>
+    {
+        private readonly IAttachmentQueryRepository _AttachmentQueryRepository;
+
+        public GetAllAttachmentsHandler(IAttachmentQueryRepository AttachmentQueryRepository)
+        {
+            _AttachmentQueryRepository = AttachmentQueryRepository;
+        }
+
+        public async Task<List<AttachmentViewModel>> Handle(GetAllAttachmentsQuery request, CancellationToken cancellationToken)
+        {
+            List<Attachment> Attachments = (List<Attachment>)await _AttachmentQueryRepository.GetAllAsync();
+
+            return MapperConfig.Mapper.Map<List<AttachmentViewModel>>(Attachments);
+        }
+    }
+
+    public class GetAttachmentByIdHandler : IRequestHandler<GetAttachmentByIdQuery, AttachmentViewModel>
+    {
+        private readonly IAttachmentQueryRepository _AttachmentQueryRepository;
+
+        public GetAttachmentByIdHandler(IAttachmentQueryRepository AttachmentQueryRepository)
+        {
+            _AttachmentQueryRepository = AttachmentQueryRepository;
+        }
+
+        public async Task<AttachmentViewModel> Handle(GetAttachmentByIdQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<AttachmentViewModel>(await _AttachmentQueryRepository.GetByIdAsync(request.Id));
+        }
+    }
+
+    public class GetAttachmentByNameHandler : IRequestHandler<GetAttachmentByNameQuery, AttachmentViewModel>
+    {
+        private readonly IAttachmentQueryRepository _AttachmentQueryRepository;
+
+        public GetAttachmentByNameHandler(IAttachmentQueryRepository AttachmentQueryRepository)
+        {
+            _AttachmentQueryRepository = AttachmentQueryRepository;
+        }
+
+        public async Task<AttachmentViewModel> Handle(GetAttachmentByNameQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<AttachmentViewModel>(await _AttachmentQueryRepository.GetByNameAsync(request.Name));
+        }
+    }
+
     #endregion
 }

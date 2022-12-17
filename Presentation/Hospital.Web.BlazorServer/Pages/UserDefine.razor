@@ -1,7 +1,325 @@
 ﻿@page "/UserDefine/{Id}"
+@using Hospital.Application.Commands
+@using Hospital.Application.Mapper
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using Hospital.Domain.Core.Helpers;
+@using Hospital.Web.BlazorServer.Models.Auth
+@using MediatR
+@using System.ComponentModel.DataAnnotations
+@inject IMediator mediator
+@inject NavigationManager navManager
+@inject ISnackbar Snackbar
 
 @attribute [Authorize(Roles = "Super,Admin")]
 
+
+<MudGrid Class="mt-2">
+    <MudItem md="12">
+        <MudPaper Class="mt-2" Elevation="10">
+            <MudForm @ref="form" @bind-IsValid="@success">
+                <MudCard Class="mt-2">
+                    <MudCardHeader>@caption</MudCardHeader>
+                    <MudCardContent>
+                        <MudGrid>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@user.FirstName" Required="true" RequiredError="Please Enter First Name" MaxLength="100" Label="First Name" Placeholder="First Name" Variant="Variant.Outlined"></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@user.LastName" Required="true" RequiredError="Please Enter Last Name" MaxLength="100" Label="Last Name" Placeholder="Last Name" Variant="Variant.Outlined"></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@user.Username" Required="true" RequiredError="Please Enter Username" MaxLength="100" Label="Username" Placeholder="Username" Variant="Variant.Outlined"></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@user.Email" MaxLength="100" Label="Email" Placeholder="Email" InputType="InputType.Email" Variant="Variant.Outlined" Validation="@(new EmailAddressAttribute() {ErrorMessage = "Wrong Email Format"})"></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@user.PhoneNumber" Required="true" RequiredError="Please Enter Mobile Number" MaxLength="100" Label="Mobile" Placeholder="Mobile" Mask="@(new PatternMask("00000000000"))" InputType="InputType.Telephone" Variant="Variant.Outlined"></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudSwitch T="bool" Class="mt-3" Checked="@user.Active" Label="@activeLabel" LabelPosition="LabelPosition.End" Color="Color.Success" UnCheckedColor="Color.Secondary" CheckedChanged="@( (bool g) => ActiveChanged(g) )"></MudSwitch>
+                            </MudItem>
+                            <MudItem md="2">
+                                <MudFileUpload T="IBrowserFile" FilesChanged="UploadPhoto" Accept=".jpg,.jpeg,.png">
+                                    <ButtonTemplate>
+                                        <MudButton HtmlTag="label"
+                                                   Variant="Variant.Filled"
+                                                   Color="Color.Primary"
+                                                   StartIcon="@Icons.Filled.CloudUpload"
+                                                   for="@context">
+                                            Upload Photo
+                                        </MudButton>
+                                    </ButtonTemplate>
+                                </MudFileUpload>
+                            </MudItem>
+                            <MudItem md="4">
+                                @if (photo != null)
+                                {
+                                    <MudImage Style="border-radius : 50%" Src=@String.Format("data:{0};base64,{1}",photoContentType,photo) Height="150"></MudImage>
+                                }
+                                else
+                                {
+                                    <MudImage Src="/images/User.png" Height="150"></MudImage>
+                                }
+
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudCheckBox @bind-Checked="@superAccess">Super</MudCheckBox>
+                                <MudCheckBox @bind-Checked="@adminAccess">Admin</MudCheckBox>
+                                <MudCheckBox @bind-Checked="@operatorAccess">Operator</MudCheckBox>
+                            </MudItem>
+                            
+                        </MudGrid>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Class="mr-2" ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveUser" Disabled="@(!success)">Save</MudButton>
+                        <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="Users">Return</MudButton>
+                    </MudCardActions>
+
+                </MudCard>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
 @code {
+    [Parameter]
+    public string Id { get; set; }
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
+    private string caption = "Add User";
+    private UserViewModel user = new UserViewModel();
+    private List<RoleViewModel> roles;
+    bool success;
+    MudForm form;
+    private string activeLabel = "Inactive";
+    private string photo;
+    private string photoContentType;
+    private bool superAccess = false;
+    private bool adminAccess = false;
+    private bool operatorAccess = false;
+    private bool attachmentChanged = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        roles = await mediator.Send(new GetAllRolesQuery());
+
+        if (!String.IsNullOrEmpty(Id))
+        {
+            if (Convert.ToInt32(Id) > 0)
+            {
+                caption = "ویرایش کاربر";
+
+                user = await mediator.Send(new GetUserByIdQuery(Convert.ToInt32(Id)));
+
+                if (user != null)
+                {
+                    foreach (var r in user.UserRoles)
+                    {
+                        if (r.RoleCode == "Super")
+                            superAccess = true;
+
+                        if (r.RoleCode == "Admin")
+                            adminAccess = true;
+
+                        if (r.RoleCode == "Operator")
+                            operatorAccess = true;
+
+                    }
+
+                    if (user.Active)
+                        activeLabel = "Active";
+                    else
+                        activeLabel = "InActive";
+
+                    photo = Convert.ToBase64String(user.AttachmentContent);
+                    photoContentType = user.AttachmentContentType;
+                }
+            }
+        }
+
+    }
+
+    protected async Task UploadPhoto(IBrowserFile file)
+    {
+        long maxFileSize = 1024 * 1024 * 5; // 5 MB or whatever, don't just use max int
+
+        var readStream = file.OpenReadStream(maxFileSize);
+
+        var buf = new byte[readStream.Length];
+
+        var ms = new MemoryStream(buf);
+
+        await readStream.CopyToAsync(ms);
+
+        var buffer = ms.ToArray();
+
+        photo = Convert.ToBase64String(buffer);
+        photoContentType = file.ContentType;
+        user.AttachmentContent = buffer;
+        user.AttachmentContentType = file.ContentType;
+
+        attachmentChanged = true;
+
+    }
+
+    protected async Task ActiveChanged(bool active)
+    {
+        if (active)
+            activeLabel = "Active";
+        else
+            activeLabel = "InActive";
+
+        user.Active = active;
+    }
+
+    protected async Task SaveUser()
+    {
+        form.Validate();
+
+        if (form.IsValid)
+        {
+
+
+            if(attachmentChanged)
+            {
+                AttachmentViewModel attachment = new AttachmentViewModel()
+                {
+                    Name = user.FirstName + "_" + user.LastName + "_" + DateTime.Now.ToString(),
+                    ContentType=user.AttachmentContentType,
+                    Content=user.AttachmentContent,
+                    Description = "User Photo"
+                };
+
+                var attachmentCommand = MapperConfig.Mapper.Map<CreateAttachmentCommand>(attachment);
+                CommandResponse attachmentResult = await mediator.Send(attachmentCommand);
+
+                if (attachmentResult.ResultType == ResultType.Success)
+                {
+                    user.AttachmentId = attachmentResult.Id;    
+                }
+            }
+
+            CommandResponse result=new CommandResponse();
+
+            if (String.IsNullOrEmpty(user.Theme))
+                user.Theme = "Light";
+
+            if (user.Id > 0)
+            {
+                try
+                {
+                    user.ModifiedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<EditUserCommand>(user);
+
+                    if (command.Id > 0)
+                    {
+                        result = await mediator.Send(command);
+
+                        if (result.ResultType == ResultType.Success)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                            navManager.NavigateTo("/Users");
+                        }
+                        else if (result.ResultType == ResultType.Warning)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Warning);
+                        }
+                        else if (result.ResultType == ResultType.Error)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Error);
+                        }
+
+                    }
+                    else
+                    {
+                        Snackbar.Add("User Not Found.", Severity.Warning);
+
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+            else
+            {
+                try
+                {
+                    user.CreatedUser = userInfo?.Username;
+                    user.Password = CryptographyHelper.Encrypt(user.Username);
+
+                    var command = MapperConfig.Mapper.Map<CreateUserCommand>(user);
+
+                    result = await mediator.Send(command);
+
+                    if (result.ResultType == ResultType.Success)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                        navManager.NavigateTo("/Users");
+                    }
+                    else if (result.ResultType == ResultType.Warning)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Warning);
+                    }
+                    else if (result.ResultType == ResultType.Error)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Error);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+
+            if(result.ResultType==ResultType.Success)
+            {
+                var userRoles = await mediator.Send(new GetUserRoleByUserIdQuery(result.Id));
+                var roles = await mediator.Send(new GetAllRolesQuery());
+                bool access = false;
+
+                foreach (var role in roles)
+                {
+                    access = false;
+
+                    if(role.Code=="Super" && superAccess)
+                        access=true;
+                    else if (role.Code == "Admin" && adminAccess)
+                        access = true;
+                    else if (role.Code == "Operator" && operatorAccess)
+                        access = true;
+
+                    if (!access && userRoles.Exists(r => r.UserId == result.Id && r.RoleCode == role.Code))
+                    {
+                        await mediator.Send(new DeleteUserRoleCommand(userRoles.FirstOrDefault(r => r.UserId == result.Id && r.Role.Code == role.Code).Id));
+                    }
+                    else if (access && !userRoles.Exists(r => r.UserId == result.Id && r.RoleCode == role.Code))
+                    {
+                        var newUserRole = new UserRoleViewModel()
+                            {
+                                RoleId = role.Id,
+                                UserId = result.Id
+                            };
+
+                        var newUserRoleCommand = MapperConfig.Mapper.Map<CreateUserRoleCommand>(newUserRole);
+
+                        await mediator.Send(newUserRoleCommand);
+                    }
+                }
+
+                
+            }
+        }
+
+    }
+
 
 }

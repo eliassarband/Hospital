@@ -39,6 +39,9 @@ namespace Hospital.Infrastructure.Data
         public DbSet<RoomType> RoomTypes { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<HospitalInformation> HospitalInformations {get;set;}
+        public DbSet<Attachment> Attachments { get; set; }
+        public DbSet<BasicInformationCategory> BasicInformationCategories { get; set; } 
+        public DbSet<BasicInformation> BasicInformations { get; set; }  
 
     }
 }

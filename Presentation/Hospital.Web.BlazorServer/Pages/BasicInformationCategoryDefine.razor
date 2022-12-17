@@ -1,0 +1,168 @@
+﻿@page "/BasicInformationCategoryDefine/{Id}"
+
+@using Hospital.Application.Commands
+@using Hospital.Application.Mapper
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Models.Auth
+@using MediatR
+@using System.ComponentModel.DataAnnotations
+@inject IMediator mediator
+@inject NavigationManager navManager
+@inject ISnackbar Snackbar
+
+@attribute [Authorize(Roles = "Super")]
+
+<MudGrid Class="mt-2">
+    <MudItem md="3"></MudItem>
+    <MudItem md="6">
+        <MudPaper Class="mt-2" Elevation="10">
+            <MudForm @ref="form" @bind-IsValid="@success">
+                <MudCard Class="mt-2">
+                    <MudCardHeader>@caption</MudCardHeader>
+                    <MudCardContent>
+                        <MudTextField T="string" Class="mt-3" @bind-Value="@category.Code" Required="true" RequiredError="Please Enter Category Code" MaxLength="50" Label="Code" Placeholder="Category Code" Variant="Variant.Outlined"></MudTextField>
+                        <MudTextField T="string" Class="mt-3" @bind-Value="@category.Name" Required="true" RequiredError="Please Enter Category Name" MaxLength="100" Label="Name" Placeholder="Category Name" Variant="Variant.Outlined"></MudTextField>
+                        <MudSwitch T="bool" Class="mt-3" @bind-Checked="@category.Viewable" Label="Viewable" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
+                        <MudSelect Clearable="true" Class="mt-3" T="int" Label="Related Category" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Related Category" @bind-value="@category.RelatedCategoryId" @bind-Text="@category.RelatedCategoryName">
+                            <MudSelectItem T="int" Value="0">Nothing Selected</MudSelectItem>
+                            @foreach (var c in categories)
+                            {
+                                <MudSelectItem T="int" Value="@c.Id">@c.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Class="mr-2" ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveBasicInformationCategory" Disabled="@(!success)">Save</MudButton>
+                        <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="basicInformationCategories">Return</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+    <MudItem md="3"></MudItem>
+</MudGrid>
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
+    private string caption = "Add Basic Information Category";
+    private BasicInformationCategoryViewModel category = new BasicInformationCategoryViewModel();
+    private List<BasicInformationCategoryViewModel> categories;
+    private bool showNotification = false;
+    private string notificationMessage = "";
+    private Severity notificationSeverity = Severity.Success;
+    bool success;
+    MudForm form;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        categories = await mediator.Send(new GetAllBasicInformationCategoriesQuery());
+
+        if (!String.IsNullOrEmpty(Id))
+        {
+            if (Convert.ToInt32(Id) > 0)
+            {
+                caption = "Edit Basic Information Category";
+
+                category = await mediator.Send(new GetBasicInformationCategoryByIdQuery(Convert.ToInt32(Id)));
+
+                if (category != null)
+                {
+
+
+                }
+            }
+        }
+
+    }
+
+    protected async Task SaveBasicInformationCategory()
+    {
+        form.Validate();
+
+        if (form.IsValid)
+        {
+            CommandResponse result;
+
+
+            if (category.Id > 0)
+            {
+                try
+                {
+                    category.ModifiedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<EditBSCategoryCommand>(category);
+
+                    if (command.Id > 0)
+                    {
+                        result = await mediator.Send(command);
+
+                        if (result.ResultType == ResultType.Success)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                            navManager.NavigateTo("/basicInformationCategories");
+                        }
+                        else if (result.ResultType == ResultType.Warning)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Warning);
+                        }
+                        else if (result.ResultType == ResultType.Error)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Error);
+                        }
+
+                    }
+                    else
+                    {
+                        Snackbar.Add("There is a problem with the selected category information.", Severity.Success);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+            else
+            {
+                try
+                {
+                    category.CreatedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<CreateBSCategoryCommand>(category);
+
+                    result = await mediator.Send(command);
+
+                    if (result.ResultType == ResultType.Success)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                        navManager.NavigateTo("/basicInformationCategories");
+                    }
+                    else if (result.ResultType == ResultType.Warning)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Warning);
+                    }
+                    else if (result.ResultType == ResultType.Error)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Error);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+        }
+
+    }
+
+
+}
+

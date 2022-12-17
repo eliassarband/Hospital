@@ -433,4 +433,177 @@ namespace Hospital.Application.Handlers.CommandHandlers
     }
 
     #endregion
+
+    #region UserRole
+    public class CreateUserRoleHandler : IRequestHandler<CreateUserRoleCommand, CommandResponse>
+    {
+        private readonly IUserRoleCommandRepository _UserRoleCommandRepository;
+
+        public CreateUserRoleHandler(IUserRoleCommandRepository UserRoleCommandRepository)
+        {
+            _UserRoleCommandRepository = UserRoleCommandRepository;
+        }
+
+        public async Task<CommandResponse> Handle(CreateUserRoleCommand request, CancellationToken cancellationToken)
+        {
+            var UserRoleEntity = MapperConfig.Mapper.Map<UserRole>(request);
+            UserRoleEntity.CreatedDate = DateTime.Now;
+
+
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (UserRoleEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+            else
+            {
+                try
+                {
+                    var newUserRole = await _UserRoleCommandRepository.AddAsync(UserRoleEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = newUserRole.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Saved successfully"
+                    };
+
+                }
+                catch (Exception exp)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = -1,
+                        ResultType = ResultType.Error,
+                        ResultMessage = "Error in operation\n" + exp.Message
+                    };
+                }
+
+            }
+
+            return response;
+        }
+    }
+
+    public class EditUserRoleHandler : IRequestHandler<EditUserRoleCommand, CommandResponse>
+    {
+        private readonly IUserRoleCommandRepository _UserRoleCommandRepository;
+        private readonly IUserRoleQueryRepository _UserRoleQueryRepository;
+
+        public EditUserRoleHandler(IUserRoleCommandRepository UserRoleCommandRepository, IUserRoleQueryRepository UserRoleQueryRepository)
+        {
+            _UserRoleCommandRepository = UserRoleCommandRepository;
+            _UserRoleQueryRepository = UserRoleQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(EditUserRoleCommand request, CancellationToken cancellationToken)
+        {
+            var UserRoleEntity = MapperConfig.Mapper.Map<UserRole>(request);
+            UserRoleEntity.ModifiedDate = DateTime.Now;
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (UserRoleEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+
+            try
+            {
+                await _UserRoleCommandRepository.UpdateAsync(UserRoleEntity);
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            var modifiedUserRole = await _UserRoleQueryRepository.GetByIdAsync(request.Id);
+
+            response = new CommandResponse()
+            {
+                Id = modifiedUserRole.Id,
+                ResultType = ResultType.Success,
+                ResultMessage = "Updated successfully"
+            };
+
+            return response;
+        }
+    }
+
+    public class DeleteUserRoleHandler : IRequestHandler<DeleteUserRoleCommand, CommandResponse>
+    {
+        private readonly IUserRoleCommandRepository _UserRoleCommandRepository;
+        private readonly IUserRoleQueryRepository _UserRoleQueryRepository;
+
+        public DeleteUserRoleHandler(IUserRoleCommandRepository UserRoleCommandRepository, IUserRoleQueryRepository UserRoleQueryRepository)
+        {
+            _UserRoleCommandRepository = UserRoleCommandRepository;
+            _UserRoleQueryRepository = UserRoleQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(DeleteUserRoleCommand request, CancellationToken cancellationToken)
+        {
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            try
+            {
+                var UserRoleEntity = await _UserRoleQueryRepository.GetByIdAsync(request.Id);
+
+
+                await _UserRoleCommandRepository.DeleteAsync(UserRoleEntity);
+
+                response = new CommandResponse()
+                {
+                    Id = request.Id,
+                    ResultType = ResultType.Success,
+                    ResultMessage = "Removed successfully"
+                };
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            return response;
+        }
+    }
+
+    #endregion
 }

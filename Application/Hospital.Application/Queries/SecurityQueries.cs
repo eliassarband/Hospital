@@ -74,4 +74,42 @@ namespace Hospital.Application.Queries
     }
 
     #endregion
+
+    #region UserRole
+    public record GetAllUserRolesQuery : IRequest<List<UserRoleViewModel>>
+    {
+
+    }
+
+    public record GetUserRoleByIdQuery : IRequest<UserRoleViewModel>
+    {
+        public int Id { get; private set; }
+
+        public GetUserRoleByIdQuery(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    public record GetUserRoleByUserIdQuery : IRequest<List<UserRoleViewModel>>
+    {
+        public int UserId { get; private set; }
+
+        public GetUserRoleByUserIdQuery(int UserId)
+        {
+            this.UserId = UserId;
+        }
+    }
+
+    public record GetUserRoleByRoleIdQuery : IRequest<List<UserRoleViewModel>>
+    {
+        public int RoleId { get; private set; }
+
+        public GetUserRoleByRoleIdQuery(int RoleId)
+        {
+            this.RoleId = RoleId;
+        }
+    }
+
+    #endregion
 }

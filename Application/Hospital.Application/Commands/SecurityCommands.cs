@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Hospital.Application.Responses;
+using Hospital.Application.ViewModels;
 
 namespace Hospital.Application.Commands
 {
@@ -20,7 +21,7 @@ namespace Hospital.Application.Commands
         public string PhoneNumber { get; set; }
         public bool Active { get; set; }
         public string Theme { get; set; }
-        public byte[]? Photo { get; set; }
+        public int? AttachmentId { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedUser { get; set; }
 
@@ -41,7 +42,7 @@ namespace Hospital.Application.Commands
         public string PhoneNumber { get; set; }
         public bool Active { get; set; }
         public string Theme { get; set; }
-        public byte[]? Photo { get; set; }
+        public int? AttachmentId { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedUser { get; set; }
         public DateTime ModifiedDate { get; set; }
@@ -119,6 +120,50 @@ namespace Hospital.Application.Commands
             this.Id = Id;
         }
     }
+
+    #endregion
+
+    #region UserRole
+    public class CreateUserRoleCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public int RoleId { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUserRole { get; set; }
+
+        public CreateUserRoleCommand()
+        {
+            this.CreatedDate = DateTime.Now;
+        }
+    }
+
+    public class EditUserRoleCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public int RoleId { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUserRole { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string? ModifiedUserRole { get; set; }
+
+        public EditUserRoleCommand()
+        {
+            this.ModifiedDate = DateTime.Now;
+        }
+    }
+
+    public class DeleteUserRoleCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+
+        public DeleteUserRoleCommand(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
 
     #endregion
 }

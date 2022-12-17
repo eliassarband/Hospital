@@ -1,7 +1,192 @@
 ﻿@page "/Users"
+@using Hospital.Application.Commands
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using Hospital.Domain.Core.Helpers;
+@using MediatR
+@inject IMediator mediator;
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
 
 @attribute [Authorize(Roles = "Super,Admin")]
 
+<MudGrid Class="mt-2">
+    <MudItem md="12">
+        <MudPaper Class="mt-2" Elevation="10">
+            <MudCard Class="pl-2 pr-2 mt-2">
+                <MudCardHeader>Users</MudCardHeader>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("UserDefine/0")>Add User</MudButton>
+                </MudCardActions>
+                <MudCardContent>
+                    <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info">
+                        <HeaderContent>
+                            <MudTh>Photo</MudTh>
+                            <MudTh>First Name</MudTh>
+                            <MudTh>Last Name</MudTh>
+                            <MudTh>Username</MudTh>
+                            <MudTh>Email</MudTh>
+                            <MudTh>Mobile</MudTh>
+                            <MudTh>Active</MudTh>
+                            <MudTh>Reset Password</MudTh>
+                            <MudTh>Edit</MudTh>
+                            <MudTh>Delete</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Photo">
+                                @if (context.Attachment != null)
+                                {
+                                    <MudAvatar Image=@String.Format("data:{0};base64,{1}",context.AttachmentContentType,Convert.ToBase64String(context.AttachmentContent))></MudAvatar>
+                                }
+                                else
+                                {
+                                    <MudAvatar Image="/images/User.png"></MudAvatar>
+                                }
+                            </MudTd>
+                            <MudTd DataLabel="FirstName">@context.FirstName</MudTd>
+                            <MudTd DataLabel="LastName">@context.LastName</MudTd>
+                            <MudTd DataLabel="Username">@context.Username</MudTd>
+                            <MudTd DataLabel="Email">@context.Email</MudTd>
+                            <MudTd DataLabel="PhoneNumber">@context.PhoneNumber</MudTd>
+                            <MudTd DataLabel="Active">
+                                @if (context.Active)
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Done" Color="Color.Success" Title="Active"></MudIcon>
+                                }
+                                else
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Clear" Color="Color.Error" Title="Inactive"></MudIcon>
+                                }
+                            </MudTd>
+                            <MudTd DataLabel="ResetPassword">
+                                <MudIconButton ButtonType="ButtonType.Button" Icon="@Icons.Material.Filled.LockReset" Color="Color.Error" OnClick="@(()=> ResetPassword(@context.Id))"></MudIconButton>
+                            </MudTd>
+                            <MudTd DataLabel="Edit">
+                                <MudIconButton ButtonType="ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("UserDefine/{0}",context.Id)></MudIconButton>
+                            </MudTd>
+                            <MudTd DataLabel="Delete">
+                                <MudIconButton ButtonType="ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteUser(@context.Id))"></MudIconButton>
+                            </MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudPagination ShowFirstButton="true" ShowLastButton="true" SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
+                        </PagerContent>
+                    </MudTable>
+                </MudCardContent>
+                
+            </MudCard>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+
+
 @code {
+    private MudTable<UserViewModel> _table;
+    private List<UserViewModel> Elements;
+    private bool loading = false;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Elements = await mediator.Send(new GetAllUsersQuery());
+    }
+
+    private void PageChanged(int i)
+    {
+        _table.NavigateTo(i - 1);
+    }
+
+    protected async Task ResetPassword(int Id)
+    {
+        bool? dialogResult = await DialogService.ShowMessageBox(
+            "Reset Password",
+            "Are You Sure?",
+            yesText: "Reset!", cancelText: "No");
+
+        if (dialogResult == true)
+        {
+            loading = true;
+
+            CommandResponse result;
+
+            var user = await mediator.Send(new GetUserByIdQuery(Id));
+
+            if (user != null)
+            {
+
+                var command = new ChangePasswordCommand(user.Id, CryptographyHelper.Encrypt(user.Username));
+
+                result = await mediator.Send(command);
+
+                if (result.ResultType == ResultType.Success)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Success);
+                }
+                else if (result.ResultType == ResultType.Warning)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Warning);
+                }
+                else if (result.ResultType == ResultType.Error)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Error);
+                }
+
+            }
+            else
+            {
+                Snackbar.Add("User Not Found.", Severity.Warning);
+            }
+
+            loading = false;
+        }
+    }
+
+    protected async Task DeleteUser(int Id)
+    {
+        bool? dialogResult = await DialogService.ShowMessageBox(
+            "Delete User",
+            "Are You Sure?",
+            yesText: "Delete!", cancelText: "No");
+
+        if (dialogResult == true)
+        {
+            loading = true;
+            try
+            {
+                CommandResponse result;
+
+                result = await mediator.Send(new DeleteUserCommand(Id));
+
+                if (result.ResultType == ResultType.Success)
+                {
+                    Elements = await mediator.Send(new GetAllUsersQuery());
+                    Snackbar.Add(result.ResultMessage, Severity.Success);
+                }
+                else if (result.ResultType == ResultType.Warning)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Warning);
+                }
+                else if (result.ResultType == ResultType.Error)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Error);
+                }
+
+
+
+            }
+            catch (Exception exp)
+            {
+                Snackbar.Add(exp.Message, Severity.Error);
+            }
+            loading = false;
+
+        }
+
+
+    }
+
 
 }

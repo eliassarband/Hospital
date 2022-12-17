@@ -1,0 +1,175 @@
+﻿@page "/BasicInformationDefine/{Id}"
+
+@using Hospital.Application.Commands
+@using Hospital.Application.Mapper
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Models.Auth
+@using MediatR
+@using System.ComponentModel.DataAnnotations
+@inject IMediator mediator
+@inject NavigationManager navManager
+@inject ISnackbar Snackbar
+
+@attribute [Authorize(Roles = "Super,Admin")]
+
+<MudGrid Class="mt-2">
+    <MudItem md="3"></MudItem>
+    <MudItem md="6">
+        <MudPaper Class="mt-2" Elevation="10">
+            <MudForm @ref="form" @bind-IsValid="@success">
+                <MudCard Class="mt-2">
+                    <MudCardHeader>@caption</MudCardHeader>
+                    <MudCardContent>
+                        <MudNumericField T="int" Class="mt-3" @bind-Value="@basicInformation.Code" Required="true" RequiredError="Please Enter Basic Information Code" Min="1" Label="Code" Placeholder="Basic Information Code" Variant="Variant.Outlined"></MudNumericField>
+                        <MudTextField T="string" Class="mt-3" @bind-Value="@basicInformation.StrCode" Required="true" RequiredError="Please Enter Basic Information Strin Code" MaxLength="50" Label="String Code" Placeholder="Basic Information String Code" Variant="Variant.Outlined"></MudTextField>
+                        <MudTextField T="string" Class="mt-3" @bind-Value="@basicInformation.Name" Required="true" RequiredError="Please Enter Basic Information Name" MaxLength="100" Label="Name" Placeholder="Basic Information Name" Variant="Variant.Outlined"></MudTextField>
+                        <MudSelect Class="mt-3" T="int" Required="true" RequiredError="Please Select Category" Label="Category" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Category" @bind-value="@basicInformation.CategoryId" @bind-Text="@basicInformation.CategoryName">
+                            @foreach (var c in categories)
+                            {
+                                <MudSelectItem T="int" Value="@c.Id">@c.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+                        <MudNumericField T="int" Class="mt-3" @bind-Value="@basicInformation.Priority" Required="true" RequiredError="Please Enter Priority" Min="1" Label="Priority" Placeholder="Priority" Variant="Variant.Outlined"></MudNumericField>
+                        <MudSelect Class="mt-3" T="int" Label="Related Basic Information" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Related Basic Information" @bind-value="@basicInformation.RelatedBasicInformationId" @bind-Text="@basicInformation.RelatedBasicInformationName">
+                            <MudSelectItem T="int" Value="0">Nothing Selected</MudSelectItem>
+                            @foreach (var c in basicInformations)
+                            {
+                                <MudSelectItem T="int" Value="@c.Id">@c.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+                        <MudSwitch T="bool" Class="mt-3" @bind-Checked="@basicInformation.Active" Label="Active" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
+                        <MudSwitch T="bool" Class="mt-3" @bind-Checked="@basicInformation.AllowChange" Label="Editable" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
+                        <MudSwitch T="bool" Class="mt-3" @bind-Checked="@basicInformation.AllowDelete" Label="Deletable" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Class="mr-2" ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveBasicInformation" Disabled="@(!success)">Save</MudButton>
+                        <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="basicInformations">Return</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+    <MudItem md="3"></MudItem>
+</MudGrid>
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
+    private string caption = "Add Basic Information";
+    private BasicInformationViewModel basicInformation = new BasicInformationViewModel();
+    private List<BasicInformationViewModel> basicInformations;
+    private List<BasicInformationCategoryViewModel> categories;
+    bool success;
+    MudForm form;
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await mediator.Send(new GetAllBasicInformationCategoriesQuery());
+
+        basicInformations = await mediator.Send(new GetAllBasicInformationsQuery());
+
+        if (!String.IsNullOrEmpty(Id))
+        {
+            if (Convert.ToInt32(Id) > 0)
+            {
+                caption = "Edit Basic Information";
+
+                basicInformation = await mediator.Send(new GetBasicInformationByIdQuery(Convert.ToInt32(Id)));
+
+                if (basicInformation != null)
+                {
+
+                }
+            }
+        }
+
+    }
+
+    protected async Task SaveBasicInformation()
+    {
+        form.Validate();
+
+        if (form.IsValid)
+        {
+            CommandResponse result;
+
+
+            if (basicInformation.Id > 0)
+            {
+                try
+                {
+                    basicInformation.ModifiedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<EditBasicInformationCommand>(basicInformation);
+
+                    if (command.Id > 0)
+                    {
+                        result = await mediator.Send(command);
+
+                        if (result.ResultType == ResultType.Success)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                            navManager.NavigateTo("/basicInformations");
+                        }
+                        else if (result.ResultType == ResultType.Warning)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Warning);
+                        }
+                        else if (result.ResultType == ResultType.Error)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Error);
+                        }
+
+                    }
+                    else
+                    {
+                        Snackbar.Add("There is a problem with the selected base information.", Severity.Warning);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+            else
+            {
+                try
+                {
+                    basicInformation.CreatedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<CreateBasicInformationCommand>(basicInformation);
+
+                    result = await mediator.Send(command);
+
+                    if (result.ResultType == ResultType.Success)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                        navManager.NavigateTo("/basicInformations");
+                    }
+                    else if (result.ResultType == ResultType.Warning)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Warning);
+                    }
+                    else if (result.ResultType == ResultType.Error)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Error);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+        }
+
+    }
+
+}
+

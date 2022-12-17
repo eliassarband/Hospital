@@ -9,7 +9,113 @@ using Hospital.Application.ViewModels;
 
 namespace Hospital.Application.Commands
 {
-    
+
+    #region BasicInformationCategory
+    public class CreateBSCategoryCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public int Code { get; set; }
+        public string Name { get; set; }
+        public bool Viewable { get; set; }
+        public int? RelatedCategoryId { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+
+        public CreateBSCategoryCommand()
+        {
+            this.CreatedDate = DateTime.Now;
+        }
+    }
+
+    public class EditBSCategoryCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public int Code { get; set; }
+        public string Name { get; set; }
+        public bool Viewable { get; set; }
+        public int? RelatedCategoryId { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string? ModifiedUser { get; set; }
+
+        public EditBSCategoryCommand()
+        {
+            this.ModifiedDate = DateTime.Now;
+        }
+    }
+
+    public class DeleteBSCategoryCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+
+        public DeleteBSCategoryCommand(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
+
+    #region BasicInformation
+    public class CreateBasicInformationCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public int Code { get; set; }
+        public string StrCode { get; set; }
+        public string Name { get; set; }
+        public int CategoryId { get; set; }
+        public int Priority { get; set; }
+        public int? RelatedBasicInformationId { get; set; }
+        public bool Active { get; set; }
+        public bool IsDeleted { get; set; }
+        public bool AllowChange { get; set; }
+        public bool AllowDelete { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+
+        public CreateBasicInformationCommand()
+        {
+            this.CreatedDate = DateTime.Now;
+        }
+    }
+
+    public class EditBasicInformationCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public int Code { get; set; }
+        public string StrCode { get; set; }
+        public string Name { get; set; }
+        public int CategoryId { get; set; }
+        public int Priority { get; set; }
+        public int? RelatedBasicInformationId { get; set; }
+        public bool Active { get; set; }
+        public bool IsDeleted { get; set; }
+        public bool AllowChange { get; set; }
+        public bool AllowDelete { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string? ModifiedUser { get; set; }
+
+        public EditBasicInformationCommand()
+        {
+            this.ModifiedDate = DateTime.Now;
+        }
+    }
+
+    public class DeleteBasicInformationCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+
+        public DeleteBasicInformationCommand(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
+
     #region Department
     public class CreateDepartmentCommand : IRequest<CommandResponse>
     {
@@ -288,4 +394,54 @@ namespace Hospital.Application.Commands
     }
 
     #endregion
+
+    #region Attachment
+    public class CreateAttachmentCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string? Extension { get; set; }
+        public string ContentType { get; set; }
+        public byte[] Content { get; set; }
+        public string Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedAttachment { get; set; }
+
+        public CreateAttachmentCommand()
+        {
+            this.CreatedDate = DateTime.Now;
+        }
+    }
+
+    public class EditAttachmentCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string? Extension { get; set; }
+        public string ContentType { get; set; }
+        public byte[] Content { get; set; }
+        public string Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedAttachment { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string? ModifiedAttachment { get; set; }
+
+        public EditAttachmentCommand()
+        {
+            this.ModifiedDate = DateTime.Now;
+        }
+    }
+
+    public class DeleteAttachmentCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+
+        public DeleteAttachmentCommand(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
+
 }

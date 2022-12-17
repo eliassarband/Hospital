@@ -1,29 +1,25 @@
-﻿using System;
+﻿using Hospital.Domain.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Hospital.Domain.Core.Entities.Base;
 
-namespace Hospital.Domain.Core.Entities
+namespace Hospital.Application.ViewModels
 {
-    [Table("Attachment", Schema = "Gnr")]
-    public class Attachment : BaseEntity
+    public class AttachmentViewModel
     {
-        [MaxLength(50)]
+        public int Id { get; set; }
         public string Name { get; set; }
-
-        [MaxLength(10)]
         public string? Extension { get; set; }
-
-        [MaxLength(50)]
         public string ContentType { get; set; }
-
         public byte[] Content { get; set; }
-
-        [MaxLength(500)]
         public string Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string? ModifiedUser { get; set; }
     }
 }

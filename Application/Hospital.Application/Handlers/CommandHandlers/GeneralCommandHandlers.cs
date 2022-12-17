@@ -14,6 +14,389 @@ using System.Threading.Tasks;
 namespace Hospital.Application.Handlers.CommandHandlers
 {
 
+    #region BasicInformationCategory
+    public class CreateBasicInformationCategoryHandler : IRequestHandler<CreateBSCategoryCommand, CommandResponse>
+    {
+        private readonly IBasicInformationCategoryCommandRepository _BasicInformationCategoryCommandRepository;
+
+        public CreateBasicInformationCategoryHandler(IBasicInformationCategoryCommandRepository BSCategoryCommandRepository)
+        {
+            _BasicInformationCategoryCommandRepository = BSCategoryCommandRepository;
+        }
+
+        public async Task<CommandResponse> Handle(CreateBSCategoryCommand request, CancellationToken cancellationToken)
+        {
+            var CategoryEntity = MapperConfig.Mapper.Map<BasicInformationCategory>(request);
+            CategoryEntity.CreatedDate = DateTime.Now;
+
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (CategoryEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+            else
+            {
+                try
+                {
+                    var newCategory = await _BasicInformationCategoryCommandRepository.AddAsync(CategoryEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = newCategory.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Saved successfully"
+                    };
+
+                }
+                catch (Exception exp)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = -1,
+                        ResultType = ResultType.Error,
+                        ResultMessage = "Error in operation\n" + exp.Message
+                    };
+                }
+
+            }
+
+            return response;
+        }
+    }
+
+    public class EditBasicInformationCategoryHandler : IRequestHandler<EditBSCategoryCommand, CommandResponse>
+    {
+        private readonly IBasicInformationCategoryCommandRepository _BasicInformationCategoryCommandRepository;
+        private readonly IBasicInformationCategoryQueryRepository _BasicInformationCategoryQueryRepository;
+
+        public EditBasicInformationCategoryHandler(IBasicInformationCategoryCommandRepository BSCategoryCommandRepository, IBasicInformationCategoryQueryRepository BSCategoryQueryRepository)
+        {
+            _BasicInformationCategoryCommandRepository = BSCategoryCommandRepository;
+            _BasicInformationCategoryQueryRepository = BSCategoryQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(EditBSCategoryCommand request, CancellationToken cancellationToken)
+        {
+            var CategoryEntity = MapperConfig.Mapper.Map<BasicInformationCategory>(request);
+            CategoryEntity.ModifiedDate = DateTime.Now;
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (CategoryEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+
+            try
+            {
+                await _BasicInformationCategoryCommandRepository.UpdateAsync(CategoryEntity);
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            var modifiedCategory = await _BasicInformationCategoryQueryRepository.GetByIdAsync(request.Id);
+
+            response = new CommandResponse()
+            {
+                Id = modifiedCategory.Id,
+                ResultType = ResultType.Success,
+                ResultMessage = "Updated successfully"
+            };
+
+            return response;
+        }
+    }
+
+    public class DeleteBasicInformationCategoryHandler : IRequestHandler<DeleteBSCategoryCommand, CommandResponse>
+    {
+        private readonly IBasicInformationCategoryCommandRepository _BasicInformationCategoryCommandRepository;
+        private readonly IBasicInformationCategoryQueryRepository _BasicInformationCategoryQueryRepository;
+
+        public DeleteBasicInformationCategoryHandler(IBasicInformationCategoryCommandRepository BSCategoryCommandRepository, IBasicInformationCategoryQueryRepository BSCategoryQueryRepository)
+        {
+            _BasicInformationCategoryCommandRepository = BSCategoryCommandRepository;
+            _BasicInformationCategoryQueryRepository = BSCategoryQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(DeleteBSCategoryCommand request, CancellationToken cancellationToken)
+        {
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            try
+            {
+                var CategoryEntity = await _BasicInformationCategoryQueryRepository.GetByIdAsync(request.Id);
+
+                if (CategoryEntity.BasicInformations != null && CategoryEntity.BasicInformations.Count > 0)
+                {
+                    response = new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "Due to the existence of basic information, it is not possible to delete"
+                    };
+                }
+                else
+                {
+                    await _BasicInformationCategoryCommandRepository.DeleteAsync(CategoryEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Removed successfully"
+                    };
+                }
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            return response;
+        }
+    }
+
+    #endregion
+
+    #region BasicInformation
+    public class CreateBasicInformationHandler : IRequestHandler<CreateBasicInformationCommand, CommandResponse>
+    {
+        private readonly IBasicInformationCommandRepository _BasicInformationCommandRepository;
+
+        public CreateBasicInformationHandler(IBasicInformationCommandRepository BasicInformationCommandRepository)
+        {
+            _BasicInformationCommandRepository = BasicInformationCommandRepository;
+        }
+
+        public async Task<CommandResponse> Handle(CreateBasicInformationCommand request, CancellationToken cancellationToken)
+        {
+            var BasicInformationEntity = MapperConfig.Mapper.Map<BasicInformation>(request);
+            BasicInformationEntity.CreatedDate = DateTime.Now;
+
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (BasicInformationEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+            else
+            {
+                try
+                {
+                    var newBasicInformation = await _BasicInformationCommandRepository.AddAsync(BasicInformationEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = newBasicInformation.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Saved successfully"
+                    };
+
+                }
+                catch (Exception exp)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = -1,
+                        ResultType = ResultType.Error,
+                        ResultMessage = "Error in operation\n" + exp.Message
+                    };
+                }
+
+            }
+
+            return response;
+        }
+    }
+
+    public class EditBasicInformationHandler : IRequestHandler<EditBasicInformationCommand, CommandResponse>
+    {
+        private readonly IBasicInformationCommandRepository _BasicInformationCommandRepository;
+        private readonly IBasicInformationQueryRepository _BasicInformationQueryRepository;
+
+        public EditBasicInformationHandler(IBasicInformationCommandRepository BasicInformationCommandRepository, IBasicInformationQueryRepository BasicInformationQueryRepository)
+        {
+            _BasicInformationCommandRepository = BasicInformationCommandRepository;
+            _BasicInformationQueryRepository = BasicInformationQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(EditBasicInformationCommand request, CancellationToken cancellationToken)
+        {
+            var BasicInformationEntity = MapperConfig.Mapper.Map<BasicInformation>(request);
+            BasicInformationEntity.ModifiedDate = DateTime.Now;
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (BasicInformationEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+
+            if (!BasicInformationEntity.AllowChange)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "The selected basic information cannot be edited"
+                };
+            }
+
+            try
+            {
+                await _BasicInformationCommandRepository.UpdateAsync(BasicInformationEntity);
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            var modifiedBasicInformation = await _BasicInformationQueryRepository.GetByIdAsync(request.Id);
+
+            response = new CommandResponse()
+            {
+                Id = modifiedBasicInformation.Id,
+                ResultType = ResultType.Success,
+                ResultMessage = "Updated successfully"
+            };
+
+            return response;
+        }
+    }
+
+    public class DeleteBasicInformationHandler : IRequestHandler<DeleteBasicInformationCommand, CommandResponse>
+    {
+        private readonly IBasicInformationCommandRepository _BasicInformationCommandRepository;
+        private readonly IBasicInformationQueryRepository _BasicInformationQueryRepository;
+
+        public DeleteBasicInformationHandler(IBasicInformationCommandRepository BasicInformationCommandRepository, IBasicInformationQueryRepository BasicInformationQueryRepository)
+        {
+            _BasicInformationCommandRepository = BasicInformationCommandRepository;
+            _BasicInformationQueryRepository = BasicInformationQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(DeleteBasicInformationCommand request, CancellationToken cancellationToken)
+        {
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            try
+            {
+                var BasicInformationEntity = await _BasicInformationQueryRepository.GetByIdAsync(request.Id);
+
+                if (BasicInformationEntity.BasicInformations != null && BasicInformationEntity.BasicInformations.Count > 0)
+                {
+                    response = new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "Due to the existence of related basic information, it is not possible to delete"
+                    };
+                }
+                else if (!BasicInformationEntity.AllowDelete)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = 0,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "The selected basic information cannot be deleted"
+                    };
+                }
+                else
+                {
+                    await _BasicInformationCommandRepository.DeleteAsync(BasicInformationEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Removed successfully"
+                    };
+                }
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            return response;
+        }
+    }
+
+    #endregion
+
     #region Department
     public class CreateDepartmentHandler : IRequestHandler<CreateDepartmentCommand, CommandResponse>
     {
@@ -854,6 +1237,179 @@ namespace Hospital.Application.Handlers.CommandHandlers
 
 
                 await _HospitalInformationCommandRepository.DeleteAsync(HospitalInformationEntity);
+
+                response = new CommandResponse()
+                {
+                    Id = request.Id,
+                    ResultType = ResultType.Success,
+                    ResultMessage = "Removed successfully"
+                };
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            return response;
+        }
+    }
+
+    #endregion
+
+    #region Attachment
+    public class CreateAttachmentHandler : IRequestHandler<CreateAttachmentCommand, CommandResponse>
+    {
+        private readonly IAttachmentCommandRepository _AttachmentCommandRepository;
+
+        public CreateAttachmentHandler(IAttachmentCommandRepository AttachmentCommandRepository)
+        {
+            _AttachmentCommandRepository = AttachmentCommandRepository;
+        }
+
+        public async Task<CommandResponse> Handle(CreateAttachmentCommand request, CancellationToken cancellationToken)
+        {
+            var AttachmentEntity = MapperConfig.Mapper.Map<Attachment>(request);
+            AttachmentEntity.CreatedDate = DateTime.Now;
+
+
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (AttachmentEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+            else
+            {
+                try
+                {
+                    var newAttachment = await _AttachmentCommandRepository.AddAsync(AttachmentEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = newAttachment.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Saved successfully"
+                    };
+
+                }
+                catch (Exception exp)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = -1,
+                        ResultType = ResultType.Error,
+                        ResultMessage = "Error in operation\n" + exp.Message
+                    };
+                }
+
+            }
+
+            return response;
+        }
+    }
+
+    public class EditAttachmentHandler : IRequestHandler<EditAttachmentCommand, CommandResponse>
+    {
+        private readonly IAttachmentCommandRepository _AttachmentCommandRepository;
+        private readonly IAttachmentQueryRepository _AttachmentQueryRepository;
+
+        public EditAttachmentHandler(IAttachmentCommandRepository AttachmentCommandRepository, IAttachmentQueryRepository AttachmentQueryRepository)
+        {
+            _AttachmentCommandRepository = AttachmentCommandRepository;
+            _AttachmentQueryRepository = AttachmentQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(EditAttachmentCommand request, CancellationToken cancellationToken)
+        {
+            var AttachmentEntity = MapperConfig.Mapper.Map<Attachment>(request);
+            AttachmentEntity.ModifiedDate = DateTime.Now;
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (AttachmentEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+
+            try
+            {
+                await _AttachmentCommandRepository.UpdateAsync(AttachmentEntity);
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            var modifiedAttachment = await _AttachmentQueryRepository.GetByIdAsync(request.Id);
+
+            response = new CommandResponse()
+            {
+                Id = modifiedAttachment.Id,
+                ResultType = ResultType.Success,
+                ResultMessage = "Updated successfully"
+            };
+
+            return response;
+        }
+    }
+
+    public class DeleteAttachmentHandler : IRequestHandler<DeleteAttachmentCommand, CommandResponse>
+    {
+        private readonly IAttachmentCommandRepository _AttachmentCommandRepository;
+        private readonly IAttachmentQueryRepository _AttachmentQueryRepository;
+
+        public DeleteAttachmentHandler(IAttachmentCommandRepository AttachmentCommandRepository, IAttachmentQueryRepository AttachmentQueryRepository)
+        {
+            _AttachmentCommandRepository = AttachmentCommandRepository;
+            _AttachmentQueryRepository = AttachmentQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(DeleteAttachmentCommand request, CancellationToken cancellationToken)
+        {
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            try
+            {
+                var AttachmentEntity = await _AttachmentQueryRepository.GetByIdAsync(request.Id);
+
+
+                await _AttachmentCommandRepository.DeleteAsync(AttachmentEntity);
 
                 response = new CommandResponse()
                 {

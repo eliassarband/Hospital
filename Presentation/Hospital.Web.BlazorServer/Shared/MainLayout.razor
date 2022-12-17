@@ -1,4 +1,6 @@
-﻿@using Hospital.Application.Queries
+﻿@using Hospital.Application.Commands;
+@using Hospital.Application.Mapper;
+@using Hospital.Application.Queries
 @using Hospital.Application.ViewModels;
 @using Hospital.Web.BlazorServer.Models.Auth
 @using MediatR
@@ -11,12 +13,12 @@
 <PageTitle>Hospital.Web.BlazorServer</PageTitle>
 
 <MudRTLProvider RightToLeft="false">
-    <MudThemeProvider />
+    <MudThemeProvider IsDarkMode="@ThemeState" />
     <MudDialogProvider />
     <MudSnackbarProvider />
 
     <MudLayout>
-        <MudAppBar Elevation="1" Color="Color.Tertiary">
+        <MudAppBar Elevation="1" Color="@AppBarColor">
             <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" Size="Size.Large" OnClick="@((e) => DrawerToggle())" />
             <MudHidden Breakpoint="Breakpoint.SmAndDown">
                 @if(hospitalInformation != null)
@@ -31,19 +33,19 @@
                 <MudText Class="mr-2"> @userInfo?.FullName </MudText>
                 <MudAvatar Class="mr-2" Image="@photo"></MudAvatar>
                 
-                <MudMenu FullWidth="true">
+                @*<MudMenu FullWidth="true">
                     <ActivatorContent>
                         <MudAvatar Class="mr-2" Image="@photo"></MudAvatar>
                     </ActivatorContent>
                     <ChildContent>
-                        <MudMenuItem Icon="@Icons.Material.Filled.Password">Change Password</MudMenuItem>
+                        <MudMenuItem Icon="@Icons.Material.Filled.Password" Href="ChangePassword">Change Password</MudMenuItem>
                     </ChildContent>
-                </MudMenu>
+                </MudMenu>*@
 
-                <MudBadge Content="300" Overlap="true" Color="Color.Warning" Visible="true" Class="mr-2" Origin="Origin.TopLeft">
+                <MudBadge Content="300" Overlap="true" Color="Color.Warning" Visible="true" Class="mr-2" Origin="Origin.TopRight">
                     <MudIconButton Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit"/>
                 </MudBadge>
-                <MudBadge Content="4" Overlap="true" Color="Color.Warning" Visible="true" Class="mr-2">
+                <MudBadge Content="4" Overlap="true" Color="Color.Warning" Visible="true" Class="mr-2" Origin="Origin.TopRight">
                     <MudIconButton Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Email" Color="Color.Inherit" />
                 </MudBadge>
                 <MudToggleIconButton Toggled="@ThemeState" ToggledChanged="OnThemeToggledChanged" Class="mr-2"
@@ -60,7 +62,7 @@
                 <MudIconButton Variant="Variant.Outlined" ButtonType="ButtonType.Submit" Color="Color.Inherit" Title="Logout" Icon="@Icons.Material.Filled.Logout"></MudIconButton>
             </MudForm>
         </MudAppBar>
-        <MudDrawer Color="Color.Dark" @bind-Open="@_drawerOpen" Fixed="true" ClipMode="DrawerClipMode.Docked" Elevation="2" Anchor="Anchor.Left" Variant="DrawerVariant.Mini" OpenMiniOnHover="false">
+        <MudDrawer Color="@DrawerColor" @bind-Open="@_drawerOpen" Fixed="true" ClipMode="DrawerClipMode.Docked" Elevation="2" Anchor="Anchor.Left" Variant="DrawerVariant.Mini" OpenMiniOnHover="false">
             
             <MudNavMenu Color="Color.Info" Bordered="true" Rounded="true">
                 <NavMenu/>
@@ -82,6 +84,7 @@
     public bool ThemeState { get; set; }
     private string photo { get; set; }
     public Color DrawerColor { get; set; }
+    public Color AppBarColor { get; set; }
     private HospitalInformationViewModel hospitalInformation = new HospitalInformationViewModel();
 
     protected override async Task OnInitializedAsync()
@@ -102,45 +105,56 @@
                     {
                         userInfo.UserId = user.Id;
                         userInfo.FullName = user.FullName();
+                        userInfo.ThemeName = user.Theme;
                         //userInfo.RoleCode = user.Role.Code;
                         //userInfo.RoleName = user.Role.Name;
 
+                        if(user.Attachment!=null)
+                        {
+                            photo = @String.Format("data:{0};base64,{1}", user.AttachmentContentType, Convert.ToBase64String(user.AttachmentContent));
+                        }
+                        else
+                        {
+                            photo = "/images/User.png";
+                        }
+
+                        if (!String.IsNullOrEmpty(user.Theme))
+                        {
+                            if (user.Theme == "Dark")
+                                ThemeState = true;
+                            if (ThemeState)
+                            {
+                                DrawerColor = Color.Warning;
+                                AppBarColor = Color.Surface;
+                            }
+                            else
+                            {
+                                DrawerColor = Color.Dark;
+                                AppBarColor = Color.Tertiary;
+                            }
+
+
+                        }
+                        else
+                        {
+                            ThemeState = false;
+                            if (ThemeState)
+                            {
+                                DrawerColor = Color.Warning;
+                                AppBarColor = Color.Surface;
+                            }
+                            else
+                            {
+                                DrawerColor = Color.Dark;
+                                AppBarColor = Color.Tertiary;
+                            }
+
+
+                        }
 
                     }
 
-                    //userSetting = await mediator.Send(new GetUserSettingByUserIdQuery(userInfo.UserId));
 
-                    //if (userSetting != null)
-                    //{
-                    //    ThemeState = userSetting.DarkMode;
-                    //    if (ThemeState)
-                    //    {
-                    //        DrawerColor = Color.Warning;
-                    //    }
-                    //    else
-                    //    {
-                    //        DrawerColor = Color.Tertiary;
-                    //    }
-
-                    //    if (userSetting.Photo == null || userSetting.Photo.Length == 0)
-                    //    {
-                            photo = "/images/User.png";
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    ThemeState = false;
-                    //    if (ThemeState)
-                    //    {
-                    //        DrawerColor = Color.Warning;
-                    //    }
-                    //    else
-                    //    {
-                    //        DrawerColor = Color.Tertiary;
-                    //    }
-
-                    //    photo = "/images/User.pngcm";
-                    //}
                 }
             }
         }
@@ -148,7 +162,7 @@
 
         if (hospitalInformation != null)
         {
-            
+
         }
     }
 
@@ -159,18 +173,25 @@
 
     public async void OnThemeToggledChanged(bool toggled)
     {
-        // Because variable is not two-way bound, we need to update it ourself
+        var user = await mediator.Send(new GetUserByUsernameQuery(userInfo?.Username));
+
         ThemeState = toggled;
 
         if (ThemeState)
         {
             DrawerColor = Color.Warning;
+            AppBarColor = Color.Surface;
+            user.Theme = "Dark";
         }
         else
         {
-            DrawerColor = Color.Tertiary;
+            DrawerColor = Color.Dark;
+            AppBarColor = Color.Tertiary;
+            user.Theme = "Light";
         }
 
-        //await mediator.Send(new UpdateThemeModeCommand(userInfo.UserId, ThemeState));
+        var command = MapperConfig.Mapper.Map<EditUserCommand>(user);
+
+        await mediator.Send(command);
     }
 }

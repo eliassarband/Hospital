@@ -23,7 +23,7 @@ namespace Hospital.Application.ViewModels
         public string? AttachmentContentType { get; set; }
         public byte[]? AttachmentContent { get; set; }
         public string? AttachmentDescription { get; set; }
-        public Attachment? Attachment { get; set; }
+        public AttachmentViewModel? Attachment { get; set; }
         public virtual ICollection<UserRoleViewModel> UserRoles { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedUser { get; set; }

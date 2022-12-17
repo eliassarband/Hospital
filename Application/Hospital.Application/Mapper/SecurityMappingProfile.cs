@@ -17,7 +17,11 @@ namespace Hospital.Application.Mapper
             CreateMap<User, EditUserCommand>().ReverseMap();
 
             CreateMap<User, UserViewModel>()
-                .ForMember(dest => dest.Password, opt => opt.MapFrom(src => CryptographyHelper.Decrypt(src.Password)));
+                .ForMember(dest => dest.Password, opt => opt.MapFrom(src => CryptographyHelper.Decrypt(src.Password)))
+                .ForMember(dest => dest.AttachmentContent,opt => opt.MapFrom(src => (src.Attachment!=null?src.Attachment.Content:null)))
+                .ForMember(dest => dest.AttachmentFullName, opt => opt.MapFrom(src => (src.Attachment != null ? src.Attachment.Name+"."+src.Attachment.Extension : "")))
+                .ForMember(dest => dest.AttachmentContentType, opt => opt.MapFrom(src => (src.Attachment != null ? src.Attachment.ContentType : "")))
+                .ForMember(dest => dest.AttachmentDescription, opt => opt.MapFrom(src => (src.Attachment != null ? src.Attachment.Description : "")));
 
             CreateMap<UserViewModel, User>()
                 .ForMember(dest => dest.Password, opt => opt.MapFrom(src => CryptographyHelper.Encrypt(src.Password)));
@@ -52,15 +56,23 @@ namespace Hospital.Application.Mapper
 
             #region UserUserRole
 
-            //CreateMap<UserRole, CreateUserRoleCommand>().ReverseMap();
+            CreateMap<UserRole, CreateUserRoleCommand>().ReverseMap();
 
-            //CreateMap<UserRole, EditUserRoleCommand>().ReverseMap();
+            CreateMap<UserRole, EditUserRoleCommand>().ReverseMap();
 
-            CreateMap<UserRole, UserRoleViewModel>().ReverseMap();
+            CreateMap<UserRole, UserRoleViewModel>()
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => (src.User != null ? src.User.Id : 0)))
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => (src.User != null ? src.User.Username : "")))
+                .ForMember(dest => dest.UserFulleName, opt => opt.MapFrom(src => (src.User != null ? src.User.FullName() : "")))
+                .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => (src.Role != null ? src.Role.Id : 0)))
+                .ForMember(dest => dest.RoleCode, opt => opt.MapFrom(src => (src.Role != null ? src.Role.Code : "")))
+                .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => (src.Role != null ? src.Role.Name : "")));
 
-            //CreateMap<CreateUserRoleCommand, UserRoleViewModel>().ReverseMap();
+            CreateMap<UserRoleViewModel, UserRole>();
 
-            //CreateMap<EditUserRoleCommand, UserRoleViewModel>().ReverseMap();
+            CreateMap<CreateUserRoleCommand, UserRoleViewModel>().ReverseMap();
+
+            CreateMap<EditUserRoleCommand, UserRoleViewModel>().ReverseMap();
 
             #endregion
 

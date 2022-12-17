@@ -4,6 +4,7 @@ using Hospital.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Infrastructure.Migrations
 {
     [DbContext(typeof(HospitalContext))]
-    partial class HospitalContextModelSnapshot : ModelSnapshot
+    [Migration("20221214074600_addAttachment")]
+    partial class addAttachment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,6 +54,7 @@ namespace Hospital.Infrastructure.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Extension")
+                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
@@ -68,112 +72,6 @@ namespace Hospital.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Attachment", "Gnr");
-                });
-
-            modelBuilder.Entity("Hospital.Domain.Core.Entities.BasicInformation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("AllowChange")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("AllowDelete")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Code")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedUser")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedUser")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("Priority")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("RelatedBasicInformationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StrCode")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("RelatedBasicInformationId");
-
-                    b.ToTable("BasicInformation", "Gnr");
-                });
-
-            modelBuilder.Entity("Hospital.Domain.Core.Entities.BasicInformationCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedUser")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedUser")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int?>("RelatedCategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Viewable")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RelatedCategoryId");
-
-                    b.ToTable("BasicInformationCategory", "Gnr");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Core.Entities.Department", b =>
@@ -345,30 +243,30 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 1,
                             Code = "Super",
-                            CreatedDate = new DateTime(2022, 12, 17, 11, 45, 16, 155, DateTimeKind.Local).AddTicks(8724),
+                            CreatedDate = new DateTime(2022, 12, 14, 11, 16, 0, 152, DateTimeKind.Local).AddTicks(9753),
                             CreatedUser = "elias.sarband",
                             Description = "",
-                            ModifiedDate = new DateTime(2022, 12, 17, 11, 45, 16, 155, DateTimeKind.Local).AddTicks(8672),
+                            ModifiedDate = new DateTime(2022, 12, 14, 11, 16, 0, 152, DateTimeKind.Local).AddTicks(9698),
                             Name = "Super Admin"
                         },
                         new
                         {
                             Id = 2,
                             Code = "Admin",
-                            CreatedDate = new DateTime(2022, 12, 17, 11, 45, 16, 155, DateTimeKind.Local).AddTicks(8729),
+                            CreatedDate = new DateTime(2022, 12, 14, 11, 16, 0, 152, DateTimeKind.Local).AddTicks(9757),
                             CreatedUser = "elias.sarband",
                             Description = "",
-                            ModifiedDate = new DateTime(2022, 12, 17, 11, 45, 16, 155, DateTimeKind.Local).AddTicks(8726),
+                            ModifiedDate = new DateTime(2022, 12, 14, 11, 16, 0, 152, DateTimeKind.Local).AddTicks(9755),
                             Name = "Administrator"
                         },
                         new
                         {
                             Id = 3,
                             Code = "Operator",
-                            CreatedDate = new DateTime(2022, 12, 17, 11, 45, 16, 155, DateTimeKind.Local).AddTicks(8733),
+                            CreatedDate = new DateTime(2022, 12, 14, 11, 16, 0, 152, DateTimeKind.Local).AddTicks(9759),
                             CreatedUser = "elias.sarband",
                             Description = "",
-                            ModifiedDate = new DateTime(2022, 12, 17, 11, 45, 16, 155, DateTimeKind.Local).AddTicks(8731),
+                            ModifiedDate = new DateTime(2022, 12, 14, 11, 16, 0, 152, DateTimeKind.Local).AddTicks(9758),
                             Name = "Operator"
                         });
                 });
@@ -608,12 +506,12 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 1,
                             Active = true,
-                            CreatedDate = new DateTime(2022, 12, 17, 11, 45, 16, 157, DateTimeKind.Local).AddTicks(7280),
+                            CreatedDate = new DateTime(2022, 12, 14, 11, 16, 0, 154, DateTimeKind.Local).AddTicks(133),
                             CreatedUser = "elias.sarband",
                             Email = "elias.sarband@gmail.com",
                             FirstName = "Elias",
                             LastName = "Sarband",
-                            ModifiedDate = new DateTime(2022, 12, 17, 11, 45, 16, 155, DateTimeKind.Local).AddTicks(8893),
+                            ModifiedDate = new DateTime(2022, 12, 14, 11, 16, 0, 152, DateTimeKind.Local).AddTicks(9887),
                             Password = "SEIE/b+BtdSahkhMsl4KK3SuEjCF1OKUEn4oQYMaYSc=",
                             PhoneNumber = "9125056182",
                             Theme = "Light",
@@ -659,38 +557,12 @@ namespace Hospital.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2022, 12, 17, 11, 45, 16, 157, DateTimeKind.Local).AddTicks(7326),
+                            CreatedDate = new DateTime(2022, 12, 14, 11, 16, 0, 154, DateTimeKind.Local).AddTicks(195),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2022, 12, 17, 11, 45, 16, 157, DateTimeKind.Local).AddTicks(7324),
+                            ModifiedDate = new DateTime(2022, 12, 14, 11, 16, 0, 154, DateTimeKind.Local).AddTicks(192),
                             RoleId = 1,
                             UserId = 1
                         });
-                });
-
-            modelBuilder.Entity("Hospital.Domain.Core.Entities.BasicInformation", b =>
-                {
-                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformationCategory", "Category")
-                        .WithMany("BasicInformations")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformation", "RelatedBasicInformation")
-                        .WithMany("BasicInformations")
-                        .HasForeignKey("RelatedBasicInformationId");
-
-                    b.Navigation("Category");
-
-                    b.Navigation("RelatedBasicInformation");
-                });
-
-            modelBuilder.Entity("Hospital.Domain.Core.Entities.BasicInformationCategory", b =>
-                {
-                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformationCategory", "RelatedCategory")
-                        .WithMany("BasicInformationCategories")
-                        .HasForeignKey("RelatedCategoryId");
-
-                    b.Navigation("RelatedCategory");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Core.Entities.Room", b =>
@@ -739,18 +611,6 @@ namespace Hospital.Infrastructure.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Hospital.Domain.Core.Entities.BasicInformation", b =>
-                {
-                    b.Navigation("BasicInformations");
-                });
-
-            modelBuilder.Entity("Hospital.Domain.Core.Entities.BasicInformationCategory", b =>
-                {
-                    b.Navigation("BasicInformationCategories");
-
-                    b.Navigation("BasicInformations");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Core.Entities.Role", b =>

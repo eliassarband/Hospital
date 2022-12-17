@@ -46,7 +46,7 @@ builder.Services.AddDbContext<HospitalContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     options.EnableSensitiveDataLogging();
-});
+},ServiceLifetime.Transient);
 
 builder.Services.AddScoped<IAccountLogic, AccountLogic>();
 builder.Services.AddScoped<TokenProvider>();
@@ -70,6 +70,9 @@ builder.Services.AddTransient<IUserCommandRepository, UserCommandRepository>();
 builder.Services.AddTransient<IRoleQueryRepository, RoleQueryRepository>();
 builder.Services.AddTransient<IRoleCommandRepository, RoleCommandRepository>();
 
+builder.Services.AddTransient<IUserRoleQueryRepository, UserRoleQueryRepository>();
+builder.Services.AddTransient<IUserRoleCommandRepository, UserRoleCommandRepository>();
+
 builder.Services.AddTransient<IDepartmentQueryRepository, DepartmentQueryRepository>();
 builder.Services.AddTransient<IDepartmentCommandRepository, DepartmentCommandRepository>();
 
@@ -84,6 +87,15 @@ builder.Services.AddTransient<IRoomCommandRepository, RoomCommandRepository>();
 
 builder.Services.AddTransient<IHospitalInformationQueryRepository, HospitalInformationQueryRepository>();
 builder.Services.AddTransient<IHospitalInformationCommandRepository, HospitalInformationCommandRepository>();
+
+builder.Services.AddTransient<IAttachmentQueryRepository, AttachmentQueryRepository>();
+builder.Services.AddTransient<IAttachmentCommandRepository, AttachmentCommandRepository>();
+
+builder.Services.AddTransient<IBasicInformationCategoryQueryRepository, BasicInformationCategoryQueryRepository>();
+builder.Services.AddTransient<IBasicInformationCategoryCommandRepository, BasicInformationCategoryCommandRepository>();
+
+builder.Services.AddTransient<IBasicInformationQueryRepository, BasicInformationQueryRepository>();
+builder.Services.AddTransient<IBasicInformationCommandRepository, BasicInformationCommandRepository>();
 
 var app = builder.Build();
 
