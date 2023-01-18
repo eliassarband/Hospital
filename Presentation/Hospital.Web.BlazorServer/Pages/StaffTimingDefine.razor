@@ -1,0 +1,180 @@
+﻿@page "/StaffTimingDefine/{Id}"
+
+@using Hospital.Application.Commands
+@using Hospital.Application.Mapper
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Models.Auth
+@using MediatR
+@using System.ComponentModel.DataAnnotations
+@inject IMediator mediator
+@inject NavigationManager navManager
+@inject ISnackbar Snackbar
+
+@attribute [Authorize(Roles = "Super,Admin")]
+
+<MudGrid Class="mt-2">
+    <MudItem md="3"></MudItem>
+    <MudItem md="6">
+        <MudPaper Class="mt-2" Elevation="10">
+            <MudForm @ref="form" @bind-IsValid="@success">
+                <MudCard Class="mt-2">
+                    <MudCardHeader>@caption</MudCardHeader>
+                    <MudCardContent>
+                        <MudGrid>
+                            <MudItem md="12">
+                                <MudSelect Class="mt-1" T="int" Label="Staff" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Staff" @bind-value="@staffTiming.StaffId" @bind-Text="@staffTiming.StaffName" Clearable Required="true" RequiredError="Please Select a Staff">
+                                    @foreach (var s in staffs)
+                                    {
+                                        <MudSelectItem T="int" Value="@s.Id">@s.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="12">
+                                <MudSelect Class="mt-1" T="int" Label="Week Day" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Week Day" @bind-value="@staffTiming.WeekDayNo" @bind-Text="@staffTiming.WeekDayName" Clearable Required="true" RequiredError="Please Select a Day">
+                                    <MudSelectItem T="int" Value="0">Saturday</MudSelectItem>
+                                    <MudSelectItem T="int" Value="1">Sunday</MudSelectItem>
+                                    <MudSelectItem T="int" Value="2">Monday</MudSelectItem>
+                                    <MudSelectItem T="int" Value="3">Tuesday</MudSelectItem>
+                                    <MudSelectItem T="int" Value="4">Wednesday</MudSelectItem>
+                                    <MudSelectItem T="int" Value="5">Thursday</MudSelectItem>
+                                    <MudSelectItem T="int" Value="6">Friday</MudSelectItem>
+                                </MudSelect>
+                            </MudItem>
+
+                            <MudItem md="12">
+                                <MudTimePicker Label="Start Time" @bind-Time="@staffTiming.StartTime" Editable="true" Clearable Required="true" RequiredError="Please Enter Start Time" />
+                            </MudItem>
+                            <MudItem md="12">
+                                <MudTimePicker Label="End Time" @bind-Time="@staffTiming.EndTime" Editable="true" Clearable Required="true" RequiredError="Please Enter End Time" />
+                            </MudItem>
+                        </MudGrid>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Class="mr-2" ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveStaffTiming" Disabled="@(!success)">Save</MudButton>
+                        <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="StaffTimings">Return</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+    <MudItem md="3"></MudItem>
+</MudGrid>
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
+    private string caption = "Add Staff Timing";
+    private StaffTimingViewModel staffTiming = new StaffTimingViewModel();
+    private List<StaffViewModel> staffs;
+    bool success;
+    MudForm form;
+
+    protected override async Task OnInitializedAsync()
+    {
+        staffs = await mediator.Send(new GetAllStaffsQuery());
+
+        if (!String.IsNullOrEmpty(Id))
+        {
+            if (Convert.ToInt32(Id) > 0)
+            {
+                caption = "Edit Staff Timing";
+
+                staffTiming = await mediator.Send(new GetStaffTimingByIdQuery(Convert.ToInt32(Id)));
+
+                if (staffTiming != null)
+                {
+
+                }
+            }
+        }
+
+    }
+
+    protected async Task SaveStaffTiming()
+    {
+        form.Validate();
+
+        if (form.IsValid)
+        {
+            CommandResponse result;
+
+
+            if (staffTiming.Id > 0)
+            {
+                try
+                {
+                    staffTiming.ModifiedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<EditStaffTimingCommand>(staffTiming);
+
+                    if (command.Id > 0)
+                    {
+                        result = await mediator.Send(command);
+
+                        if (result.ResultType == ResultType.Success)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                            navManager.NavigateTo("StaffTimings");
+                        }
+                        else if (result.ResultType == ResultType.Warning)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Warning);
+                        }
+                        else if (result.ResultType == ResultType.Error)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Error);
+                        }
+
+                    }
+                    else
+                    {
+                        Snackbar.Add("Error in selected StaffTiming", Severity.Warning);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+            else
+            {
+                try
+                {
+                    staffTiming.CreatedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<CreateStaffTimingCommand>(staffTiming);
+
+                    result = await mediator.Send(command);
+
+                    if (result.ResultType == ResultType.Success)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                        navManager.NavigateTo("StaffTimings");
+                    }
+                    else if (result.ResultType == ResultType.Warning)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Warning);
+                    }
+                    else if (result.ResultType == ResultType.Error)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Error);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+        }
+
+    }
+
+}
+

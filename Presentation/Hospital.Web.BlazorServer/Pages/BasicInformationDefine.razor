@@ -23,17 +23,17 @@
                 <MudCard Class="mt-2">
                     <MudCardHeader>@caption</MudCardHeader>
                     <MudCardContent>
-                        <MudNumericField T="int" Class="mt-3" @bind-Value="@basicInformation.Code" Required="true" RequiredError="Please Enter Basic Information Code" Min="1" Label="Code" Placeholder="Basic Information Code" Variant="Variant.Outlined"></MudNumericField>
-                        <MudTextField T="string" Class="mt-3" @bind-Value="@basicInformation.StrCode" Required="true" RequiredError="Please Enter Basic Information Strin Code" MaxLength="50" Label="String Code" Placeholder="Basic Information String Code" Variant="Variant.Outlined"></MudTextField>
-                        <MudTextField T="string" Class="mt-3" @bind-Value="@basicInformation.Name" Required="true" RequiredError="Please Enter Basic Information Name" MaxLength="100" Label="Name" Placeholder="Basic Information Name" Variant="Variant.Outlined"></MudTextField>
-                        <MudSelect Class="mt-3" T="int" Required="true" RequiredError="Please Select Category" Label="Category" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Category" @bind-value="@basicInformation.CategoryId" @bind-Text="@basicInformation.CategoryName">
+                        <MudNumericField T="int" Class="mt-3" @bind-Value="@basicInformation.Code" Required="true" RequiredError="Please Enter Basic Information Code" Min="1" Label="Code" Placeholder="Basic Information Code" Variant="Variant.Outlined" Clearable></MudNumericField>
+                        <MudTextField T="string" Class="mt-3" @bind-Value="@basicInformation.StrCode" Required="true" RequiredError="Please Enter Basic Information Strin Code" MaxLength="50" Label="String Code" Placeholder="Basic Information String Code" Variant="Variant.Outlined" Clearable></MudTextField>
+                        <MudTextField T="string" Class="mt-3" @bind-Value="@basicInformation.Name" Required="true" RequiredError="Please Enter Basic Information Name" MaxLength="100" Label="Name" Placeholder="Basic Information Name" Variant="Variant.Outlined" Clearable></MudTextField>
+                        <MudSelect Class="mt-3" T="int" Required="true" RequiredError="Please Select Category" Label="Category" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Category" @bind-value="@basicInformation.CategoryId" @bind-Text="@basicInformation.CategoryName" Clearable>
                             @foreach (var c in categories)
                             {
                                 <MudSelectItem T="int" Value="@c.Id">@c.Name</MudSelectItem>
                             }
                         </MudSelect>
-                        <MudNumericField T="int" Class="mt-3" @bind-Value="@basicInformation.Priority" Required="true" RequiredError="Please Enter Priority" Min="1" Label="Priority" Placeholder="Priority" Variant="Variant.Outlined"></MudNumericField>
-                        <MudSelect Class="mt-3" T="int" Label="Related Basic Information" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Related Basic Information" @bind-value="@basicInformation.RelatedBasicInformationId" @bind-Text="@basicInformation.RelatedBasicInformationName">
+                        <MudNumericField T="int" Class="mt-3" @bind-Value="@basicInformation.Priority" Required="true" RequiredError="Please Enter Priority" Min="1" Label="Priority" Placeholder="Priority" Variant="Variant.Outlined" Clearable></MudNumericField>
+                        <MudSelect Class="mt-3" T="int" Label="Related Basic Information" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Related Basic Information" @bind-value="@basicInformation.RelatedBasicInformationId" @bind-Text="@basicInformation.RelatedBasicInformationName" Clearable>
                             <MudSelectItem T="int" Value="0">Nothing Selected</MudSelectItem>
                             @foreach (var c in basicInformations)
                             {

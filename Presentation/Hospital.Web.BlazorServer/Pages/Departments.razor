@@ -20,7 +20,11 @@
                     <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("DepartmentDefine/0")>Add Department</MudButton>
                 </MudCardActions>
                 <MudCardContent>
-                    <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info">
+                    <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<DepartmentViewModel,bool>(FilterDepartmentInit)">
+                        <ToolBarContent>
+                            <MudSpacer />
+                            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Clearable></MudTextField>
+                        </ToolBarContent>
                         <HeaderContent>
                             <MudTh>Code</MudTh>
                             <MudTh>Name</MudTh>
@@ -43,7 +47,7 @@
                                     <MudIcon Icon="@Icons.Material.Filled.Clear" Color="Color.Error" Title="No"></MudIcon>
                                 }
                             </MudTd>
-                            <MudTd DataLabel="DefaultPercent">@context.MainDeptartment</MudTd>
+                            <MudTd DataLabel="MainDepartmentName">@context.MainDepartmentName</MudTd>
                             <MudTd DataLabel="Not In Use">
                                 @if (context.NotInUse)
                                 {
@@ -77,8 +81,8 @@
     private MudTable<DepartmentViewModel> _table;
     private List<DepartmentViewModel> Elements;
     private bool loading = false;
-
-
+    private string searchString = "";
+    
     protected override async Task OnInitializedAsync()
     {
         Elements = await mediator.Send(new GetAllDepartmentsQuery());
@@ -87,6 +91,23 @@
     private void PageChanged(int i)
     {
         _table.NavigateTo(i - 1);
+    }
+
+    private bool FilterDepartmentInit(DepartmentViewModel element) => FilterDepartment(element, searchString);
+
+    private bool FilterDepartment(DepartmentViewModel element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.Code.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.MainDepartmentName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if ($"{element.Code} {element.Name} {element.MainDepartmentName}".Contains(searchString))
+            return true;
+        return false;
     }
 
     protected async Task DeleteDepartment(int Id)

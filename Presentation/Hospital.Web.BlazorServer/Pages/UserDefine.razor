@@ -25,19 +25,19 @@
                     <MudCardContent>
                         <MudGrid>
                             <MudItem md="6">
-                                <MudTextField T="string" Class="mt-3" @bind-Value="@user.FirstName" Required="true" RequiredError="Please Enter First Name" MaxLength="100" Label="First Name" Placeholder="First Name" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@user.FirstName" Required="true" RequiredError="Please Enter First Name" MaxLength="100" Label="First Name" Placeholder="First Name" Variant="Variant.Outlined" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="6">
-                                <MudTextField T="string" Class="mt-3" @bind-Value="@user.LastName" Required="true" RequiredError="Please Enter Last Name" MaxLength="100" Label="Last Name" Placeholder="Last Name" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@user.LastName" Required="true" RequiredError="Please Enter Last Name" MaxLength="100" Label="Last Name" Placeholder="Last Name" Variant="Variant.Outlined" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="6">
-                                <MudTextField T="string" Class="mt-3" @bind-Value="@user.Username" Required="true" RequiredError="Please Enter Username" MaxLength="100" Label="Username" Placeholder="Username" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@user.Username" Required="true" RequiredError="Please Enter Username" MaxLength="100" Label="Username" Placeholder="Username" Variant="Variant.Outlined" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="6">
-                                <MudTextField T="string" Class="mt-3" @bind-Value="@user.Email" MaxLength="100" Label="Email" Placeholder="Email" InputType="InputType.Email" Variant="Variant.Outlined" Validation="@(new EmailAddressAttribute() {ErrorMessage = "Wrong Email Format"})"></MudTextField>
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@user.Email" MaxLength="100" Label="Email" Placeholder="Email" InputType="InputType.Email" Variant="Variant.Outlined" Validation="@(new EmailAddressAttribute() {ErrorMessage = "Wrong Email Format"})" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="6">
-                                <MudTextField T="string" Class="mt-3" @bind-Value="@user.PhoneNumber" Required="true" RequiredError="Please Enter Mobile Number" MaxLength="100" Label="Mobile" Placeholder="Mobile" Mask="@(new PatternMask("00000000000"))" InputType="InputType.Telephone" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@user.PhoneNumber" Required="true" RequiredError="Please Enter Mobile Number" MaxLength="100" Label="Mobile" Placeholder="Mobile" Mask="@(new PatternMask("00000000000"))" InputType="InputType.Telephone" Variant="Variant.Outlined" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="6">
                                 <MudSwitch T="bool" Class="mt-3" Checked="@user.Active" Label="@activeLabel" LabelPosition="LabelPosition.End" Color="Color.Success" UnCheckedColor="Color.Secondary" CheckedChanged="@( (bool g) => ActiveChanged(g) )"></MudSwitch>

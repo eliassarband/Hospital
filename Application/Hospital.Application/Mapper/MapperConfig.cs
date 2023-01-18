@@ -15,7 +15,8 @@ namespace Hospital.Application.Mapper
             {
                 cfg.ShouldMapProperty = p => p.GetMethod.IsPublic || p.GetMethod.IsAssembly;
                 cfg.AddProfile<SecurityMappingProfile>();
-                cfg.AddProfile<GeneralMappingProfile>();
+                cfg.AddProfile<GeneralMappingProfile>(); 
+                cfg.AddProfile<MedicalMappingProfile>();
             });
 
             var mapper = config.CreateMapper();

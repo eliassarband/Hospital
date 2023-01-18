@@ -131,6 +131,120 @@ namespace Hospital.Infrastructure.Migrations
                     b.HasIndex("RelatedBasicInformationId");
 
                     b.ToTable("BasicInformation", "Gnr");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 101,
+                            Active = true,
+                            AllowChange = false,
+                            AllowDelete = false,
+                            CategoryId = 1,
+                            Code = 1,
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4857),
+                            CreatedUser = "elias.sarband",
+                            IsDeleted = false,
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4853),
+                            Name = "Doctor",
+                            Priority = 1,
+                            StrCode = "Doctor"
+                        },
+                        new
+                        {
+                            Id = 102,
+                            Active = true,
+                            AllowChange = false,
+                            AllowDelete = false,
+                            CategoryId = 1,
+                            Code = 2,
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4865),
+                            CreatedUser = "elias.sarband",
+                            IsDeleted = false,
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4860),
+                            Name = "Nurse",
+                            Priority = 2,
+                            StrCode = "Nurse"
+                        },
+                        new
+                        {
+                            Id = 103,
+                            Active = true,
+                            AllowChange = false,
+                            AllowDelete = false,
+                            CategoryId = 1,
+                            Code = 3,
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4869),
+                            CreatedUser = "elias.sarband",
+                            IsDeleted = false,
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4867),
+                            Name = "Staff",
+                            Priority = 3,
+                            StrCode = "Staff"
+                        },
+                        new
+                        {
+                            Id = 201,
+                            Active = true,
+                            AllowChange = false,
+                            AllowDelete = false,
+                            CategoryId = 2,
+                            Code = 1,
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4873),
+                            CreatedUser = "elias.sarband",
+                            IsDeleted = false,
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4870),
+                            Name = "Mr",
+                            Priority = 1,
+                            StrCode = "Mr"
+                        },
+                        new
+                        {
+                            Id = 202,
+                            Active = true,
+                            AllowChange = false,
+                            AllowDelete = false,
+                            CategoryId = 2,
+                            Code = 2,
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4876),
+                            CreatedUser = "elias.sarband",
+                            IsDeleted = false,
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4874),
+                            Name = "Mrs",
+                            Priority = 2,
+                            StrCode = "Mrs"
+                        },
+                        new
+                        {
+                            Id = 701,
+                            Active = true,
+                            AllowChange = false,
+                            AllowDelete = false,
+                            CategoryId = 7,
+                            Code = 1,
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4879),
+                            CreatedUser = "elias.sarband",
+                            IsDeleted = false,
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4877),
+                            Name = "Cash",
+                            Priority = 1,
+                            StrCode = "Cash"
+                        },
+                        new
+                        {
+                            Id = 702,
+                            Active = true,
+                            AllowChange = false,
+                            AllowDelete = false,
+                            CategoryId = 7,
+                            Code = 2,
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4883),
+                            CreatedUser = "elias.sarband",
+                            IsDeleted = false,
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4881),
+                            Name = "Credit",
+                            Priority = 2,
+                            StrCode = "Credit"
+                        });
                 });
 
             modelBuilder.Entity("Hospital.Domain.Core.Entities.BasicInformationCategory", b =>
@@ -174,6 +288,79 @@ namespace Hospital.Infrastructure.Migrations
                     b.HasIndex("RelatedCategoryId");
 
                     b.ToTable("BasicInformationCategory", "Gnr");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Code = "StaffType",
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4815),
+                            CreatedUser = "elias.sarband",
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4811),
+                            Name = "Staff Type",
+                            Viewable = true
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Code = "NamePrefix",
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4819),
+                            CreatedUser = "elias.sarband",
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4817),
+                            Name = "Name Prefix",
+                            Viewable = true
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Code = "Speciality",
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4821),
+                            CreatedUser = "elias.sarband",
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4820),
+                            Name = "Speciality",
+                            Viewable = true
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Code = "Qualification",
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4825),
+                            CreatedUser = "elias.sarband",
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4823),
+                            Name = "Qualification",
+                            Viewable = true
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Code = "City",
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4829),
+                            CreatedUser = "elias.sarband",
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4827),
+                            Name = "City",
+                            Viewable = true
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Code = "Area",
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4832),
+                            CreatedUser = "elias.sarband",
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4830),
+                            Name = "Area",
+                            RelatedCategoryId = 5,
+                            Viewable = true
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Code = "InsurancePaymentType",
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4835),
+                            CreatedUser = "elias.sarband",
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4833),
+                            Name = "Insurance Payment Type",
+                            Viewable = false
+                        });
                 });
 
             modelBuilder.Entity("Hospital.Domain.Core.Entities.Department", b =>
@@ -198,9 +385,8 @@ namespace Hospital.Infrastructure.Migrations
                     b.Property<bool>("IsMain")
                         .HasColumnType("bit");
 
-                    b.Property<string>("MainDeptartment")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                    b.Property<int?>("MainDepartmentId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -217,6 +403,8 @@ namespace Hospital.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MainDepartmentId");
 
                     b.ToTable("Department", "Gnr");
                 });
@@ -301,6 +489,309 @@ namespace Hospital.Infrastructure.Migrations
                     b.ToTable("HospitalInformation", "Gnr");
                 });
 
+            modelBuilder.Entity("Hospital.Domain.Core.Entities.Insurance", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AdvancePaymentAmount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AdvancePaymentPercent")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IPDDiscountPercent")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InsurancePaymentTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("NotInUse")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("OPDDiscountPercent")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InsurancePaymentTypeId");
+
+                    b.ToTable("Insurance", "Med");
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Core.Entities.InsuranceAgreement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AttachmentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("InsuranceId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ShowWarningBefore")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ToDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttachmentId");
+
+                    b.HasIndex("InsuranceId");
+
+                    b.ToTable("InsuranceAgreement", "Med");
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Core.Entities.Patient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int?>("AreaId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AttachmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("FatherName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("GenderId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("InsuranceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("InsuranceNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Mobile")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<DateTime>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int?>("NamePrefixId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NationalIdCart")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Occupation")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("ProposalNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int?>("RefferById")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AreaId");
+
+                    b.HasIndex("AttachmentId");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("GenderId");
+
+                    b.HasIndex("InsuranceId");
+
+                    b.HasIndex("NamePrefixId");
+
+                    b.HasIndex("RefferById");
+
+                    b.ToTable("Patient", "Med");
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Core.Entities.RefferBy", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int?>("AreaId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateOfJoining")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("IPDAmount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IPDPercent")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Mobile")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<DateTime>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int?>("NamePrefixId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OPDAmount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OPDPercent")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("QualificationId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SpecialityId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StaffTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AreaId");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("NamePrefixId");
+
+                    b.HasIndex("QualificationId");
+
+                    b.HasIndex("SpecialityId");
+
+                    b.HasIndex("StaffTypeId");
+
+                    b.ToTable("RefferBy", "Med");
+                });
+
             modelBuilder.Entity("Hospital.Domain.Core.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -345,30 +836,30 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 1,
                             Code = "Super",
-                            CreatedDate = new DateTime(2022, 12, 17, 11, 45, 16, 155, DateTimeKind.Local).AddTicks(8724),
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 834, DateTimeKind.Local).AddTicks(4237),
                             CreatedUser = "elias.sarband",
                             Description = "",
-                            ModifiedDate = new DateTime(2022, 12, 17, 11, 45, 16, 155, DateTimeKind.Local).AddTicks(8672),
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 834, DateTimeKind.Local).AddTicks(4176),
                             Name = "Super Admin"
                         },
                         new
                         {
                             Id = 2,
                             Code = "Admin",
-                            CreatedDate = new DateTime(2022, 12, 17, 11, 45, 16, 155, DateTimeKind.Local).AddTicks(8729),
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 834, DateTimeKind.Local).AddTicks(4240),
                             CreatedUser = "elias.sarband",
                             Description = "",
-                            ModifiedDate = new DateTime(2022, 12, 17, 11, 45, 16, 155, DateTimeKind.Local).AddTicks(8726),
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 834, DateTimeKind.Local).AddTicks(4239),
                             Name = "Administrator"
                         },
                         new
                         {
                             Id = 3,
                             Code = "Operator",
-                            CreatedDate = new DateTime(2022, 12, 17, 11, 45, 16, 155, DateTimeKind.Local).AddTicks(8733),
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 834, DateTimeKind.Local).AddTicks(4243),
                             CreatedUser = "elias.sarband",
                             Description = "",
-                            ModifiedDate = new DateTime(2022, 12, 17, 11, 45, 16, 155, DateTimeKind.Local).AddTicks(8731),
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 834, DateTimeKind.Local).AddTicks(4242),
                             Name = "Operator"
                         });
                 });
@@ -537,6 +1028,148 @@ namespace Hospital.Infrastructure.Migrations
                     b.ToTable("Service", "Gnr");
                 });
 
+            modelBuilder.Entity("Hospital.Domain.Core.Entities.Staff", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int?>("AreaId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateOfJoining")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("IPDChargePercent")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Mobile")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<DateTime>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int?>("NamePrefixId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("NightIPDChargePercent")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("NightOPDChargePercent")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OPDChargePercent")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("QualificationId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SpecialityId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StaffTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AreaId");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("NamePrefixId");
+
+                    b.HasIndex("QualificationId");
+
+                    b.HasIndex("SpecialityId");
+
+                    b.HasIndex("StaffTypeId");
+
+                    b.ToTable("Staff", "Med");
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Core.Entities.StaffTiming", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<DateTime>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("StaffId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("WeekDayName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("WeekDayNo")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StaffId");
+
+                    b.ToTable("StaffTiming", "Med");
+                });
+
             modelBuilder.Entity("Hospital.Domain.Core.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -608,16 +1241,31 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 1,
                             Active = true,
-                            CreatedDate = new DateTime(2022, 12, 17, 11, 45, 16, 157, DateTimeKind.Local).AddTicks(7280),
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 835, DateTimeKind.Local).AddTicks(5145),
                             CreatedUser = "elias.sarband",
                             Email = "elias.sarband@gmail.com",
                             FirstName = "Elias",
                             LastName = "Sarband",
-                            ModifiedDate = new DateTime(2022, 12, 17, 11, 45, 16, 155, DateTimeKind.Local).AddTicks(8893),
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 834, DateTimeKind.Local).AddTicks(4460),
                             Password = "SEIE/b+BtdSahkhMsl4KK3SuEjCF1OKUEn4oQYMaYSc=",
                             PhoneNumber = "9125056182",
                             Theme = "Light",
                             Username = "elias.sarband"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Active = true,
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4734),
+                            CreatedUser = "elias.sarband",
+                            Email = "",
+                            FirstName = "Admin",
+                            LastName = "AccurateCo",
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 835, DateTimeKind.Local).AddTicks(5150),
+                            Password = "dW/0ZNtG5T5uIyhEYh0J9Q==",
+                            PhoneNumber = "9125056182",
+                            Theme = "Light",
+                            Username = "accurateco"
                         });
                 });
 
@@ -659,11 +1307,20 @@ namespace Hospital.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2022, 12, 17, 11, 45, 16, 157, DateTimeKind.Local).AddTicks(7326),
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4787),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2022, 12, 17, 11, 45, 16, 157, DateTimeKind.Local).AddTicks(7324),
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4779),
                             RoleId = 1,
                             UserId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4790),
+                            CreatedUser = "elias.sarband",
+                            ModifiedDate = new DateTime(2023, 1, 14, 16, 33, 48, 836, DateTimeKind.Local).AddTicks(4789),
+                            RoleId = 1,
+                            UserId = 2
                         });
                 });
 
@@ -693,6 +1350,127 @@ namespace Hospital.Infrastructure.Migrations
                     b.Navigation("RelatedCategory");
                 });
 
+            modelBuilder.Entity("Hospital.Domain.Core.Entities.Department", b =>
+                {
+                    b.HasOne("Hospital.Domain.Core.Entities.Department", "MainDepartment")
+                        .WithMany()
+                        .HasForeignKey("MainDepartmentId");
+
+                    b.Navigation("MainDepartment");
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Core.Entities.Insurance", b =>
+                {
+                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformation", "InsurancePaymentType")
+                        .WithMany()
+                        .HasForeignKey("InsurancePaymentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("InsurancePaymentType");
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Core.Entities.InsuranceAgreement", b =>
+                {
+                    b.HasOne("Hospital.Domain.Core.Entities.Attachment", "Attachment")
+                        .WithMany()
+                        .HasForeignKey("AttachmentId");
+
+                    b.HasOne("Hospital.Domain.Core.Entities.Insurance", "Insurance")
+                        .WithMany()
+                        .HasForeignKey("InsuranceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Attachment");
+
+                    b.Navigation("Insurance");
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Core.Entities.Patient", b =>
+                {
+                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformation", "Area")
+                        .WithMany()
+                        .HasForeignKey("AreaId");
+
+                    b.HasOne("Hospital.Domain.Core.Entities.Attachment", "Attachment")
+                        .WithMany()
+                        .HasForeignKey("AttachmentId");
+
+                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformation", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId");
+
+                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformation", "Gender")
+                        .WithMany()
+                        .HasForeignKey("GenderId");
+
+                    b.HasOne("Hospital.Domain.Core.Entities.Insurance", "Insurance")
+                        .WithMany()
+                        .HasForeignKey("InsuranceId");
+
+                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformation", "NamePrefix")
+                        .WithMany()
+                        .HasForeignKey("NamePrefixId");
+
+                    b.HasOne("Hospital.Domain.Core.Entities.RefferBy", "RefferBy")
+                        .WithMany()
+                        .HasForeignKey("RefferById");
+
+                    b.Navigation("Area");
+
+                    b.Navigation("Attachment");
+
+                    b.Navigation("City");
+
+                    b.Navigation("Gender");
+
+                    b.Navigation("Insurance");
+
+                    b.Navigation("NamePrefix");
+
+                    b.Navigation("RefferBy");
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Core.Entities.RefferBy", b =>
+                {
+                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformation", "Area")
+                        .WithMany()
+                        .HasForeignKey("AreaId");
+
+                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformation", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId");
+
+                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformation", "NamePrefix")
+                        .WithMany()
+                        .HasForeignKey("NamePrefixId");
+
+                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformation", "Qualification")
+                        .WithMany()
+                        .HasForeignKey("QualificationId");
+
+                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformation", "Speciality")
+                        .WithMany()
+                        .HasForeignKey("SpecialityId");
+
+                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformation", "StaffType")
+                        .WithMany()
+                        .HasForeignKey("StaffTypeId");
+
+                    b.Navigation("Area");
+
+                    b.Navigation("City");
+
+                    b.Navigation("NamePrefix");
+
+                    b.Navigation("Qualification");
+
+                    b.Navigation("Speciality");
+
+                    b.Navigation("StaffType");
+                });
+
             modelBuilder.Entity("Hospital.Domain.Core.Entities.Room", b =>
                 {
                     b.HasOne("Hospital.Domain.Core.Entities.RoomType", "RoomType")
@@ -711,6 +1489,56 @@ namespace Hospital.Infrastructure.Migrations
                         .HasForeignKey("DepartmentId");
 
                     b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Core.Entities.Staff", b =>
+                {
+                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformation", "Area")
+                        .WithMany()
+                        .HasForeignKey("AreaId");
+
+                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformation", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId");
+
+                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformation", "NamePrefix")
+                        .WithMany()
+                        .HasForeignKey("NamePrefixId");
+
+                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformation", "Qualification")
+                        .WithMany()
+                        .HasForeignKey("QualificationId");
+
+                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformation", "Speciality")
+                        .WithMany()
+                        .HasForeignKey("SpecialityId");
+
+                    b.HasOne("Hospital.Domain.Core.Entities.BasicInformation", "StaffType")
+                        .WithMany()
+                        .HasForeignKey("StaffTypeId");
+
+                    b.Navigation("Area");
+
+                    b.Navigation("City");
+
+                    b.Navigation("NamePrefix");
+
+                    b.Navigation("Qualification");
+
+                    b.Navigation("Speciality");
+
+                    b.Navigation("StaffType");
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Core.Entities.StaffTiming", b =>
+                {
+                    b.HasOne("Hospital.Domain.Core.Entities.Staff", "Staff")
+                        .WithMany("StaffTimings")
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Staff");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Core.Entities.User", b =>
@@ -756,6 +1584,11 @@ namespace Hospital.Infrastructure.Migrations
             modelBuilder.Entity("Hospital.Domain.Core.Entities.Role", b =>
                 {
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Core.Entities.Staff", b =>
+                {
+                    b.Navigation("StaffTimings");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Core.Entities.User", b =>

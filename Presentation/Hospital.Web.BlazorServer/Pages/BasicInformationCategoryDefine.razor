@@ -23,10 +23,10 @@
                 <MudCard Class="mt-2">
                     <MudCardHeader>@caption</MudCardHeader>
                     <MudCardContent>
-                        <MudTextField T="string" Class="mt-3" @bind-Value="@category.Code" Required="true" RequiredError="Please Enter Category Code" MaxLength="50" Label="Code" Placeholder="Category Code" Variant="Variant.Outlined"></MudTextField>
-                        <MudTextField T="string" Class="mt-3" @bind-Value="@category.Name" Required="true" RequiredError="Please Enter Category Name" MaxLength="100" Label="Name" Placeholder="Category Name" Variant="Variant.Outlined"></MudTextField>
+                        <MudTextField T="string" Class="mt-3" @bind-Value="@category.Code" Required="true" RequiredError="Please Enter Category Code" MaxLength="50" Label="Code" Placeholder="Category Code" Variant="Variant.Outlined" Clearable></MudTextField>
+                        <MudTextField T="string" Class="mt-3" @bind-Value="@category.Name" Required="true" RequiredError="Please Enter Category Name" MaxLength="100" Label="Name" Placeholder="Category Name" Variant="Variant.Outlined" Clearable></MudTextField>
                         <MudSwitch T="bool" Class="mt-3" @bind-Checked="@category.Viewable" Label="Viewable" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
-                        <MudSelect Clearable="true" Class="mt-3" T="int" Label="Related Category" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Related Category" @bind-value="@category.RelatedCategoryId" @bind-Text="@category.RelatedCategoryName">
+                        <MudSelect Class="mt-3" T="int" Label="Related Category" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Related Category" @bind-value="@category.RelatedCategoryId" @bind-Text="@category.RelatedCategoryName" Clearable>
                             <MudSelectItem T="int" Value="0">Nothing Selected</MudSelectItem>
                             @foreach (var c in categories)
                             {
@@ -98,7 +98,7 @@
                 try
                 {
                     category.ModifiedUser = userInfo?.Username;
-                    var command = MapperConfig.Mapper.Map<EditBSCategoryCommand>(category);
+                    var command = MapperConfig.Mapper.Map<EditBasicInformationCategoryCommand>(category);
 
                     if (command.Id > 0)
                     {
@@ -135,7 +135,7 @@
                 try
                 {
                     category.CreatedUser = userInfo?.Username;
-                    var command = MapperConfig.Mapper.Map<CreateBSCategoryCommand>(category);
+                    var command = MapperConfig.Mapper.Map<CreateBasicInformationCategoryCommand>(category);
 
                     result = await mediator.Send(command);
 

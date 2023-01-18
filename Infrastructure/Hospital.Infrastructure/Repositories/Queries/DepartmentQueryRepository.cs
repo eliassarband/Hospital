@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Hospital.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Infrastructure.Repositories.Queries
 {
@@ -22,7 +23,19 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.Departments.ToList();
+                return _context.Departments.Include(d => d.MainDepartment).ToList();
+            }
+            catch (Exception exp)
+            {
+                throw new Exception(exp.Message, exp);
+            }
+        }
+
+        public async Task<IReadOnlyList<Department>> GetByMainDepartmentIdAsync(int departmentId)
+        {
+            try
+            {
+                return _context.Departments.Where(d => d.MainDepartmentId == departmentId).Include(d => d.MainDepartment).ToList();
             }
             catch (Exception exp)
             {
@@ -34,7 +47,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.Departments.Where(t => t.Id == id).FirstOrDefault();
+                return _context.Departments.Where(t => t.Id == id).Include(t => t.MainDepartment).FirstOrDefault();
             }
             catch (Exception exp)
             {
@@ -46,7 +59,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.Departments.Where(t => t.Code == code).FirstOrDefault();
+                return _context.Departments.Where(t => t.Code == code).Include(t => t.MainDepartment).FirstOrDefault();
             }
             catch (Exception exp)
             {
@@ -58,7 +71,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.Departments.Where(t => t.Name == name).FirstOrDefault();
+                return _context.Departments.Where(t => t.Name == name).Include(t => t.MainDepartment).FirstOrDefault();
             }
             catch (Exception exp)
             {

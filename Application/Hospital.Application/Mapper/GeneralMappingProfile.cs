@@ -13,10 +13,10 @@ namespace Hospital.Application.Mapper
 
             #region BasicInformationCategory
 
-            CreateMap<BasicInformationCategory, CreateBSCategoryCommand>().ReverseMap()
+            CreateMap<BasicInformationCategory, CreateBasicInformationCategoryCommand>().ReverseMap()
                 .ForMember(dest => dest.RelatedCategoryId, opt => opt.MapFrom(src => (src.RelatedCategoryId == 0 ? null : src.RelatedCategoryId)));
 
-            CreateMap<BasicInformationCategory, EditBSCategoryCommand>().ReverseMap()
+            CreateMap<BasicInformationCategory, EditBasicInformationCategoryCommand>().ReverseMap()
                 .ForMember(dest => dest.RelatedCategoryId, opt => opt.MapFrom(src => (src.RelatedCategoryId == 0 ? null : src.RelatedCategoryId)));
 
             CreateMap<BasicInformationCategory, BasicInformationCategoryViewModel>()
@@ -26,9 +26,9 @@ namespace Hospital.Application.Mapper
 
             CreateMap<BasicInformationCategoryViewModel, BasicInformationCategory>();
 
-            CreateMap<CreateBSCategoryCommand, BasicInformationCategoryViewModel>().ReverseMap();
+            CreateMap<CreateBasicInformationCategoryCommand, BasicInformationCategoryViewModel>().ReverseMap();
 
-            CreateMap<EditBSCategoryCommand, BasicInformationCategoryViewModel>().ReverseMap();
+            CreateMap<EditBasicInformationCategoryCommand, BasicInformationCategoryViewModel>().ReverseMap();
 
             #endregion
 
@@ -59,11 +59,17 @@ namespace Hospital.Application.Mapper
 
             #region Department
 
-            CreateMap<Department, CreateDepartmentCommand>().ReverseMap();
+            CreateMap<Department, CreateDepartmentCommand>().ReverseMap()
+                .ForMember(dest => dest.MainDepartmentId, opt => opt.MapFrom(src => (src.MainDepartmentId == 0 ? null : src.MainDepartmentId))); 
 
-            CreateMap<Department, EditDepartmentCommand>().ReverseMap();
+            CreateMap<Department, EditDepartmentCommand>().ReverseMap()
+                .ForMember(dest => dest.MainDepartmentId, opt => opt.MapFrom(src => (src.MainDepartmentId == 0 ? null : src.MainDepartmentId)));
 
-            CreateMap<Department, DepartmentViewModel>().ReverseMap();
+            CreateMap<Department, DepartmentViewModel>()
+                .ForMember(dest => dest.MainDepartmentId, opt => opt.MapFrom(src => (src.MainDepartment != null ? src.MainDepartment.Id : 0)))
+                .ForMember(dest => dest.MainDepartmentName, opt => opt.MapFrom(src => (src.MainDepartment != null ? src.MainDepartment.Name : "")));
+
+            CreateMap<DepartmentViewModel, Department>();
 
             CreateMap<CreateDepartmentCommand, DepartmentViewModel>().ReverseMap();
 

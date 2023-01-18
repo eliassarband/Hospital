@@ -1,0 +1,144 @@
+﻿@page "/InsuranceAgreements"
+@using Hospital.Application.Commands
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using MediatR
+@inject IMediator mediator;
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+@attribute [Authorize(Roles = "Super,Admin")]
+
+<MudGrid Class="mt-2">
+    <MudItem md="12">
+        <MudPaper Class="mt-2" Elevation="10">
+            <MudCard Class="pl-2 pr-2 mt-2">
+                <MudCardHeader>InsuranceAgreements</MudCardHeader>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("InsuranceAgreementDefine/0")>Add Insurance Agreement</MudButton>
+                </MudCardActions>
+                <MudCardContent>
+                    <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<InsuranceAgreementViewModel,bool>(FilterInsuranceAgreementInit)">
+                        <ToolBarContent>
+                            <MudSpacer />
+                            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Clearable></MudTextField>
+                        </ToolBarContent>
+                        <HeaderContent>
+                            <MudTh>Insurance Code</MudTh>
+                            <MudTh>Insurance Name</MudTh>
+                            <MudTh>From Date</MudTh>
+                            <MudTh>To Date</MudTh>
+                            <MudTh>Show Warning Before</MudTh>
+                            <MudTh>Edit</MudTh>
+                            <MudTh>Delete</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="InsuranceCode">@context.InsuranceCode</MudTd>
+                            <MudTd DataLabel="InsuranceName">@context.InsuranceName</MudTd>
+                            <MudTd DataLabel="Date">@context.Date</MudTd>
+                            <MudTd DataLabel="ToDate">@context.ToDate</MudTd>
+                            <MudTd DataLabel="ShowWarningBefore">@context.ShowWarningBefore</MudTd>
+                            <MudTd DataLabel="Edit">
+                                <MudIconButton ButtonType="ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("InsuranceAgreementDefine/{0}",context.Id)></MudIconButton>
+                            </MudTd>
+                            <MudTd DataLabel="Delete">
+                                <MudIconButton ButtonType="ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteInsuranceAgreement(@context.Id))"></MudIconButton>
+                            </MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudPagination ShowFirstButton="true" ShowLastButton="true" SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
+                        </PagerContent>
+                    </MudTable>
+                </MudCardContent>
+
+            </MudCard>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+
+@code {
+    private MudTable<InsuranceAgreementViewModel> _table;
+    private List<InsuranceAgreementViewModel> Elements;
+    private bool loading = false;
+    private string searchString = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        Elements = await mediator.Send(new GetAllInsuranceAgreementsQuery());
+
+    }
+
+    private void PageChanged(int i)
+    {
+        _table.NavigateTo(i - 1);
+    }
+
+    private bool FilterInsuranceAgreementInit(InsuranceAgreementViewModel element) => FilterInsuranceAgreement(element, searchString);
+
+    private bool FilterInsuranceAgreement(InsuranceAgreementViewModel element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.InsuranceCode.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.InsuranceName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Date.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.ToDate.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if ($"{element.InsuranceCode} {element.InsuranceName} {element.Date.ToString()} {element.ToDate.ToString()}".Contains(searchString))
+            return true;
+        return false;
+    }
+
+    protected async Task DeleteInsuranceAgreement(int Id)
+    {
+
+        bool? dialogResult = await DialogService.ShowMessageBox(
+            "Delete Insurance Agreement",
+            "Are You Sure?",
+            yesText: "Delete!", cancelText: "No");
+
+        if (dialogResult == true)
+        {
+            loading = true;
+            try
+            {
+                CommandResponse result;
+
+                result = await mediator.Send(new DeleteInsuranceAgreementCommand(Id));
+
+                if (result.ResultType == ResultType.Success)
+                {
+                    Elements = await mediator.Send(new GetAllInsuranceAgreementsQuery());
+                    Snackbar.Add(result.ResultMessage, Severity.Success);
+                }
+                else if (result.ResultType == ResultType.Warning)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Warning);
+                }
+                else if (result.ResultType == ResultType.Error)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Error);
+                }
+
+
+
+            }
+            catch (Exception exp)
+            {
+                Snackbar.Add(exp.Message, Severity.Error);
+            }
+            loading = false;
+
+        }
+
+
+    }
+
+
+}

@@ -25,16 +25,21 @@
                     <MudCardContent>
                         <MudGrid>
                             <MudItem md="12" sm="12" xs="12">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@department.Code" Required="true" RequiredError="Please Enter Code" MaxLength="100" Label="Code" Placeholder="Department Code" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@department.Code" Required="true" RequiredError="Please Enter Code" MaxLength="100" Label="Code" Placeholder="Department Code" Variant="Variant.Outlined" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="12" sm="12" xs="12">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@department.Name" Required="true" RequiredError="Please Enter Name" MaxLength="200" Label="Name" Placeholder="Department Name" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@department.Name" Required="true" RequiredError="Please Enter Name" MaxLength="200" Label="Name" Placeholder="Department Name" Variant="Variant.Outlined" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="12" sm="12" xs="12">
                                 <MudSwitch T="bool" Class="mt-1" @bind-Checked="@department.IsMain" Label="Is Main" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
                             </MudItem>
                             <MudItem md="12" sm="12" xs="12">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@department.MainDeptartment" Required="true" RequiredError="Please Enter Main Department" MaxLength="200" Label="MainDeptartment" Placeholder="Main Deptartment" Variant="Variant.Outlined"></MudTextField>
+                                <MudSelect Class="mt-3" T="int" Label="Main Department" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Main Department" @bind-value="@department.MainDepartmentId" @bind-Text="@department.MainDepartmentName"  Clearable>
+                                    @foreach (var d in departments)
+                                    {
+                                        <MudSelectItem T="int" Value="@d.Id">@d.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
                             </MudItem>
                             <MudItem md="12" sm="12" xs="12">
                                 <MudSwitch T="bool" Class="mt-1" @bind-Checked="@department.NotInUse" Label="Not In Use" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
@@ -61,11 +66,15 @@
 
     private string caption = "Add Department";
     private DepartmentViewModel department = new DepartmentViewModel();
+    private List<DepartmentViewModel> departments;
     bool success;
     MudForm form;
 
     protected override async Task OnInitializedAsync()
     {
+
+        departments = await mediator.Send(new GetAllDepartmentsQuery());
+
         if (!String.IsNullOrEmpty(Id))
         {
             if (Convert.ToInt32(Id) > 0)

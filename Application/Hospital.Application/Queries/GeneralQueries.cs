@@ -139,6 +139,15 @@ namespace Hospital.Application.Queries
 
     }
 
+    public record GetAllDepartmentsByMainDepartmentIdQuery : IRequest<List<DepartmentViewModel>>
+    {
+        public int DepartmentId { get; private set; }
+
+        public GetAllDepartmentsByMainDepartmentIdQuery(int DepartmentId)
+        {
+            this.DepartmentId = DepartmentId;
+        }
+    }
 
     public record GetDepartmentByIdQuery : IRequest<DepartmentViewModel>
     {

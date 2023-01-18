@@ -1,0 +1,246 @@
+﻿@page "/StaffDefine/{Id}"
+
+@using Hospital.Application.Commands
+@using Hospital.Application.Mapper
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Models.Auth
+@using MediatR
+@using System.ComponentModel.DataAnnotations
+@inject IMediator mediator
+@inject NavigationManager navManager
+@inject ISnackbar Snackbar
+
+@attribute [Authorize(Roles = "Super,Admin")]
+
+<MudGrid Class="mt-2">
+    <MudItem md="1"></MudItem>
+    <MudItem md="10">
+        <MudPaper Class="mt-2" Elevation="10">
+            <MudForm @ref="form" @bind-IsValid="@success">
+                <MudCard Class="mt-2">
+                    <MudCardHeader>@caption</MudCardHeader>
+                    <MudCardContent>
+                        <MudGrid>
+                            <MudItem md="6">
+                                <MudSelect Class="mt-1" T="int" Label="Staff Type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Staff Type" @bind-value="@staff.StaffTypeId" @bind-Text="@staff.StaffTypeName" Clearable>
+                                    @foreach (var s in staffTypes)
+                                    {
+                                            <MudSelectItem T="int" Value="@s.Id">@s.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@staff.Code" Required="true" RequiredError="Please Enter Code" MaxLength="100" Label="Code" Placeholder="Staff Code" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudSelect Class="mt-1" T="int" Label="Name Prefix" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Name Prefix" @bind-value="@staff.NamePrefixId" @bind-Text="@staff.NamePrefixName" Clearable>
+                                    @foreach (var n in namePrefixes)
+                                    {
+                                        <MudSelectItem T="int" Value="@n.Id">@n.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@staff.Name" Required="true" RequiredError="Please Enter Name" MaxLength="100" Label="Name" Placeholder="Staff Name" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudDatePicker Label="Date of Joining" @bind-Date="@staff.DateOfJoining" TitleDateFormat="dddd, dd MMMM" Variant="Variant.Outlined" Required="true" RequiredError="Please Select Date" />
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudDatePicker Label="Date of Birth" @bind-Date="@staff.DateOfBirth" TitleDateFormat="dddd, dd MMMM" Variant="Variant.Outlined" Required="true" RequiredError="Please Select Date" />
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudSelect Class="mt-1" T="int" Label="Speciality" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Speciality" @bind-value="@staff.SpecialityId" @bind-Text="@staff.SpecialityName" Clearable>
+                                    @foreach (var s in specialities)
+                                    {
+                                        <MudSelectItem T="int" Value="@s.Id">@s.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudSelect Class="mt-1" T="int" Label="Qualification" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Qualification" @bind-value="@staff.QualificationId" @bind-Text="@staff.QualificationName" Clearable>
+                                    @foreach (var q in qualifications)
+                                    {
+                                        <MudSelectItem T="int" Value="@q.Id">@q.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@staff.Mobile" Required="true" RequiredError="Please Enter Mobile Number" MaxLength="20" Label="Mobile" Placeholder="Mobile" Mask="@(new PatternMask("00000000000"))" InputType="InputType.Telephone" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@staff.Email" MaxLength="100" Label="Email" Placeholder="Email" InputType="InputType.Email" Variant="Variant.Outlined" Validation="@(new EmailAddressAttribute() {ErrorMessage = "Wrong Email Format"})" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudSelect Class="mt-1" T="int" Label="City" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="City" @bind-value="@staff.CityId" @bind-Text="@staff.CityName" Clearable>
+                                    @foreach (var c in cities)
+                                    {
+                                        <MudSelectItem T="int" Value="@c.Id">@c.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudSelect Class="mt-1" T="int" Label="Area" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Area" @bind-value="@staff.AreaId" @bind-Text="@staff.AreaName" Clearable>
+                                    @foreach (var a in areas)
+                                    {
+                                        <MudSelectItem T="int" Value="@a.Id">@a.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="12">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@staff.Address" MaxLength="1000" Label="Address" Placeholder="Staff Address" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@staff.OPDChargePercent" Label="OPD Charge Percent" Placeholder="OPD Charge Percent" Variant="Variant.Outlined" Clearable></MudNumericField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@staff.NightOPDChargePercent" Label="Night OPD Charge Percent" Placeholder="Night OPD Charge Percent" Variant="Variant.Outlined" Clearable></MudNumericField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@staff.IPDChargePercent" Label="IPD Charge Percent" Placeholder="IPD Charge Percent" Variant="Variant.Outlined" Clearable></MudNumericField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@staff.NightIPDChargePercent" Label="Night IPD Charge Percent" Placeholder="Night IPD Charge Percent" Variant="Variant.Outlined" Clearable></MudNumericField>
+                            </MudItem>
+                        </MudGrid>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Class="mr-2" ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveStaff" Disabled="@(!success)">Save</MudButton>
+                        <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="Staffs">Return</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+    <MudItem md="1"></MudItem>
+</MudGrid>
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
+    private string caption = "Add Staff";
+    private StaffViewModel staff = new StaffViewModel();
+    private List<BasicInformationViewModel> staffTypes;
+    private List<BasicInformationViewModel> namePrefixes;
+    private List<BasicInformationViewModel> specialities;
+    private List<BasicInformationViewModel> qualifications;
+    private List<BasicInformationViewModel> cities;
+    private List<BasicInformationViewModel> areas;
+
+    bool success;
+    MudForm form;
+
+    protected override async Task OnInitializedAsync()
+    {
+        staffTypes = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("StaffType"));
+        namePrefixes = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("NamePrefix"));
+        specialities = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Speciality"));
+        qualifications = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Qualification"));
+        cities = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("City"));
+        areas = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Area"));
+
+        if (!String.IsNullOrEmpty(Id))
+        {
+            if (Convert.ToInt32(Id) > 0)
+            {
+                caption = "Edit Staff";
+
+                staff = await mediator.Send(new GetStaffByIdQuery(Convert.ToInt32(Id)));
+
+                if (staff != null)
+                {
+
+                }
+            }
+        }
+
+    }
+
+    protected async Task SaveStaff()
+    {
+        form.Validate();
+
+        if (form.IsValid)
+        {
+            CommandResponse result;
+
+
+            if (staff.Id > 0)
+            {
+                try
+                {
+                    staff.ModifiedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<EditStaffCommand>(staff);
+
+                    if (command.Id > 0)
+                    {
+                        result = await mediator.Send(command);
+
+                        if (result.ResultType == ResultType.Success)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                            navManager.NavigateTo("Staffs");
+                        }
+                        else if (result.ResultType == ResultType.Warning)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Warning);
+                        }
+                        else if (result.ResultType == ResultType.Error)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Error);
+                        }
+
+                    }
+                    else
+                    {
+                        Snackbar.Add("Error in selected Staff", Severity.Warning);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+            else
+            {
+                try
+                {
+                    staff.CreatedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<CreateStaffCommand>(staff);
+
+                    result = await mediator.Send(command);
+
+                    if (result.ResultType == ResultType.Success)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                        navManager.NavigateTo("Staffs");
+                    }
+                    else if (result.ResultType == ResultType.Warning)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Warning);
+                    }
+                    else if (result.ResultType == ResultType.Error)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Error);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+        }
+
+    }
+
+}
+

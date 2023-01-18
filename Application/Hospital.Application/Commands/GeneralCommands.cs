@@ -11,26 +11,26 @@ namespace Hospital.Application.Commands
 {
 
     #region BasicInformationCategory
-    public class CreateBSCategoryCommand : IRequest<CommandResponse>
+    public class CreateBasicInformationCategoryCommand : IRequest<CommandResponse>
     {
         public int Id { get; set; }
-        public int Code { get; set; }
+        public string Code { get; set; }
         public string Name { get; set; }
         public bool Viewable { get; set; }
         public int? RelatedCategoryId { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedUser { get; set; }
 
-        public CreateBSCategoryCommand()
+        public CreateBasicInformationCategoryCommand()
         {
             this.CreatedDate = DateTime.Now;
         }
     }
 
-    public class EditBSCategoryCommand : IRequest<CommandResponse>
+    public class EditBasicInformationCategoryCommand : IRequest<CommandResponse>
     {
         public int Id { get; set; }
-        public int Code { get; set; }
+        public string Code { get; set; }
         public string Name { get; set; }
         public bool Viewable { get; set; }
         public int? RelatedCategoryId { get; set; }
@@ -39,17 +39,17 @@ namespace Hospital.Application.Commands
         public DateTime ModifiedDate { get; set; }
         public string? ModifiedUser { get; set; }
 
-        public EditBSCategoryCommand()
+        public EditBasicInformationCategoryCommand()
         {
             this.ModifiedDate = DateTime.Now;
         }
     }
 
-    public class DeleteBSCategoryCommand : IRequest<CommandResponse>
+    public class DeleteBasicInformationCategoryCommand : IRequest<CommandResponse>
     {
         public int Id { get; set; }
 
-        public DeleteBSCategoryCommand(int Id)
+        public DeleteBasicInformationCategoryCommand(int Id)
         {
             this.Id = Id;
         }
@@ -123,7 +123,7 @@ namespace Hospital.Application.Commands
         public string Code { get; set; }
         public string Name { get; set; }
         public bool IsMain { get; set; }
-        public string MainDeptartment { get; set; }
+        public int? MainDepartmentId { get; set; }
         public bool NotInUse { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedDepartment { get; set; }
@@ -140,7 +140,7 @@ namespace Hospital.Application.Commands
         public string Code { get; set; }
         public string Name { get; set; }
         public bool IsMain { get; set; }
-        public string MainDeptartment { get; set; }
+        public int? MainDepartmentId { get; set; }
         public bool NotInUse { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedDepartment { get; set; }

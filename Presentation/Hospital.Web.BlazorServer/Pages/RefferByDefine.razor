@@ -1,0 +1,246 @@
+﻿@page "/RefferByDefine/{Id}"
+
+@using Hospital.Application.Commands
+@using Hospital.Application.Mapper
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Models.Auth
+@using MediatR
+@using System.ComponentModel.DataAnnotations
+@inject IMediator mediator
+@inject NavigationManager navManager
+@inject ISnackbar Snackbar
+
+@attribute [Authorize(Roles = "Super,Admin")]
+
+<MudGrid Class="mt-2">
+    <MudItem md="1"></MudItem>
+    <MudItem md="10">
+        <MudPaper Class="mt-2" Elevation="10">
+            <MudForm @ref="form" @bind-IsValid="@success">
+                <MudCard Class="mt-2">
+                    <MudCardHeader>@caption</MudCardHeader>
+                    <MudCardContent>
+                        <MudGrid>
+                            <MudItem md="6">
+                                <MudSelect Class="mt-1" T="int" Label="Staff Type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Staff Type" @bind-value="@refferBy.StaffTypeId" @bind-Text="@refferBy.StaffTypeName" Clearable>
+                                    @foreach (var s in staffTypes)
+                                    {
+                                        <MudSelectItem T="int" Value="@s.Id">@s.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@refferBy.Code" Required="true" RequiredError="Please Enter Code" MaxLength="100" Label="Code" Placeholder="RefferBy Code" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudSelect Class="mt-1" T="int" Label="Name Prefix" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Name Prefix" @bind-value="@refferBy.NamePrefixId" @bind-Text="@refferBy.NamePrefixName" Clearable>
+                                    @foreach (var n in namePrefixes)
+                                    {
+                                        <MudSelectItem T="int" Value="@n.Id">@n.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@refferBy.Name" Required="true" RequiredError="Please Enter Name" MaxLength="100" Label="Name" Placeholder="RefferBy Name" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudDatePicker Label="Date of Joining" @bind-Date="@refferBy.DateOfJoining" TitleDateFormat="dddd, dd MMMM" Variant="Variant.Outlined" Required="true" RequiredError="Please Select Date" />
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudDatePicker Label="Date of Birth" @bind-Date="@refferBy.DateOfBirth" TitleDateFormat="dddd, dd MMMM" Variant="Variant.Outlined" Required="true" RequiredError="Please Select Date" />
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudSelect Class="mt-1" T="int" Label="Speciality" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Speciality" @bind-value="@refferBy.SpecialityId" @bind-Text="@refferBy.SpecialityName" Clearable>
+                                    @foreach (var s in specialities)
+                                    {
+                                        <MudSelectItem T="int" Value="@s.Id">@s.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudSelect Class="mt-1" T="int" Label="Qualification" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Qualification" @bind-value="@refferBy.QualificationId" @bind-Text="@refferBy.QualificationName" Clearable>
+                                    @foreach (var q in qualifications)
+                                    {
+                                        <MudSelectItem T="int" Value="@q.Id">@q.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@refferBy.Mobile" Required="true" RequiredError="Please Enter Mobile Number" MaxLength="20" Label="Mobile" Placeholder="Mobile" Mask="@(new PatternMask("00000000000"))" InputType="InputType.Telephone" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@refferBy.Email" MaxLength="100" Label="Email" Placeholder="Email" InputType="InputType.Email" Variant="Variant.Outlined" Validation="@(new EmailAddressAttribute() {ErrorMessage = "Wrong Email Format"})" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudSelect Class="mt-1" T="int" Label="City" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="City" @bind-value="@refferBy.CityId" @bind-Text="@refferBy.CityName" Clearable>
+                                    @foreach (var c in cities)
+                                    {
+                                        <MudSelectItem T="int" Value="@c.Id">@c.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudSelect Class="mt-1" T="int" Label="Area" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Area" @bind-value="@refferBy.AreaId" @bind-Text="@refferBy.AreaName" Clearable>
+                                    @foreach (var a in areas)
+                                    {
+                                        <MudSelectItem T="int" Value="@a.Id">@a.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="12">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@refferBy.Address" MaxLength="1000" Label="Address" Placeholder="RefferBy Address" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@refferBy.OPDPercent" Label="OPD Percent" Placeholder="OPD Percent" Variant="Variant.Outlined" Clearable></MudNumericField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@refferBy.OPDAmount" Label="OPD Amount" Placeholder="OPD Amount" Variant="Variant.Outlined" Clearable></MudNumericField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@refferBy.IPDPercent" Label="IPD Percent" Placeholder="IPD Percent" Variant="Variant.Outlined" Clearable></MudNumericField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@refferBy.IPDAmount" Label="IPD Amount" Placeholder="IPD Amount" Variant="Variant.Outlined" Clearable></MudNumericField>
+                            </MudItem>
+                        </MudGrid>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Class="mr-2" ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveRefferBy" Disabled="@(!success)">Save</MudButton>
+                        <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="RefferBys">Return</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+    <MudItem md="1"></MudItem>
+</MudGrid>
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
+    private string caption = "Add Reffer By";
+    private RefferByViewModel refferBy = new RefferByViewModel();
+    private List<BasicInformationViewModel> staffTypes;
+    private List<BasicInformationViewModel> namePrefixes;
+    private List<BasicInformationViewModel> specialities;
+    private List<BasicInformationViewModel> qualifications;
+    private List<BasicInformationViewModel> cities;
+    private List<BasicInformationViewModel> areas;
+
+    bool success;
+    MudForm form;
+
+    protected override async Task OnInitializedAsync()
+    {
+        staffTypes = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("StaffType"));
+        namePrefixes = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("NamePrefix"));
+        specialities = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Speciality"));
+        qualifications = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Qualification"));
+        cities = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("City"));
+        areas = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Area"));
+
+        if (!String.IsNullOrEmpty(Id))
+        {
+            if (Convert.ToInt32(Id) > 0)
+            {
+                caption = "Edit Reffer By";
+
+                refferBy = await mediator.Send(new GetRefferByByIdQuery(Convert.ToInt32(Id)));
+
+                if (refferBy != null)
+                {
+
+                }
+            }
+        }
+
+    }
+
+    protected async Task SaveRefferBy()
+    {
+        form.Validate();
+
+        if (form.IsValid)
+        {
+            CommandResponse result;
+
+
+            if (refferBy.Id > 0)
+            {
+                try
+                {
+                    refferBy.ModifiedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<EditRefferByCommand>(refferBy);
+
+                    if (command.Id > 0)
+                    {
+                        result = await mediator.Send(command);
+
+                        if (result.ResultType == ResultType.Success)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                            navManager.NavigateTo("RefferBies");
+                        }
+                        else if (result.ResultType == ResultType.Warning)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Warning);
+                        }
+                        else if (result.ResultType == ResultType.Error)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Error);
+                        }
+
+                    }
+                    else
+                    {
+                        Snackbar.Add("Error in selected RefferBy", Severity.Warning);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+            else
+            {
+                try
+                {
+                    refferBy.CreatedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<CreateRefferByCommand>(refferBy);
+
+                    result = await mediator.Send(command);
+
+                    if (result.ResultType == ResultType.Success)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                        navManager.NavigateTo("RefferBies");
+                    }
+                    else if (result.ResultType == ResultType.Warning)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Warning);
+                    }
+                    else if (result.ResultType == ResultType.Error)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Error);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+        }
+
+    }
+
+}
+

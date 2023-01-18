@@ -97,6 +97,21 @@ builder.Services.AddTransient<IBasicInformationCategoryCommandRepository, BasicI
 builder.Services.AddTransient<IBasicInformationQueryRepository, BasicInformationQueryRepository>();
 builder.Services.AddTransient<IBasicInformationCommandRepository, BasicInformationCommandRepository>();
 
+builder.Services.AddTransient<IInsuranceQueryRepository, InsuranceQueryRepository>();
+builder.Services.AddTransient<IInsuranceCommandRepository, InsuranceCommandRepository>();
+
+builder.Services.AddTransient<IInsuranceAgreementQueryRepository, InsuranceAgreementQueryRepository>();
+builder.Services.AddTransient<IInsuranceAgreementCommandRepository, InsuranceAgreementCommandRepository>();
+
+builder.Services.AddTransient<IStaffQueryRepository, StaffQueryRepository>();
+builder.Services.AddTransient<IStaffCommandRepository, StaffCommandRepository>();
+
+builder.Services.AddTransient<IStaffTimingQueryRepository, StaffTimingQueryRepository>();
+builder.Services.AddTransient<IStaffTimingCommandRepository, StaffTimingCommandRepository>();
+
+builder.Services.AddTransient<IRefferByQueryRepository, RefferByQueryRepository>();
+builder.Services.AddTransient<IRefferByCommandRepository, RefferByCommandRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

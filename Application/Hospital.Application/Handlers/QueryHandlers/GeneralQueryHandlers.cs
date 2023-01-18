@@ -250,6 +250,24 @@ namespace Hospital.Application.Handlers.QueryHandlers
         }
     }
 
+    public class GetAllDepartmentsByMainDepartmentIdHandler : IRequestHandler<GetAllDepartmentsByMainDepartmentIdQuery, List<DepartmentViewModel>>
+    {
+        private readonly IDepartmentQueryRepository _DepartmentQueryRepository;
+
+        public GetAllDepartmentsByMainDepartmentIdHandler(IDepartmentQueryRepository DepartmentQueryRepository)
+        {
+            _DepartmentQueryRepository = DepartmentQueryRepository;
+        }
+
+        public async Task<List<DepartmentViewModel>> Handle(GetAllDepartmentsByMainDepartmentIdQuery request, CancellationToken cancellationToken)
+        {
+            List<Department> Departments = (List<Department>)await _DepartmentQueryRepository.GetByMainDepartmentIdAsync(request.DepartmentId);
+
+            return MapperConfig.Mapper.Map<List<DepartmentViewModel>>(Departments);
+        }
+    }
+
+
     public class GetDepartmentByIdHandler : IRequestHandler<GetDepartmentByIdQuery, DepartmentViewModel>
     {
         private readonly IDepartmentQueryRepository _DepartmentQueryRepository;

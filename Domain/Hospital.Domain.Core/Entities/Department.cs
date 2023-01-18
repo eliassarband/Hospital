@@ -23,8 +23,9 @@ namespace Hospital.Domain.Core.Entities
         [Required]
         public bool IsMain { get; set; }
 
-        [MaxLength(200)]
-        public string? MainDeptartment { get; set; }
+        [ForeignKey("MainDepartmentId")]
+        public int? MainDepartmentId { get; set; }
+        public virtual Department? MainDepartment { get; set; }
 
         public bool NotInUse { get; set; }
 

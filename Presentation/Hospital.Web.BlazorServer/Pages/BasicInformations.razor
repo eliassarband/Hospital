@@ -20,7 +20,11 @@
                     <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("BasicInformationDefine/0")>Add Basic Information</MudButton>
                 </MudCardActions>
                 <MudCardContent>
-                    <MudTable FixedHeader="true" FixedFooter="true" @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info">
+                    <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<BasicInformationViewModel,bool>(FilterBasicInformationInit)">
+                        <ToolBarContent>
+                            <MudSpacer />
+                            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Clearable></MudTextField>
+                        </ToolBarContent>
                         <HeaderContent>
                             <MudTh>Code</MudTh>
                             <MudTh>String Code</MudTh>
@@ -102,10 +106,8 @@
     private MudTable<BasicInformationViewModel> _table;
     private List<BasicInformationViewModel> Elements;
     private bool loading = false;
-
-    private int FilterCode = 0;
-
-
+    private string searchString = "";
+    
     protected override async Task OnInitializedAsync()
     {
         Elements = await mediator.Send(new GetAllBasicInformationsQuery());
@@ -116,11 +118,25 @@
         _table.NavigateTo(i - 1);
     }
 
-    protected async Task CodeChanged()
-    {
-        if (FilterCode > 0)
-            Elements.Where(e => e.Code == FilterCode);
+    private bool FilterBasicInformationInit(BasicInformationViewModel element) => FilterBasicInformation(element, searchString);
 
+    private bool FilterBasicInformation(BasicInformationViewModel element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.Code.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.StrCode.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.CategoryName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.RelatedBasicInformationName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if ($"{element.Code} {element.StrCode} {element.Name} {element.CategoryName} {element.RelatedBasicInformationName}".Contains(searchString))
+            return true;
+        return false;
     }
 
     protected async Task DeleteBasicInformation(int Id)

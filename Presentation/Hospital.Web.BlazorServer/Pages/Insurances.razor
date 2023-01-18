@@ -1,0 +1,158 @@
+﻿@page "/Insurances"
+@using Hospital.Application.Commands
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using MediatR
+@inject IMediator mediator;
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+@attribute [Authorize(Roles = "Super,Admin")]
+
+<MudGrid Class="mt-2">
+    <MudItem md="12">
+        <MudPaper Class="mt-2" Elevation="10">
+            <MudCard Class="pl-2 pr-2 mt-2">
+                <MudCardHeader>Insurances</MudCardHeader>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("InsuranceDefine/0")>Add Insurance</MudButton>
+                </MudCardActions>
+                <MudCardContent>
+                    <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<InsuranceViewModel,bool>(FilterInsuranceInit)">
+                        <ToolBarContent>
+                            <MudSpacer />
+                            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Clearable></MudTextField>
+                        </ToolBarContent>
+                        <HeaderContent>
+                            <MudTh>Code</MudTh>
+                            <MudTh>Name</MudTh>
+                            <MudTh>OPD Discount</MudTh>
+                            <MudTh>IPD Discount</MudTh>
+                            <MudTh>Advance Payment Percent</MudTh>
+                            <MudTh>Advance Payment Amount</MudTh>
+                            <MudTh>Payment Type</MudTh>
+                            <MudTh>Not In Use</MudTh>
+                            <MudTh>Edit</MudTh>
+                            <MudTh>Delete</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Code">@context.Code</MudTd>
+                            <MudTd DataLabel="Name">@context.Name</MudTd>
+                            <MudTd DataLabel="OPDDiscountPercent">@context.OPDDiscountPercent</MudTd>
+                            <MudTd DataLabel="IPDDiscountPercent">@context.IPDDiscountPercent</MudTd>
+                            <MudTd DataLabel="AdvancePaymentPercent">@context.AdvancePaymentPercent</MudTd>
+                            <MudTd DataLabel="AdvancePaymentAmount">@context.AdvancePaymentAmount</MudTd>
+                            <MudTd DataLabel="InsurancePaymentTypeName">@context.InsurancePaymentTypeName</MudTd>
+                            <MudTd DataLabel="Viewable">
+                                @if (context.NotInUse)
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Done" Color="Color.Success" Title="NotInUse"></MudIcon>
+                                }
+                                else
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Clear" Color="Color.Error" Title=""></MudIcon>
+                                }
+                            </MudTd>
+                            
+                            <MudTd DataLabel="Edit">
+                                <MudIconButton ButtonType="ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("InsuranceDefine/{0}",context.Id)></MudIconButton>
+                            </MudTd>
+                            <MudTd DataLabel="Delete">
+                                <MudIconButton ButtonType="ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteInsurance(@context.Id))"></MudIconButton>
+                            </MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudPagination ShowFirstButton="true" ShowLastButton="true" SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
+                        </PagerContent>
+                    </MudTable>
+                </MudCardContent>
+
+            </MudCard>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+
+@code {
+    private MudTable<InsuranceViewModel> _table;
+    private List<InsuranceViewModel> Elements;
+    private bool loading = false;
+    private string searchString = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        Elements = await mediator.Send(new GetAllInsurancesQuery());
+
+    }
+
+    private void PageChanged(int i)
+    {
+        _table.NavigateTo(i - 1);
+    }
+
+    private bool FilterInsuranceInit(InsuranceViewModel element) => FilterInsurance(element, searchString);
+
+    private bool FilterInsurance(InsuranceViewModel element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.Code.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.InsurancePaymentTypeName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if ($"{element.Code} {element.Name} {element.InsurancePaymentTypeName}".Contains(searchString))
+            return true;
+        return false;
+    }
+
+    protected async Task DeleteInsurance(int Id)
+    {
+
+        bool? dialogResult = await DialogService.ShowMessageBox(
+            "Delete Insurance",
+            "Are You Sure?",
+            yesText: "Delete!", cancelText: "No");
+
+        if (dialogResult == true)
+        {
+            loading = true;
+            try
+            {
+                CommandResponse result;
+
+                result = await mediator.Send(new DeleteInsuranceCommand(Id));
+
+                if (result.ResultType == ResultType.Success)
+                {
+                    Elements = await mediator.Send(new GetAllInsurancesQuery());
+                    Snackbar.Add(result.ResultMessage, Severity.Success);
+                }
+                else if (result.ResultType == ResultType.Warning)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Warning);
+                }
+                else if (result.ResultType == ResultType.Error)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Error);
+                }
+
+
+
+            }
+            catch (Exception exp)
+            {
+                Snackbar.Add(exp.Message, Severity.Error);
+            }
+            loading = false;
+
+        }
+
+
+    }
+
+
+}

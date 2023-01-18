@@ -1,0 +1,183 @@
+﻿@page "/InsuranceDefine/{Id}"
+
+@using Hospital.Application.Commands
+@using Hospital.Application.Mapper
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Models.Auth
+@using MediatR
+@using System.ComponentModel.DataAnnotations
+@inject IMediator mediator
+@inject NavigationManager navManager
+@inject ISnackbar Snackbar
+
+@attribute [Authorize(Roles = "Super,Admin")]
+
+<MudGrid Class="mt-2">
+    <MudItem md="3"></MudItem>
+    <MudItem md="6">
+        <MudPaper Class="mt-2" Elevation="10">
+            <MudForm @ref="form" @bind-IsValid="@success">
+                <MudCard Class="mt-2">
+                    <MudCardHeader>@caption</MudCardHeader>
+                    <MudCardContent>
+                        <MudGrid>
+                            <MudItem md="12">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@Insurance.Code" Required="true" RequiredError="Please Enter Code" MaxLength="100" Label="Code" Placeholder="Insurance Code" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="12">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@Insurance.Name" Required="true" RequiredError="Please Enter Name" MaxLength="200" Label="Name" Placeholder="Insurance Name" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="12">
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@Insurance.OPDDiscountPercent" Label="OPD Discount Percent" Placeholder="OPD Discount Percent" Required="true" RequiredError="Please Enter OPD Discount Percent" Variant="Variant.Outlined" Clearable></MudNumericField>
+                            </MudItem>
+                            <MudItem md="12">
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@Insurance.IPDDiscountPercent" Label="IPD Discount Percent" Placeholder="IPD Discount Percent" Required="true" RequiredError="Please Enter IPD Discount Percent" Variant="Variant.Outlined" Clearable></MudNumericField>
+                            </MudItem>
+                            <MudItem md="12">
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@Insurance.AdvancePaymentPercent" Label="Advance Payment Percent" Placeholder="Advance Payment Percent" Required="true" RequiredError="Please Enter Advance Payment Percent" Variant="Variant.Outlined" Clearable></MudNumericField>
+                            </MudItem>
+                            <MudItem md="12">
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@Insurance.AdvancePaymentAmount" Label="Advance Payment Amount" Placeholder="Advance Payment Amount" Required="true" RequiredError="Please Enter Advance Payment Amount" Variant="Variant.Outlined" Clearable></MudNumericField>
+                            </MudItem>
+                            <MudItem md="12">
+                                <MudSelect Class="mt-1" T="int" Label="Payment Type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Payment Type" @bind-value="@Insurance.InsurancePaymentTypeId" @bind-Text="@Insurance.InsurancePaymentTypeName" Clearable>
+                                    @foreach (var p in PaymentTypes)
+                                    {
+                                        <MudSelectItem T="int" Value="@p.Id">@p.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="12">
+                                <MudSwitch T="bool" Class="mt-1" @bind-Checked="@Insurance.NotInUse" Label="Not In Use" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
+                            </MudItem>
+                        </MudGrid>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Class="mr-2" ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveInsurance" Disabled="@(!success)">Save</MudButton>
+                        <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="Insurances">Return</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+    <MudItem md="3"></MudItem>
+</MudGrid>
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
+    private string caption = "Add Insurance";
+    private InsuranceViewModel Insurance = new InsuranceViewModel();
+    private List<BasicInformationViewModel> PaymentTypes;
+    bool success;
+    MudForm form;
+
+    protected override async Task OnInitializedAsync()
+    {
+        PaymentTypes = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("InsurancePaymentType"));
+
+        if (!String.IsNullOrEmpty(Id))
+        {
+            if (Convert.ToInt32(Id) > 0)
+            {
+                caption = "Edit Insurance";
+
+                Insurance = await mediator.Send(new GetInsuranceByIdQuery(Convert.ToInt32(Id)));
+
+                if (Insurance != null)
+                {
+
+                }
+            }
+        }
+
+    }
+
+    protected async Task SaveInsurance()
+    {
+        form.Validate();
+
+        if (form.IsValid)
+        {
+            CommandResponse result;
+
+
+            if (Insurance.Id > 0)
+            {
+                try
+                {
+                    Insurance.ModifiedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<EditInsuranceCommand>(Insurance);
+
+                    if (command.Id > 0)
+                    {
+                        result = await mediator.Send(command);
+
+                        if (result.ResultType == ResultType.Success)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                            navManager.NavigateTo("Insurances");
+                        }
+                        else if (result.ResultType == ResultType.Warning)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Warning);
+                        }
+                        else if (result.ResultType == ResultType.Error)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Error);
+                        }
+
+                    }
+                    else
+                    {
+                        Snackbar.Add("Error in selected Insurance", Severity.Warning);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+            else
+            {
+                try
+                {
+                    Insurance.CreatedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<CreateInsuranceCommand>(Insurance);
+
+                    result = await mediator.Send(command);
+
+                    if (result.ResultType == ResultType.Success)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                        navManager.NavigateTo("Insurances");
+                    }
+                    else if (result.ResultType == ResultType.Warning)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Warning);
+                    }
+                    else if (result.ResultType == ResultType.Error)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Error);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+        }
+
+    }
+
+}
+

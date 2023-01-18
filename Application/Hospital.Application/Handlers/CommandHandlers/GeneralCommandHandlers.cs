@@ -15,7 +15,7 @@ namespace Hospital.Application.Handlers.CommandHandlers
 {
 
     #region BasicInformationCategory
-    public class CreateBasicInformationCategoryHandler : IRequestHandler<CreateBSCategoryCommand, CommandResponse>
+    public class CreateBasicInformationCategoryHandler : IRequestHandler<CreateBasicInformationCategoryCommand, CommandResponse>
     {
         private readonly IBasicInformationCategoryCommandRepository _BasicInformationCategoryCommandRepository;
 
@@ -24,7 +24,7 @@ namespace Hospital.Application.Handlers.CommandHandlers
             _BasicInformationCategoryCommandRepository = BSCategoryCommandRepository;
         }
 
-        public async Task<CommandResponse> Handle(CreateBSCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> Handle(CreateBasicInformationCategoryCommand request, CancellationToken cancellationToken)
         {
             var CategoryEntity = MapperConfig.Mapper.Map<BasicInformationCategory>(request);
             CategoryEntity.CreatedDate = DateTime.Now;
@@ -75,7 +75,7 @@ namespace Hospital.Application.Handlers.CommandHandlers
         }
     }
 
-    public class EditBasicInformationCategoryHandler : IRequestHandler<EditBSCategoryCommand, CommandResponse>
+    public class EditBasicInformationCategoryHandler : IRequestHandler<EditBasicInformationCategoryCommand, CommandResponse>
     {
         private readonly IBasicInformationCategoryCommandRepository _BasicInformationCategoryCommandRepository;
         private readonly IBasicInformationCategoryQueryRepository _BasicInformationCategoryQueryRepository;
@@ -86,7 +86,7 @@ namespace Hospital.Application.Handlers.CommandHandlers
             _BasicInformationCategoryQueryRepository = BSCategoryQueryRepository;
         }
 
-        public async Task<CommandResponse> Handle(EditBSCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> Handle(EditBasicInformationCategoryCommand request, CancellationToken cancellationToken)
         {
             var CategoryEntity = MapperConfig.Mapper.Map<BasicInformationCategory>(request);
             CategoryEntity.ModifiedDate = DateTime.Now;
@@ -135,7 +135,7 @@ namespace Hospital.Application.Handlers.CommandHandlers
         }
     }
 
-    public class DeleteBasicInformationCategoryHandler : IRequestHandler<DeleteBSCategoryCommand, CommandResponse>
+    public class DeleteBasicInformationCategoryHandler : IRequestHandler<DeleteBasicInformationCategoryCommand, CommandResponse>
     {
         private readonly IBasicInformationCategoryCommandRepository _BasicInformationCategoryCommandRepository;
         private readonly IBasicInformationCategoryQueryRepository _BasicInformationCategoryQueryRepository;
@@ -146,7 +146,7 @@ namespace Hospital.Application.Handlers.CommandHandlers
             _BasicInformationCategoryQueryRepository = BSCategoryQueryRepository;
         }
 
-        public async Task<CommandResponse> Handle(DeleteBSCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> Handle(DeleteBasicInformationCategoryCommand request, CancellationToken cancellationToken)
         {
             CommandResponse response = new CommandResponse()
             {

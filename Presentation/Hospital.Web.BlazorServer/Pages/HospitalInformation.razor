@@ -25,16 +25,16 @@
                     <MudCardContent>
                         <MudGrid>
                             <MudItem md="12" sm="12" xs="12">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.Name" Required="true" RequiredError="Please Enter Name" MaxLength="200" Label="Name" Placeholder="Hospital Name" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.Name" Required="true" RequiredError="Please Enter Name" MaxLength="200" Label="Name" Placeholder="Hospital Name" Variant="Variant.Outlined" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="12" sm="12" xs="12">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.Address" Label="Address" Placeholder="Hospital Address" Variant="Variant.Outlined" Lines="2"></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.Address" Label="Address" Placeholder="Hospital Address" Variant="Variant.Outlined" Lines="2" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="6" sm="12" xs="12">
-                                <MudTextField T="string" Class="mt-3" @bind-Value="@hospitalInformation.Phone" MaxLength="20" Label="Phone" Placeholder="Hospital Phone" Variant="Variant.Outlined" Mask="@(new PatternMask("00000000000"))"></MudTextField>
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@hospitalInformation.Phone" MaxLength="20" Label="Phone" Placeholder="Hospital Phone" Variant="Variant.Outlined" Mask="@(new PatternMask("00000000000"))" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="6" sm="12" xs="12">
-                                <MudTextField T="string" Class="mt-3" @bind-Value="@hospitalInformation.Mobile" MaxLength="20" Label="Mobile" Placeholder="Hospital Mobile" Variant="Variant.Outlined" Mask="@(new PatternMask("00000000000"))"></MudTextField>
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@hospitalInformation.Mobile" MaxLength="20" Label="Mobile" Placeholder="Hospital Mobile" Variant="Variant.Outlined" Mask="@(new PatternMask("00000000000"))" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="2" sm="12" xs="12">
         
@@ -71,28 +71,28 @@
                                 <MudImage Src=@String.Format("data:image/png;base64,{0}",whiteImage) Height="70"></MudImage>
                             </MudItem>
                             <MudItem md="6" sm="12" xs="12">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.RegisterationNumber" MaxLength="20" Label="Registeration Number" Placeholder="Hospital Registeration Number" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.RegisterationNumber" MaxLength="20" Label="Registeration Number" Placeholder="Hospital Registeration Number" Variant="Variant.Outlined" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="6" sm="12" xs="12">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.Email" MaxLength="50" Label="Email" Placeholder="Hospital Email" Variant="Variant.Outlined" Mask="@emailMask" HelperText="@emailMask.Mask"></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.Email" MaxLength="50" Label="Email" Placeholder="Hospital Email" Variant="Variant.Outlined" Mask="@emailMask" HelperText="@emailMask.Mask" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="6" sm="12" xs="12">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.BackupDirectory1" MaxLength="100" Label="Backup Directory 1" Placeholder="Backup Directory 1" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.BackupDirectory1" MaxLength="100" Label="Backup Directory 1" Placeholder="Backup Directory 1" Variant="Variant.Outlined" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="6" sm="12" xs="12">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.BackupDirectory2" MaxLength="100" Label="Backup Directory 2" Placeholder="Backup Directory 2" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.BackupDirectory2" MaxLength="100" Label="Backup Directory 2" Placeholder="Backup Directory 2" Variant="Variant.Outlined" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="6" sm="12" xs="12">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.CurrencyName" MaxLength="20" Label="Currency Name" Placeholder="Currency Name" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.CurrencyName" MaxLength="20" Label="Currency Name" Placeholder="Currency Name" Variant="Variant.Outlined" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="6" sm="12" xs="12">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.CurrencySymbol" MaxLength="10" Label="Currency Symbol" Placeholder="Currency Symbol" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.CurrencySymbol" MaxLength="10" Label="Currency Symbol" Placeholder="Currency Symbol" Variant="Variant.Outlined" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="6" sm="12" xs="12">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.CurrencyCents" MaxLength="20" Label="Currency Cents" Placeholder="Currency Cents" Variant="Variant.Outlined"></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@hospitalInformation.CurrencyCents" MaxLength="20" Label="Currency Cents" Placeholder="Currency Cents" Variant="Variant.Outlined" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="6" sm="12" xs="12">
-                                <MudNumericField T="int" Class="mt-1" @bind-Value="@hospitalInformation.SessionTimeout" Min="0" Max="20" Label="Session Timeout" Placeholder="Session Timeout" Variant="Variant.Outlined"></MudNumericField>
+                                <MudNumericField T="int" Class="mt-1" @bind-Value="@hospitalInformation.SessionTimeout" Min="0" Max="20" Label="Session Timeout" Placeholder="Session Timeout" Variant="Variant.Outlined" Clearable></MudNumericField>
                             </MudItem>
                         </MudGrid>
                     </MudCardContent>

@@ -31,21 +31,21 @@
             <MudSpacer />
             <MudHidden Breakpoint="Breakpoint.SmAndDown">
                 <MudText Class="mr-2"> @userInfo?.FullName </MudText>
-                <MudAvatar Class="mr-2" Image="@photo"></MudAvatar>
+                @*<MudAvatar Class="mr-2" Image="@photo"></MudAvatar>*@
                 
-                @*<MudMenu FullWidth="true">
+                <MudMenu>
                     <ActivatorContent>
                         <MudAvatar Class="mr-2" Image="@photo"></MudAvatar>
                     </ActivatorContent>
                     <ChildContent>
-                        <MudMenuItem Icon="@Icons.Material.Filled.Password" Href="ChangePassword">Change Password</MudMenuItem>
+                        <MudMenuItem Icon="@Icons.Material.Filled.Password"  Href="ChangePassword">Change Password</MudMenuItem>
                     </ChildContent>
-                </MudMenu>*@
+                </MudMenu>
 
-                <MudBadge Content="300" Overlap="true" Color="Color.Warning" Visible="true" Class="mr-2" Origin="Origin.TopRight">
+                <MudBadge Content="@UnreadNotifications" Overlap="true" Color="Color.Warning" Visible="true" Class="mr-2" Origin="Origin.TopRight">
                     <MudIconButton Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit"/>
                 </MudBadge>
-                <MudBadge Content="4" Overlap="true" Color="Color.Warning" Visible="true" Class="mr-2" Origin="Origin.TopRight">
+                <MudBadge Content="@UnreadMessages" Overlap="true" Color="Color.Warning" Visible="true" Class="mr-2" Origin="Origin.TopRight">
                     <MudIconButton Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Email" Color="Color.Inherit" />
                 </MudBadge>
                 <MudToggleIconButton Toggled="@ThemeState" ToggledChanged="OnThemeToggledChanged" Class="mr-2"
@@ -53,7 +53,27 @@
                                      ToggledIcon="@Icons.Material.Filled.DarkMode" ToggledColor="@Color.Warning" ToggledTitle="Dark Mode" Variant="Variant.Outlined" />
             </MudHidden>
             <MudHidden Breakpoint="Breakpoint.MdAndUp">
-                <MudIconButton Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Settings" Color="Color.Inherit" Class="mr-2" />
+                <MudMenu>
+                    <ActivatorContent>
+                        <MudIconButton Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Settings" Color="Color.Inherit" Class="mr-2" />
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MudMenuItem Icon="@Icons.Material.Filled.Person" Disabled>@userInfo?.FullName</MudMenuItem>
+                        <MudMenuItem Icon="@Icons.Material.Filled.Password" Href="ChangePassword">Change Password</MudMenuItem>
+                        <MudMenuItem Icon="@Icons.Material.Filled.Notifications" Href="Notifications">
+                            <MudBadge Content="@UnreadNotifications" Overlap="true" Color="Color.Warning" Visible="true" Class="mr-2" Origin="Origin.TopRight">
+                                <MudText>Notifications</MudText>
+                            </MudBadge>
+                        </MudMenuItem>
+                        <MudMenuItem Icon="@Icons.Material.Filled.Email" Href="Messages">
+                            <MudBadge Content="@UnreadMessages" Overlap="true" Color="Color.Warning" Visible="true" Class="mr-2" Origin="Origin.TopRight">
+                                <MudText>Messages</MudText>
+                            </MudBadge>
+                        </MudMenuItem>
+                        <MudMenuItem Icon="@(ThemeState? Icons.Material.Filled.DarkMode:Icons.Material.Filled.LightMode)" OnClick="ThemeClicked">@(ThemeState?"Dark":"Light")</MudMenuItem>
+                    </ChildContent>
+                </MudMenu>
+                
                 
             </MudHidden>
             <MudForm method="post" action="identiy/account/logout">
@@ -78,7 +98,7 @@
         </MudMainContent>
     </MudLayout>
 </MudRTLProvider>
-@code {
+    @code {
     bool _drawerOpen = true;
     private LoginedUser? userInfo;
     public bool ThemeState { get; set; }
@@ -86,6 +106,9 @@
     public Color DrawerColor { get; set; }
     public Color AppBarColor { get; set; }
     private HospitalInformationViewModel hospitalInformation = new HospitalInformationViewModel();
+
+    private int UnreadNotifications { get; set; }
+    private int UnreadMessages { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -156,6 +179,9 @@
 
 
                 }
+
+                UnreadMessages = 15;
+                UnreadNotifications = 33;
             }
         }
         hospitalInformation = await mediator.Send(new GetHospitalInformationByIdQuery(1));
@@ -169,6 +195,16 @@
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
+    }
+
+    protected async Task ThemeClicked()
+    {
+        if (ThemeState)
+            ThemeState = false;
+        else
+            ThemeState = true;
+
+        OnThemeToggledChanged(ThemeState);
     }
 
     public async void OnThemeToggledChanged(bool toggled)

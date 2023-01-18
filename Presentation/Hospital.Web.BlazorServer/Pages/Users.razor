@@ -21,7 +21,11 @@
                     <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("UserDefine/0")>Add User</MudButton>
                 </MudCardActions>
                 <MudCardContent>
-                    <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info">
+                    <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<UserViewModel,bool>(FilterUserInit)">
+                        <ToolBarContent>
+                            <MudSpacer />
+                            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Clearable></MudTextField>
+                        </ToolBarContent>
                         <HeaderContent>
                             <MudTh>Photo</MudTh>
                             <MudTh>First Name</MudTh>
@@ -87,6 +91,7 @@
     private MudTable<UserViewModel> _table;
     private List<UserViewModel> Elements;
     private bool loading = false;
+    private string searchString = "";
 
 
     protected override async Task OnInitializedAsync()
@@ -97,6 +102,27 @@
     private void PageChanged(int i)
     {
         _table.NavigateTo(i - 1);
+    }
+
+    private bool FilterUserInit(UserViewModel element) => FilterUser(element, searchString);
+
+    private bool FilterUser(UserViewModel element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.FirstName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.LastName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Username.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.PhoneNumber.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if ($"{element.FirstName} {element.LastName} {element.Username} {element.Email} {element.PhoneNumber}".Contains(searchString))
+            return true;
+        return false;
     }
 
     protected async Task ResetPassword(int Id)

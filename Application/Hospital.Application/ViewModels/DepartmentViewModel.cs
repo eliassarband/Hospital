@@ -13,7 +13,9 @@ namespace Hospital.Application.ViewModels
         public string Code { get; set; }
         public string Name { get; set; }
         public bool IsMain { get; set; }
-        public string MainDeptartment { get; set; }
+        public int MainDepartmentId { get; set; }
+        public string MainDepartmentName { get; set; }
+        public DepartmentViewModel MainDeptartment { get; set; }
         public bool NotInUse { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedUser { get; set; }

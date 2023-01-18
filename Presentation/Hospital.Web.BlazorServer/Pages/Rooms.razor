@@ -20,7 +20,11 @@
                     <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("RoomDefine/0")>Add Room</MudButton>
                 </MudCardActions>
                 <MudCardContent>
-                    <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info">
+                    <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<RoomViewModel,bool>(FilterRoomInit)">
+                        <ToolBarContent>
+                            <MudSpacer />
+                            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Clearable></MudTextField>
+                        </ToolBarContent>
                         <HeaderContent>
                             <MudTh>Code</MudTh>
                             <MudTh>Name</MudTh>
@@ -70,8 +74,8 @@
     private MudTable<RoomViewModel> _table;
     private List<RoomViewModel> Elements;
     private bool loading = false;
-
-
+    private string searchString = "";
+    
     protected override async Task OnInitializedAsync()
     {
         Elements = await mediator.Send(new GetAllRoomsQuery());
@@ -80,6 +84,27 @@
     private void PageChanged(int i)
     {
         _table.NavigateTo(i - 1);
+    }
+
+    private bool FilterRoomInit(RoomViewModel element) => FilterRoom(element, searchString);
+
+    private bool FilterRoom(RoomViewModel element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.Code.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.RoomTypeName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Rest.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Cost.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if ($"{element.Code} {element.Name} {element.RoomTypeName} {element.Rest} {element.Cost}".Contains(searchString))
+            return true;
+        return false;
     }
 
     protected async Task DeleteRoom(int Id)
