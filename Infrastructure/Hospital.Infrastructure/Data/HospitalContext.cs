@@ -6,7 +6,7 @@ namespace Hospital.Infrastructure.Data
 {
     public class HospitalContext : DbContext
     {
-        public HospitalContext(DbContextOptions options) : base(options)
+        public HospitalContext(DbContextOptions<HospitalContext> options) : base(options)
         {
 
         }

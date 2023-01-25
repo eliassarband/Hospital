@@ -112,6 +112,9 @@ builder.Services.AddTransient<IStaffTimingCommandRepository, StaffTimingCommandR
 builder.Services.AddTransient<IRefferByQueryRepository, RefferByQueryRepository>();
 builder.Services.AddTransient<IRefferByCommandRepository, RefferByCommandRepository>();
 
+builder.Services.AddTransient<IPatientQueryRepository, PatientQueryRepository>();
+builder.Services.AddTransient<IPatientCommandRepository, PatientCommandRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

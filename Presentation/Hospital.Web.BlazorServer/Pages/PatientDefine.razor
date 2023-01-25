@@ -1,0 +1,319 @@
+﻿@page "/PatientDefine/{Id}"
+
+@using Hospital.Application.Commands
+@using Hospital.Application.Mapper
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Models.Auth
+@using MediatR
+@using System.ComponentModel.DataAnnotations
+@inject IMediator mediator
+@inject NavigationManager navManager
+@inject ISnackbar Snackbar
+
+@attribute [Authorize(Roles = "Super,Admin")]
+
+<MudGrid Class="mt-2">
+    <MudItem md="1"></MudItem>
+    <MudItem md="10">
+        <MudPaper Class="mt-2" Elevation="10">
+            <MudForm @ref="form" @bind-IsValid="@success">
+                <MudCard Class="mt-2">
+                    <MudCardHeader>@caption</MudCardHeader>
+                    <MudCardContent>
+                        <MudGrid>
+                            
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@patient.NationalIdCart" Required="true" RequiredError="Please National Id Cart" MaxLength="20" Label="National Id Cart" Placeholder="Patient National Id Cart" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudSelect Class="mt-1" T="int" Label="Name Prefix" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Name Prefix" @bind-value="@patient.NamePrefixId" @bind-Text="@patient.NamePrefixName" Clearable>
+                                    @foreach (var n in namePrefixes)
+                                    {
+                                        <MudSelectItem T="int" Value="@n.Id">@n.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@patient.Name" Required="true" RequiredError="Please Enter Name" MaxLength="200" Label="Name" Placeholder="Patient Name" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudDatePicker Label="Date of Birth" @bind-Date="@patient.DateOfBirth" TitleDateFormat="dddd, dd MMMM" Variant="Variant.Outlined" Required="true" RequiredError="Please Select Date" />
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudSelect Class="mt-1" T="int" Label="Gender" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Speciality" @bind-value="@patient.GenderId" @bind-Text="@patient.GenderName" Clearable>
+                                    @foreach (var s in genders)
+                                    {
+                                        <MudSelectItem T="int" Value="@s.Id">@s.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@patient.FatherName" Required="true" RequiredError="Please Enter Father Name" MaxLength="100" Label="Father Name" Placeholder="Patient Father Name" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@patient.Mobile" Required="true" RequiredError="Please Enter Mobile Number" MaxLength="15" Label="Mobile" Placeholder="Mobile" Mask="@(new PatternMask("00000000000"))" InputType="InputType.Telephone" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                             <MudItem md="6">
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@patient.Phone" Required="true" RequiredError="Please Enter Phone Number" MaxLength="15" Label="Phone" Placeholder="Phone" Mask="@(new PatternMask("00000000000"))" InputType="InputType.Telephone" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@patient.Email" MaxLength="100" Label="Email" Placeholder="Email" InputType="InputType.Email" Variant="Variant.Outlined" Validation="@(new EmailAddressAttribute() {ErrorMessage = "Wrong Email Format"})" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudSelect Class="mt-1" T="int" Label="City" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="City" @bind-value="@patient.CityId" @bind-Text="@patient.CityName" Clearable>
+                                    @foreach (var c in cities)
+                                    {
+                                        <MudSelectItem T="int" Value="@c.Id">@c.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudSelect Class="mt-1" T="int" Label="Area" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Area" @bind-value="@patient.AreaId" @bind-Text="@patient.AreaName" Clearable>
+                                    @foreach (var a in areas)
+                                    {
+                                        <MudSelectItem T="int" Value="@a.Id">@a.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@patient.Address" MaxLength="1000" Label="Address" Placeholder="Patient Address" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudSelect Class="mt-1" T="int" Label="Reffer By" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Reffer By" @bind-value="@patient.RefferById" @bind-Text="@patient.RefferByName" Clearable>
+                                    @foreach (var c in refferBies)
+                                    {
+                                        <MudSelectItem T="int" Value="@c.Id">@c.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@patient.Occupation" MaxLength="200" Label="Occupation" Placeholder="Patient Occupation" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudSelect Class="mt-1" T="int" Label="Insurance" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Insurance" @bind-value="@patient.InsuranceId" @bind-Text="@patient.InsuranceName" Clearable>
+                                    @foreach (var c in insurances)
+                                    {
+                                        <MudSelectItem T="int" Value="@c.Id">@c.Name</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@patient.InsuranceNumber" MaxLength="20" Label="Insurance Number" Placeholder="Insurance Number" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="6">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@patient.ProposalNumber" MaxLength="20" Label="Proposal Number" Placeholder="Proposal Number" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="2">
+                                <MudFileUpload T="IBrowserFile" FilesChanged="UploadPhoto" Accept=".jpg,.jpeg,.png">
+                                    <ButtonTemplate>
+                                        <MudButton HtmlTag="label"
+                                                   Variant="Variant.Filled"
+                                                   Color="Color.Primary"
+                                                   StartIcon="@Icons.Filled.CloudUpload"
+                                                   for="@context">
+                                            Upload Photo
+                                        </MudButton>
+                                    </ButtonTemplate>
+                                </MudFileUpload>
+                            </MudItem>
+                            <MudItem md="4">
+                                @if (photo != null)
+                                {
+                                    <MudImage Style="border-radius : 50%" Src=@String.Format("data:{0};base64,{1}",photoContentType,photo) Height="150"></MudImage>
+                                }
+                                else
+                                {
+                                    <MudImage Src="/images/User.png" Height="150"></MudImage>
+                                }
+
+                            </MudItem>
+                        </MudGrid>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Class="mr-2" ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SavePatient" Disabled="@(!success)">Save</MudButton>
+                        <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="Patients">Return</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+    <MudItem md="1"></MudItem>
+</MudGrid>
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
+    private string caption = "Add Patient";
+    private PatientViewModel patient = new PatientViewModel();
+    private List<BasicInformationViewModel> namePrefixes;
+    private List<BasicInformationViewModel> genders;
+    private List<BasicInformationViewModel> cities;
+    private List<BasicInformationViewModel> areas;
+    private List<RefferByViewModel> refferBies;
+    private List<InsuranceViewModel> insurances;
+
+
+    bool success;
+    MudForm form; 
+    private string photo;
+    private string photoContentType;
+    private bool attachmentChanged = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        namePrefixes = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("NamePrefix"));
+        genders = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Gender"));
+        cities = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("City"));
+        areas = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Area"));
+        refferBies = await mediator.Send(new GetAllRefferBiesQuery());
+        insurances = await mediator.Send(new GetAllInsurancesQuery());
+
+        if (!String.IsNullOrEmpty(Id))
+        {
+            if (Convert.ToInt32(Id) > 0)
+            {
+                caption = "Edit Patient";
+
+                patient = await mediator.Send(new GetPatientByIdQuery(Convert.ToInt32(Id)));
+
+                if (patient != null)
+                {
+
+                    photo = Convert.ToBase64String(patient.AttachmentContent);
+                    photoContentType = patient.AttachmentContentType;
+                }
+            }
+        }
+
+    }
+
+    protected async Task UploadPhoto(IBrowserFile file)
+    {
+        long maxFileSize = 1024 * 1024 * 5; // 5 MB or whatever, don't just use max int
+
+        var readStream = file.OpenReadStream(maxFileSize);
+
+        var buf = new byte[readStream.Length];
+
+        var ms = new MemoryStream(buf);
+
+        await readStream.CopyToAsync(ms);
+
+        var buffer = ms.ToArray();
+
+        photo = Convert.ToBase64String(buffer);
+        photoContentType = file.ContentType;
+        patient.AttachmentContent = buffer;
+        patient.AttachmentContentType = file.ContentType;
+
+        attachmentChanged = true;
+
+    }
+
+    protected async Task SavePatient()
+    {
+        form.Validate();
+
+        if (form.IsValid)
+        {
+            if (attachmentChanged)
+            {
+                AttachmentViewModel attachment = new AttachmentViewModel()
+                    {
+                        Name = patient.Name + "_" + DateTime.Now.ToString(),
+                        ContentType = patient.AttachmentContentType,
+                        Content = patient.AttachmentContent,
+                        Description = "User Photo"
+                    };
+
+                var attachmentCommand = MapperConfig.Mapper.Map<CreateAttachmentCommand>(attachment);
+                CommandResponse attachmentResult = await mediator.Send(attachmentCommand);
+
+                if (attachmentResult.ResultType == ResultType.Success)
+                {
+                    patient.AttachmentId = attachmentResult.Id;
+                }
+            }
+            CommandResponse result;
+
+
+            if (patient.Id > 0)
+            {
+                try
+                {
+                    patient.ModifiedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<EditPatientCommand>(patient);
+
+                    if (command.Id > 0)
+                    {
+                        result = await mediator.Send(command);
+
+                        if (result.ResultType == ResultType.Success)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                            navManager.NavigateTo("Patients");
+                        }
+                        else if (result.ResultType == ResultType.Warning)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Warning);
+                        }
+                        else if (result.ResultType == ResultType.Error)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Error);
+                        }
+
+                    }
+                    else
+                    {
+                        Snackbar.Add("Error in selected Patient", Severity.Warning);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+            else
+            {
+                try
+                {
+                    patient.CreatedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<CreatePatientCommand>(patient);
+
+                    result = await mediator.Send(command);
+
+                    if (result.ResultType == ResultType.Success)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                        navManager.NavigateTo("Patients");
+                    }
+                    else if (result.ResultType == ResultType.Warning)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Warning);
+                    }
+                    else if (result.ResultType == ResultType.Error)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Error);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+        }
+
+    }
+
+}
+
