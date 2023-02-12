@@ -231,6 +231,55 @@ namespace Hospital.Application.Mapper
             CreateMap<EditPatientCommand, PatientViewModel>().ReverseMap();
 
             #endregion
+
+            #region OPDBill
+
+            CreateMap<OPDBill, CreateOPDBillCommand>().ReverseMap()
+                .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => (src.PatientId == 0 ? null : src.PatientId)));
+
+            CreateMap<OPDBill, EditOPDBillCommand>().ReverseMap()
+                .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => (src.PatientId == 0 ? null : src.PatientId)));
+
+            CreateMap<OPDBill, OPDBillViewModel>()
+                .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => (src.Patient != null ? src.Patient.Id : 0)))
+                .ForMember(dest => dest.PatienName, opt => opt.MapFrom(src => (src.Patient != null ? src.Patient.Name : "")));
+
+            CreateMap<OPDBillViewModel, OPDBill>();
+
+            CreateMap<CreateOPDBillCommand, OPDBillViewModel>().ReverseMap();
+
+            CreateMap<EditOPDBillCommand, OPDBillViewModel>().ReverseMap();
+
+            #endregion
+
+            #region OPDBillService
+
+            CreateMap<OPDBillService, CreateOPDBillServiceCommand>().ReverseMap()
+                .ForMember(dest => dest.OPDBillId, opt => opt.MapFrom(src => (src.OPDBillId == 0 ? null : src.OPDBillId)))
+                .ForMember(dest => dest.ServiceId, opt => opt.MapFrom(src => (src.ServiceId == 0 ? null : src.ServiceId)))
+                .ForMember(dest => dest.StaffId, opt => opt.MapFrom(src => (src.StaffId == 0 ? null : src.StaffId)));
+
+            CreateMap<OPDBillService, EditOPDBillServiceCommand>().ReverseMap()
+                .ForMember(dest => dest.OPDBillId, opt => opt.MapFrom(src => (src.OPDBillId == 0 ? null : src.OPDBillId)))
+                .ForMember(dest => dest.ServiceId, opt => opt.MapFrom(src => (src.ServiceId == 0 ? null : src.ServiceId)))
+                .ForMember(dest => dest.StaffId, opt => opt.MapFrom(src => (src.StaffId == 0 ? null : src.StaffId)));
+
+            CreateMap<OPDBillService, OPDBillServiceViewModel>()
+                .ForMember(dest => dest.OPDBillId, opt => opt.MapFrom(src => (src.OPDBill != null ? src.OPDBill.Id : 0)))
+                .ForMember(dest => dest.ServiceId, opt => opt.MapFrom(src => (src.Service!= null ? src.Service.Id : 0)))
+                .ForMember(dest => dest.ServiceCode, opt => opt.MapFrom(src => (src.Service != null ? src.Service.Code : "")))
+                .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => (src.Service != null ? src.Service.Name : "")))
+                .ForMember(dest => dest.StaffId, opt => opt.MapFrom(src => (src.Staff != null ? src.Staff.Id : 0)))
+                .ForMember(dest => dest.StaffCode, opt => opt.MapFrom(src => (src.Staff != null ? src.Staff.Code : "")))
+                .ForMember(dest => dest.StaffName, opt => opt.MapFrom(src => (src.Staff  != null ? src.Staff.Name : "")));
+
+            CreateMap<OPDBillServiceViewModel, OPDBillService>();
+
+            CreateMap<CreateOPDBillServiceCommand, OPDBillServiceViewModel>().ReverseMap();
+
+            CreateMap<EditOPDBillServiceCommand, OPDBillServiceViewModel>().ReverseMap();
+
+            #endregion
         }
     }
 }

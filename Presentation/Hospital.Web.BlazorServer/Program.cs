@@ -112,6 +112,13 @@ builder.Services.AddTransient<IStaffTimingCommandRepository, StaffTimingCommandR
 builder.Services.AddTransient<IRefferByQueryRepository, RefferByQueryRepository>();
 builder.Services.AddTransient<IRefferByCommandRepository, RefferByCommandRepository>();
 
+builder.Services.AddTransient<IOPDBillQueryRepository, OPDBillQueryRepository>();
+builder.Services.AddTransient<IOPDBillCommandRepository, OPDBillCommandRepository>();
+
+builder.Services.AddTransient<IOPDBillServiceQueryRepository, OPDBillServiceQueryRepository>();
+builder.Services.AddTransient<IOPDBillServiceCommandRepository, OPDBillServiceCommandRepository>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

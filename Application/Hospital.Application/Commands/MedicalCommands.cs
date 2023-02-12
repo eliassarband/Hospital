@@ -426,4 +426,106 @@ namespace Hospital.Application.Commands
 
     #endregion
 
+    #region OPDBill
+    public class CreateOPDBillCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public DateTime Date { get; set; }
+        public int? PatientId { get; set; }
+        public string BillNo { get; set; }
+        public int TotalAmount { get; set; }
+        public int PayableAmount { get; set; }
+        public string Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+
+        public CreateOPDBillCommand()
+        {
+            this.CreatedDate = DateTime.Now;
+        }
+    }
+
+    public class EditOPDBillCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public DateTime Date { get; set; }
+        public int? PatientId { get; set; }
+        public string BillNo { get; set; }
+        public int TotalAmount { get; set; }
+        public int PayableAmount { get; set; }
+        public string Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string? ModifiedUser { get; set; }
+
+        public EditOPDBillCommand()
+        {
+            this.ModifiedDate = DateTime.Now;
+        }
+    }
+
+    public class DeleteOPDBillCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+
+        public DeleteOPDBillCommand(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
+
+    #region OPDBillService
+    public class CreateOPDBillServiceCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public int? OPDBillId { get; set; }
+        public int? ServiceId { get; set; }
+        public int Quantity { get; set; }
+        public int Rate { get; set; }
+        public int Amount { get; set; }
+        public int? StaffId { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+
+        public CreateOPDBillServiceCommand()
+        {
+            this.CreatedDate = DateTime.Now;
+        }
+    }
+
+    public class EditOPDBillServiceCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public int? OPDBillId { get; set; }
+        public int? ServiceId { get; set; }
+        public int Quantity { get; set; }
+        public int Rate { get; set; }
+        public int Amount { get; set; }
+        public int? StaffId { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string? ModifiedUser { get; set; }
+
+        public EditOPDBillServiceCommand()
+        {
+            this.ModifiedDate = DateTime.Now;
+        }
+    }
+
+    public class DeleteOPDBillServiceCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+
+        public DeleteOPDBillServiceCommand(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
+
 }

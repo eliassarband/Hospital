@@ -72,5 +72,7 @@ namespace Hospital.Infrastructure.Data
         public DbSet<StaffTiming> StaffTimings { get; set; }
         public DbSet<RefferBy> RefferBies { get; set; }
         public DbSet<Patient> Patients { get; set; }
+        public DbSet<OPDBill> OPDBills { get; set; }  
+        public DbSet<OPDBillService> OPDBillServices { get; set; }    
     }
 }
