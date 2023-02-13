@@ -18,13 +18,14 @@ namespace Hospital.Application.ViewModels
         public string? ServiceName { get; set; }
         public int Quantity { get; set; }
         public int Rate { get; set; }
+        public int Discount { get; set; }
         public int Amount { get; set; }
         public int? StaffId { get; set; }
         public string? StaffCode { get; set; }
         public string? StaffName { get; set; }
         public DateTime CreatedDate { get; set; }
-        public string? CreatedOPDBillService { get; set; }
+        public string? CreatedUser { get; set; }
         public DateTime ModifiedDate { get; set; }
-        public string? ModifiedOPDBillService { get; set; }
+        public string? ModifiedUser { get; set; }
     }
 }

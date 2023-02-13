@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Hospital.Application.Commands;
+using Hospital.Application.Handlers.QueryHandlers;
 using Hospital.Application.ViewModels;
 using Hospital.Domain.Core.Entities;
 using Hospital.Domain.Core.Helpers;
@@ -242,7 +243,7 @@ namespace Hospital.Application.Mapper
 
             CreateMap<OPDBill, OPDBillViewModel>()
                 .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => (src.Patient != null ? src.Patient.Id : 0)))
-                .ForMember(dest => dest.PatienName, opt => opt.MapFrom(src => (src.Patient != null ? src.Patient.Name : "")));
+                .ForMember(dest => dest.PatientName, opt => opt.MapFrom(src => (src.Patient != null ? src.Patient.Name : "")));
 
             CreateMap<OPDBillViewModel, OPDBill>();
 
@@ -279,6 +280,13 @@ namespace Hospital.Application.Mapper
 
             CreateMap<EditOPDBillServiceCommand, OPDBillServiceViewModel>().ReverseMap();
 
+            #endregion
+
+            #region PatientToSelectItem
+
+            CreateMap<PatientViewModel, SelectItemViewModel>()
+                .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Name));
             #endregion
         }
     }

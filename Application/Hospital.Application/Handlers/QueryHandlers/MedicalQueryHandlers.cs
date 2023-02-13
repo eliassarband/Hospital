@@ -346,5 +346,93 @@ namespace Hospital.Application.Handlers.QueryHandlers
 
     #endregion
 
+    #region OPDBill
+
+    public class GetAllOPDBillsHandler : IRequestHandler<GetAllOPDBillsQuery, List<OPDBillViewModel>>
+    {
+        private readonly IOPDBillQueryRepository _OPDBillQueryRepository;
+
+        public GetAllOPDBillsHandler(IOPDBillQueryRepository OPDBillQueryRepository)
+        {
+            _OPDBillQueryRepository = OPDBillQueryRepository;
+        }
+
+        public async Task<List<OPDBillViewModel>> Handle(GetAllOPDBillsQuery request, CancellationToken cancellationToken)
+        {
+            var BIs = (List<OPDBill>)await _OPDBillQueryRepository.GetAllAsync();
+
+            return MapperConfig.Mapper.Map<List<OPDBillViewModel>>(BIs);
+        }
+    }
+
+    public class GetOPDBillByIdHandler : IRequestHandler<GetOPDBillByIdQuery, OPDBillViewModel>
+    {
+        private readonly IOPDBillQueryRepository _OPDBillQueryRepository;
+
+        public GetOPDBillByIdHandler(IOPDBillQueryRepository OPDBillQueryRepository)
+        {
+            _OPDBillQueryRepository = OPDBillQueryRepository;
+        }
+
+        public async Task<OPDBillViewModel> Handle(GetOPDBillByIdQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<OPDBillViewModel>(await _OPDBillQueryRepository.GetByIdAsync(request.Id));
+        }
+    }
+
+    #endregion
+
+    #region OPDBillService
+
+    public class GetAllOPDBillServicesHandler : IRequestHandler<GetAllOPDBillServicesQuery, List<OPDBillServiceViewModel>>
+    {
+        private readonly IOPDBillServiceQueryRepository _OPDBillServiceQueryRepository;
+
+        public GetAllOPDBillServicesHandler(IOPDBillServiceQueryRepository OPDBillServiceQueryRepository)
+        {
+            _OPDBillServiceQueryRepository = OPDBillServiceQueryRepository;
+        }
+
+        public async Task<List<OPDBillServiceViewModel>> Handle(GetAllOPDBillServicesQuery request, CancellationToken cancellationToken)
+        {
+            var BIs = (List<OPDBillService>)await _OPDBillServiceQueryRepository.GetAllAsync();
+
+            return MapperConfig.Mapper.Map<List<OPDBillServiceViewModel>>(BIs);
+        }
+    }
+
+    public class GetOPDBillServicesByOPDBillIdHandler : IRequestHandler<GetOPDBillServicesByOPDBillIdQuery, List<OPDBillServiceViewModel>>
+    {
+        private readonly IOPDBillServiceQueryRepository _OPDBillServiceQueryRepository;
+
+        public GetOPDBillServicesByOPDBillIdHandler(IOPDBillServiceQueryRepository OPDBillServiceQueryRepository)
+        {
+            _OPDBillServiceQueryRepository = OPDBillServiceQueryRepository;
+        }
+
+        public async Task<List<OPDBillServiceViewModel>> Handle(GetOPDBillServicesByOPDBillIdQuery request, CancellationToken cancellationToken)
+        {
+            var BIs = (List<OPDBillService>)await _OPDBillServiceQueryRepository.GetByOPDBillIdAsync(request.OPDBillId);
+
+            return MapperConfig.Mapper.Map<List<OPDBillServiceViewModel>>(BIs);
+        }
+    }
+
+    public class GetOPDBillServiceByIdHandler : IRequestHandler<GetOPDBillServiceByIdQuery, OPDBillServiceViewModel>
+    {
+        private readonly IOPDBillServiceQueryRepository _OPDBillServiceQueryRepository;
+
+        public GetOPDBillServiceByIdHandler(IOPDBillServiceQueryRepository OPDBillServiceQueryRepository)
+        {
+            _OPDBillServiceQueryRepository = OPDBillServiceQueryRepository;
+        }
+
+        public async Task<OPDBillServiceViewModel> Handle(GetOPDBillServiceByIdQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<OPDBillServiceViewModel>(await _OPDBillServiceQueryRepository.GetByIdAsync(request.Id));
+        }
+    }
+
+    #endregion
 
 }
