@@ -21,7 +21,7 @@ namespace Hospital.Application.ViewModels
 
         public string Name { get; set; }
 
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         public int GenderId { get; set; }
         public int? GenderCode { get; set; }

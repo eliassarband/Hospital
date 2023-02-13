@@ -863,4 +863,174 @@ namespace Hospital.Application.Handlers.CommandHandlers
     }
 
     #endregion
+
+    #region Patient
+    public class CreatePatientHandler : IRequestHandler<CreatePatientCommand, CommandResponse>
+    {
+        private readonly IPatientCommandRepository _PatientCommandRepository;
+
+        public CreatePatientHandler(IPatientCommandRepository PatientCommandRepository)
+        {
+            _PatientCommandRepository = PatientCommandRepository;
+        }
+
+        public async Task<CommandResponse> Handle(CreatePatientCommand request, CancellationToken cancellationToken)
+        {
+            var PatientEntity = MapperConfig.Mapper.Map<Patient>(request);
+            PatientEntity.CreatedDate = DateTime.Now;
+
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (PatientEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+            else
+            {
+                try
+                {
+                    var newPatient = await _PatientCommandRepository.AddAsync(PatientEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = newPatient.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Saved successfully"
+                    };
+
+                }
+                catch (Exception exp)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = -1,
+                        ResultType = ResultType.Error,
+                        ResultMessage = "Error in operation\n" + exp.Message
+                    };
+                }
+
+            }
+
+            return response;
+        }
+    }
+
+    public class EditPatientHandler : IRequestHandler<EditPatientCommand, CommandResponse>
+    {
+        private readonly IPatientCommandRepository _PatientCommandRepository;
+        private readonly IPatientQueryRepository _PatientQueryRepository;
+
+        public EditPatientHandler(IPatientCommandRepository PatientCommandRepository, IPatientQueryRepository PatientQueryRepository)
+        {
+            _PatientCommandRepository = PatientCommandRepository;
+            _PatientQueryRepository = PatientQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(EditPatientCommand request, CancellationToken cancellationToken)
+        {
+            var PatientEntity = MapperConfig.Mapper.Map<Patient>(request);
+            PatientEntity.ModifiedDate = DateTime.Now;
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (PatientEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+
+            try
+            {
+                await _PatientCommandRepository.UpdateAsync(PatientEntity);
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            var modifiedPatient = await _PatientQueryRepository.GetByIdAsync(request.Id);
+
+            response = new CommandResponse()
+            {
+                Id = modifiedPatient.Id,
+                ResultType = ResultType.Success,
+                ResultMessage = "Updated successfully"
+            };
+
+            return response;
+        }
+    }
+
+    public class DeletePatientHandler : IRequestHandler<DeletePatientCommand, CommandResponse>
+    {
+        private readonly IPatientCommandRepository _PatientCommandRepository;
+        private readonly IPatientQueryRepository _PatientQueryRepository;
+
+        public DeletePatientHandler(IPatientCommandRepository PatientCommandRepository, IPatientQueryRepository PatientQueryRepository)
+        {
+            _PatientCommandRepository = PatientCommandRepository;
+            _PatientQueryRepository = PatientQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(DeletePatientCommand request, CancellationToken cancellationToken)
+        {
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            try
+            {
+                var PatientEntity = await _PatientQueryRepository.GetByIdAsync(request.Id);
+
+                await _PatientCommandRepository.DeleteAsync(PatientEntity);
+
+                response = new CommandResponse()
+                {
+                    Id = request.Id,
+                    ResultType = ResultType.Success,
+                    ResultMessage = "Removed successfully"
+                };
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            return response;
+        }
+    }
+
+    #endregion
 }

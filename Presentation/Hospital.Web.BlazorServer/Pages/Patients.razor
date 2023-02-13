@@ -1,0 +1,156 @@
+﻿@page "/Patients"
+@using Hospital.Application.Commands
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using MediatR
+@inject IMediator mediator;
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+@attribute [Authorize(Roles = "Super,Admin,Operator")]
+
+<MudGrid Class="mt-2">
+    <MudItem md="12">
+        <MudPaper Class="mt-2" Elevation="10">
+            <MudCard Class="pl-2 pr-2 mt-2">
+                <MudCardHeader>Patients</MudCardHeader>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("PatientDefine/0")>Add Patient</MudButton>
+                </MudCardActions>
+                <MudCardContent>
+                    <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<PatientViewModel,bool>(FilterPatientInit)">
+                        <ToolBarContent>
+                            <MudSpacer />
+                            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Clearable></MudTextField>
+                        </ToolBarContent>
+                        <HeaderContent>
+                            <MudTh>NationalIdCart</MudTh>
+                            <MudTh>Name</MudTh>
+                            <MudTh>Date Of Birth</MudTh>
+                            <MudTh>Gender</MudTh>
+                            <MudTh>FatherName</MudTh>
+                            <MudTh>Mobile</MudTh>
+                            <MudTh>City</MudTh>
+                            <MudTh>Area</MudTh>
+                            <MudTh>RefferBy</MudTh>
+                            <MudTh>Edit</MudTh>
+                            <MudTh>Delete</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="NationalIdCart">@context.NationalIdCart</MudTd>
+                            <MudTd DataLabel="Name">@context.NamePrefixName @context.Name</MudTd>
+                            <MudTd DataLabel="DateOfBirth">@context.DateOfBirth</MudTd>
+                            <MudTd DataLabel="GenderName">@context.GenderName</MudTd>
+                            <MudTd DataLabel="FatherName">@context.FatherName</MudTd>
+                            <MudTd DataLabel="Mobile">@context.Mobile</MudTd>
+                            <MudTd DataLabel="CityName">@context.CityName</MudTd>
+                            <MudTd DataLabel="AreaName">@context.AreaName</MudTd>
+                            <MudTd DataLabel="RefferByName">@context.RefferByName</MudTd>
+                            <MudTd DataLabel="Edit">
+                                <MudIconButton ButtonType="ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("PatientDefine/{0}",context.Id)></MudIconButton>
+                            </MudTd>
+                            <MudTd DataLabel="Delete">
+                                <MudIconButton ButtonType="ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeletePatient(@context.Id))"></MudIconButton>
+                            </MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudPagination ShowFirstButton="true" ShowLastButton="true" SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
+                        </PagerContent>
+                    </MudTable>
+                </MudCardContent>
+            </MudCard>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+
+
+@code {
+    private MudTable<PatientViewModel> _table;
+    private List<PatientViewModel> Elements;
+    private bool loading = false;
+    private string searchString = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        Elements = await mediator.Send(new GetAllPatientsQuery());
+    }
+
+    private void PageChanged(int i)
+    {
+        _table.NavigateTo(i - 1);
+    }
+
+    private bool FilterPatientInit(PatientViewModel element) => FilterPatient(element, searchString);
+
+    private bool FilterPatient(PatientViewModel element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.NationalIdCart.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.DateOfBirth.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.FatherName.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Mobile.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.CityName.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.AreaName.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if ($"{element.NationalIdCart} {element.Name} {element.DateOfBirth} {element.FatherName} {element.Mobile} {element.CityName} {element.AreaName}".Contains(searchString))
+            return true;
+        return false;
+    }
+
+    protected async Task DeletePatient(int Id)
+    {
+        bool? dialogResult = await DialogService.ShowMessageBox(
+            "Delete Patient",
+            "Are you sure?",
+            yesText: "Delete!", cancelText: "No");
+
+        if (dialogResult == true)
+        {
+            loading = true;
+            try
+            {
+                CommandResponse result;
+
+                result = await mediator.Send(new DeletePatientCommand(Id));
+
+                if (result.ResultType == ResultType.Success)
+                {
+                    Elements = await mediator.Send(new GetAllPatientsQuery());
+                    Snackbar.Add(result.ResultMessage, Severity.Success);
+                }
+                else if (result.ResultType == ResultType.Warning)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Warning);
+                }
+                else if (result.ResultType == ResultType.Error)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Error);
+                }
+
+
+
+            }
+            catch (Exception exp)
+            {
+                Snackbar.Add(exp.Message, Severity.Error);
+            }
+            loading = false;
+
+        }
+
+
+    }
+
+
+}

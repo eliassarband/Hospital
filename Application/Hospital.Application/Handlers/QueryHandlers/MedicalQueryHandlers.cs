@@ -295,6 +295,56 @@ namespace Hospital.Application.Handlers.QueryHandlers
 
     #endregion
 
+    #region Patient
+
+    public class GetAllPatientsHandler : IRequestHandler<GetAllPatientsQuery, List<PatientViewModel>>
+    {
+        private readonly IPatientQueryRepository _PatientQueryRepository;
+
+        public GetAllPatientsHandler(IPatientQueryRepository PatientQueryRepository)
+        {
+            _PatientQueryRepository = PatientQueryRepository;
+        }
+
+        public async Task<List<PatientViewModel>> Handle(GetAllPatientsQuery request, CancellationToken cancellationToken)
+        {
+            var BIs = (List<Patient>)await _PatientQueryRepository.GetAllAsync();
+
+            return MapperConfig.Mapper.Map<List<PatientViewModel>>(BIs);
+        }
+    }
+
+    public class GetPatientByIdHandler : IRequestHandler<GetPatientByIdQuery, PatientViewModel>
+    {
+        private readonly IPatientQueryRepository _PatientQueryRepository;
+
+        public GetPatientByIdHandler(IPatientQueryRepository PatientQueryRepository)
+        {
+            _PatientQueryRepository = PatientQueryRepository;
+        }
+
+        public async Task<PatientViewModel> Handle(GetPatientByIdQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<PatientViewModel>(await _PatientQueryRepository.GetByIdAsync(request.Id));
+        }
+    }
+
+    public class GetPatientByNationalIdHandler : IRequestHandler<GetPatientByNationalIdQuery, PatientViewModel>
+    {
+        private readonly IPatientQueryRepository _PatientQueryRepository;
+
+        public GetPatientByNationalIdHandler(IPatientQueryRepository PatientQueryRepository)
+        {
+            _PatientQueryRepository = PatientQueryRepository;
+        }
+
+        public async Task<PatientViewModel> Handle(GetPatientByNationalIdQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<PatientViewModel>(await _PatientQueryRepository.GetByNationalIdAsync(request.NationalId));
+        }
+    }
+
+    #endregion
 
 
 }

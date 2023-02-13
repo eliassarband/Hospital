@@ -24,10 +24,17 @@
                             </div>
                             <div class="col-12 text-center mb-2">
                                 @*<img src="~/images/loginLogo.png" alt="Afghan Hospital" title="Afghan Hospital" />*@
-                                <img src=@String.Format("data:image/png;base64,{0}",Convert.ToBase64String(Model.hospitalInformation.Logo)) alt="@Model.hospitalInformation.Name" title="@Model.hospitalInformation.Name" height="100px" />
+                                @if (Model.hospitalInformation != null)
+                                {
+                                    <img src=@String.Format("data:image/png;base64,{0}",Convert.ToBase64String(Model.hospitalInformation.Logo)) alt="@Model.hospitalInformation.Name" title="@Model.hospitalInformation.Name" height="100px" />
+                                }
+                                else
+                                {
+                                    <img src="~/images/loginLogo.png" alt="Afghan Hospital" title="Afghan Hospital" />
+                                }
                             </div>
                             <div class="col-12 text-center text-secondary mb-3">
-                               <h2>@Model.hospitalInformation.Name</h2>
+                               <h2>@Model.hospitalInformation?.Name</h2>
                             </div>
                             <div class="col-12 mb-3">
                                 <div class="row">
