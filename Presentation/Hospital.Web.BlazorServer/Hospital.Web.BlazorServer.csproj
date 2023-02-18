@@ -14,11 +14,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MudBlazor" Version="6.1.7" />
+    <PackageReference Include="Telerik.UI.for.Blazor" Version="3.6.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Application\Hospital.Application\Hospital.Application.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Hospital.Infrastructure\Hospital.Infrastructure.csproj" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties UseCdnSupport="False" /></VisualStudio></ProjectExtensions>
 
 </Project>

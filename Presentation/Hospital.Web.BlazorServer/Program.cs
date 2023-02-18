@@ -112,6 +112,9 @@ builder.Services.AddTransient<IStaffTimingCommandRepository, StaffTimingCommandR
 builder.Services.AddTransient<IRefferByQueryRepository, RefferByQueryRepository>();
 builder.Services.AddTransient<IRefferByCommandRepository, RefferByCommandRepository>();
 
+builder.Services.AddTransient<IPatientQueryRepository, PatientQueryRepository>();
+builder.Services.AddTransient<IPatientCommandRepository, PatientCommandRepository>();
+
 builder.Services.AddTransient<IOPDBillQueryRepository, OPDBillQueryRepository>();
 builder.Services.AddTransient<IOPDBillCommandRepository, OPDBillCommandRepository>();
 

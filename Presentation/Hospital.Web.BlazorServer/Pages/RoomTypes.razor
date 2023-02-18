@@ -17,7 +17,7 @@
             <MudCard Class="pl-2 pr-2 mt-2">
                 <MudCardHeader>Room Types</MudCardHeader>
                 <MudCardActions>
-                    <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("RoomTypeDefine/0")>Add Room Type</MudButton>
+                    <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("RoomTypeDefine/0")>Add Room Type</MudButton>
                 </MudCardActions>
                 <MudCardContent>
                     <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<RoomTypeViewModel,bool>(FilterRoomTypeInit)">
@@ -50,10 +50,10 @@
                                 }
                             </MudTd>
                             <MudTd DataLabel="Edit">
-                                <MudIconButton ButtonType="ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("RoomTypeDefine/{0}",context.Id)></MudIconButton>
+                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("RoomTypeDefine/{0}",context.Id)></MudIconButton>
                             </MudTd>
                             <MudTd DataLabel="Delete">
-                                <MudIconButton ButtonType="ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteRoomType(@context.Id))"></MudIconButton>
+                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteRoomType(@context.Id))"></MudIconButton>
                             </MudTd>
                         </RowTemplate>
                         <PagerContent>

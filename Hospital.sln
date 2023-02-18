@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.Web.BlazorServer",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.Domain.Core", "Domain\Hospital.Domain.Core\Hospital.Domain.Core.csproj", "{14FC7560-2965-4B5E-98F7-4A40F346E6E4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.Presentation.WebApp", "Presentation\Hospital.Presentation.WebApp\Hospital.Presentation.WebApp.csproj", "{8F6A7E34-3094-4527-9376-7BAB7F85B168}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{14FC7560-2965-4B5E-98F7-4A40F346E6E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14FC7560-2965-4B5E-98F7-4A40F346E6E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14FC7560-2965-4B5E-98F7-4A40F346E6E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F6A7E34-3094-4527-9376-7BAB7F85B168}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F6A7E34-3094-4527-9376-7BAB7F85B168}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F6A7E34-3094-4527-9376-7BAB7F85B168}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F6A7E34-3094-4527-9376-7BAB7F85B168}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +56,7 @@ Global
 		{42EE8C91-D518-4D6A-9D24-61E801BAAA46} = {439E7798-F612-4529-B3ED-2F0DB0587C6A}
 		{3F1C61D1-F381-4C19-BA0E-5C3A30BBD892} = {FF1CF853-5492-41B8-88FD-1040443B954A}
 		{14FC7560-2965-4B5E-98F7-4A40F346E6E4} = {5366280D-FF83-4DDD-9BE3-535C49F0B139}
+		{8F6A7E34-3094-4527-9376-7BAB7F85B168} = {FF1CF853-5492-41B8-88FD-1040443B954A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7F45922E-CAC0-4902-ACEF-B394D4CD7819}

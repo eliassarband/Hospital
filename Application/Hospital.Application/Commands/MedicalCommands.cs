@@ -433,6 +433,7 @@ namespace Hospital.Application.Commands
         public DateTime Date { get; set; }
         public int? PatientId { get; set; }
         public string BillNo { get; set; }
+        public string ReceiptNo { get; set; }
         public int TotalAmount { get; set; }
         public int PayableAmount { get; set; }
         public string Description { get; set; }
@@ -451,6 +452,7 @@ namespace Hospital.Application.Commands
         public DateTime Date { get; set; }
         public int? PatientId { get; set; }
         public string BillNo { get; set; }
+        public string ReceiptNo { get; set; }
         public int TotalAmount { get; set; }
         public int PayableAmount { get; set; }
         public string Description { get; set; }

@@ -17,6 +17,8 @@ namespace Hospital.Domain.Core.Entities
 
         [Required]
         public string BillNo { get; set; }
+        [Required]
+        public string ReceiptNo { get; set; }
 
         [Required]
         public int TotalAmount { get; set; }
@@ -25,7 +27,7 @@ namespace Hospital.Domain.Core.Entities
         public int PayableAmount { get; set; }
 
         [MaxLength(1000)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
 
         public virtual ICollection<OPDBillService> OPDBillServices { get; set; }

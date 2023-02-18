@@ -17,6 +17,7 @@ namespace Hospital.Application.ViewModels
         public string PatientName { get; set; }
         public PatientViewModel Patient { get; set; }
         public string BillNo { get; set; }
+        public string ReceiptNo { get; set; }
         public int TotalAmount { get; set; }
         public int PayableAmount { get; set; }
         public string Description { get; set; }

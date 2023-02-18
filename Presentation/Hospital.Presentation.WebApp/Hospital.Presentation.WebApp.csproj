@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseRazorSourceGenerator>false</UseRazorSourceGenerator>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\lib\blazor-ui\swatches\bootstrap-3-dark.css" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Telerik.UI.for.Blazor" Version="3.6.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+		<Compile Update="Resources\TelerikMessages.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>TelerikMessages.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Resources\TelerikMessages.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>TelerikMessages.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ProjectExtensions><VisualStudio><UserProperties UseCdnSupport="False" /></VisualStudio></ProjectExtensions>
+
+</Project>
