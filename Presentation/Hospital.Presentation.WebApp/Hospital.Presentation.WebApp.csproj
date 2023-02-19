@@ -12,6 +12,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <PackageReference Include="Telerik.FontIcons" Version="1.0.2" />
     <PackageReference Include="Telerik.UI.for.Blazor" Version="3.6.0" />
   </ItemGroup>
   

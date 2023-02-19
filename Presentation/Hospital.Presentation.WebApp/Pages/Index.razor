@@ -7,6 +7,7 @@
 @inject ITelerikStringLocalizer Localizer
 @* This is the namespace that is generated from the resx files localizer *@
 @using Hospital.Presentation.WebApp.Resources
+@using Telerik.FontIcons;
 
 Current UI culture (used for localization): @Thread.CurrentThread.CurrentUICulture.Name
 <br />
@@ -19,7 +20,7 @@ Welcome to your new app.
 <br />
 
 <TelerikButton OnClick="@SayHelloHandler" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">@Localizer[nameof(TelerikMessages.Wizard_Next)]</TelerikButton>
-
+<TelerikFontIcon Icon="@FontIcon.Check" Flip="@IconFlip.Both" />
 <br />
 
 @helloString
