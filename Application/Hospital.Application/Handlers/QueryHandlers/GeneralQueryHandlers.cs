@@ -582,4 +582,56 @@ namespace Hospital.Application.Handlers.QueryHandlers
     }
 
     #endregion
+
+    #region ReportTemplate
+
+    public class GetAllReportTemplatesHandler : IRequestHandler<GetAllReportTemplatesQuery, List<ReportTemplateViewModel>>
+    {
+        private readonly IReportTemplateQueryRepository _ReportTemplateQueryRepository;
+
+        public GetAllReportTemplatesHandler(IReportTemplateQueryRepository ReportTemplateQueryRepository)
+        {
+            _ReportTemplateQueryRepository = ReportTemplateQueryRepository;
+        }
+
+        public async Task<List<ReportTemplateViewModel>> Handle(GetAllReportTemplatesQuery request, CancellationToken cancellationToken)
+        {
+            List<ReportTemplate> ReportTemplates = (List<ReportTemplate>)await _ReportTemplateQueryRepository.GetAllAsync();
+
+            return MapperConfig.Mapper.Map<List<ReportTemplateViewModel>>(ReportTemplates);
+        }
+    }
+
+    public class GetReportTemplateByIdHandler : IRequestHandler<GetReportTemplateByIdQuery, ReportTemplateViewModel>
+    {
+        private readonly IReportTemplateQueryRepository _ReportTemplateQueryRepository;
+
+        public GetReportTemplateByIdHandler(IReportTemplateQueryRepository ReportTemplateQueryRepository)
+        {
+            _ReportTemplateQueryRepository = ReportTemplateQueryRepository;
+        }
+
+        public async Task<ReportTemplateViewModel> Handle(GetReportTemplateByIdQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<ReportTemplateViewModel>(await _ReportTemplateQueryRepository.GetByIdAsync(request.Id));
+        }
+    }
+
+    public class GetReportTemplateByCodeHandler : IRequestHandler<GetReportTemplateByCodeQuery, ReportTemplateViewModel>
+    {
+        private readonly IReportTemplateQueryRepository _ReportTemplateQueryRepository;
+
+        public GetReportTemplateByCodeHandler(IReportTemplateQueryRepository ReportTemplateQueryRepository)
+        {
+            _ReportTemplateQueryRepository = ReportTemplateQueryRepository;
+        }
+
+        public async Task<ReportTemplateViewModel> Handle(GetReportTemplateByCodeQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<ReportTemplateViewModel>(await _ReportTemplateQueryRepository.GetByCodeAsync(request.Code));
+        }
+    }
+
+
+    #endregion
 }

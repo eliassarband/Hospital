@@ -14,6 +14,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MudBlazor" Version="6.1.7" />
+    <PackageReference Include="Stimulsoft.Reports.Blazor" Version="2023.1.7" />
     <PackageReference Include="Telerik.UI.for.Blazor" Version="3.6.0" />
   </ItemGroup>
 

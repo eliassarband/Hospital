@@ -444,4 +444,48 @@ namespace Hospital.Application.Commands
 
     #endregion
 
+    #region ReportTemplate
+    public class CreateReportTemplateCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string Content { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedReportTemplate { get; set; }
+
+        public CreateReportTemplateCommand()
+        {
+            this.CreatedDate = DateTime.Now;
+        }
+    }
+
+    public class EditReportTemplateCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string Content { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedReportTemplate { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string? ModifiedReportTemplate { get; set; }
+
+        public EditReportTemplateCommand()
+        {
+            this.ModifiedDate = DateTime.Now;
+        }
+    }
+
+    public class DeleteReportTemplateCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+
+        public DeleteReportTemplateCommand(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
 }

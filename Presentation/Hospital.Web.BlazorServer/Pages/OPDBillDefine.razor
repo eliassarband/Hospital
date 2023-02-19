@@ -194,6 +194,18 @@
         oPDBill.PayableAmount = payable;
     }
 
+    protected async Task Print()
+    {
+        if (oPDBill.Id > 0)
+        {
+
+            if (oPDBill.Id > 0)
+            {
+                navManager.NavigateTo("/ReportShow/OPDBill/" + oPDBill.Id.ToString());
+            }
+        }
+
+    }
 
     protected async Task SaveOPDBill()
     {
@@ -249,8 +261,24 @@
 
                             }
 
-                            if(Id>0)
+                            oPDBill.Id = result.Id;
+
+                            bool? dialogResult = await DialogService.ShowMessageBox(
+                                "Print",
+                                "Do you want to Print؟",
+                                yesText: "Yes", cancelText: "No");
+
+                            if (dialogResult == true)
+                            {
+                                if (result.Id > 0)
+                                {
+                                    Print();
+                                }
+                            }
+                            else if(Id>0)
+                            {
                                 navManager.NavigateTo("OPDBills");
+                            }
                         }
                         else if (result.ResultType == ResultType.Warning)
                         {
@@ -313,7 +341,21 @@
 
                         }
 
-                        if (Id > 0)
+                        oPDBill.Id = result.Id;
+
+                        bool? dialogResult = await DialogService.ShowMessageBox(
+                            "Print",
+                            "Do you want to Print؟",
+                            yesText: "Yes", cancelText: "No");
+
+                        if (dialogResult == true)
+                        {
+                            if (result.Id > 0)
+                            {
+                                Print();
+                            }
+                        }
+                        else if (Id > 0)
                             navManager.NavigateTo("OPDBills");
                     }
                     else if (result.ResultType == ResultType.Warning)

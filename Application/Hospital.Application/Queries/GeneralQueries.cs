@@ -340,4 +340,34 @@ namespace Hospital.Application.Queries
     }
 
     #endregion
+
+    #region ReportTemplate
+    public record GetAllReportTemplatesQuery : IRequest<List<ReportTemplateViewModel>>
+    {
+
+    }
+
+
+    public record GetReportTemplateByIdQuery : IRequest<ReportTemplateViewModel>
+    {
+        public int Id { get; private set; }
+
+        public GetReportTemplateByIdQuery(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    public record GetReportTemplateByCodeQuery : IRequest<ReportTemplateViewModel>
+    {
+        public string Code { get; private set; }
+
+        public GetReportTemplateByCodeQuery(string Code)
+        {
+            this.Code = Code;
+        }
+    }
+
+
+    #endregion
 }

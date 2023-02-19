@@ -1434,4 +1434,177 @@ namespace Hospital.Application.Handlers.CommandHandlers
     }
 
     #endregion
+
+    #region ReportTemplate
+    public class CreateReportTemplateHandler : IRequestHandler<CreateReportTemplateCommand, CommandResponse>
+    {
+        private readonly IReportTemplateCommandRepository _ReportTemplateCommandRepository;
+
+        public CreateReportTemplateHandler(IReportTemplateCommandRepository ReportTemplateCommandRepository)
+        {
+            _ReportTemplateCommandRepository = ReportTemplateCommandRepository;
+        }
+
+        public async Task<CommandResponse> Handle(CreateReportTemplateCommand request, CancellationToken cancellationToken)
+        {
+            var ReportTemplateEntity = MapperConfig.Mapper.Map<ReportTemplate>(request);
+            ReportTemplateEntity.CreatedDate = DateTime.Now;
+
+
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (ReportTemplateEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+            else
+            {
+                try
+                {
+                    var newReportTemplate = await _ReportTemplateCommandRepository.AddAsync(ReportTemplateEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = newReportTemplate.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Saved successfully"
+                    };
+
+                }
+                catch (Exception exp)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = -1,
+                        ResultType = ResultType.Error,
+                        ResultMessage = "Error in operation\n" + exp.Message
+                    };
+                }
+
+            }
+
+            return response;
+        }
+    }
+
+    public class EditReportTemplateHandler : IRequestHandler<EditReportTemplateCommand, CommandResponse>
+    {
+        private readonly IReportTemplateCommandRepository _ReportTemplateCommandRepository;
+        private readonly IReportTemplateQueryRepository _ReportTemplateQueryRepository;
+
+        public EditReportTemplateHandler(IReportTemplateCommandRepository ReportTemplateCommandRepository, IReportTemplateQueryRepository ReportTemplateQueryRepository)
+        {
+            _ReportTemplateCommandRepository = ReportTemplateCommandRepository;
+            _ReportTemplateQueryRepository = ReportTemplateQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(EditReportTemplateCommand request, CancellationToken cancellationToken)
+        {
+            var ReportTemplateEntity = MapperConfig.Mapper.Map<ReportTemplate>(request);
+            ReportTemplateEntity.ModifiedDate = DateTime.Now;
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (ReportTemplateEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+
+            try
+            {
+                await _ReportTemplateCommandRepository.UpdateAsync(ReportTemplateEntity);
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            var modifiedReportTemplate = await _ReportTemplateQueryRepository.GetByIdAsync(request.Id);
+
+            response = new CommandResponse()
+            {
+                Id = modifiedReportTemplate.Id,
+                ResultType = ResultType.Success,
+                ResultMessage = "Updated successfully"
+            };
+
+            return response;
+        }
+    }
+
+    public class DeleteReportTemplateHandler : IRequestHandler<DeleteReportTemplateCommand, CommandResponse>
+    {
+        private readonly IReportTemplateCommandRepository _ReportTemplateCommandRepository;
+        private readonly IReportTemplateQueryRepository _ReportTemplateQueryRepository;
+
+        public DeleteReportTemplateHandler(IReportTemplateCommandRepository ReportTemplateCommandRepository, IReportTemplateQueryRepository ReportTemplateQueryRepository)
+        {
+            _ReportTemplateCommandRepository = ReportTemplateCommandRepository;
+            _ReportTemplateQueryRepository = ReportTemplateQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(DeleteReportTemplateCommand request, CancellationToken cancellationToken)
+        {
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            try
+            {
+                var ReportTemplateEntity = await _ReportTemplateQueryRepository.GetByIdAsync(request.Id);
+
+
+                await _ReportTemplateCommandRepository.DeleteAsync(ReportTemplateEntity);
+
+                response = new CommandResponse()
+                {
+                    Id = request.Id,
+                    ResultType = ResultType.Success,
+                    ResultMessage = "Removed successfully"
+                };
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            return response;
+        }
+    }
+
+    #endregion
 }

@@ -121,6 +121,9 @@ builder.Services.AddTransient<IOPDBillCommandRepository, OPDBillCommandRepositor
 builder.Services.AddTransient<IOPDBillServiceQueryRepository, OPDBillServiceQueryRepository>();
 builder.Services.AddTransient<IOPDBillServiceCommandRepository, OPDBillServiceCommandRepository>();
 
+builder.Services.AddTransient<IReportTemplateQueryRepository, ReportTemplateQueryRepository>();
+builder.Services.AddTransient<IReportTemplateCommandRepository, ReportTemplateCommandRepository>();
+
 
 var app = builder.Build();
 

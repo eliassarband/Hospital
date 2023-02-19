@@ -1,0 +1,118 @@
+﻿@page "/OPDReportTemplate"
+@using Hospital.Application.Commands;
+@using Hospital.Application.Mapper;
+@using Hospital.Application.Queries;
+@using Hospital.Application.Responses;
+@using Hospital.Application.ViewModels;
+@using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Helpers;
+@using Hospital.Web.BlazorServer.Models.Auth;
+
+@using Stimulsoft.Base
+@using Stimulsoft.Report
+@using Stimulsoft.Report.Blazor
+@using Stimulsoft.Report.Dictionary
+@using Stimulsoft.Report.Web
+@using MediatR
+@inject IMediator mediator
+@inject NavigationManager navManager
+@inject ISnackbar Snackbar
+
+@attribute [Authorize(Roles = "Super,Admin")]
+
+@*<MudPaper Style="background-color:red" Class="p-2" Elevation="10" Height="90vh">*@
+    <StiBlazorDesigner Report="@report"
+                       OnSaveReport="@OnSaveReport" Height="800px" />
+@*</MudPaper>*@
+@code {
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+    private StiReport report;
+    private ReportTemplateViewModel reportTemplate;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        reportTemplate = await mediator.Send(new GetReportTemplateByCodeQuery("OPDBill"));
+
+        report = StiReport.CreateNewReport();
+
+        report.Dictionary.Databases.Clear();
+
+        if (reportTemplate != null)
+        {
+            report.LoadFromString(reportTemplate.Content);
+        }
+
+        var oPDBills = await mediator.Send(new GetAllOPDBillsQuery());
+
+        report.RegData(ConverterHelper.ListToDataTable(oPDBills));
+
+        report.Dictionary.Synchronize();
+
+        report.Render();
+
+        base.OnInitialized();
+
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        //navManager.NavigateTo("/ReceiptreportTemplate", true);
+
+
+    }
+
+    protected async Task OnSaveReport(StiSaveReportEventArgs args)
+    {
+        var report = args.Report;
+
+        var str = report.SaveToString();
+
+        if (reportTemplate == null)
+        {
+            reportTemplate = new ReportTemplateViewModel()
+                {
+                    Id = 0,
+                    Code = "OPDBill",
+                    Name = "OPD Bill Template",
+                    Content = str
+                };
+        }
+        else
+        {
+            reportTemplate.Content = str;
+        }
+        CommandResponse result;
+
+        if (reportTemplate.Id > 0)
+        {
+            reportTemplate.ModifiedUser = userInfo?.Username;
+            var command = MapperConfig.Mapper.Map<EditReportTemplateCommand>(reportTemplate);
+
+            result = await mediator.Send(command);
+        }
+        else
+        {
+            reportTemplate.CreatedUser = userInfo?.Username;
+            var command = MapperConfig.Mapper.Map<CreateReportTemplateCommand>(reportTemplate);
+
+            result = await mediator.Send(command);
+        }
+
+        if (result.ResultType == ResultType.Success)
+        {
+            Snackbar.Add(result.ResultMessage, Severity.Success);
+
+        }
+        else if (result.ResultType == ResultType.Warning)
+        {
+            Snackbar.Add(result.ResultMessage, Severity.Warning);
+        }
+        else if (result.ResultType == ResultType.Error)
+        {
+            Snackbar.Add(result.ResultMessage, Severity.Error);
+        }
+
+    }
+}

@@ -161,6 +161,19 @@ namespace Hospital.Application.Mapper
 
             #endregion
 
+            #region ReportTemplate
+
+            CreateMap<ReportTemplate, CreateReportTemplateCommand>().ReverseMap();
+
+            CreateMap<ReportTemplate, EditReportTemplateCommand>().ReverseMap();
+
+            CreateMap<ReportTemplate, ReportTemplateViewModel>().ReverseMap();
+
+            CreateMap<CreateReportTemplateCommand, ReportTemplateViewModel>().ReverseMap();
+
+            CreateMap<EditReportTemplateCommand, ReportTemplateViewModel>().ReverseMap();
+
+            #endregion
 
         }
     }
