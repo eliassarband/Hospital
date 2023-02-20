@@ -9,8 +9,6 @@
 @using Hospital.Web.BlazorServer.Models.Auth
 @using MediatR
 @using System.ComponentModel.DataAnnotations
-@using Telerik.Blazor;
-@using Telerik.Blazor.Components;
 @inject IMediator mediator
 @inject NavigationManager navManager
 @inject ISnackbar Snackbar
@@ -26,16 +24,37 @@
                     <MudCardHeader>@caption</MudCardHeader>
                     <MudCardContent>
                         <MudGrid>
-                            <MudItem md="6">
+                            @*<MudItem md="6">
                                 <MudDatePicker Label="Date" @bind-Date="@oPDBill.Date" TitleDateFormat="dddd, dd MMMM" Variant="Variant.Outlined" Required="true" RequiredError="Please Select Date" />
-                            </MudItem>
+                            </MudItem>*@
                             <MudItem md="6">
+                                <TelerikFloatingLabel Text="Date*:" Class="custom-label">
+                                    <div class="k-form-field-wrap">
+                                        <TelerikDatePicker @bind-Value="@oPDBill.Date"
+                                                           Format="dddd, dd MMMM, yyyy"
+                                                           Id="opd-date">
+                                        </TelerikDatePicker>
+                                    </div>
+                                </TelerikFloatingLabel>
+                            </MudItem>
+                            @*<MudItem md="6">
                                 <MudSelect Class="mt-1" T="int" Label="Patient" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Patient" @bind-value="@oPDBill.PatientId" @bind-Text="@oPDBill.PatientName" Clearable>
                                     @foreach (var p in patients)
                                     {
                                         <MudSelectItem T="int" Value="@p.Id">@p.Name</MudSelectItem>
                                     }
                                 </MudSelect>
+                            </MudItem>*@
+                            <MudItem md="6">
+                                <TelerikComboBox @bind-Value="@oPDBill.PatientId"
+                                                 Data="@patients"
+                                                 Placeholder="Select Patient"
+                                                 TextField="@nameof(PatientViewModel.Name)"
+                                                 ValueField="@nameof(PatientViewModel.Id)"
+                                                 Filterable="true"
+                                                 Id="patient"
+                                                 Width="100%">
+                                </TelerikComboBox>
                             </MudItem>
                             <MudItem md="12">
                                 <TelerikGrid Data=@oPDBillServices EditMode="@GridEditMode.Popup"

@@ -11,7 +11,8 @@
 @inject Hospital.Web.BlazorServer.Models.TokenProvider _tokenProvider;
 @inject IMediator mediator;
 
-<PageTitle>Hospital.Web.BlazorServer</PageTitle>
+<PageTitle>HMIS System</PageTitle>
+
 
 <MudRTLProvider RightToLeft="false">
     <MudThemeProvider IsDarkMode="@ThemeState" />
@@ -32,7 +33,6 @@
             <MudSpacer />
             <MudHidden Breakpoint="Breakpoint.SmAndDown">
                 <MudText Class="mr-2"> @userInfo?.FullName </MudText>
-                @*<MudAvatar Class="mr-2" Image="@photo"></MudAvatar>*@
                 
                 <MudMenu>
                     <ActivatorContent>
@@ -92,13 +92,16 @@
         <MudMainContent>
             <MudContainer MaxWidth="MaxWidth.Large" Fixed="true">
                 <CascadingValue Value="@userInfo">
-                    
+                      
                     @Body
                 </CascadingValue>
             </MudContainer>
         </MudMainContent>
     </MudLayout>
 </MudRTLProvider>
+
+ 
+
     @code {
     bool _drawerOpen = true;
     private LoginedUser? userInfo;
