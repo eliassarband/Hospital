@@ -16,105 +16,137 @@
 
 @attribute [Authorize(Roles = "Super,Admin,Operator")]
 
+<h1>@caption</h1>
+
 <MudGrid Class="mt-2">
     <MudItem md="12">
-        <MudPaper Class="mt-2" Elevation="10">
-            <MudForm @ref="form" @bind-IsValid="@success">
-                <MudCard Class="mt-2">
-                    <MudCardHeader>@caption</MudCardHeader>
-                    <MudCardContent>
-                        <MudGrid>
-                            @*<MudItem md="6">
-                                <MudDatePicker Label="Date" @bind-Date="@oPDBill.Date" TitleDateFormat="dddd, dd MMMM" Variant="Variant.Outlined" Required="true" RequiredError="Please Select Date" />
-                            </MudItem>*@
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Date*:" Class="custom-label">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikDatePicker @bind-Value="@oPDBill.Date"
-                                                           Format="dddd, dd MMMM, yyyy"
-                                                           Id="opd-date">
-                                        </TelerikDatePicker>
-                                    </div>
-                                </TelerikFloatingLabel>
-                            </MudItem>
-                            @*<MudItem md="6">
-                                <MudSelect Class="mt-1" T="int" Label="Patient" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Patient" @bind-value="@oPDBill.PatientId" @bind-Text="@oPDBill.PatientName" Clearable>
-                                    @foreach (var p in patients)
-                                    {
-                                        <MudSelectItem T="int" Value="@p.Id">@p.Name</MudSelectItem>
-                                    }
-                                </MudSelect>
-                            </MudItem>*@
-                            <MudItem md="6">
-                                <TelerikComboBox @bind-Value="@oPDBill.PatientId"
-                                                 Data="@patients"
-                                                 Placeholder="Select Patient"
-                                                 TextField="@nameof(PatientViewModel.Name)"
-                                                 ValueField="@nameof(PatientViewModel.Id)"
-                                                 Filterable="true"
-                                                 Id="patient"
-                                                 Width="100%">
-                                </TelerikComboBox>
-                            </MudItem>
-                            <MudItem md="12">
-                                <TelerikGrid Data=@oPDBillServices EditMode="@GridEditMode.Popup"
-                                             Height="300px" Pageable="true" PageSize="5"
-                                             OnDelete=@DeleteItem OnCreate=@CreateItem>
-                                    <GridToolBar>
-                                        <GridCommandButton Command="Add">Add Service</GridCommandButton>
-                                    </GridToolBar>
-                                    <GridColumns>
-                                        <GridColumn Field=@nameof(OPDBillServiceViewModel.ServiceName)  Title="Service Name" Editable="true" Width="15vw" TextAlign="ColumnTextAlign.Center">
-                                            <EditorTemplate>
-                                                @{
-                                                    var ServiceToEdit = context as OPDBillServiceViewModel;
-                                                    <TelerikDropDownList Data="@services" ValueField="Id" TextField="Name" @bind-Value="@ServiceToEdit.ServiceId" />
-                                                }
-                                            </EditorTemplate>
-                                        </GridColumn>
-                                        <GridColumn Field=@nameof(OPDBillServiceViewModel.Quantity) Title="Quantity" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" />
-                                        <GridColumn Field=@nameof(OPDBillServiceViewModel.Rate) Title="Rate" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" />
-                                        <GridColumn Field=@nameof(OPDBillServiceViewModel.Discount) Title="Discount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" />
-                                        <GridColumn Field=@nameof(OPDBillServiceViewModel.StaffName) Title="Staff Name" Editable="true" Width="15vw" TextAlign="ColumnTextAlign.Center">
-                                            <EditorTemplate>
-                                                @{
-                                                    var ServiceToEdit = context as OPDBillServiceViewModel;
-                                                    <TelerikDropDownList Data="@staffs" ValueField="Id" TextField="Name" @bind-Value="@ServiceToEdit.StaffId" />
-                                                }
-                                            </EditorTemplate>
-                                        </GridColumn>
-                                        <GridColumn Field=@nameof(OPDBillServiceViewModel.Amount) Title="Amount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" />
-                                        <GridCommandColumn Width="10vw">
+        <MudPaper Class="p-3" Elevation="10">
+            <TelerikForm @ref="form" Model="@oPDBill"
+                     OnValidSubmit="@HandleValidSubmit"
+                     OnInvalidSubmit="@HandleInvalidSubmit">
+                <FormValidation>
+                    <DataAnnotationsValidator></DataAnnotationsValidator>
+                    
+                </FormValidation>
+                <FormItems>
+                    <MudGrid Spacing="1">
+                        <MudItem md="6">
+                            <TelerikFloatingLabel Text="Date" Class="custom-label w-100">
+                                <div class="k-form-field-wrap">
+                                    <TelerikDatePicker @bind-Value="@oPDBill.Date"
+                                                        Format="dddd, dd MMMM, yyyy"
+                                                        Id="opd-date">
+                                    </TelerikDatePicker>
+                                </div>
+                            </TelerikFloatingLabel>
+                            <TelerikValidationMessage For="@(() => oPDBill.Date)" />
+                        </MudItem>
+                        <MudItem md="6">
+                            <TelerikFloatingLabel Text="Patient" Class="custom-label w-100">
+                                <div class="k-form-field-wrap">
+                                    <TelerikComboBox @bind-Value="@oPDBill.PatientId"
+                                                        Data="@patients"
+                                                        Placeholder="Select Patient"
+                                                        TextField="@nameof(PatientViewModel.Name)"
+                                                        ValueField="@nameof(PatientViewModel.Id)"
+                                                        Filterable="true"
+                                                        Id="patient">
+                                    </TelerikComboBox>
+                                </div>
+                            </TelerikFloatingLabel>
+                            <TelerikValidationMessage For="@(() => oPDBill.Patient)" />
+                        </MudItem>
+                        <MudItem md="12">
+                            <TelerikGrid Data=@oPDBillServices EditMode="@GridEditMode.Popup"
+                                            Height="300px" Pageable="true" PageSize="5"
+                                            OnDelete=@DeleteItem OnCreate=@CreateItem>
+                                <GridToolBar>
+                                    <GridCommandButton Command="Add">Add Service</GridCommandButton>
+                                </GridToolBar>
+                                <GridColumns>
+                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.ServiceName) Title="Service Name" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                        <EditorTemplate>
+                                            @{
+                                                var ServiceToEdit = context as OPDBillServiceViewModel;
+                                                <TelerikDropDownList Data="@services" ValueField="Id" TextField="Name" @bind-Value="@ServiceToEdit.ServiceId"></TelerikDropDownList>
+                                            }
+                                        </EditorTemplate>
+                                    </GridColumn>
+                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.Quantity) Title="Quantity" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.Rate) Title="Rate" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.Discount) Title="Discount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.StaffName) Title="Staff Name" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                        <EditorTemplate>
+                                            @{
+                                                var ServiceToEdit = context as OPDBillServiceViewModel;
+                                                <TelerikDropDownList Data="@staffs" ValueField="Id" TextField="Name" @bind-Value="@ServiceToEdit.StaffId" />
+                                            }
+                                        </EditorTemplate>
+                                    </GridColumn>
+                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.Amount) Title="Amount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                    <GridCommandColumn Title="Action" Width="10vw" HeaderClass="k-text-center">
+
+                                        <GridCommandButton Command="Delete" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Delete</GridCommandButton>
                                             
-                                                <GridCommandButton Command="Delete" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Delete</GridCommandButton>
-                                            
-                                        </GridCommandColumn>
-                                    </GridColumns>
-                                </TelerikGrid>
-                            </MudItem>
-                            <MudItem md="6">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@oPDBill.BillNo" MaxLength="20" Label="Bill Number" Placeholder="Bill Number" Variant="Variant.Outlined" Clearable></MudTextField>
-                            </MudItem>
-                            <MudItem md="6">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@oPDBill.ReceiptNo" MaxLength="20" Label="Receipt Number" Placeholder="Receipt Number" Variant="Variant.Outlined" Clearable></MudTextField>
-                            </MudItem>
-                            <MudItem md="6">
-                                <MudNumericField T="int" Class="mt-1" @bind-Value="@oPDBill.TotalAmount" Label="Total Amount Number" Placeholder="Total Amount" Variant="Variant.Outlined" Clearable ReadOnly></MudNumericField>
-                            </MudItem>
-                            <MudItem md="6">
-                                <MudNumericField T="int" Class="mt-1" @bind-Value="@oPDBill.PayableAmount" Label="Payable Number" Placeholder="Payable Number" Variant="Variant.Outlined" Clearable ReadOnly></MudNumericField>
-                            </MudItem>
-                            <MudItem md="12">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@oPDBill.Description" MaxLength="100" Label="Description" Placeholder="Description" Variant="Variant.Outlined" Clearable></MudTextField>
-                            </MudItem>
-                        </MudGrid>
-                    </MudCardContent>
-                    <MudCardActions>
-                        <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveOPDBill" Disabled="@(!success)">Save</MudButton>
-                        <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="OPDBills">Return</MudButton>
-                    </MudCardActions>
-                </MudCard>
-            </MudForm>
+                                    </GridCommandColumn>
+                                </GridColumns>
+                            </TelerikGrid>
+                        </MudItem>
+                        <MudItem md="6">
+                            <TelerikFloatingLabel Text="Bill Number" Class="custom-label w-100">
+                                <div class="k-form-field-wrap">
+                                    <TelerikTextBox Placeholder="Bill Number" 
+                                                    @bind-Value="@oPDBill.BillNo"></TelerikTextBox>
+                                </div>
+                            </TelerikFloatingLabel>
+                            <TelerikValidationMessage For="@(() => oPDBill.BillNo)" />
+                        </MudItem>
+                        <MudItem md="6">
+                            <TelerikFloatingLabel Text="Receipt Number" Class="custom-label w-100">
+                                <div class="k-form-field-wrap">
+                                    <TelerikTextBox Placeholder="Receipt Number" 
+                                                    @bind-Value="@oPDBill.ReceiptNo"></TelerikTextBox>
+                                </div>
+                            </TelerikFloatingLabel>
+                        </MudItem>
+                        <MudItem md="6">
+                            <TelerikFloatingLabel Text="Total Amount" Class="custom-label w-100">
+                                <div class="k-form-field-wrap">
+                                    <TelerikNumericTextBox Placeholder="Total Amount"
+                                                            @bind-Value="@oPDBill.TotalAmount"
+                                                            Format="C"
+                                                            Decimals="0"></TelerikNumericTextBox>
+                                </div>
+                            </TelerikFloatingLabel>
+                            <TelerikValidationMessage For="@(() => oPDBill.TotalAmount)" />
+                        </MudItem>
+                        <MudItem md="6">
+                            <TelerikFloatingLabel Text="Payable Amount" Class="custom-label w-100">
+                                <div class="k-form-field-wrap">
+                                    <TelerikNumericTextBox Placeholder="Payable Amount"
+                                                            @bind-Value="@oPDBill.PayableAmount"
+                                                            Format="C"
+                                                            Decimals="0"></TelerikNumericTextBox>
+                                </div>
+                            </TelerikFloatingLabel>
+                        </MudItem>
+                        <MudItem md="12" Class="mb-2">
+                            <TelerikFloatingLabel Text="Description" Class="custom-label w-100">
+                                <div class="k-form-field-wrap">
+                                    <TelerikTextBox Placeholder="Description"
+                                                    @bind-Value="@oPDBill.Description"></TelerikTextBox>
+                                </div>
+                            </TelerikFloatingLabel>
+                        </MudItem>
+                    </MudGrid>
+                        
+                </FormItems>
+                <FormButtons>
+                    <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveOPDBill">Save</MudButton>
+                    <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="OPDBills">Return</MudButton>
+                </FormButtons>
+            </TelerikForm>
+            
         </MudPaper>
     </MudItem>
 </MudGrid>
@@ -133,7 +165,7 @@
     private List<StaffViewModel> staffs;
     private List<OPDBillServiceViewModel> oPDBillServices = new List<OPDBillServiceViewModel>();
     bool success;
-    MudForm form;
+    TelerikForm form;
 
 
     protected override async Task OnInitializedAsync()
@@ -155,6 +187,24 @@
             }
         }
 
+    }
+
+    public bool ValidSubmit { get; set; } = false;
+
+    async void HandleValidSubmit()
+    {
+        ValidSubmit = true;
+
+        await Task.Delay(2000);
+
+        ValidSubmit = false;
+
+        StateHasChanged();
+    }
+
+    void HandleInvalidSubmit()
+    {
+        ValidSubmit = false;
     }
 
     private async void CreateItem(GridCommandEventArgs args)
@@ -228,9 +278,8 @@
 
     protected async Task SaveOPDBill()
     {
-        form.Validate();
 
-        if (form.IsValid)
+        if (form.IsValid())
         {
             CommandResponse result;
 
