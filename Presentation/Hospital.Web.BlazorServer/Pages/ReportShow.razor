@@ -72,8 +72,14 @@
                     report.LoadFromString(reportTemplate.Content);
                 }
 
-                report.RegData(ConverterHelper.ListToDataTable(oPDBills));
-                report.RegData(ConverterHelper.ListToDataTable(oPDBillServices));
+                report.RegData("OPDBillData",ConverterHelper.ListToDataTable(oPDBills));
+                report.RegData("OPDBillService",ConverterHelper.ListToDataTable(oPDBillServices));
+
+                var hospital = await mediator.Send(new GetHospitalInformationByIdQuery(1));
+                List<HospitalInformationViewModel> hospitals = new List<HospitalInformationViewModel>();
+                hospitals.Add(hospital);
+
+                report.RegData("HospitalInformation", ConverterHelper.ListToDataTable(hospitals));
 
                 report.Dictionary.Synchronize();
 
