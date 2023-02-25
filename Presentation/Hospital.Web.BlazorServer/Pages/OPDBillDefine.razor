@@ -17,7 +17,7 @@
 @attribute [Authorize(Roles = "Super,Admin,Operator")]
 
 <h1>@caption</h1>
-<h2>@returnValue</h2>
+
 <MudGrid Class="mt-2">
     <MudItem md="12">
         <MudPaper Class="p-3" Elevation="10">
@@ -308,25 +308,7 @@
     </MudItem>
 </MudGrid>
 
-<TelerikWindow @bind-Visible="@searchWindowState">
-    <WindowTitle>
-        <strong>Search Patient</strong>
-    </WindowTitle>
-    <WindowContent>
-        
-        <CascadingValue Value="@userInfo" Name="UserInformation">
-            <CascadingValue Value="@returnValue" Name="ReturnValue">
-                <PatientSearch />
-            </CascadingValue>
-        </CascadingValue>
-        
-    </WindowContent>
-    <WindowActions>
-        <WindowAction Name="Minimize"></WindowAction>
-        <WindowAction Name="Maximize"></WindowAction>
-        <WindowAction Name="Close"></WindowAction>
-    </WindowActions>
-</TelerikWindow>
+
 
 @code {
     [Parameter]
@@ -352,8 +334,7 @@
     private string newPatientDescription = "New Patient";
     private string patientAge = "";
     private int totalDiscount = 0;
-    private bool searchWindowState = false;
-    private int returnValue = 0;
+    
 
 
 
@@ -494,7 +475,7 @@
 
     protected async Task SearchPatient()
     {
-        searchWindowState = true;
+        
 
     }
 
