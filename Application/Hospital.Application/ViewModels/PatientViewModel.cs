@@ -13,24 +13,30 @@ namespace Hospital.Application.ViewModels
     {
         public int Id { get; set; }
 
+        [Required]
         public int NamePrefixId { get; set; }
         public int? NamePrefixCode { get; set; }
         public string? NamePrefixStrCode { get; set; }
         public string? NamePrefixName { get; set; }
         public virtual BasicInformationViewModel NamePrefix { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
+        [Required]
         public DateTime? DateOfBirth { get; set; }
 
+        [Required]
         public int GenderId { get; set; }
         public int? GenderCode { get; set; }
         public string? GenderStrCode { get; set; }
         public string? GenderName { get; set; }
         public virtual BasicInformationViewModel Gender { get; set; }
 
+        [Required]
         public string FatherName { get; set; }
 
+        [Required]
         public string Mobile { get; set; }
 
         public string? Phone { get; set; }
@@ -57,11 +63,12 @@ namespace Hospital.Application.ViewModels
         public string? RefferByName { get; set; }
         public virtual RefferByViewModel? RefferBy { get; set; }
 
-        
+        [Required]
         public string NationalIdCart { get; set; }
 
         public string? Occupation { get; set; }
 
+        [Required]
         public int InsuranceId { get; set; }
         public string? InsuranceCode { get; set; }
         public string? InsuranceName { get; set; }
