@@ -42,167 +42,28 @@
                             <TelerikValidationMessage For="@(() => oPDBill.Date)" />
                         </MudItem>
                         <MudItem md="3">
-                            <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@NewPatient">@newPatientDescription</TelerikButton>
+                            <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@NewPatient">Add New Patient</TelerikButton>
                         </MudItem>
                         <MudItem md="3">
                             <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@SearchPatient">Search Patient</TelerikButton>
                         </MudItem>
-                        @if (!newPatient)
-                        {
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Patient" Class="custom-label w-100">
-                                <div class="k-form-field-wrap">
-                                    <TelerikComboBox @bind-Value="@oPDBill.PatientId"
-                                                        Data="@patients"
-                                                        Placeholder="Select Patient"
-                                                        TextField="@nameof(PatientViewModel.Name)"
-                                                        ValueField="@nameof(PatientViewModel.Id)"
-                                                        Filterable="true"
-                                                        Id="patient">
+                        
+                        <MudItem md="6">
+                            <TelerikFloatingLabel Text="Patient" Class="custom-label w-100">
+                            <div class="k-form-field-wrap">
+                                <TelerikComboBox @bind-Value="@oPDBill.PatientId"
+                                                    Data="@patients"
+                                                    Placeholder="Select Patient"
+                                                    TextField="@nameof(PatientViewModel.Name)"
+                                                    ValueField="@nameof(PatientViewModel.Id)"
+                                                    Filterable="true"
+                                                    Id="patient">
                                     </TelerikComboBox>
                                 </div>
                             </TelerikFloatingLabel>
                             <TelerikValidationMessage For="@(() => oPDBill.Patient)" />
                         </MudItem>
-                        }
-                        @if (newPatient)
-                        {
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Pre" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikComboBox @bind-Value="@oPDBill.Patient.NamePrefixId"
-                                                     Data="@namePrefixes"
-                                                     Placeholder="Select Name Prefix"
-                                                     TextField="@nameof(BasicInformationViewModel.Name)"
-                                                     ValueField="@nameof(BasicInformationViewModel.Id)"
-                                                     Filterable="true"
-                                                     Id="prefix">
-                                        </TelerikComboBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => oPDBill.Patient.NamePrefix)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Patient Name" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikTextBox Placeholder="Patient Name"
-                                                    @bind-Value="@oPDBill.Patient.Name"></TelerikTextBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => oPDBill.Patient.Name)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Patient National Id" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikTextBox Placeholder="Patient National Id"
-                                                    @bind-Value="@oPDBill.Patient.NationalIdCart"></TelerikTextBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => oPDBill.Patient.NationalIdCart)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Gender" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikComboBox @bind-Value="@oPDBill.Patient.GenderId"
-                                                     Data="@genders"
-                                                     Placeholder="Select Gender"
-                                                     TextField="@nameof(BasicInformationViewModel.Name)"
-                                                     ValueField="@nameof(BasicInformationViewModel.Id)"
-                                                     Filterable="true"
-                                                     Id="gender">
-                                        </TelerikComboBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => oPDBill.Patient.GenderId)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Date of Birth" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikDatePicker @bind-Value="@oPDBill.Patient.DateOfBirth"
-                                                       Format="dddd, dd MMMM, yyyy"
-                                                       Id="opd-date" OnChange="@DateOfBirthChange">
-                                        </TelerikDatePicker>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => oPDBill.Patient.DateOfBirth)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Age" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikTextBox Placeholder="Patient Age"
-                                                    @bind-Value="@patientAge"></TelerikTextBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Patient Father Name" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikTextBox Placeholder="Patient Father Name"
-                                                    @bind-Value="@oPDBill.Patient.FatherName"></TelerikTextBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => oPDBill.Patient.FatherName)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Reffer By" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikComboBox @bind-Value="@oPDBill.Patient.RefferById"
-                                                     Data="@refferBies"
-                                                     Placeholder="Select Reffer By"
-                                                     TextField="@nameof(RefferByViewModel.Name)"
-                                                     ValueField="@nameof(RefferByViewModel.Id)"
-                                                     Filterable="true"
-                                                     Id="refferBy">
-                                        </TelerikComboBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => oPDBill.Patient.RefferById)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Insurance" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikComboBox @bind-Value="@oPDBill.Patient.InsuranceId"
-                                                     Data="@insurances"
-                                                     Placeholder="Select Insurance"
-                                                     TextField="@nameof(InsuranceViewModel.Name)"
-                                                     ValueField="@nameof(InsuranceViewModel.Id)"
-                                                     Filterable="true"
-                                                     Id="insurance">
-                                        </TelerikComboBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => oPDBill.Patient.InsuranceId)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Patient Insurance Number" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikTextBox Placeholder="Patient Insurance Number"
-                                                    @bind-Value="@oPDBill.Patient.InsuranceNumber"></TelerikTextBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => oPDBill.Patient.InsuranceNumber)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Patient Mobile Number" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikMaskedTextBox Id="phone-input"
-                                                          PlaceHolder="Patient Mobile Number"
-                                                          @bind-Value="@oPDBill.Patient.Mobile"
-                                                          Mask="(999) 000-0000"></TelerikMaskedTextBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => oPDBill.Patient.Mobile)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Patient Address" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikTextBox Placeholder="Patient Address"
-                                                    @bind-Value="@oPDBill.Patient.Address"></TelerikTextBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => oPDBill.Patient.Address)" />
-                            </MudItem>
-                        }
+                       
                         <MudItem md="12">
                             <TelerikGrid Data=@oPDBillServices EditMode="@GridEditMode.Popup"
                                             Height="300px" Pageable="true" PageSize="5"
@@ -308,6 +169,29 @@
     </MudItem>
 </MudGrid>
 
+<TelerikWindow Class="demo-window" Width="80vw" Height="80vh" Centered="true" @bind-Visible=@addPatientWindowState Modal="true">
+    <WindowTitle>
+        <strong>Add Patient</strong>
+    </WindowTitle>
+    <WindowActions>
+        <WindowAction Name="Close" />
+    </WindowActions>
+    <WindowContent>
+        <PatientDefine Id="0"></PatientDefine>
+    </WindowContent>
+</TelerikWindow>
+
+<TelerikWindow Class="demo-window" Width="80vw" Height="80vh" Centered="true" @bind-Visible=@searchPatientWindowState Modal="true">
+    <WindowTitle>
+        <strong>Search Patient</strong>
+    </WindowTitle>
+    <WindowActions>
+        <WindowAction Name="Close" />
+    </WindowActions>
+    <WindowContent>
+        <Patients></Patients>
+    </WindowContent>
+</TelerikWindow>
 
 
 @code {
@@ -323,18 +207,11 @@
     private List<StaffViewModel> staffs;
     private List<OPDBillServiceViewModel> oPDBillServices = new List<OPDBillServiceViewModel>();
 
-    private List<BasicInformationViewModel> namePrefixes;
-    private List<BasicInformationViewModel> genders;
-    private List<RefferByViewModel> refferBies;
-    private List<InsuranceViewModel> insurances;
-
     private bool success;
     TelerikForm form; 
-    private bool newPatient = false;
-    private string newPatientDescription = "New Patient";
-    private string patientAge = "";
     private int totalDiscount = 0;
-    
+    private bool addPatientWindowState = false;
+    private bool searchPatientWindowState = false;
 
 
 
@@ -343,11 +220,6 @@
         patients = await mediator.Send(new GetAllPatientsQuery());
         services = await mediator.Send(new GetAllServicesQuery());
         staffs = await mediator.Send(new GetAllStaffsQuery());
-
-        namePrefixes = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("NamePrefix"));
-        genders = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Gender"));
-        refferBies = await mediator.Send(new GetAllRefferBiesQuery());
-        insurances = await mediator.Send(new GetAllInsurancesQuery());
 
         oPDBill.Date = DateTime.Now;
 
@@ -363,11 +235,7 @@
                 oPDBillServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(oPDBill.Id));
             }
         }
-        else
-        {
 
-            oPDBill.Patient = new PatientViewModel();
-        }
 
     }
 
@@ -461,45 +329,38 @@
 
     protected async Task NewPatient()
     {
+        addPatientWindowState = true;
 
-        newPatient = !newPatient;
-        if (newPatient)
-        {
-            newPatientDescription = "Select Exist Patient";
-            oPDBill.PatientId = 0;
-        }
-        else
-            newPatientDescription = "New Patient";
 
     }
 
     protected async Task SearchPatient()
     {
-        
+        searchPatientWindowState = true;
 
     }
 
-    protected async Task DateOfBirthChange()
-    {
-        if (oPDBill.Patient.DateOfBirth != null)
-        {
-            DateTime dateOfBirth = oPDBill.Patient.DateOfBirth ?? DateTime.Now;
-            TimeSpan span = DateTime.Now - dateOfBirth;
-            DateTime age = DateTime.MinValue + span;
+    //protected async Task DateOfBirthChange()
+    //{
+    //    if (oPDBill.Patient.DateOfBirth != null)
+    //    {
+    //        DateTime dateOfBirth = oPDBill.Patient.DateOfBirth ?? DateTime.Now;
+    //        TimeSpan span = DateTime.Now - dateOfBirth;
+    //        DateTime age = DateTime.MinValue + span;
 
-            // Make adjustment due to MinValue equalling 1/1/1
-            int years = age.Year - 1;
-            int months = age.Month - 1;
-            int days = age.Day - 1;
+    //        // Make adjustment due to MinValue equalling 1/1/1
+    //        int years = age.Year - 1;
+    //        int months = age.Month - 1;
+    //        int days = age.Day - 1;
 
-            patientAge = String.Format("{0} Years, {1} Months, {2} Days", years, months, days);
-        }
-        else
-        {
-            patientAge = "Unknown";
-        }
+    //        patientAge = String.Format("{0} Years, {1} Months, {2} Days", years, months, days);
+    //    }
+    //    else
+    //    {
+    //        patientAge = "Unknown";
+    //    }
 
-    }
+    //}
 
     protected async Task SaveOPDBill()
     {
