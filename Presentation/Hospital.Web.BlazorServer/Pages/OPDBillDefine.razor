@@ -50,18 +50,33 @@
                         
                         <MudItem md="6">
                             <TelerikFloatingLabel Text="Patient" Class="custom-label w-100">
-                            <div class="k-form-field-wrap">
-                                <TelerikComboBox @bind-Value="@oPDBill.PatientId"
-                                                    Data="@patients"
-                                                    Placeholder="Select Patient"
-                                                    TextField="@nameof(PatientViewModel.Name)"
-                                                    ValueField="@nameof(PatientViewModel.Id)"
-                                                    Filterable="true"
-                                                    Id="patient">
-                                    </TelerikComboBox>
+                                <div class="k-form-field-wrap">
+                                    <TelerikMultiColumnComboBox Data="@patients"
+                                                                TextField="@nameof(PatientViewModel.Name)"
+                                                                ValueField="@nameof(PatientViewModel.Id)"
+                                                                Filterable="true"
+                                                                @bind-Value="@oPDBill.PatientId"
+                                                                Id="patient"
+                                                                ListHeight="250px"
+                                                                Placeholder="Hint: You can filter by the Patient Name">
+                                        <MultiColumnComboBoxColumns>
+                                            <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.Name)" Title="Name" Width="200px" />
+                                            <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.NationalIdCart)" Title="National ID" Width="150px" />
+                                            <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.FatherName)" Title="Father" Width="150px" />
+                                            <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.GenderName)" Title="Gender" Width="100px" />
+                                            <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.Mobile)" Title="Mobile" Width="150px" />
+                                        </MultiColumnComboBoxColumns>
+                                        <FooterTemplate>
+                                            <span class="combobox-footer k-display-flex k-align-items-center k-justify-content-center">
+                                                Total: @patients.Count() records
+                                            </span>
+                                        </FooterTemplate>
+                                    </TelerikMultiColumnComboBox>
                                 </div>
                             </TelerikFloatingLabel>
                             <TelerikValidationMessage For="@(() => oPDBill.Patient)" />
+
+                            
                         </MudItem>
                        
                         <MudItem md="12">
@@ -177,7 +192,7 @@
         <WindowAction Name="Close" />
     </WindowActions>
     <WindowContent>
-        <PatientDefine Id="0"></PatientDefine>
+        <PatientDefine Id="0" Mode="Modal" OnPatientAdded="PatientAdded"></PatientDefine>
     </WindowContent>
 </TelerikWindow>
 
@@ -189,7 +204,7 @@
         <WindowAction Name="Close" />
     </WindowActions>
     <WindowContent>
-        <Patients></Patients>
+        <Patients Mode="Search" OnPatientSelected="PatientSelected"></Patients>
     </WindowContent>
 </TelerikWindow>
 
@@ -334,10 +349,25 @@
 
     }
 
+    protected async Task PatientAdded(int PatientId)
+    {
+        patients = await mediator.Send(new GetAllPatientsQuery());
+        oPDBill.PatientId = PatientId;
+
+        addPatientWindowState = false;
+    }
+
     protected async Task SearchPatient()
     {
         searchPatientWindowState = true;
 
+    }
+
+    protected async Task PatientSelected(int PatientId)
+    {
+        oPDBill.PatientId = PatientId;
+
+        searchPatientWindowState = false;
     }
 
     //protected async Task DateOfBirthChange()

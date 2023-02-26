@@ -55,7 +55,7 @@
         hospitals.Add(hospital);
 
         report.RegData("HospitalInformation", ConverterHelper.ListToDataTable(hospitals));
-
+        report.RegBusinessObject("test", hospital);
 
         report.Dictionary.Synchronize();
 

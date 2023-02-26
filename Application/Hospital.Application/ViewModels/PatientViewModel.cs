@@ -41,6 +41,7 @@ namespace Hospital.Application.ViewModels
 
         public string? Phone { get; set; }
 
+        [EmailAddress]
         public string? Email { get; set; }
 
         public int CityId { get; set; }
