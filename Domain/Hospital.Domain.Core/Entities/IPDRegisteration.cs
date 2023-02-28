@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Hospital.Domain.Core.Entities
 {
-    [Table("OPDBill", Schema = "Med")]
-    public class OPDBill : BaseEntity
+    [Table("IPDRegisteration", Schema = "Med")]
+    public class IPDRegisteration : BaseEntity
     {
         [Required]
         public DateTime Date { get; set; }
@@ -16,9 +16,9 @@ namespace Hospital.Domain.Core.Entities
         public virtual Patient Patient { get; set; }
 
         [Required]
-        [ForeignKey("PaymentTypeId")]
-        public int? PaymentTypeId { get; set; }
-        public virtual BasicInformation? PaymentType { get; set; }
+        [ForeignKey("RefferById")]
+        public int? RefferById { get; set; }
+        public virtual RefferBy RefferBy { get; set; }
 
         [Required]
         public int TotalAmount { get; set; }
@@ -30,6 +30,8 @@ namespace Hospital.Domain.Core.Entities
         public string? Description { get; set; }
 
 
-        public virtual ICollection<OPDBillService> OPDBillServices { get; set; }
+        public virtual ICollection<IPDRegisterationService> IPDRegisterationServices { get; set; }
+        public virtual ICollection<IPDRegisterationRoom> IPDRegisterationRooms { get; set; }
+        public virtual ICollection<IPDRegisterationPayment> IPDRegisterationPayments { get; set; }
     }
 }

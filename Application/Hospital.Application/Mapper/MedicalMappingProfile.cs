@@ -294,6 +294,108 @@ namespace Hospital.Application.Mapper
                 .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Name));
             #endregion
+
+            #region IPDRegisteration
+
+            CreateMap<IPDRegisteration, CreateIPDRegisterationCommand>().ReverseMap()
+                .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => (src.PatientId == 0 ? null : src.PatientId)))
+                .ForMember(dest => dest.RefferById, opt => opt.MapFrom(src => (src.RefferById == 0 ? null : src.RefferById)));
+
+            CreateMap<IPDRegisteration, EditIPDRegisterationCommand>().ReverseMap()
+                .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => (src.PatientId == 0 ? null : src.PatientId)))
+                .ForMember(dest => dest.RefferById, opt => opt.MapFrom(src => (src.RefferById == 0 ? null : src.RefferById)));
+
+            CreateMap<IPDRegisteration, IPDRegisterationViewModel>()
+                .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => (src.Patient != null ? src.Patient.Id : 0)))
+                .ForMember(dest => dest.PatientName, opt => opt.MapFrom(src => (src.Patient != null ? src.Patient.Name : "")))
+                .ForMember(dest => dest.RefferById, opt => opt.MapFrom(src => (src.RefferBy != null ? src.RefferBy.Id : 0)))
+                .ForMember(dest => dest.RefferByName, opt => opt.MapFrom(src => (src.RefferBy != null ? src.RefferBy.Name : "")));
+
+            CreateMap<IPDRegisterationViewModel, IPDRegisteration>();
+
+            CreateMap<CreateIPDRegisterationCommand, IPDRegisterationViewModel>().ReverseMap();
+
+            CreateMap<EditIPDRegisterationCommand, IPDRegisterationViewModel>().ReverseMap();
+
+            #endregion
+
+            #region IPDRegisterationService
+
+            CreateMap<IPDRegisterationService, CreateIPDRegisterationServiceCommand>().ReverseMap()
+                .ForMember(dest => dest.IPDRegisterationId, opt => opt.MapFrom(src => (src.IPDRegisterationId == 0 ? null : src.IPDRegisterationId)))
+                .ForMember(dest => dest.ServiceId, opt => opt.MapFrom(src => (src.ServiceId == 0 ? null : src.ServiceId)))
+                .ForMember(dest => dest.StaffId, opt => opt.MapFrom(src => (src.StaffId == 0 ? null : src.StaffId)));
+
+            CreateMap<IPDRegisterationService, EditIPDRegisterationServiceCommand>().ReverseMap()
+                .ForMember(dest => dest.IPDRegisterationId, opt => opt.MapFrom(src => (src.IPDRegisterationId == 0 ? null : src.IPDRegisterationId)))
+                .ForMember(dest => dest.ServiceId, opt => opt.MapFrom(src => (src.ServiceId == 0 ? null : src.ServiceId)))
+                .ForMember(dest => dest.StaffId, opt => opt.MapFrom(src => (src.StaffId == 0 ? null : src.StaffId)));
+
+            CreateMap<IPDRegisterationService, IPDRegisterationServiceViewModel>()
+                .ForMember(dest => dest.IPDRegisterationId, opt => opt.MapFrom(src => (src.IPDRegisteration != null ? src.IPDRegisteration.Id : 0)))
+                .ForMember(dest => dest.ServiceId, opt => opt.MapFrom(src => (src.Service != null ? src.Service.Id : 0)))
+                .ForMember(dest => dest.ServiceCode, opt => opt.MapFrom(src => (src.Service != null ? src.Service.Code : "")))
+                .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => (src.Service != null ? src.Service.Name : "")))
+                .ForMember(dest => dest.StaffId, opt => opt.MapFrom(src => (src.Staff != null ? src.Staff.Id : 0)))
+                .ForMember(dest => dest.StaffCode, opt => opt.MapFrom(src => (src.Staff != null ? src.Staff.Code : "")))
+                .ForMember(dest => dest.StaffName, opt => opt.MapFrom(src => (src.Staff != null ? src.Staff.Name : "")));
+
+            CreateMap<IPDRegisterationServiceViewModel, IPDRegisterationService>();
+
+            CreateMap<CreateIPDRegisterationServiceCommand, IPDRegisterationServiceViewModel>().ReverseMap();
+
+            CreateMap<EditIPDRegisterationServiceCommand, IPDRegisterationServiceViewModel>().ReverseMap();
+
+            #endregion
+
+            #region IPDRegisterationRoom
+
+            CreateMap<IPDRegisterationRoom, CreateIPDRegisterationRoomCommand>().ReverseMap()
+                .ForMember(dest => dest.IPDRegisterationId, opt => opt.MapFrom(src => (src.IPDRegisterationId == 0 ? null : src.IPDRegisterationId)))
+                .ForMember(dest => dest.RoomId, opt => opt.MapFrom(src => (src.RoomId == 0 ? null : src.RoomId)));
+
+            CreateMap<IPDRegisterationRoom, EditIPDRegisterationRoomCommand>().ReverseMap()
+                .ForMember(dest => dest.IPDRegisterationId, opt => opt.MapFrom(src => (src.IPDRegisterationId == 0 ? null : src.IPDRegisterationId)))
+                .ForMember(dest => dest.RoomId, opt => opt.MapFrom(src => (src.RoomId == 0 ? null : src.RoomId)));
+
+            CreateMap<IPDRegisterationRoom, IPDRegisterationRoomViewModel>()
+                .ForMember(dest => dest.IPDRegisterationId, opt => opt.MapFrom(src => (src.IPDRegisteration != null ? src.IPDRegisteration.Id : 0)))
+                .ForMember(dest => dest.RoomId, opt => opt.MapFrom(src => (src.Room != null ? src.Room.Id : 0)))
+                .ForMember(dest => dest.RoomCode, opt => opt.MapFrom(src => (src.Room != null ? src.Room.Code : "")))
+                .ForMember(dest => dest.RoomName, opt => opt.MapFrom(src => (src.Room != null ? src.Room.Name : "")));
+
+            CreateMap<IPDRegisterationRoomViewModel, IPDRegisterationRoom>();
+
+            CreateMap<CreateIPDRegisterationRoomCommand, IPDRegisterationRoomViewModel>().ReverseMap();
+
+            CreateMap<EditIPDRegisterationRoomCommand, IPDRegisterationRoomViewModel>().ReverseMap();
+
+            #endregion
+
+            #region IPDRegisterationPayment
+
+            CreateMap<IPDRegisterationPayment, CreateIPDRegisterationPaymentCommand>().ReverseMap()
+                .ForMember(dest => dest.IPDRegisterationId, opt => opt.MapFrom(src => (src.IPDRegisterationId == 0 ? null : src.IPDRegisterationId)))
+                .ForMember(dest => dest.PaymentTypeId, opt => opt.MapFrom(src => (src.PaymentTypeId == 0 ? null : src.PaymentTypeId)));
+
+            CreateMap<IPDRegisterationPayment, EditIPDRegisterationPaymentCommand>().ReverseMap()
+                .ForMember(dest => dest.IPDRegisterationId, opt => opt.MapFrom(src => (src.IPDRegisterationId == 0 ? null : src.IPDRegisterationId)))
+                .ForMember(dest => dest.PaymentTypeId, opt => opt.MapFrom(src => (src.PaymentTypeId == 0 ? null : src.PaymentTypeId)));
+
+            CreateMap<IPDRegisterationPayment, IPDRegisterationPaymentViewModel>()
+                .ForMember(dest => dest.IPDRegisterationId, opt => opt.MapFrom(src => (src.IPDRegisteration != null ? src.IPDRegisteration.Id : 0)))
+                .ForMember(dest => dest.PaymentTypeId, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.Id : 0)))
+                .ForMember(dest => dest.PaymentTypeCode, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.Code : 0)))
+                .ForMember(dest => dest.PaymentTypeStrCode, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.StrCode : "")))
+                .ForMember(dest => dest.PaymentTypeName, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.Name : "")));
+
+            CreateMap<IPDRegisterationPaymentViewModel, IPDRegisterationPayment>();
+
+            CreateMap<CreateIPDRegisterationPaymentCommand, IPDRegisterationPaymentViewModel>().ReverseMap();
+
+            CreateMap<EditIPDRegisterationPaymentCommand, IPDRegisterationPaymentViewModel>().ReverseMap();
+
+            #endregion
         }
     }
 }

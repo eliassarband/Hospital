@@ -528,4 +528,216 @@ namespace Hospital.Application.Commands
 
     #endregion
 
+    #region IPDRegisteration
+    public class CreateIPDRegisterationCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public DateTime Date { get; set; }
+        public int? PatientId { get; set; }
+        public int? RefferById { get; set; }
+        public int TotalAmount { get; set; }
+        public int PayableAmount { get; set; }
+        public string? Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+
+        public CreateIPDRegisterationCommand()
+        {
+            this.CreatedDate = DateTime.Now;
+        }
+    }
+
+    public class EditIPDRegisterationCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public DateTime Date { get; set; }
+        public int? PatientId { get; set; }
+        public int? RefferById { get; set; }
+        public int TotalAmount { get; set; }
+        public int PayableAmount { get; set; }
+        public string? Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string? ModifiedUser { get; set; }
+
+        public EditIPDRegisterationCommand()
+        {
+            this.ModifiedDate = DateTime.Now;
+        }
+    }
+
+    public class DeleteIPDRegisterationCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+
+        public DeleteIPDRegisterationCommand(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
+
+    #region IPDRegisterationService
+    public class CreateIPDRegisterationServiceCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public int? IPDRegisterationId { get; set; }
+        public DateTime Date { get; set; }
+        public int? ServiceId { get; set; }
+        public int Quantity { get; set; }
+        public int Rate { get; set; }
+        public int Discount { get; set; }
+        public int Amount { get; set; }
+        public int? StaffId { get; set; }
+        public string Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+
+        public CreateIPDRegisterationServiceCommand()
+        {
+            this.CreatedDate = DateTime.Now;
+        }
+    }
+
+    public class EditIPDRegisterationServiceCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public int? IPDRegisterationId { get; set; }
+        public DateTime Date { get; set; }
+        public int? ServiceId { get; set; }
+        public int Quantity { get; set; }
+        public int Rate { get; set; }
+        public int Discount { get; set; }
+        public int Amount { get; set; }
+        public int? StaffId { get; set; }
+        public string Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string? ModifiedUser { get; set; }
+
+        public EditIPDRegisterationServiceCommand()
+        {
+            this.ModifiedDate = DateTime.Now;
+        }
+    }
+
+    public class DeleteIPDRegisterationServiceCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+
+        public DeleteIPDRegisterationServiceCommand(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
+
+    #region IPDRegisterationRoom
+    public class CreateIPDRegisterationRoomCommand : IRequest<CommandResponse>
+    {
+
+        public int Id { get; set; }
+        public int? IPDRegisterationId { get; set; }
+        public DateTime Date { get; set; }
+        public int? RoomId { get; set; }
+        public int Days { get; set; }
+        public int Rate { get; set; }
+        public int Amount { get; set; }
+        public string Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+
+        public CreateIPDRegisterationRoomCommand()
+        {
+            this.CreatedDate = DateTime.Now;
+        }
+    }
+
+    public class EditIPDRegisterationRoomCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public int? IPDRegisterationId { get; set; }
+        public DateTime Date { get; set; }
+        public int? RoomId { get; set; }
+        public int Days { get; set; }
+        public int Rate { get; set; }
+        public int Amount { get; set; }
+        public string Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string? ModifiedUser { get; set; }
+
+        public EditIPDRegisterationRoomCommand()
+        {
+            this.ModifiedDate = DateTime.Now;
+        }
+    }
+
+    public class DeleteIPDRegisterationRoomCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+
+        public DeleteIPDRegisterationRoomCommand(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
+
+    #region IPDRegisterationPayment
+    public class CreateIPDRegisterationPaymentCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public int? IPDRegisterationId { get; set; }
+        public DateTime Date { get; set; }
+        public int? PaymentTypeId { get; set; }
+        public int Amount { get; set; }
+        public string ChequeNumber { get; set; }
+        public string Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+
+        public CreateIPDRegisterationPaymentCommand()
+        {
+            this.CreatedDate = DateTime.Now;
+        }
+    }
+
+    public class EditIPDRegisterationPaymentCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public int? IPDRegisterationId { get; set; }
+        public DateTime Date { get; set; }
+        public int? PaymentTypeId { get; set; }
+        public int Amount { get; set; }
+        public string ChequeNumber { get; set; }
+        public string Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string? ModifiedUser { get; set; }
+
+        public EditIPDRegisterationPaymentCommand()
+        {
+            this.ModifiedDate = DateTime.Now;
+        }
+    }
+
+    public class DeleteIPDRegisterationPaymentCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+
+        public DeleteIPDRegisterationPaymentCommand(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
 }

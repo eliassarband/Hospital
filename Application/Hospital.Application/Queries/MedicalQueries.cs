@@ -240,4 +240,107 @@ namespace Hospital.Application.Queries
     }
 
     #endregion
+
+    #region IPDRegisteration
+    public record GetAllIPDRegisterationsQuery : IRequest<List<IPDRegisterationViewModel>>
+    {
+
+    }
+
+
+    public class GetIPDRegisterationByIdQuery : IRequest<IPDRegisterationViewModel>
+    {
+        public int Id { get; private set; }
+
+        public GetIPDRegisterationByIdQuery(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
+
+    #region IPDRegisterationService
+    public record GetAllIPDRegisterationServicesQuery : IRequest<List<IPDRegisterationServiceViewModel>>
+    {
+
+    }
+
+    public record GetIPDRegisterationServicesByIPDRegisterationIdQuery : IRequest<List<IPDRegisterationServiceViewModel>>
+    {
+        public int IPDRegisterationId { get; private set; }
+
+        public GetIPDRegisterationServicesByIPDRegisterationIdQuery(int IPDRegisterationId)
+        {
+            this.IPDRegisterationId = IPDRegisterationId;
+        }
+    }
+
+    public class GetIPDRegisterationServiceByIdQuery : IRequest<IPDRegisterationServiceViewModel>
+    {
+        public int Id { get; private set; }
+
+        public GetIPDRegisterationServiceByIdQuery(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
+
+    #region IPDRegisterationRoom
+    public record GetAllIPDRegisterationRoomsQuery : IRequest<List<IPDRegisterationRoomViewModel>>
+    {
+
+    }
+
+    public record GetIPDRegisterationRoomsByOPDBillIdQuery : IRequest<List<IPDRegisterationRoomViewModel>>
+    {
+        public int IPDRegisterationId { get; private set; }
+
+        public GetIPDRegisterationRoomsByOPDBillIdQuery(int IPDRegisterationId)
+        {
+            this.IPDRegisterationId = IPDRegisterationId;
+        }
+    }
+
+    public class GetIPDRegisterationRoomByIdQuery : IRequest<IPDRegisterationRoomViewModel>
+    {
+        public int Id { get; private set; }
+
+        public GetIPDRegisterationRoomByIdQuery(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
+
+    #region IPDRegisterationPayment
+    public record GetAllIPDRegisterationPaymentsQuery : IRequest<List<IPDRegisterationPaymentViewModel>>
+    {
+
+    }
+
+    public record GetIPDRegisterationPaymentsByOPDBillIdQuery : IRequest<List<IPDRegisterationPaymentViewModel>>
+    {
+        public int IPDRegisterationId { get; private set; }
+
+        public GetIPDRegisterationPaymentsByOPDBillIdQuery(int IPDRegisterationId)
+        {
+            this.IPDRegisterationId = IPDRegisterationId;
+        }
+    }
+
+    public class GetIPDRegisterationPaymentByIdQuery : IRequest<IPDRegisterationPaymentViewModel>
+    {
+        public int Id { get; private set; }
+
+        public GetIPDRegisterationPaymentByIdQuery(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
 }

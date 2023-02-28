@@ -4,13 +4,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Hospital.Domain.Core.Entities
 {
-    [Table("OPDBillService", Schema = "Med")]
-    public class OPDBillService : BaseEntity
+    [Table("IPDRegisterationService", Schema = "Med")]
+    public class IPDRegisterationService : BaseEntity
     {
         [Required]
-        [ForeignKey("OPDBillId")]
-        public int? OPDBillId { get; set; }
-        public virtual OPDBill OPDBill { get; set; }
+        [ForeignKey("IPDRegisterationId")]
+        public int? IPDRegisterationId { get; set; }
+        public virtual IPDRegisteration IPDRegisteration { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
 
         [Required]
         [ForeignKey("ServiceId")]
@@ -33,5 +36,7 @@ namespace Hospital.Domain.Core.Entities
         public int? StaffId { get; set; }
         public virtual Staff Staff { get; set; }
 
+
+        public string Description { get; set; }
     }
 }

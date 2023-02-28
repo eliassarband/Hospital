@@ -1373,4 +1373,684 @@ namespace Hospital.Application.Handlers.CommandHandlers
     }
 
     #endregion
+
+    #region IPDRegisteration
+    public class CreateIPDRegisterationHandler : IRequestHandler<CreateIPDRegisterationCommand, CommandResponse>
+    {
+        private readonly IIPDRegisterationCommandRepository _IPDRegisterationCommandRepository;
+
+        public CreateIPDRegisterationHandler(IIPDRegisterationCommandRepository IPDRegisterationCommandRepository)
+        {
+            _IPDRegisterationCommandRepository = IPDRegisterationCommandRepository;
+        }
+
+        public async Task<CommandResponse> Handle(CreateIPDRegisterationCommand request, CancellationToken cancellationToken)
+        {
+            var IPDRegisterationEntity = MapperConfig.Mapper.Map<IPDRegisteration>(request);
+            IPDRegisterationEntity.CreatedDate = DateTime.Now;
+
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (IPDRegisterationEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+            else
+            {
+                try
+                {
+                    var newIPDRegisteration = await _IPDRegisterationCommandRepository.AddAsync(IPDRegisterationEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = newIPDRegisteration.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Saved successfully"
+                    };
+
+                }
+                catch (Exception exp)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = -1,
+                        ResultType = ResultType.Error,
+                        ResultMessage = "Error in operation\n" + exp.Message
+                    };
+                }
+
+            }
+
+            return response;
+        }
+    }
+
+    public class EditIPDRegisterationHandler : IRequestHandler<EditIPDRegisterationCommand, CommandResponse>
+    {
+        private readonly IIPDRegisterationCommandRepository _IPDRegisterationCommandRepository;
+        private readonly IIPDRegisterationQueryRepository _IPDRegisterationQueryRepository;
+
+        public EditIPDRegisterationHandler(IIPDRegisterationCommandRepository IPDRegisterationCommandRepository, IIPDRegisterationQueryRepository IPDRegisterationQueryRepository)
+        {
+            _IPDRegisterationCommandRepository = IPDRegisterationCommandRepository;
+            _IPDRegisterationQueryRepository = IPDRegisterationQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(EditIPDRegisterationCommand request, CancellationToken cancellationToken)
+        {
+            var IPDRegisterationEntity = MapperConfig.Mapper.Map<IPDRegisteration>(request);
+            IPDRegisterationEntity.ModifiedDate = DateTime.Now;
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (IPDRegisterationEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+
+            try
+            {
+                await _IPDRegisterationCommandRepository.UpdateAsync(IPDRegisterationEntity);
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            var modifiedIPDRegisteration = await _IPDRegisterationQueryRepository.GetByIdAsync(request.Id);
+
+            response = new CommandResponse()
+            {
+                Id = modifiedIPDRegisteration.Id,
+                ResultType = ResultType.Success,
+                ResultMessage = "Updated successfully"
+            };
+
+            return response;
+        }
+    }
+
+    public class DeleteIPDRegisterationHandler : IRequestHandler<DeleteIPDRegisterationCommand, CommandResponse>
+    {
+        private readonly IIPDRegisterationCommandRepository _IPDRegisterationCommandRepository;
+        private readonly IIPDRegisterationQueryRepository _IPDRegisterationQueryRepository;
+
+        public DeleteIPDRegisterationHandler(IIPDRegisterationCommandRepository IPDRegisterationCommandRepository, IIPDRegisterationQueryRepository IPDRegisterationQueryRepository)
+        {
+            _IPDRegisterationCommandRepository = IPDRegisterationCommandRepository;
+            _IPDRegisterationQueryRepository = IPDRegisterationQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(DeleteIPDRegisterationCommand request, CancellationToken cancellationToken)
+        {
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            try
+            {
+                var IPDRegisterationEntity = await _IPDRegisterationQueryRepository.GetByIdAsync(request.Id);
+
+                await _IPDRegisterationCommandRepository.DeleteAsync(IPDRegisterationEntity);
+
+                response = new CommandResponse()
+                {
+                    Id = request.Id,
+                    ResultType = ResultType.Success,
+                    ResultMessage = "Removed successfully"
+                };
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            return response;
+        }
+    }
+
+    #endregion
+
+    #region IPDRegisterationService
+    public class CreateIPDRegisterationServiceHandler : IRequestHandler<CreateIPDRegisterationServiceCommand, CommandResponse>
+    {
+        private readonly IIPDRegisterationServiceCommandRepository _IPDRegisterationServiceCommandRepository;
+
+        public CreateIPDRegisterationServiceHandler(IIPDRegisterationServiceCommandRepository IPDRegisterationServiceCommandRepository)
+        {
+            _IPDRegisterationServiceCommandRepository = IPDRegisterationServiceCommandRepository;
+        }
+
+        public async Task<CommandResponse> Handle(CreateIPDRegisterationServiceCommand request, CancellationToken cancellationToken)
+        {
+            var IPDRegisterationServiceEntity = MapperConfig.Mapper.Map<IPDRegisterationService>(request);
+            IPDRegisterationServiceEntity.CreatedDate = DateTime.Now;
+
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (IPDRegisterationServiceEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+            else
+            {
+                try
+                {
+                    var newIPDRegisterationService = await _IPDRegisterationServiceCommandRepository.AddAsync(IPDRegisterationServiceEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = newIPDRegisterationService.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Saved successfully"
+                    };
+
+                }
+                catch (Exception exp)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = -1,
+                        ResultType = ResultType.Error,
+                        ResultMessage = "Error in operation\n" + exp.Message
+                    };
+                }
+
+            }
+
+            return response;
+        }
+    }
+
+    public class EditIPDRegisterationServiceHandler : IRequestHandler<EditIPDRegisterationServiceCommand, CommandResponse>
+    {
+        private readonly IIPDRegisterationServiceCommandRepository _IPDRegisterationServiceCommandRepository;
+        private readonly IIPDRegisterationServiceQueryRepository _IPDRegisterationServiceQueryRepository;
+
+        public EditIPDRegisterationServiceHandler(IIPDRegisterationServiceCommandRepository IPDRegisterationServiceCommandRepository, IIPDRegisterationServiceQueryRepository IPDRegisterationServiceQueryRepository)
+        {
+            _IPDRegisterationServiceCommandRepository = IPDRegisterationServiceCommandRepository;
+            _IPDRegisterationServiceQueryRepository = IPDRegisterationServiceQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(EditIPDRegisterationServiceCommand request, CancellationToken cancellationToken)
+        {
+            var IPDRegisterationServiceEntity = MapperConfig.Mapper.Map<IPDRegisterationService>(request);
+            IPDRegisterationServiceEntity.ModifiedDate = DateTime.Now;
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (IPDRegisterationServiceEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+
+            try
+            {
+                await _IPDRegisterationServiceCommandRepository.UpdateAsync(IPDRegisterationServiceEntity);
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            var modifiedIPDRegisterationService = await _IPDRegisterationServiceQueryRepository.GetByIdAsync(request.Id);
+
+            response = new CommandResponse()
+            {
+                Id = modifiedIPDRegisterationService.Id,
+                ResultType = ResultType.Success,
+                ResultMessage = "Updated successfully"
+            };
+
+            return response;
+        }
+    }
+
+    public class DeleteIPDRegisterationServiceHandler : IRequestHandler<DeleteIPDRegisterationServiceCommand, CommandResponse>
+    {
+        private readonly IIPDRegisterationServiceCommandRepository _IPDRegisterationServiceCommandRepository;
+        private readonly IIPDRegisterationServiceQueryRepository _IPDRegisterationServiceQueryRepository;
+
+        public DeleteIPDRegisterationServiceHandler(IIPDRegisterationServiceCommandRepository IPDRegisterationServiceCommandRepository, IIPDRegisterationServiceQueryRepository IPDRegisterationServiceQueryRepository)
+        {
+            _IPDRegisterationServiceCommandRepository = IPDRegisterationServiceCommandRepository;
+            _IPDRegisterationServiceQueryRepository = IPDRegisterationServiceQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(DeleteIPDRegisterationServiceCommand request, CancellationToken cancellationToken)
+        {
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            try
+            {
+                var IPDRegisterationServiceEntity = await _IPDRegisterationServiceQueryRepository.GetByIdAsync(request.Id);
+
+                await _IPDRegisterationServiceCommandRepository.DeleteAsync(IPDRegisterationServiceEntity);
+
+                response = new CommandResponse()
+                {
+                    Id = request.Id,
+                    ResultType = ResultType.Success,
+                    ResultMessage = "Removed successfully"
+                };
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            return response;
+        }
+    }
+
+    #endregion
+
+    #region IPDRegisterationRoom
+    public class CreateIPDRegisterationRoomHandler : IRequestHandler<CreateIPDRegisterationRoomCommand, CommandResponse>
+    {
+        private readonly IIPDRegisterationRoomCommandRepository _IPDRegisterationRoomCommandRepository;
+
+        public CreateIPDRegisterationRoomHandler(IIPDRegisterationRoomCommandRepository IPDRegisterationRoomCommandRepository)
+        {
+            _IPDRegisterationRoomCommandRepository = IPDRegisterationRoomCommandRepository;
+        }
+
+        public async Task<CommandResponse> Handle(CreateIPDRegisterationRoomCommand request, CancellationToken cancellationToken)
+        {
+            var IPDRegisterationRoomEntity = MapperConfig.Mapper.Map<IPDRegisterationRoom>(request);
+            IPDRegisterationRoomEntity.CreatedDate = DateTime.Now;
+
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (IPDRegisterationRoomEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+            else
+            {
+                try
+                {
+                    var newIPDRegisterationRoom = await _IPDRegisterationRoomCommandRepository.AddAsync(IPDRegisterationRoomEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = newIPDRegisterationRoom.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Saved successfully"
+                    };
+
+                }
+                catch (Exception exp)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = -1,
+                        ResultType = ResultType.Error,
+                        ResultMessage = "Error in operation\n" + exp.Message
+                    };
+                }
+
+            }
+
+            return response;
+        }
+    }
+
+    public class EditIPDRegisterationRoomHandler : IRequestHandler<EditIPDRegisterationRoomCommand, CommandResponse>
+    {
+        private readonly IIPDRegisterationRoomCommandRepository _IPDRegisterationRoomCommandRepository;
+        private readonly IIPDRegisterationRoomQueryRepository _IPDRegisterationRoomQueryRepository;
+
+        public EditIPDRegisterationRoomHandler(IIPDRegisterationRoomCommandRepository IPDRegisterationRoomCommandRepository, IIPDRegisterationRoomQueryRepository IPDRegisterationRoomQueryRepository)
+        {
+            _IPDRegisterationRoomCommandRepository = IPDRegisterationRoomCommandRepository;
+            _IPDRegisterationRoomQueryRepository = IPDRegisterationRoomQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(EditIPDRegisterationRoomCommand request, CancellationToken cancellationToken)
+        {
+            var IPDRegisterationRoomEntity = MapperConfig.Mapper.Map<IPDRegisterationRoom>(request);
+            IPDRegisterationRoomEntity.ModifiedDate = DateTime.Now;
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (IPDRegisterationRoomEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+
+            try
+            {
+                await _IPDRegisterationRoomCommandRepository.UpdateAsync(IPDRegisterationRoomEntity);
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            var modifiedIPDRegisterationRoom = await _IPDRegisterationRoomQueryRepository.GetByIdAsync(request.Id);
+
+            response = new CommandResponse()
+            {
+                Id = modifiedIPDRegisterationRoom.Id,
+                ResultType = ResultType.Success,
+                ResultMessage = "Updated successfully"
+            };
+
+            return response;
+        }
+    }
+
+    public class DeleteIPDRegisterationRoomHandler : IRequestHandler<DeleteIPDRegisterationRoomCommand, CommandResponse>
+    {
+        private readonly IIPDRegisterationRoomCommandRepository _IPDRegisterationRoomCommandRepository;
+        private readonly IIPDRegisterationRoomQueryRepository _IPDRegisterationRoomQueryRepository;
+
+        public DeleteIPDRegisterationRoomHandler(IIPDRegisterationRoomCommandRepository IPDRegisterationRoomCommandRepository, IIPDRegisterationRoomQueryRepository IPDRegisterationRoomQueryRepository)
+        {
+            _IPDRegisterationRoomCommandRepository = IPDRegisterationRoomCommandRepository;
+            _IPDRegisterationRoomQueryRepository = IPDRegisterationRoomQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(DeleteIPDRegisterationRoomCommand request, CancellationToken cancellationToken)
+        {
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            try
+            {
+                var IPDRegisterationRoomEntity = await _IPDRegisterationRoomQueryRepository.GetByIdAsync(request.Id);
+
+                await _IPDRegisterationRoomCommandRepository.DeleteAsync(IPDRegisterationRoomEntity);
+
+                response = new CommandResponse()
+                {
+                    Id = request.Id,
+                    ResultType = ResultType.Success,
+                    ResultMessage = "Removed successfully"
+                };
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            return response;
+        }
+    }
+
+    #endregion
+
+    #region IPDRegisterationPayment
+    public class CreateIPDRegisterationPaymentHandler : IRequestHandler<CreateIPDRegisterationPaymentCommand, CommandResponse>
+    {
+        private readonly IIPDRegisterationPaymentCommandRepository _IPDRegisterationPaymentCommandRepository;
+
+        public CreateIPDRegisterationPaymentHandler(IIPDRegisterationPaymentCommandRepository IPDRegisterationPaymentCommandRepository)
+        {
+            _IPDRegisterationPaymentCommandRepository = IPDRegisterationPaymentCommandRepository;
+        }
+
+        public async Task<CommandResponse> Handle(CreateIPDRegisterationPaymentCommand request, CancellationToken cancellationToken)
+        {
+            var IPDRegisterationPaymentEntity = MapperConfig.Mapper.Map<IPDRegisterationPayment>(request);
+            IPDRegisterationPaymentEntity.CreatedDate = DateTime.Now;
+
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (IPDRegisterationPaymentEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+            else
+            {
+                try
+                {
+                    var newIPDRegisterationPayment = await _IPDRegisterationPaymentCommandRepository.AddAsync(IPDRegisterationPaymentEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = newIPDRegisterationPayment.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Saved successfully"
+                    };
+
+                }
+                catch (Exception exp)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = -1,
+                        ResultType = ResultType.Error,
+                        ResultMessage = "Error in operation\n" + exp.Message
+                    };
+                }
+
+            }
+
+            return response;
+        }
+    }
+
+    public class EditIPDRegisterationPaymentHandler : IRequestHandler<EditIPDRegisterationPaymentCommand, CommandResponse>
+    {
+        private readonly IIPDRegisterationPaymentCommandRepository _IPDRegisterationPaymentCommandRepository;
+        private readonly IIPDRegisterationPaymentQueryRepository _IPDRegisterationPaymentQueryRepository;
+
+        public EditIPDRegisterationPaymentHandler(IIPDRegisterationPaymentCommandRepository IPDRegisterationPaymentCommandRepository, IIPDRegisterationPaymentQueryRepository IPDRegisterationPaymentQueryRepository)
+        {
+            _IPDRegisterationPaymentCommandRepository = IPDRegisterationPaymentCommandRepository;
+            _IPDRegisterationPaymentQueryRepository = IPDRegisterationPaymentQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(EditIPDRegisterationPaymentCommand request, CancellationToken cancellationToken)
+        {
+            var IPDRegisterationPaymentEntity = MapperConfig.Mapper.Map<IPDRegisterationPayment>(request);
+            IPDRegisterationPaymentEntity.ModifiedDate = DateTime.Now;
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (IPDRegisterationPaymentEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+
+            try
+            {
+                await _IPDRegisterationPaymentCommandRepository.UpdateAsync(IPDRegisterationPaymentEntity);
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            var modifiedIPDRegisterationPayment = await _IPDRegisterationPaymentQueryRepository.GetByIdAsync(request.Id);
+
+            response = new CommandResponse()
+            {
+                Id = modifiedIPDRegisterationPayment.Id,
+                ResultType = ResultType.Success,
+                ResultMessage = "Updated successfully"
+            };
+
+            return response;
+        }
+    }
+
+    public class DeleteIPDRegisterationPaymentHandler : IRequestHandler<DeleteIPDRegisterationPaymentCommand, CommandResponse>
+    {
+        private readonly IIPDRegisterationPaymentCommandRepository _IPDRegisterationPaymentCommandRepository;
+        private readonly IIPDRegisterationPaymentQueryRepository _IPDRegisterationPaymentQueryRepository;
+
+        public DeleteIPDRegisterationPaymentHandler(IIPDRegisterationPaymentCommandRepository IPDRegisterationPaymentCommandRepository, IIPDRegisterationPaymentQueryRepository IPDRegisterationPaymentQueryRepository)
+        {
+            _IPDRegisterationPaymentCommandRepository = IPDRegisterationPaymentCommandRepository;
+            _IPDRegisterationPaymentQueryRepository = IPDRegisterationPaymentQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(DeleteIPDRegisterationPaymentCommand request, CancellationToken cancellationToken)
+        {
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            try
+            {
+                var IPDRegisterationPaymentEntity = await _IPDRegisterationPaymentQueryRepository.GetByIdAsync(request.Id);
+
+                await _IPDRegisterationPaymentCommandRepository.DeleteAsync(IPDRegisterationPaymentEntity);
+
+                response = new CommandResponse()
+                {
+                    Id = request.Id,
+                    ResultType = ResultType.Success,
+                    ResultMessage = "Removed successfully"
+                };
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            return response;
+        }
+    }
+
+    #endregion
 }

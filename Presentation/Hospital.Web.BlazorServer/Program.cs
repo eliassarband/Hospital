@@ -124,6 +124,17 @@ builder.Services.AddTransient<IOPDBillServiceCommandRepository, OPDBillServiceCo
 builder.Services.AddTransient<IReportTemplateQueryRepository, ReportTemplateQueryRepository>();
 builder.Services.AddTransient<IReportTemplateCommandRepository, ReportTemplateCommandRepository>();
 
+builder.Services.AddTransient<IIPDRegisterationQueryRepository, IPDRegisterationQueryRepository>();
+builder.Services.AddTransient<IIPDRegisterationCommandRepository, IPDRegisterationCommandRepository>();
+
+builder.Services.AddTransient<IIPDRegisterationServiceQueryRepository, IPDRegisterationServiceQueryRepository>();
+builder.Services.AddTransient<IIPDRegisterationServiceCommandRepository, IPDRegisterationServiceCommandRepository>();
+
+builder.Services.AddTransient<IIPDRegisterationRoomQueryRepository, IPDRegisterationRoomQueryRepository>();
+builder.Services.AddTransient<IIPDRegisterationRoomCommandRepository, IPDRegisterationRoomCommandRepository>();
+
+builder.Services.AddTransient<IIPDRegisterationPaymentQueryRepository, IPDRegisterationPaymentQueryRepository>();
+builder.Services.AddTransient<IIPDRegisterationPaymentCommandRepository, IPDRegisterationPaymentCommandRepository>();
 
 var app = builder.Build();
 

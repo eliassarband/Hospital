@@ -1,0 +1,721 @@
+﻿@page "/IPDRegisterationDefine/{Id:int?}"
+
+@using Hospital.Application.Commands
+@using Hospital.Application.Mapper
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Models.Auth
+@using MediatR
+@using System.ComponentModel.DataAnnotations
+@inject IMediator mediator
+@inject NavigationManager navManager
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+@attribute [Authorize(Roles = "Super,Admin,Operator")]
+
+<h1>@caption</h1>
+
+<MudGrid Class="mt-2">
+    <MudItem md="12">
+        <MudPaper Class="p-3" Elevation="10">
+            <TelerikForm @ref="form" Model="@iPDRegisteration"
+                         OnValidSubmit="@HandleValidSubmit"
+                         OnInvalidSubmit="@HandleInvalidSubmit">
+                <FormValidation>
+                    <DataAnnotationsValidator></DataAnnotationsValidator>
+
+                </FormValidation>
+                <FormItems>
+                    <TelerikTabStrip @bind-ActiveTabIndex="@ActiveTabIndex" Class="mb-2">
+                        <TabStripTab Title="General Information">
+                            <MudGrid Spacing="1">
+                                <MudItem md="12">
+                                    <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@NewPatient">Add New Patient</TelerikButton>
+                        
+                                    <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@SearchPatient">Search Patient</TelerikButton>
+                                </MudItem>
+                                <MudItem md="6">
+                                    <TelerikFloatingLabel Text="Date" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikDatePicker @bind-Value="@iPDRegisteration.Date"
+                                                                Format="dddd, dd MMMM, yyyy"
+                                                                Id="opd-date">
+                                            </TelerikDatePicker>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => iPDRegisteration.Date)" />
+                                </MudItem>
+                                <MudItem md="6">
+                                    <TelerikFloatingLabel Text="Patient" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikMultiColumnComboBox Data="@patients"
+                                                                        TextField="@nameof(PatientViewModel.Name)"
+                                                                        ValueField="@nameof(PatientViewModel.Id)"
+                                                                        Filterable="true"
+                                                                        @bind-Value="@iPDRegisteration.PatientId"
+                                                                        Id="patient"
+                                                                        ListHeight="250px"
+                                                                        Placeholder="Hint: You can filter by the Patient Name">
+                                                <MultiColumnComboBoxColumns>
+                                                    <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.Name)" Title="Name" Width="200px" />
+                                                    <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.NationalIdCart)" Title="National ID" Width="150px" />
+                                                    <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.FatherName)" Title="Father" Width="150px" />
+                                                    <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.GenderName)" Title="Gender" Width="100px" />
+                                                    <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.Mobile)" Title="Mobile" Width="150px" />
+                                                </MultiColumnComboBoxColumns>
+                                                <FooterTemplate>
+                                                    <span class="combobox-footer k-display-flex k-align-items-center k-justify-content-center">
+                                                        Total: @patients.Count() records
+                                                    </span>
+                                                </FooterTemplate>
+                                            </TelerikMultiColumnComboBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => iPDRegisteration.Patient)" />
+
+                            
+                                </MudItem>
+                                <MudItem md="6">
+                                    <TelerikFloatingLabel Text="Reffer By" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikComboBox @bind-Value="@iPDRegisteration.RefferById"
+                                                             Data="@refferBies"
+                                                             Placeholder="Select Reffer By"
+                                                             TextField="@nameof(RefferByViewModel.Name)"
+                                                             ValueField="@nameof(RefferByViewModel.Id)"
+                                                             Filterable="true"
+                                                             Id="refferBy">
+                                            </TelerikComboBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => iPDRegisteration.RefferById)" />
+                                </MudItem>
+                                <MudItem md="6">
+                                    <TelerikFloatingLabel Text="Total Amount" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikNumericTextBox Placeholder="Total Amount"
+                                                                   @bind-Value="@iPDRegisteration.TotalAmount"
+                                                                   Format="C"
+                                                                   Decimals="0"></TelerikNumericTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => iPDRegisteration.TotalAmount)" />
+                                </MudItem>
+                                <MudItem md="6">
+                                    <TelerikFloatingLabel Text="Total Discount" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikNumericTextBox Placeholder="Total Discount"
+                                                                   @bind-Value="@totalDiscount"
+                                                                   Format="C"
+                                                                   Decimals="0"></TelerikNumericTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                </MudItem>
+                                <MudItem md="6">
+                                    <TelerikFloatingLabel Text="Payable Amount" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikNumericTextBox Placeholder="Payable Amount"
+                                                                   @bind-Value="@iPDRegisteration.PayableAmount"
+                                                                   Format="C"
+                                                                   Decimals="0"></TelerikNumericTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                </MudItem>
+                                <MudItem md="12" Class="mb-2">
+                                    <TelerikFloatingLabel Text="Description" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikTextBox Placeholder="Description"
+                                                            @bind-Value="@iPDRegisteration.Description"></TelerikTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                </MudItem>
+                            </MudGrid>
+                        </TabStripTab>
+                        <TabStripTab Title="Room(s)">
+                            <WeatherCard City="London"
+                                         TempC="21"
+                                         Forecast="ForecastType.Cloudy">
+                            </WeatherCard>
+                        </TabStripTab>
+                        <TabStripTab Title="Service(s)">
+                            <WeatherCard City="Paris"
+                                         TempC="17"
+                                         Forecast="ForecastType.Rainy">
+                            </WeatherCard>
+                        </TabStripTab>
+                        <TabStripTab Title="Payment(s)">
+                            <WeatherCard City="Paris"
+                                         TempC="17"
+                                         Forecast="ForecastType.Rainy">
+                            </WeatherCard>
+                        </TabStripTab>
+                    </TelerikTabStrip>
+                    @*<MudGrid Spacing="1">
+                        <MudItem md="12">
+                            <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@NewPatient">Add New Patient</TelerikButton>
+
+                            <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@SearchPatient">Search Patient</TelerikButton>
+                        </MudItem>
+                        <MudItem md="6">
+                            <TelerikFloatingLabel Text="Date" Class="custom-label w-100">
+                                <div class="k-form-field-wrap">
+                                    <TelerikDatePicker @bind-Value="@IPDRegisteration.Date"
+                                                       Format="dddd, dd MMMM, yyyy"
+                                                       Id="opd-date">
+                                    </TelerikDatePicker>
+                                </div>
+                            </TelerikFloatingLabel>
+                            <TelerikValidationMessage For="@(() => IPDRegisteration.Date)" />
+                        </MudItem>
+                        <MudItem md="6">
+                            <TelerikFloatingLabel Text="Patient" Class="custom-label w-100">
+                                <div class="k-form-field-wrap">
+                                    <TelerikMultiColumnComboBox Data="@patients"
+                                                                TextField="@nameof(PatientViewModel.Name)"
+                                                                ValueField="@nameof(PatientViewModel.Id)"
+                                                                Filterable="true"
+                                                                @bind-Value="@IPDRegisteration.PatientId"
+                                                                Id="patient"
+                                                                ListHeight="250px"
+                                                                Placeholder="Hint: You can filter by the Patient Name">
+                                        <MultiColumnComboBoxColumns>
+                                            <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.Name)" Title="Name" Width="200px" />
+                                            <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.NationalIdCart)" Title="National ID" Width="150px" />
+                                            <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.FatherName)" Title="Father" Width="150px" />
+                                            <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.GenderName)" Title="Gender" Width="100px" />
+                                            <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.Mobile)" Title="Mobile" Width="150px" />
+                                        </MultiColumnComboBoxColumns>
+                                        <FooterTemplate>
+                                            <span class="combobox-footer k-display-flex k-align-items-center k-justify-content-center">
+                                                Total: @patients.Count() records
+                                            </span>
+                                        </FooterTemplate>
+                                    </TelerikMultiColumnComboBox>
+                                </div>
+                            </TelerikFloatingLabel>
+                            <TelerikValidationMessage For="@(() => IPDRegisteration.Patient)" />
+
+
+                        </MudItem>
+
+                        <MudItem md="12">
+                            <TelerikGrid Data=@IPDRegisterationServices EditMode="@GridEditMode.Popup"
+                                         Height="300px" Pageable="true" PageSize="5"
+                                         OnDelete=@DeleteItem OnCreate=@CreateItem>
+                                <GridToolBar>
+                                    <GridCommandButton Command="Add">Add Service</GridCommandButton>
+                                </GridToolBar>
+                                <GridColumns>
+                                    <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.ServiceName) Title="Service Name" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                        <EditorTemplate>
+                                            @{
+                                                var ServiceToEdit = context as IPDRegisterationServiceViewModel;
+                                                <TelerikDropDownList Data="@services" ValueField="Id" TextField="Name" @bind-Value="@ServiceToEdit.ServiceId"></TelerikDropDownList>
+                                            }
+                                        </EditorTemplate>
+                                    </GridColumn>
+                                    <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Quantity) Title="Quantity" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                    <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Rate) Title="Rate" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                    <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Discount) Title="Discount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                    <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.StaffName) Title="Staff Name" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                        <EditorTemplate>
+                                            @{
+                                                var ServiceToEdit = context as IPDRegisterationServiceViewModel;
+                                                <TelerikDropDownList Data="@staffs" ValueField="Id" TextField="Name" @bind-Value="@ServiceToEdit.StaffId" />
+                                            }
+                                        </EditorTemplate>
+                                    </GridColumn>
+                                    <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Amount) Title="Amount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                    <GridCommandColumn Title="Action" Width="10vw" HeaderClass="k-text-center">
+
+                                        <GridCommandButton Command="Delete" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Delete</GridCommandButton>
+
+                                    </GridCommandColumn>
+                                </GridColumns>
+                            </TelerikGrid>
+                        </MudItem>
+                        <MudItem md="6">
+                            <TelerikFloatingLabel Text="Payment Type" Class="custom-label w-100">
+                                <div class="k-form-field-wrap">
+                                    <TelerikComboBox @bind-Value="@IPDRegisteration.PaymentTypeId"
+                                                     Data="@paymentTypes"
+                                                     Placeholder="Select Payment Type"
+                                                     TextField="@nameof(BasicInformationViewModel.Name)"
+                                                     ValueField="@nameof(BasicInformationViewModel.Id)"
+                                                     Filterable="true"
+                                                     Id="paymentType">
+                                    </TelerikComboBox>
+                                </div>
+                            </TelerikFloatingLabel>
+                            <TelerikValidationMessage For="@(() => IPDRegisteration.PaymentTypeId)" />
+                        </MudItem>
+                        <MudItem md="6">
+                            <TelerikFloatingLabel Text="Total Amount" Class="custom-label w-100">
+                                <div class="k-form-field-wrap">
+                                    <TelerikNumericTextBox Placeholder="Total Amount"
+                                                           @bind-Value="@IPDRegisteration.TotalAmount"
+                                                           Format="C"
+                                                           Decimals="0"></TelerikNumericTextBox>
+                                </div>
+                            </TelerikFloatingLabel>
+                            <TelerikValidationMessage For="@(() => IPDRegisteration.TotalAmount)" />
+                        </MudItem>
+                        <MudItem md="6">
+                            <TelerikFloatingLabel Text="Total Discount" Class="custom-label w-100">
+                                <div class="k-form-field-wrap">
+                                    <TelerikNumericTextBox Placeholder="Total Discount"
+                                                           @bind-Value="@totalDiscount"
+                                                           Format="C"
+                                                           Decimals="0"></TelerikNumericTextBox>
+                                </div>
+                            </TelerikFloatingLabel>
+                        </MudItem>
+                        <MudItem md="6">
+                            <TelerikFloatingLabel Text="Payable Amount" Class="custom-label w-100">
+                                <div class="k-form-field-wrap">
+                                    <TelerikNumericTextBox Placeholder="Payable Amount"
+                                                           @bind-Value="@IPDRegisteration.PayableAmount"
+                                                           Format="C"
+                                                           Decimals="0"></TelerikNumericTextBox>
+                                </div>
+                            </TelerikFloatingLabel>
+                        </MudItem>
+                        <MudItem md="12" Class="mb-2">
+                            <TelerikFloatingLabel Text="Description" Class="custom-label w-100">
+                                <div class="k-form-field-wrap">
+                                    <TelerikTextBox Placeholder="Description"
+                                                    @bind-Value="@IPDRegisteration.Description"></TelerikTextBox>
+                                </div>
+                            </TelerikFloatingLabel>
+                        </MudItem>
+                    </MudGrid>*@
+
+                </FormItems>
+                <FormButtons>
+                    <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveIPDRegisteration">Save</MudButton>
+                    <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="IPDRegisterations">Return</MudButton>
+                </FormButtons>
+            </TelerikForm>
+
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+<TelerikWindow Class="demo-window" Width="80vw" Height="80vh" Centered="true" @bind-Visible=@addPatientWindowState Modal="true">
+    <WindowTitle>
+        <strong>Add Patient</strong>
+    </WindowTitle>
+    <WindowActions>
+        <WindowAction Name="Close" />
+    </WindowActions>
+    <WindowContent>
+        <PatientDefine Id="0" Mode="Modal" OnPatientAdded="PatientAdded"></PatientDefine>
+    </WindowContent>
+</TelerikWindow>
+
+<TelerikWindow Class="demo-window" Width="80vw" Height="80vh" Centered="true" @bind-Visible=@searchPatientWindowState Modal="true">
+    <WindowTitle>
+        <strong>Search Patient</strong>
+    </WindowTitle>
+    <WindowActions>
+        <WindowAction Name="Close" />
+    </WindowActions>
+    <WindowContent>
+        <Patients Mode="Search" OnPatientSelected="PatientSelected"></Patients>
+    </WindowContent>
+</TelerikWindow>
+
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
+    public int ActiveTabIndex { get; set; } = 0;
+    private string caption = "Add IPD Registeration";
+    private IPDRegisterationViewModel iPDRegisteration = new IPDRegisterationViewModel();
+    private List<PatientViewModel> patients;
+    private List<RefferByViewModel> refferBies;
+    private List<BasicInformationViewModel> paymentTypes;
+    private List<ServiceViewModel> services;
+    private List<StaffViewModel> staffs;
+    private List<IPDRegisterationServiceViewModel> iPDRegisterationServices = new List<IPDRegisterationServiceViewModel>();
+
+    private bool success;
+    TelerikForm form;
+    private int totalDiscount = 0;
+    private bool addPatientWindowState = false;
+    private bool searchPatientWindowState = false;
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        patients = await mediator.Send(new GetAllPatientsQuery());
+        refferBies = await mediator.Send(new GetAllRefferBiesQuery());
+        services = await mediator.Send(new GetAllServicesQuery());
+        staffs = await mediator.Send(new GetAllStaffsQuery());
+        paymentTypes = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("PaymentType"));
+
+        iPDRegisteration.Date = DateTime.Now;
+
+        if (Id > 0)
+        {
+            caption = "Edit IPD Registeration";
+
+            iPDRegisteration = await mediator.Send(new GetIPDRegisterationByIdQuery(Convert.ToInt32(Id)));
+
+            if (iPDRegisteration != null)
+            {
+
+                iPDRegisterationServices = await mediator.Send(new GetIPDRegisterationServicesByIPDRegisterationIdQuery(iPDRegisteration.Id));
+
+                foreach (var billService in iPDRegisterationServices)
+                {
+                    var service = await mediator.Send(new GetServiceByIdQuery(billService.ServiceId ?? 0));
+
+                    if (service != null)
+                    {
+                        billService.ServiceCode = service.Code;
+                        billService.ServiceName = service.Name;
+                        billService.Rate = service.OPDRate;
+                        if (service.DiscountAmount > 0)
+                            billService.Discount = service.DiscountAmount;
+
+                        if (service.DiscountPercentage > 0)
+                            billService.Discount = (service.OPDRate * service.DiscountPercentage) / 100;
+
+                        billService.Amount = billService.Quantity * (billService.Rate - billService.Discount);
+                    }
+
+                    var staff = await mediator.Send(new GetStaffByIdQuery(billService.StaffId ?? 0));
+
+                    if (staff != null)
+                    {
+                        billService.StaffCode = staff.Code;
+                        billService.StaffName = staff.Name;
+                    }
+
+
+                    CalculateAmount();
+
+                }
+            }
+        }
+
+
+    }
+
+    public bool ValidSubmit { get; set; } = false;
+
+    async void HandleValidSubmit()
+    {
+        ValidSubmit = true;
+
+        await Task.Delay(2000);
+
+        ValidSubmit = false;
+
+        StateHasChanged();
+    }
+
+    void HandleInvalidSubmit()
+    {
+        ValidSubmit = false;
+    }
+
+    private async void CreateItem(GridCommandEventArgs args)
+    {
+        IPDRegisterationServiceViewModel billService = (IPDRegisterationServiceViewModel)args.Item;
+
+        var service = await mediator.Send(new GetServiceByIdQuery(billService.ServiceId ?? 0));
+
+        if (service != null)
+        {
+            billService.ServiceCode = service.Code;
+            billService.ServiceName = service.Name;
+            billService.Rate = service.OPDRate;
+            if (service.DiscountAmount > 0)
+                billService.Discount = service.DiscountAmount;
+
+            if (service.DiscountPercentage > 0)
+                billService.Discount = (service.OPDRate * service.DiscountPercentage) / 100;
+
+            billService.Amount = billService.Quantity * (billService.Rate - billService.Discount);
+        }
+
+        var staff = await mediator.Send(new GetStaffByIdQuery(billService.StaffId ?? 0));
+
+        if (staff != null)
+        {
+            billService.StaffCode = staff.Code;
+            billService.StaffName = staff.Name;
+        }
+
+        iPDRegisterationServices.Add(billService);
+
+        CalculateAmount();
+        //ProductService.CreateProduct((ProductDto)args.Item);
+        //LoadData();
+    }
+
+    private void DeleteItem(GridCommandEventArgs args)
+    {
+
+        IPDRegisterationServiceViewModel billService = (IPDRegisterationServiceViewModel)args.Item;
+
+        iPDRegisterationServices.Remove(billService);
+
+        CalculateAmount();
+        //ProductService.DeleteProduct((ProductDto)args.Item);
+        //LoadData();
+    }
+
+    private async void CalculateAmount()
+    {
+        var total = iPDRegisterationServices.Sum(b => b.Rate * b.Quantity);
+        var payable = iPDRegisterationServices.Sum(b => b.Amount);
+
+        iPDRegisteration.TotalAmount = total;
+        iPDRegisteration.PayableAmount = payable;
+        totalDiscount = total - payable;
+    }
+
+    protected async Task Print()
+    {
+        if (iPDRegisteration.Id > 0)
+        {
+
+            if (iPDRegisteration.Id > 0)
+            {
+                navManager.NavigateTo("/ReportShow/IPDRegisteration/" + iPDRegisteration.Id.ToString());
+            }
+        }
+
+    }
+
+    protected async Task NewPatient()
+    {
+        addPatientWindowState = true;
+
+
+    }
+
+    protected async Task PatientAdded(int PatientId)
+    {
+        patients = await mediator.Send(new GetAllPatientsQuery());
+        iPDRegisteration.PatientId = PatientId;
+
+        addPatientWindowState = false;
+    }
+
+    protected async Task SearchPatient()
+    {
+        searchPatientWindowState = true;
+
+    }
+
+    protected async Task PatientSelected(int PatientId)
+    {
+        iPDRegisteration.PatientId = PatientId;
+
+        searchPatientWindowState = false;
+    }
+
+    //protected async Task DateOfBirthChange()
+    //{
+    //    if (IPDRegisteration.Patient.DateOfBirth != null)
+    //    {
+    //        DateTime dateOfBirth = IPDRegisteration.Patient.DateOfBirth ?? DateTime.Now;
+    //        TimeSpan span = DateTime.Now - dateOfBirth;
+    //        DateTime age = DateTime.MinValue + span;
+
+    //        // Make adjustment due to MinValue equalling 1/1/1
+    //        int years = age.Year - 1;
+    //        int months = age.Month - 1;
+    //        int days = age.Day - 1;
+
+    //        patientAge = String.Format("{0} Years, {1} Months, {2} Days", years, months, days);
+    //    }
+    //    else
+    //    {
+    //        patientAge = "Unknown";
+    //    }
+
+    //}
+
+    protected async Task SaveIPDRegisteration()
+    {
+
+        if (form.IsValid())
+        {
+
+            CommandResponse result;
+
+
+            if (iPDRegisteration.Id > 0)
+            {
+                try
+                {
+                    iPDRegisteration.ModifiedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<EditIPDRegisterationCommand>(iPDRegisteration);
+
+                    if (command.Id > 0)
+                    {
+                        result = await mediator.Send(command);
+
+                        if (result.ResultType == ResultType.Success)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                            var billServices = await mediator.Send(new GetIPDRegisterationServicesByIPDRegisterationIdQuery(result.Id));
+
+                            foreach (var service in iPDRegisterationServices)
+                            {
+                                service.IPDRegisterationId = result.Id;
+                                if (billServices.Exists(b => b.ServiceId == service.Id))
+                                {
+
+
+                                    var editCommand = MapperConfig.Mapper.Map<EditIPDRegisterationServiceCommand>(service);
+
+                                    await mediator.Send(editCommand);
+                                }
+                                else
+                                {
+                                    var addCommand = MapperConfig.Mapper.Map<CreateIPDRegisterationServiceCommand>(service);
+
+                                    await mediator.Send(addCommand);
+                                }
+                            }
+
+                            foreach (var billService in billServices)
+                            {
+                                if (!iPDRegisterationServices.Exists(b => b.ServiceId == billService.ServiceId))
+                                {
+                                    await mediator.Send(new DeleteIPDRegisterationServiceCommand(billService.Id));
+                                }
+
+                            }
+
+                            iPDRegisteration.Id = result.Id;
+
+                            bool? dialogResult = await DialogService.ShowMessageBox(
+                                "Print",
+                                "Do you want to Print؟",
+                                yesText: "Yes", cancelText: "No");
+
+                            if (dialogResult == true)
+                            {
+                                if (result.Id > 0)
+                                {
+                                    Print();
+                                }
+                            }
+                            else if (Id > 0)
+                            {
+                                navManager.NavigateTo("IPDRegisterations");
+                            }
+                        }
+                        else if (result.ResultType == ResultType.Warning)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Warning);
+                        }
+                        else if (result.ResultType == ResultType.Error)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Error);
+                        }
+
+                    }
+                    else
+                    {
+                        Snackbar.Add("Error in selected IPDRegisteration", Severity.Warning);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+            else
+            {
+                try
+                {
+                    iPDRegisteration.CreatedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<CreateIPDRegisterationCommand>(iPDRegisteration);
+
+                    result = await mediator.Send(command);
+
+                    if (result.ResultType == ResultType.Success)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Success);
+                        var billServices = await mediator.Send(new GetIPDRegisterationServicesByIPDRegisterationIdQuery(result.Id));
+
+                        foreach (var service in iPDRegisterationServices)
+                        {
+                            service.IPDRegisterationId = result.Id;
+
+                            if (billServices.Exists(b => b.ServiceId == service.Id))
+                            {
+                                var editCommand = MapperConfig.Mapper.Map<EditIPDRegisterationServiceCommand>(service);
+
+                                await mediator.Send(editCommand);
+                            }
+                            else
+                            {
+                                var addCommand = MapperConfig.Mapper.Map<CreateIPDRegisterationServiceCommand>(service);
+
+                                await mediator.Send(addCommand);
+                            }
+                        }
+
+                        foreach (var billService in billServices)
+                        {
+                            if (!iPDRegisterationServices.Exists(b => b.ServiceId == billService.ServiceId))
+                            {
+                                await mediator.Send(new DeleteIPDRegisterationServiceCommand(billService.Id));
+                            }
+
+                        }
+
+                        iPDRegisteration.Id = result.Id;
+
+                        bool? dialogResult = await DialogService.ShowMessageBox(
+                            "Print",
+                            "Do you want to Print؟",
+                            yesText: "Yes", cancelText: "No");
+
+                        if (dialogResult == true)
+                        {
+                            if (result.Id > 0)
+                            {
+                                Print();
+                            }
+                        }
+                        else if (Id > 0)
+                            navManager.NavigateTo("IPDRegisterations");
+                    }
+                    else if (result.ResultType == ResultType.Warning)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Warning);
+                    }
+                    else if (result.ResultType == ResultType.Error)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Error);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+        }
+
+    }
+
+}
+

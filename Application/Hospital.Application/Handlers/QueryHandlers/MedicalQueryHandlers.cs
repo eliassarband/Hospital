@@ -435,4 +435,198 @@ namespace Hospital.Application.Handlers.QueryHandlers
 
     #endregion
 
+    #region IPDRegisteration
+
+    public class GetAllIPDRegisterationsHandler : IRequestHandler<GetAllIPDRegisterationsQuery, List<IPDRegisterationViewModel>>
+    {
+        private readonly IIPDRegisterationQueryRepository _IPDRegisterationQueryRepository;
+
+        public GetAllIPDRegisterationsHandler(IIPDRegisterationQueryRepository IPDRegisterationQueryRepository)
+        {
+            _IPDRegisterationQueryRepository = IPDRegisterationQueryRepository;
+        }
+
+        public async Task<List<IPDRegisterationViewModel>> Handle(GetAllIPDRegisterationsQuery request, CancellationToken cancellationToken)
+        {
+            var BIs = (List<IPDRegisteration>)await _IPDRegisterationQueryRepository.GetAllAsync();
+
+            return MapperConfig.Mapper.Map<List<IPDRegisterationViewModel>>(BIs);
+        }
+    }
+
+    public class GetIPDRegisterationByIdHandler : IRequestHandler<GetIPDRegisterationByIdQuery, IPDRegisterationViewModel>
+    {
+        private readonly IIPDRegisterationQueryRepository _IPDRegisterationQueryRepository;
+
+        public GetIPDRegisterationByIdHandler(IIPDRegisterationQueryRepository IPDRegisterationQueryRepository)
+        {
+            _IPDRegisterationQueryRepository = IPDRegisterationQueryRepository;
+        }
+
+        public async Task<IPDRegisterationViewModel> Handle(GetIPDRegisterationByIdQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<IPDRegisterationViewModel>(await _IPDRegisterationQueryRepository.GetByIdAsync(request.Id));
+        }
+    }
+
+    #endregion
+
+    #region IPDRegisterationService
+
+    public class GetAllIPDRegisterationServicesHandler : IRequestHandler<GetAllIPDRegisterationServicesQuery, List<IPDRegisterationServiceViewModel>>
+    {
+        private readonly IIPDRegisterationServiceQueryRepository _IPDRegisterationServiceQueryRepository;
+
+        public GetAllIPDRegisterationServicesHandler(IIPDRegisterationServiceQueryRepository IPDRegisterationServiceQueryRepository)
+        {
+            _IPDRegisterationServiceQueryRepository = IPDRegisterationServiceQueryRepository;
+        }
+
+        public async Task<List<IPDRegisterationServiceViewModel>> Handle(GetAllIPDRegisterationServicesQuery request, CancellationToken cancellationToken)
+        {
+            var BIs = (List<IPDRegisterationService>)await _IPDRegisterationServiceQueryRepository.GetAllAsync();
+
+            return MapperConfig.Mapper.Map<List<IPDRegisterationServiceViewModel>>(BIs);
+        }
+    }
+
+    public class GetIPDRegisterationServicesByIPDRegisterationIdHandler : IRequestHandler<GetIPDRegisterationServicesByIPDRegisterationIdQuery, List<IPDRegisterationServiceViewModel>>
+    {
+        private readonly IIPDRegisterationServiceQueryRepository _IPDRegisterationServiceQueryRepository;
+
+        public GetIPDRegisterationServicesByIPDRegisterationIdHandler(IIPDRegisterationServiceQueryRepository IPDRegisterationServiceQueryRepository)
+        {
+            _IPDRegisterationServiceQueryRepository = IPDRegisterationServiceQueryRepository;
+        }
+
+        public async Task<List<IPDRegisterationServiceViewModel>> Handle(GetIPDRegisterationServicesByIPDRegisterationIdQuery request, CancellationToken cancellationToken)
+        {
+            var BIs = (List<IPDRegisterationService>)await _IPDRegisterationServiceQueryRepository.GetByIPDRegisterationIdAsync(request.IPDRegisterationId);
+
+            return MapperConfig.Mapper.Map<List<IPDRegisterationServiceViewModel>>(BIs);
+        }
+    }
+
+    public class GetIPDRegisterationServiceByIdHandler : IRequestHandler<GetIPDRegisterationServiceByIdQuery, IPDRegisterationServiceViewModel>
+    {
+        private readonly IIPDRegisterationServiceQueryRepository _IPDRegisterationServiceQueryRepository;
+
+        public GetIPDRegisterationServiceByIdHandler(IIPDRegisterationServiceQueryRepository IPDRegisterationServiceQueryRepository)
+        {
+            _IPDRegisterationServiceQueryRepository = IPDRegisterationServiceQueryRepository;
+        }
+
+        public async Task<IPDRegisterationServiceViewModel> Handle(GetIPDRegisterationServiceByIdQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<IPDRegisterationServiceViewModel>(await _IPDRegisterationServiceQueryRepository.GetByIdAsync(request.Id));
+        }
+    }
+
+    #endregion
+
+    #region IPDRegisterationRoom
+
+    public class GetAllIPDRegisterationRoomsHandler : IRequestHandler<GetAllIPDRegisterationRoomsQuery, List<IPDRegisterationRoomViewModel>>
+    {
+        private readonly IIPDRegisterationRoomQueryRepository _IPDRegisterationRoomQueryRepository;
+
+        public GetAllIPDRegisterationRoomsHandler(IIPDRegisterationRoomQueryRepository IPDRegisterationRoomQueryRepository)
+        {
+            _IPDRegisterationRoomQueryRepository = IPDRegisterationRoomQueryRepository;
+        }
+
+        public async Task<List<IPDRegisterationRoomViewModel>> Handle(GetAllIPDRegisterationRoomsQuery request, CancellationToken cancellationToken)
+        {
+            var BIs = (List<IPDRegisterationRoom>)await _IPDRegisterationRoomQueryRepository.GetAllAsync();
+
+            return MapperConfig.Mapper.Map<List<IPDRegisterationRoomViewModel>>(BIs);
+        }
+    }
+
+    public class GetIPDRegisterationRoomsByOPDBillIdHandler : IRequestHandler<GetIPDRegisterationRoomsByOPDBillIdQuery, List<IPDRegisterationRoomViewModel>>
+    {
+        private readonly IIPDRegisterationRoomQueryRepository _IPDRegisterationRoomQueryRepository;
+
+        public GetIPDRegisterationRoomsByOPDBillIdHandler(IIPDRegisterationRoomQueryRepository IPDRegisterationRoomQueryRepository)
+        {
+            _IPDRegisterationRoomQueryRepository = IPDRegisterationRoomQueryRepository;
+        }
+
+        public async Task<List<IPDRegisterationRoomViewModel>> Handle(GetIPDRegisterationRoomsByOPDBillIdQuery request, CancellationToken cancellationToken)
+        {
+            var BIs = (List<IPDRegisterationRoom>)await _IPDRegisterationRoomQueryRepository.GetByIPDRegisterationIdAsync(request.IPDRegisterationId);
+
+            return MapperConfig.Mapper.Map<List<IPDRegisterationRoomViewModel>>(BIs);
+        }
+    }
+
+    public class GetIPDRegisterationRoomByIdHandler : IRequestHandler<GetIPDRegisterationRoomByIdQuery, IPDRegisterationRoomViewModel>
+    {
+        private readonly IIPDRegisterationRoomQueryRepository _IPDRegisterationRoomQueryRepository;
+
+        public GetIPDRegisterationRoomByIdHandler(IIPDRegisterationRoomQueryRepository IPDRegisterationRoomQueryRepository)
+        {
+            _IPDRegisterationRoomQueryRepository = IPDRegisterationRoomQueryRepository;
+        }
+
+        public async Task<IPDRegisterationRoomViewModel> Handle(GetIPDRegisterationRoomByIdQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<IPDRegisterationRoomViewModel>(await _IPDRegisterationRoomQueryRepository.GetByIdAsync(request.Id));
+        }
+    }
+
+    #endregion
+
+    #region IPDRegisterationPayment
+
+    public class GetAllIPDRegisterationPaymentsHandler : IRequestHandler<GetAllIPDRegisterationPaymentsQuery, List<IPDRegisterationPaymentViewModel>>
+    {
+        private readonly IIPDRegisterationPaymentQueryRepository _IPDRegisterationPaymentQueryRepository;
+
+        public GetAllIPDRegisterationPaymentsHandler(IIPDRegisterationPaymentQueryRepository IPDRegisterationPaymentQueryRepository)
+        {
+            _IPDRegisterationPaymentQueryRepository = IPDRegisterationPaymentQueryRepository;
+        }
+
+        public async Task<List<IPDRegisterationPaymentViewModel>> Handle(GetAllIPDRegisterationPaymentsQuery request, CancellationToken cancellationToken)
+        {
+            var BIs = (List<IPDRegisterationPayment>)await _IPDRegisterationPaymentQueryRepository.GetAllAsync();
+
+            return MapperConfig.Mapper.Map<List<IPDRegisterationPaymentViewModel>>(BIs);
+        }
+    }
+
+    public class GetIPDRegisterationPaymentsByOPDBillIdHandler : IRequestHandler<GetIPDRegisterationPaymentsByOPDBillIdQuery, List<IPDRegisterationPaymentViewModel>>
+    {
+        private readonly IIPDRegisterationPaymentQueryRepository _IPDRegisterationPaymentQueryRepository;
+
+        public GetIPDRegisterationPaymentsByOPDBillIdHandler(IIPDRegisterationPaymentQueryRepository IPDRegisterationPaymentQueryRepository)
+        {
+            _IPDRegisterationPaymentQueryRepository = IPDRegisterationPaymentQueryRepository;
+        }
+
+        public async Task<List<IPDRegisterationPaymentViewModel>> Handle(GetIPDRegisterationPaymentsByOPDBillIdQuery request, CancellationToken cancellationToken)
+        {
+            var BIs = (List<IPDRegisterationPayment>)await _IPDRegisterationPaymentQueryRepository.GetByIPDRegisterationIdAsync(request.IPDRegisterationId);
+
+            return MapperConfig.Mapper.Map<List<IPDRegisterationPaymentViewModel>>(BIs);
+        }
+    }
+
+    public class GetIPDRegisterationPaymentByIdHandler : IRequestHandler<GetIPDRegisterationPaymentByIdQuery, IPDRegisterationPaymentViewModel>
+    {
+        private readonly IIPDRegisterationPaymentQueryRepository _IPDRegisterationPaymentQueryRepository;
+
+        public GetIPDRegisterationPaymentByIdHandler(IIPDRegisterationPaymentQueryRepository IPDRegisterationPaymentQueryRepository)
+        {
+            _IPDRegisterationPaymentQueryRepository = IPDRegisterationPaymentQueryRepository;
+        }
+
+        public async Task<IPDRegisterationPaymentViewModel> Handle(GetIPDRegisterationPaymentByIdQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<IPDRegisterationPaymentViewModel>(await _IPDRegisterationPaymentQueryRepository.GetByIdAsync(request.Id));
+        }
+    }
+
+    #endregion
 }
