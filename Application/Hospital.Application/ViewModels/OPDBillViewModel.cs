@@ -23,8 +23,13 @@ namespace Hospital.Application.ViewModels
         public PatientViewModel Patient { get; set; }
 
         [Required]
-        public string BillNo { get; set; }
-        public string ReceiptNo { get; set; }
+        [Range(1, int.MaxValue)]
+        public int PaymentTypeId { get; set; }
+        public int PaymentTypeCode { get; set; }
+        public string PaymentTypeStrCode { get; set; }
+        public string PaymentTypeName { get; set; }
+        public BasicInformationViewModel PaymentType { get; set; }
+
 
         [Required]
         [Range(1, int.MaxValue)]

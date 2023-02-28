@@ -38,7 +38,7 @@ namespace Hospital.Infrastructure.Data
                 new BasicInformationCategory() { Id = 4, Code = "Qualification", Name = "Qualification", Viewable = true, RelatedCategoryId = null, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
                 new BasicInformationCategory() { Id = 5, Code = "City", Name = "City", Viewable = true, RelatedCategoryId = null, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
                 new BasicInformationCategory() { Id = 6, Code = "Area", Name = "Area", Viewable = true, RelatedCategoryId = 5, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
-                new BasicInformationCategory() { Id = 7, Code = "InsurancePaymentType", Name = "Insurance Payment Type", Viewable = false, RelatedCategoryId = null, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" }
+                new BasicInformationCategory() { Id = 7, Code = "PaymentType", Name = "Payment Type", Viewable = false, RelatedCategoryId = null, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" }
             );
 
             modelBuilder.Entity<BasicInformation>().HasData(

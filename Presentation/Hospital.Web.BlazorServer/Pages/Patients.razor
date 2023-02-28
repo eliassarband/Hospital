@@ -17,7 +17,10 @@
             <MudCard Class="pl-2 pr-2 mt-2">
                 <MudCardHeader>Patients</MudCardHeader>
                 <MudCardActions>
+                   @if(String.IsNullOrEmpty(Mode))
+                   {
                     <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("PatientDefine/0")>Add Patient</MudButton>
+                   }
                 </MudCardActions>
                 <MudCardContent>
                     <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<PatientViewModel,bool>(FilterPatientInit)">
@@ -72,7 +75,7 @@
                                 if(Mode == "Search")
                                 {
                                     <MudTd DataLabel="Select">
-                                        <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Search" Color="Color.Secondary" OnClick="@(()=> SelectPatient(@context.Id))"></MudIconButton>
+                                        <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.PersonAdd" Color="Color.Tertiary" OnClick="@(()=> SelectPatient(@context.Id))"></MudIconButton>
                                     </MudTd>
                                 }
                             }

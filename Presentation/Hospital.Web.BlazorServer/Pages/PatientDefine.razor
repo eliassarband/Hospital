@@ -254,7 +254,11 @@
                 </FormItems>
                 <FormButtons>
                    <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SavePatient">Save</MudButton>
+
+                   @if(String.IsNullOrEmpty(Mode))
+                   {
                         <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="Patients">Return</MudButton>
+                   }
                 </FormButtons>
             </TelerikForm>
                    

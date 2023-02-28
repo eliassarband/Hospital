@@ -16,9 +16,9 @@ namespace Hospital.Domain.Core.Entities
         public virtual Patient Patient { get; set; }
 
         [Required]
-        public string BillNo { get; set; }
-        [Required]
-        public string ReceiptNo { get; set; }
+        [ForeignKey("PaymentTypeId")]
+        public int? PaymentTypeId { get; set; }
+        public virtual BasicInformation? PaymentType { get; set; }
 
         [Required]
         public int TotalAmount { get; set; }

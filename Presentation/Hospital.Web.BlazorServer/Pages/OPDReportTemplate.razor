@@ -44,18 +44,17 @@
             report.LoadFromString(reportTemplate.Content);
         }
 
-        var oPDBills = await mediator.Send(new GetAllOPDBillsQuery());
+        var oPDBills = await mediator.Send(new GetAllOPDBillsQuery()); 
+        report.RegBusinessObject("OPDBill", oPDBills.FirstOrDefault());
+        
         var oPDBillServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(0));
-
-        report.RegData("OPDBillData",ConverterHelper.ListToDataTable(oPDBills));
-        report.RegData("OPDBillService", ConverterHelper.ListToDataTable(oPDBillServices));
+        report.RegBusinessObject("OPDBillServices", oPDBillServices);
 
         var hospital = await mediator.Send(new GetHospitalInformationByIdQuery(1));
-        List<HospitalInformationViewModel> hospitals = new List<HospitalInformationViewModel>();
-        hospitals.Add(hospital);
+        report.RegBusinessObject("HospitalInformation", hospital);
 
-        report.RegData("HospitalInformation", ConverterHelper.ListToDataTable(hospitals));
-        report.RegBusinessObject("test", hospital);
+        var patients = await mediator.Send(new GetAllPatientsQuery());
+        report.RegBusinessObject("Patient", patients.FirstOrDefault());
 
         report.Dictionary.Synchronize();
 

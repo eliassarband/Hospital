@@ -45,21 +45,15 @@
     protected override async Task OnInitializedAsync()
     {
 
-
-        if (Id > 0)
+        if (ReportCode=="OPDBill" && Id > 0)
         {
 
             PrinterSettings settings = new PrinterSettings();
             string defaultPrinterName = settings.PrinterName;
-            List<OPDBillViewModel> oPDBills = new List<OPDBillViewModel>();
 
             var oPDBill = await mediator.Send(new GetOPDBillByIdQuery(Id));
 
-            oPDBills.Add(oPDBill);
-
-            var oPDBillServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(Id));
-
-            if (oPDBills != null)
+            if (oPDBill != null)
             {
                 reportTemplate = await mediator.Send(new GetReportTemplateByCodeQuery(ReportCode));
 
@@ -71,17 +65,17 @@
                 {
                     report.LoadFromString(reportTemplate.Content);
                 }
+                
+                report.RegBusinessObject("OPDBill", oPDBill);
 
-                report.RegData("OPDBillData",ConverterHelper.ListToDataTable(oPDBills));
-                report.RegData("OPDBillService",ConverterHelper.ListToDataTable(oPDBillServices));
+                var oPDBillServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(Id));
+                report.RegBusinessObject("OPDBillServices", oPDBillServices);
 
                 var hospital = await mediator.Send(new GetHospitalInformationByIdQuery(1));
-                List<HospitalInformationViewModel> hospitals = new List<HospitalInformationViewModel>();
-                hospitals.Add(hospital);
+                report.RegBusinessObject("HospitalInformation", hospital);
 
-                report.RegData("HospitalInformation", ConverterHelper.ListToDataTable(hospitals));
-
-                
+                var patients = await mediator.Send(new GetPatientByIdQuery(oPDBill.PatientId));
+                report.RegBusinessObject("Patient", patients);
 
                 report.Dictionary.Synchronize();
 

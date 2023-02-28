@@ -30,6 +30,11 @@
                 </FormValidation>
                 <FormItems>
                     <MudGrid Spacing="1">
+                        <MudItem md="12">
+                            <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@NewPatient">Add New Patient</TelerikButton>
+                        
+                            <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@SearchPatient">Search Patient</TelerikButton>
+                        </MudItem>
                         <MudItem md="6">
                             <TelerikFloatingLabel Text="Date" Class="custom-label w-100">
                                 <div class="k-form-field-wrap">
@@ -41,13 +46,6 @@
                             </TelerikFloatingLabel>
                             <TelerikValidationMessage For="@(() => oPDBill.Date)" />
                         </MudItem>
-                        <MudItem md="3">
-                            <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@NewPatient">Add New Patient</TelerikButton>
-                        </MudItem>
-                        <MudItem md="3">
-                            <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@SearchPatient">Search Patient</TelerikButton>
-                        </MudItem>
-                        
                         <MudItem md="6">
                             <TelerikFloatingLabel Text="Patient" Class="custom-label w-100">
                                 <div class="k-form-field-wrap">
@@ -116,23 +114,21 @@
                             </TelerikGrid>
                         </MudItem>
                         <MudItem md="6">
-                            <TelerikFloatingLabel Text="Bill Number" Class="custom-label w-100">
+                            <TelerikFloatingLabel Text="Payment Type" Class="custom-label w-100">
                                 <div class="k-form-field-wrap">
-                                    <TelerikTextBox Placeholder="Bill Number" 
-                                                    @bind-Value="@oPDBill.BillNo"></TelerikTextBox>
+                                    <TelerikComboBox @bind-Value="@oPDBill.PaymentTypeId"
+                                                     Data="@paymentTypes"
+                                                     Placeholder="Select Payment Type"
+                                                     TextField="@nameof(BasicInformationViewModel.Name)"
+                                                     ValueField="@nameof(BasicInformationViewModel.Id)"
+                                                     Filterable="true"
+                                                     Id="paymentType">
+                                    </TelerikComboBox>
                                 </div>
                             </TelerikFloatingLabel>
-                            <TelerikValidationMessage For="@(() => oPDBill.BillNo)" />
+                            <TelerikValidationMessage For="@(() => oPDBill.PaymentTypeId)" />
                         </MudItem>
                         <MudItem md="6">
-                            <TelerikFloatingLabel Text="Receipt Number" Class="custom-label w-100">
-                                <div class="k-form-field-wrap">
-                                    <TelerikTextBox Placeholder="Receipt Number" 
-                                                    @bind-Value="@oPDBill.ReceiptNo"></TelerikTextBox>
-                                </div>
-                            </TelerikFloatingLabel>
-                        </MudItem>
-                        <MudItem md="4">
                             <TelerikFloatingLabel Text="Total Amount" Class="custom-label w-100">
                                 <div class="k-form-field-wrap">
                                     <TelerikNumericTextBox Placeholder="Total Amount"
@@ -143,7 +139,7 @@
                             </TelerikFloatingLabel>
                             <TelerikValidationMessage For="@(() => oPDBill.TotalAmount)" />
                         </MudItem>
-                        <MudItem md="4">
+                        <MudItem md="6">
                             <TelerikFloatingLabel Text="Total Discount" Class="custom-label w-100">
                                 <div class="k-form-field-wrap">
                                     <TelerikNumericTextBox Placeholder="Total Discount"
@@ -153,7 +149,7 @@
                                 </div>
                             </TelerikFloatingLabel>
                         </MudItem>
-                        <MudItem md="4">
+                        <MudItem md="6">
                             <TelerikFloatingLabel Text="Payable Amount" Class="custom-label w-100">
                                 <div class="k-form-field-wrap">
                                     <TelerikNumericTextBox Placeholder="Payable Amount"
@@ -218,6 +214,7 @@
     private string caption = "Add OPD Bill";
     private OPDBillViewModel oPDBill = new OPDBillViewModel();
     private List<PatientViewModel> patients;
+    private List<BasicInformationViewModel> paymentTypes;
     private List<ServiceViewModel> services;
     private List<StaffViewModel> staffs;
     private List<OPDBillServiceViewModel> oPDBillServices = new List<OPDBillServiceViewModel>();
@@ -235,6 +232,7 @@
         patients = await mediator.Send(new GetAllPatientsQuery());
         services = await mediator.Send(new GetAllServicesQuery());
         staffs = await mediator.Send(new GetAllStaffsQuery());
+        paymentTypes = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("PaymentType"));
 
         oPDBill.Date = DateTime.Now;
 
@@ -248,6 +246,37 @@
             {
 
                 oPDBillServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(oPDBill.Id));
+
+                foreach (var billService in oPDBillServices)
+                {
+                    var service = await mediator.Send(new GetServiceByIdQuery(billService.ServiceId ?? 0));
+
+                    if (service != null)
+                    {
+                        billService.ServiceCode = service.Code;
+                        billService.ServiceName = service.Name;
+                        billService.Rate = service.OPDRate;
+                        if (service.DiscountAmount > 0)
+                            billService.Discount = service.DiscountAmount;
+
+                        if (service.DiscountPercentage > 0)
+                            billService.Discount = (service.OPDRate * service.DiscountPercentage) / 100;
+
+                        billService.Amount = billService.Quantity * (billService.Rate - billService.Discount);
+                    }
+
+                    var staff = await mediator.Send(new GetStaffByIdQuery(billService.StaffId ?? 0));
+
+                    if (staff != null)
+                    {
+                        billService.StaffCode = staff.Code;
+                        billService.StaffName = staff.Name;
+                    }
+
+
+                    CalculateAmount();
+                
+                }
             }
         }
 

@@ -28,7 +28,7 @@
                         <HeaderContent>
                             <MudTh>Date</MudTh>
                             <MudTh>Patient</MudTh>
-                            <MudTh>Bill No</MudTh>
+                            <MudTh>Payment Type</MudTh>
                             <MudTh>Total Amount</MudTh>
                             <MudTh>Payable Amount</MudTh>
                             <MudTh>Edit</MudTh>
@@ -37,7 +37,7 @@
                         <RowTemplate>
                             <MudTd DataLabel="Date">@context.Date</MudTd>
                             <MudTd DataLabel="Patient">@context.PatientName</MudTd>
-                            <MudTd DataLabel="BillNo">@context.BillNo</MudTd>
+                            <MudTd DataLabel="BillNo">@context.PaymentTypeName</MudTd>
                             <MudTd DataLabel="TotalAmount">@context.TotalAmount</MudTd>
                             <MudTd DataLabel="PayableAmount">@context.PayableAmount</MudTd>
                             <MudTd DataLabel="Edit">
@@ -85,9 +85,9 @@
             return true;
         if (element.PatientName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
-        if (element.BillNo.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        if (element.PaymentTypeName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
-        if ($"{element.Date.ToString()} {element.PatientName} {element.BillNo}".Contains(searchString))
+        if ($"{element.Date.ToString()} {element.PatientName} {element.PaymentTypeName}".Contains(searchString))
             return true;
         return false;
     }

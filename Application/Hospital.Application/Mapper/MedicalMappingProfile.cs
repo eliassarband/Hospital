@@ -236,14 +236,20 @@ namespace Hospital.Application.Mapper
             #region OPDBill
 
             CreateMap<OPDBill, CreateOPDBillCommand>().ReverseMap()
-                .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => (src.PatientId == 0 ? null : src.PatientId)));
+                .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => (src.PatientId == 0 ? null : src.PatientId)))
+                .ForMember(dest => dest.PaymentTypeId, opt => opt.MapFrom(src => (src.PaymentTypeId == 0 ? null : src.PaymentTypeId)));
 
             CreateMap<OPDBill, EditOPDBillCommand>().ReverseMap()
-                .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => (src.PatientId == 0 ? null : src.PatientId)));
+                .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => (src.PatientId == 0 ? null : src.PatientId)))
+                .ForMember(dest => dest.PaymentTypeId, opt => opt.MapFrom(src => (src.PaymentTypeId == 0 ? null : src.PaymentTypeId)));
 
             CreateMap<OPDBill, OPDBillViewModel>()
                 .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => (src.Patient != null ? src.Patient.Id : 0)))
-                .ForMember(dest => dest.PatientName, opt => opt.MapFrom(src => (src.Patient != null ? src.Patient.Name : "")));
+                .ForMember(dest => dest.PatientName, opt => opt.MapFrom(src => (src.Patient != null ? src.Patient.Name : "")))
+                .ForMember(dest => dest.PaymentTypeId, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.Id : 0)))
+                .ForMember(dest => dest.PaymentTypeCode, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.Code : 0)))
+                .ForMember(dest => dest.PaymentTypeStrCode, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.StrCode : "")))
+                .ForMember(dest => dest.PaymentTypeName, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.Name : "")));
 
             CreateMap<OPDBillViewModel, OPDBill>();
 

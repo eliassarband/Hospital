@@ -81,7 +81,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        PaymentTypes = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("InsurancePaymentType"));
+        PaymentTypes = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("PaymentType"));
 
         if (!String.IsNullOrEmpty(Id))
         {
