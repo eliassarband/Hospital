@@ -294,11 +294,11 @@ namespace Hospital.Application.Queries
 
     }
 
-    public record GetIPDRegisterationRoomsByOPDBillIdQuery : IRequest<List<IPDRegisterationRoomViewModel>>
+    public record GetIPDRegisterationRoomsByIPDRegisterationIdQuery : IRequest<List<IPDRegisterationRoomViewModel>>
     {
         public int IPDRegisterationId { get; private set; }
 
-        public GetIPDRegisterationRoomsByOPDBillIdQuery(int IPDRegisterationId)
+        public GetIPDRegisterationRoomsByIPDRegisterationIdQuery(int IPDRegisterationId)
         {
             this.IPDRegisterationId = IPDRegisterationId;
         }
@@ -322,11 +322,11 @@ namespace Hospital.Application.Queries
 
     }
 
-    public record GetIPDRegisterationPaymentsByOPDBillIdQuery : IRequest<List<IPDRegisterationPaymentViewModel>>
+    public record GetIPDRegisterationPaymentsByIPDRegisterationIdQuery : IRequest<List<IPDRegisterationPaymentViewModel>>
     {
         public int IPDRegisterationId { get; private set; }
 
-        public GetIPDRegisterationPaymentsByOPDBillIdQuery(int IPDRegisterationId)
+        public GetIPDRegisterationPaymentsByIPDRegisterationIdQuery(int IPDRegisterationId)
         {
             this.IPDRegisterationId = IPDRegisterationId;
         }

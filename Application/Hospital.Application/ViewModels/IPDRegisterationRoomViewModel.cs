@@ -13,7 +13,7 @@ namespace Hospital.Application.ViewModels
     {
         public int Id { get; set; }
 
-        [Required]
+       
         public int? IPDRegisterationId { get; set; }
         public virtual IPDRegisterationViewModel IPDRegisteration { get; set; }
 
@@ -27,12 +27,13 @@ namespace Hospital.Application.ViewModels
         public virtual RoomViewModel Room { get; set; }
 
         [Required]
+        [Range(1,int.MaxValue)]
         public int Days { get; set; }
 
-        [Required]
+        
         public int Rate { get; set; }
 
-        [Required]
+        
         public int Amount { get; set; }
 
         public string Description { get; set; }

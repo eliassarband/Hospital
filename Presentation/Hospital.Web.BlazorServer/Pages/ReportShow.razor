@@ -86,6 +86,53 @@
 
             }
         }
+        else if (ReportCode == "IPDRegisteration" && Id > 0)
+        {
+
+            PrinterSettings settings = new PrinterSettings();
+            string defaultPrinterName = settings.PrinterName;
+
+            var iPDRegisteration = await mediator.Send(new GetIPDRegisterationByIdQuery(Id));
+
+            if (iPDRegisteration != null)
+            {
+                reportTemplate = await mediator.Send(new GetReportTemplateByCodeQuery(ReportCode));
+
+                report = StiReport.CreateNewReport();
+
+                report.Dictionary.Databases.Clear();
+
+                if (reportTemplate != null)
+                {
+                    report.LoadFromString(reportTemplate.Content);
+                }
+
+                report.RegBusinessObject("IPDRegisteration", iPDRegisteration);
+
+                var iPDRegisterationRooms = await mediator.Send(new GetIPDRegisterationRoomsByIPDRegisterationIdQuery(iPDRegisteration.Id));
+                report.RegBusinessObject("IPDRegisterationRooms", iPDRegisterationRooms);
+
+                var iPDRegisterationServices = await mediator.Send(new GetIPDRegisterationServicesByIPDRegisterationIdQuery(iPDRegisteration.Id));
+                report.RegBusinessObject("IPDRegisterationServices", iPDRegisterationServices);
+
+                var iPDRegisterationPayments = await mediator.Send(new GetIPDRegisterationPaymentsByIPDRegisterationIdQuery(iPDRegisteration.Id));
+                report.RegBusinessObject("IPDRegisterationPayments", iPDRegisterationPayments);
+
+                var hospital = await mediator.Send(new GetHospitalInformationByIdQuery(1));
+                report.RegBusinessObject("HospitalInformation", hospital);
+
+                var patients = await mediator.Send(new GetPatientByIdQuery(iPDRegisteration.PatientId??0));
+                report.RegBusinessObject("Patient", patients);
+
+                report.Dictionary.Synchronize();
+
+                //report.Print();
+
+                //base.OnInitialized();
+
+
+            }
+        }
 
     }
 

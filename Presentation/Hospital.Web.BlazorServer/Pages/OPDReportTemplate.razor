@@ -46,9 +46,12 @@
 
         var oPDBills = await mediator.Send(new GetAllOPDBillsQuery()); 
         report.RegBusinessObject("OPDBill", oPDBills.FirstOrDefault());
-        
-        var oPDBillServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(0));
-        report.RegBusinessObject("OPDBillServices", oPDBillServices);
+
+        if (oPDBills != null)
+        {
+            var oPDBillServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(0));
+            report.RegBusinessObject("OPDBillServices", oPDBillServices);
+        }
 
         var hospital = await mediator.Send(new GetHospitalInformationByIdQuery(1));
         report.RegBusinessObject("HospitalInformation", hospital);

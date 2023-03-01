@@ -78,7 +78,7 @@
                         </MudItem>
                        
                         <MudItem md="12">
-                            <TelerikGrid Data=@oPDBillServices EditMode="@GridEditMode.Popup"
+                            <TelerikGrid Data=@oPDBillServices EditMode="@GridEditMode.Inline"
                                             Height="300px" Pageable="true" PageSize="5"
                                             OnDelete=@DeleteItem OnCreate=@CreateItem>
                                 <GridToolBar>
@@ -89,18 +89,44 @@
                                         <EditorTemplate>
                                             @{
                                                 var ServiceToEdit = context as OPDBillServiceViewModel;
-                                                <TelerikDropDownList Data="@services" ValueField="Id" TextField="Name" @bind-Value="@ServiceToEdit.ServiceId"></TelerikDropDownList>
+                                                <TelerikComboBox @bind-Value="@ServiceToEdit.ServiceId"
+                                                             Data="@services"
+                                                             Placeholder="Select Service"
+                                                             TextField="@nameof(ServiceViewModel.Name)"
+                                                             ValueField="@nameof(ServiceViewModel.Id)"
+                                                             Filterable="true"
+                                                             Id="service">
+                                                </TelerikComboBox>
+                                                <TelerikValidationMessage For="@(() => ServiceToEdit.ServiceId)" />
                                             }
                                         </EditorTemplate>
                                     </GridColumn>
-                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.Quantity) Title="Quantity" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.Quantity) Title="Quantity" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                        <EditorTemplate>
+                                            @{
+                                                var ServiceToEdit = context as OPDBillServiceViewModel;
+                                                <TelerikNumericTextBox Placeholder="Quantity"
+                                                                       @bind-Value="@ServiceToEdit.Quantity"
+                                                                   Decimals="0"></TelerikNumericTextBox>
+                                                <TelerikValidationMessage For="@(() => ServiceToEdit.Quantity)" />
+                                            }
+                                        </EditorTemplate>
+                                    </GridColumn>
                                     <GridColumn Field=@nameof(OPDBillServiceViewModel.Rate) Title="Rate" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
                                     <GridColumn Field=@nameof(OPDBillServiceViewModel.Discount) Title="Discount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
                                     <GridColumn Field=@nameof(OPDBillServiceViewModel.StaffName) Title="Staff Name" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
                                         <EditorTemplate>
                                             @{
                                                 var ServiceToEdit = context as OPDBillServiceViewModel;
-                                                <TelerikDropDownList Data="@staffs" ValueField="Id" TextField="Name" @bind-Value="@ServiceToEdit.StaffId" />
+                                                <TelerikComboBox @bind-Value="@ServiceToEdit.StaffId"
+                                                             Data="@staffs"
+                                                             Placeholder="Select Staff"
+                                                             TextField="@nameof(StaffViewModel.Name)"
+                                                             ValueField="@nameof(StaffViewModel.Id)"
+                                                             Filterable="true"
+                                                             Id="staff">
+                                                </TelerikComboBox>
+                                                <TelerikValidationMessage For="@(() => ServiceToEdit.StaffId)" />
                                             }
                                         </EditorTemplate>
                                     </GridColumn>
@@ -108,7 +134,8 @@
                                     <GridCommandColumn Title="Action" Width="10vw" HeaderClass="k-text-center">
 
                                         <GridCommandButton Command="Delete" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Delete</GridCommandButton>
-                                            
+                                        <GridCommandButton Command="Save" ThemeColor="@ThemeConstants.Button.ThemeColor.Tertiary" ShowInEdit="true">Update</GridCommandButton>
+                                        <GridCommandButton Command="Cancel" ShowInEdit="true">Cancel</GridCommandButton>
                                     </GridCommandColumn>
                                 </GridColumns>
                             </TelerikGrid>

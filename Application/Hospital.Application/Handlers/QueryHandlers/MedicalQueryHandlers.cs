@@ -543,16 +543,16 @@ namespace Hospital.Application.Handlers.QueryHandlers
         }
     }
 
-    public class GetIPDRegisterationRoomsByOPDBillIdHandler : IRequestHandler<GetIPDRegisterationRoomsByOPDBillIdQuery, List<IPDRegisterationRoomViewModel>>
+    public class GetIPDRegisterationRoomsByIPDRegisterationIdHandler : IRequestHandler<GetIPDRegisterationRoomsByIPDRegisterationIdQuery, List<IPDRegisterationRoomViewModel>>
     {
         private readonly IIPDRegisterationRoomQueryRepository _IPDRegisterationRoomQueryRepository;
 
-        public GetIPDRegisterationRoomsByOPDBillIdHandler(IIPDRegisterationRoomQueryRepository IPDRegisterationRoomQueryRepository)
+        public GetIPDRegisterationRoomsByIPDRegisterationIdHandler(IIPDRegisterationRoomQueryRepository IPDRegisterationRoomQueryRepository)
         {
             _IPDRegisterationRoomQueryRepository = IPDRegisterationRoomQueryRepository;
         }
 
-        public async Task<List<IPDRegisterationRoomViewModel>> Handle(GetIPDRegisterationRoomsByOPDBillIdQuery request, CancellationToken cancellationToken)
+        public async Task<List<IPDRegisterationRoomViewModel>> Handle(GetIPDRegisterationRoomsByIPDRegisterationIdQuery request, CancellationToken cancellationToken)
         {
             var BIs = (List<IPDRegisterationRoom>)await _IPDRegisterationRoomQueryRepository.GetByIPDRegisterationIdAsync(request.IPDRegisterationId);
 
@@ -596,16 +596,16 @@ namespace Hospital.Application.Handlers.QueryHandlers
         }
     }
 
-    public class GetIPDRegisterationPaymentsByOPDBillIdHandler : IRequestHandler<GetIPDRegisterationPaymentsByOPDBillIdQuery, List<IPDRegisterationPaymentViewModel>>
+    public class GetIPDRegisterationPaymentsByIPDRegisterationIdHandler : IRequestHandler<GetIPDRegisterationPaymentsByIPDRegisterationIdQuery, List<IPDRegisterationPaymentViewModel>>
     {
         private readonly IIPDRegisterationPaymentQueryRepository _IPDRegisterationPaymentQueryRepository;
 
-        public GetIPDRegisterationPaymentsByOPDBillIdHandler(IIPDRegisterationPaymentQueryRepository IPDRegisterationPaymentQueryRepository)
+        public GetIPDRegisterationPaymentsByIPDRegisterationIdHandler(IIPDRegisterationPaymentQueryRepository IPDRegisterationPaymentQueryRepository)
         {
             _IPDRegisterationPaymentQueryRepository = IPDRegisterationPaymentQueryRepository;
         }
 
-        public async Task<List<IPDRegisterationPaymentViewModel>> Handle(GetIPDRegisterationPaymentsByOPDBillIdQuery request, CancellationToken cancellationToken)
+        public async Task<List<IPDRegisterationPaymentViewModel>> Handle(GetIPDRegisterationPaymentsByIPDRegisterationIdQuery request, CancellationToken cancellationToken)
         {
             var BIs = (List<IPDRegisterationPayment>)await _IPDRegisterationPaymentQueryRepository.GetByIPDRegisterationIdAsync(request.IPDRegisterationId);
 

@@ -42,7 +42,7 @@
                                         <div class="k-form-field-wrap">
                                             <TelerikDatePicker @bind-Value="@iPDRegisteration.Date"
                                                                 Format="dddd, dd MMMM, yyyy"
-                                                                Id="opd-date">
+                                                                Id="ipd-date">
                                             </TelerikDatePicker>
                                         </div>
                                     </TelerikFloatingLabel>
@@ -135,164 +135,218 @@
                             </MudGrid>
                         </TabStripTab>
                         <TabStripTab Title="Room(s)">
-                            <WeatherCard City="London"
-                                         TempC="21"
-                                         Forecast="ForecastType.Cloudy">
-                            </WeatherCard>
+                            <MudGrid Spacing="1">
+                                <MudItem md="12">
+                                    <TelerikGrid Data=@iPDRegisterationRooms EditMode="@GridEditMode.Inline"
+                                                 Height="300px" Pageable="true" PageSize="5"
+                                                 OnDelete=@DeleteRoom OnCreate=@CreateRoom>
+                                        <GridToolBar>
+                                            <GridCommandButton Command="Add">Add Service</GridCommandButton>
+                                        </GridToolBar>
+                                        <GridColumns>
+                                            <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.Date) Title="Date" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                                <EditorTemplate>
+                                                    @{
+                                                        var RoomToEdit = context as IPDRegisterationRoomViewModel;
+                                                        RoomToEdit.Date=DateTime.Today;
+
+                                                        <TelerikDatePicker @bind-Value="@RoomToEdit.Date"
+                                                                       Format="dddd, dd MMMM, yyyy"
+                                                                       Id="ipd-room-date">
+                                                        </TelerikDatePicker>
+                                                        <TelerikValidationMessage For="@(() => RoomToEdit.Date)" />
+                                                    }
+                                                </EditorTemplate>
+                                            </GridColumn>
+                                            <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.RoomName) Title="Room Name" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                                <EditorTemplate>
+                                                    @{
+                                                        var RoomToEdit = context as IPDRegisterationRoomViewModel;
+                                                        <TelerikComboBox @bind-Value="@RoomToEdit.RoomId"
+                                                                     Data="@rooms"
+                                                                     Placeholder="Select Room"
+                                                                     TextField="@nameof(RoomViewModel.Name)"
+                                                                     ValueField="@nameof(RoomViewModel.Id)"
+                                                                     Filterable="true"
+                                                                     Id="room">
+                                                        </TelerikComboBox>
+                                                        <TelerikValidationMessage For="@(() => RoomToEdit.RoomId)" />
+                                                    }
+                                                </EditorTemplate>
+                                            </GridColumn>
+                                            <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.Days) Title="Days" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                                <EditorTemplate>
+                                                    @{
+                                                        var RoomToEdit = context as IPDRegisterationRoomViewModel;
+                                                        <TelerikNumericTextBox Placeholder="Days"
+                                                                               @bind-Value="@RoomToEdit.Days"
+                                                                           Decimals="0"></TelerikNumericTextBox>
+                                                        <TelerikValidationMessage For="@(() => RoomToEdit.Days)" />
+                                                    }
+                                                </EditorTemplate>
+                                            </GridColumn>
+                                            <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.Rate) Title="Rate" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                            <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.Amount) Title="Amount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                            <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.Description) Title="Description" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                            <GridCommandColumn Title="Action" Width="10vw" HeaderClass="k-text-center">
+
+                                                <GridCommandButton Command="Delete" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Delete</GridCommandButton>
+                                                <GridCommandButton Command="Save" ThemeColor="@ThemeConstants.Button.ThemeColor.Tertiary" ShowInEdit="true">Update</GridCommandButton>
+                                                <GridCommandButton Command="Cancel" ShowInEdit="true">Cancel</GridCommandButton>
+                                            </GridCommandColumn>
+                                        </GridColumns>
+                                    </TelerikGrid>
+                                </MudItem>
+                            </MudGrid>
                         </TabStripTab>
                         <TabStripTab Title="Service(s)">
-                            <WeatherCard City="Paris"
-                                         TempC="17"
-                                         Forecast="ForecastType.Rainy">
-                            </WeatherCard>
+                            <MudGrid Spacing="1">
+                                <MudItem md="12">
+                                    <TelerikGrid Data=@iPDRegisterationServices EditMode="@GridEditMode.Inline"
+                                                 Height="300px" Pageable="true" PageSize="5"
+                                                 OnDelete=@DeleteService OnCreate=@CreateService>
+                                        <GridToolBar>
+                                            <GridCommandButton Command="Add">Add Room</GridCommandButton>
+                                        </GridToolBar>
+                                        <GridColumns>
+                                            <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Date) Title="Date" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                                <EditorTemplate>
+                                                    @{
+                                                        var ServiceToEdit = context as IPDRegisterationServiceViewModel;
+                                                        ServiceToEdit.Date = DateTime.Today;
+
+                                                        <TelerikDatePicker @bind-Value="@ServiceToEdit.Date"
+                                                                       Format="yyyy-MM-dd"
+                                                                       Id="ipd-service-date">
+                                                        </TelerikDatePicker>
+                                                        <TelerikValidationMessage For="@(() => ServiceToEdit.Date)" />
+                                                    }
+                                                </EditorTemplate>
+                                            </GridColumn>
+                                            <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.ServiceName) Title="Service Name" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                                <EditorTemplate>
+                                                    @{
+                                                        var ServiceToEdit = context as IPDRegisterationServiceViewModel;
+                                                        <TelerikComboBox @bind-Value="@ServiceToEdit.ServiceId"
+                                                                     Data="@services"
+                                                                     Placeholder="Select Service"
+                                                                     TextField="@nameof(ServiceViewModel.Name)"
+                                                                     ValueField="@nameof(ServiceViewModel.Id)"
+                                                                     Filterable="true"
+                                                                     Id="service">
+                                                        </TelerikComboBox>
+                                                        <TelerikValidationMessage For="@(() => ServiceToEdit.ServiceId)" />
+                                                    }
+                                                </EditorTemplate>
+                                            </GridColumn>
+                                            <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Quantity) Title="Quantity" Editable="true" Width="5vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                                <EditorTemplate>
+                                                    @{
+                                                        var ServiceToEdit = context as IPDRegisterationServiceViewModel;
+                                                        <TelerikNumericTextBox Placeholder="Quantity"
+                                                                               @bind-Value="@ServiceToEdit.Quantity"
+                                                                           Decimals="0"></TelerikNumericTextBox>
+                                                        <TelerikValidationMessage For="@(() => ServiceToEdit.Quantity)" />
+                                                    }
+                                                </EditorTemplate>
+                                            </GridColumn>
+                                            <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Rate) Title="Rate" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                            <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Discount) Title="Discount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                            <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.StaffName) Title="Staff Name" Editable="true" Width="15vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                                <EditorTemplate>
+                                                    @{
+                                                        var ServiceToEdit = context as IPDRegisterationServiceViewModel;
+                                                        <TelerikComboBox @bind-Value="@ServiceToEdit.StaffId"
+                                                                     Data="@staffs"
+                                                                     Placeholder="Select Staff"
+                                                                     TextField="@nameof(StaffViewModel.Name)"
+                                                                     ValueField="@nameof(StaffViewModel.Id)"
+                                                                     Filterable="true"
+                                                                     Id="staff">
+                                                        </TelerikComboBox>
+                                                        <TelerikValidationMessage For="@(() => ServiceToEdit.StaffId)" />
+                                                    }
+                                                </EditorTemplate>
+                                            </GridColumn>
+                                            <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Amount) Title="Amount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                            <GridCommandColumn Title="Action" Width="10vw" HeaderClass="k-text-center">
+
+                                                <GridCommandButton Command="Delete" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Delete</GridCommandButton>
+                                                <GridCommandButton Command="Save" ThemeColor="@ThemeConstants.Button.ThemeColor.Tertiary" ShowInEdit="true">Update</GridCommandButton>
+                                                <GridCommandButton Command="Cancel" ShowInEdit="true">Cancel</GridCommandButton>
+                                            </GridCommandColumn>
+                                        </GridColumns>
+                                    </TelerikGrid>
+                                </MudItem>
+                            </MudGrid>
                         </TabStripTab>
                         <TabStripTab Title="Payment(s)">
-                            <WeatherCard City="Paris"
-                                         TempC="17"
-                                         Forecast="ForecastType.Rainy">
-                            </WeatherCard>
+                            <MudGrid Spacing="1">
+                                <MudItem md="12">
+                                    <TelerikGrid Data=@iPDRegisterationPayments EditMode="@GridEditMode.Inline"
+                                                 Height="300px" Pageable="true" PageSize="5"
+                                                 OnDelete=@DeletePayment OnCreate=@CreatePayment>
+                                        <GridToolBar>
+                                            <GridCommandButton Command="Add">Add Payment</GridCommandButton>
+                                        </GridToolBar>
+                                        <GridColumns>
+                                            <GridColumn Field=@nameof(IPDRegisterationPaymentViewModel.Date) Title="Date" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                                <EditorTemplate>
+                                                    @{
+                                                        var RoomToEdit = context as IPDRegisterationPaymentViewModel;
+                                                        RoomToEdit.Date = DateTime.Today;
+
+                                                        <TelerikDatePicker @bind-Value="@RoomToEdit.Date"
+                                                                       Format="dddd, dd MMMM, yyyy"
+                                                                       Id="ipd-payment-date">
+                                                        </TelerikDatePicker>
+                                                        <TelerikValidationMessage For="@(() => RoomToEdit.Date)" />
+                                                    }
+                                                </EditorTemplate>
+                                            </GridColumn>
+                                            <GridColumn Field=@nameof(IPDRegisterationPaymentViewModel.PaymentTypeName) Title="Payment Type" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                                <EditorTemplate>
+                                                    @{
+                                                        var PaymentToEdit = context as IPDRegisterationPaymentViewModel;
+                                                        <TelerikComboBox @bind-Value="@PaymentToEdit.PaymentTypeId"
+                                                                     Data="@paymentTypes"
+                                                                     Placeholder="Select Payment Type"
+                                                                     TextField="@nameof(BasicInformationViewModel.Name)"
+                                                                     ValueField="@nameof(BasicInformationViewModel.Id)"
+                                                                     Filterable="true"
+                                                                     Id="payment">
+                                                        </TelerikComboBox>
+                                                        <TelerikValidationMessage For="@(() => PaymentToEdit.PaymentTypeId)" />
+                                                    }
+                                                </EditorTemplate>
+                                            </GridColumn>
+                                            <GridColumn Field=@nameof(IPDRegisterationPaymentViewModel.Amount) Title="Amount" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                                <EditorTemplate>
+                                                    @{
+                                                        var PaymentToEdit = context as IPDRegisterationPaymentViewModel;
+                                                        <TelerikNumericTextBox Placeholder="Amount"
+                                                                               @bind-Value="@PaymentToEdit.Amount"
+                                                                               Format="C"
+                                                                               Decimals="0"></TelerikNumericTextBox>
+                                                        <TelerikValidationMessage For="@(() => PaymentToEdit.Amount)" />
+                                                    }
+                                                </EditorTemplate>
+                                            </GridColumn>
+                                            <GridColumn Field=@nameof(IPDRegisterationPaymentViewModel.ChequeNumber) Title="Cheque Number" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                            <GridColumn Field=@nameof(IPDRegisterationPaymentViewModel.Description) Title="Description" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                            <GridCommandColumn Title="Action" Width="10vw" HeaderClass="k-text-center">
+
+                                                <GridCommandButton Command="Delete" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Delete</GridCommandButton>
+                                                <GridCommandButton Command="Save" ThemeColor="@ThemeConstants.Button.ThemeColor.Tertiary" ShowInEdit="true">Update</GridCommandButton>
+                                                <GridCommandButton Command="Cancel" ShowInEdit="true">Cancel</GridCommandButton>
+                                            </GridCommandColumn>
+                                        </GridColumns>
+                                    </TelerikGrid>
+                                </MudItem>
+                            </MudGrid>
                         </TabStripTab>
                     </TelerikTabStrip>
-                    @*<MudGrid Spacing="1">
-                        <MudItem md="12">
-                            <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@NewPatient">Add New Patient</TelerikButton>
-
-                            <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@SearchPatient">Search Patient</TelerikButton>
-                        </MudItem>
-                        <MudItem md="6">
-                            <TelerikFloatingLabel Text="Date" Class="custom-label w-100">
-                                <div class="k-form-field-wrap">
-                                    <TelerikDatePicker @bind-Value="@IPDRegisteration.Date"
-                                                       Format="dddd, dd MMMM, yyyy"
-                                                       Id="opd-date">
-                                    </TelerikDatePicker>
-                                </div>
-                            </TelerikFloatingLabel>
-                            <TelerikValidationMessage For="@(() => IPDRegisteration.Date)" />
-                        </MudItem>
-                        <MudItem md="6">
-                            <TelerikFloatingLabel Text="Patient" Class="custom-label w-100">
-                                <div class="k-form-field-wrap">
-                                    <TelerikMultiColumnComboBox Data="@patients"
-                                                                TextField="@nameof(PatientViewModel.Name)"
-                                                                ValueField="@nameof(PatientViewModel.Id)"
-                                                                Filterable="true"
-                                                                @bind-Value="@IPDRegisteration.PatientId"
-                                                                Id="patient"
-                                                                ListHeight="250px"
-                                                                Placeholder="Hint: You can filter by the Patient Name">
-                                        <MultiColumnComboBoxColumns>
-                                            <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.Name)" Title="Name" Width="200px" />
-                                            <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.NationalIdCart)" Title="National ID" Width="150px" />
-                                            <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.FatherName)" Title="Father" Width="150px" />
-                                            <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.GenderName)" Title="Gender" Width="100px" />
-                                            <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.Mobile)" Title="Mobile" Width="150px" />
-                                        </MultiColumnComboBoxColumns>
-                                        <FooterTemplate>
-                                            <span class="combobox-footer k-display-flex k-align-items-center k-justify-content-center">
-                                                Total: @patients.Count() records
-                                            </span>
-                                        </FooterTemplate>
-                                    </TelerikMultiColumnComboBox>
-                                </div>
-                            </TelerikFloatingLabel>
-                            <TelerikValidationMessage For="@(() => IPDRegisteration.Patient)" />
-
-
-                        </MudItem>
-
-                        <MudItem md="12">
-                            <TelerikGrid Data=@IPDRegisterationServices EditMode="@GridEditMode.Popup"
-                                         Height="300px" Pageable="true" PageSize="5"
-                                         OnDelete=@DeleteItem OnCreate=@CreateItem>
-                                <GridToolBar>
-                                    <GridCommandButton Command="Add">Add Service</GridCommandButton>
-                                </GridToolBar>
-                                <GridColumns>
-                                    <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.ServiceName) Title="Service Name" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
-                                        <EditorTemplate>
-                                            @{
-                                                var ServiceToEdit = context as IPDRegisterationServiceViewModel;
-                                                <TelerikDropDownList Data="@services" ValueField="Id" TextField="Name" @bind-Value="@ServiceToEdit.ServiceId"></TelerikDropDownList>
-                                            }
-                                        </EditorTemplate>
-                                    </GridColumn>
-                                    <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Quantity) Title="Quantity" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
-                                    <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Rate) Title="Rate" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
-                                    <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Discount) Title="Discount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
-                                    <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.StaffName) Title="Staff Name" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
-                                        <EditorTemplate>
-                                            @{
-                                                var ServiceToEdit = context as IPDRegisterationServiceViewModel;
-                                                <TelerikDropDownList Data="@staffs" ValueField="Id" TextField="Name" @bind-Value="@ServiceToEdit.StaffId" />
-                                            }
-                                        </EditorTemplate>
-                                    </GridColumn>
-                                    <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Amount) Title="Amount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
-                                    <GridCommandColumn Title="Action" Width="10vw" HeaderClass="k-text-center">
-
-                                        <GridCommandButton Command="Delete" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Delete</GridCommandButton>
-
-                                    </GridCommandColumn>
-                                </GridColumns>
-                            </TelerikGrid>
-                        </MudItem>
-                        <MudItem md="6">
-                            <TelerikFloatingLabel Text="Payment Type" Class="custom-label w-100">
-                                <div class="k-form-field-wrap">
-                                    <TelerikComboBox @bind-Value="@IPDRegisteration.PaymentTypeId"
-                                                     Data="@paymentTypes"
-                                                     Placeholder="Select Payment Type"
-                                                     TextField="@nameof(BasicInformationViewModel.Name)"
-                                                     ValueField="@nameof(BasicInformationViewModel.Id)"
-                                                     Filterable="true"
-                                                     Id="paymentType">
-                                    </TelerikComboBox>
-                                </div>
-                            </TelerikFloatingLabel>
-                            <TelerikValidationMessage For="@(() => IPDRegisteration.PaymentTypeId)" />
-                        </MudItem>
-                        <MudItem md="6">
-                            <TelerikFloatingLabel Text="Total Amount" Class="custom-label w-100">
-                                <div class="k-form-field-wrap">
-                                    <TelerikNumericTextBox Placeholder="Total Amount"
-                                                           @bind-Value="@IPDRegisteration.TotalAmount"
-                                                           Format="C"
-                                                           Decimals="0"></TelerikNumericTextBox>
-                                </div>
-                            </TelerikFloatingLabel>
-                            <TelerikValidationMessage For="@(() => IPDRegisteration.TotalAmount)" />
-                        </MudItem>
-                        <MudItem md="6">
-                            <TelerikFloatingLabel Text="Total Discount" Class="custom-label w-100">
-                                <div class="k-form-field-wrap">
-                                    <TelerikNumericTextBox Placeholder="Total Discount"
-                                                           @bind-Value="@totalDiscount"
-                                                           Format="C"
-                                                           Decimals="0"></TelerikNumericTextBox>
-                                </div>
-                            </TelerikFloatingLabel>
-                        </MudItem>
-                        <MudItem md="6">
-                            <TelerikFloatingLabel Text="Payable Amount" Class="custom-label w-100">
-                                <div class="k-form-field-wrap">
-                                    <TelerikNumericTextBox Placeholder="Payable Amount"
-                                                           @bind-Value="@IPDRegisteration.PayableAmount"
-                                                           Format="C"
-                                                           Decimals="0"></TelerikNumericTextBox>
-                                </div>
-                            </TelerikFloatingLabel>
-                        </MudItem>
-                        <MudItem md="12" Class="mb-2">
-                            <TelerikFloatingLabel Text="Description" Class="custom-label w-100">
-                                <div class="k-form-field-wrap">
-                                    <TelerikTextBox Placeholder="Description"
-                                                    @bind-Value="@IPDRegisteration.Description"></TelerikTextBox>
-                                </div>
-                            </TelerikFloatingLabel>
-                        </MudItem>
-                    </MudGrid>*@
-
+                    
                 </FormItems>
                 <FormButtons>
                     <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveIPDRegisteration">Save</MudButton>
@@ -343,7 +397,10 @@
     private List<BasicInformationViewModel> paymentTypes;
     private List<ServiceViewModel> services;
     private List<StaffViewModel> staffs;
+    private List<RoomViewModel> rooms;
     private List<IPDRegisterationServiceViewModel> iPDRegisterationServices = new List<IPDRegisterationServiceViewModel>();
+    private List<IPDRegisterationRoomViewModel> iPDRegisterationRooms = new List<IPDRegisterationRoomViewModel>();
+    private List<IPDRegisterationPaymentViewModel> iPDRegisterationPayments = new List<IPDRegisterationPaymentViewModel>();
 
     private bool success;
     TelerikForm form;
@@ -360,6 +417,7 @@
         services = await mediator.Send(new GetAllServicesQuery());
         staffs = await mediator.Send(new GetAllStaffsQuery());
         paymentTypes = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("PaymentType"));
+        rooms = await mediator.Send(new GetAllRoomsQuery());
 
         iPDRegisteration.Date = DateTime.Now;
 
@@ -372,7 +430,9 @@
             if (iPDRegisteration != null)
             {
 
+                iPDRegisterationRooms = await mediator.Send(new GetIPDRegisterationRoomsByIPDRegisterationIdQuery(iPDRegisteration.Id));
                 iPDRegisterationServices = await mediator.Send(new GetIPDRegisterationServicesByIPDRegisterationIdQuery(iPDRegisteration.Id));
+                iPDRegisterationPayments = await mediator.Send(new GetIPDRegisterationPaymentsByIPDRegisterationIdQuery(iPDRegisteration.Id));
 
                 foreach (var billService in iPDRegisterationServices)
                 {
@@ -428,7 +488,42 @@
         ValidSubmit = false;
     }
 
-    private async void CreateItem(GridCommandEventArgs args)
+    private async void CreateRoom(GridCommandEventArgs args)
+    {
+        IPDRegisterationRoomViewModel iPDRoom = (IPDRegisterationRoomViewModel)args.Item;
+
+        var room = await mediator.Send(new GetRoomByIdQuery(iPDRoom.RoomId ?? 0));
+
+        if (room != null)
+        {
+            iPDRoom.RoomCode = room.Code;
+            iPDRoom.RoomName = room.Name;
+            iPDRoom.Rate = room.Cost;
+
+            iPDRoom.Amount = iPDRoom.Days * room.Cost;
+        }
+
+
+        iPDRegisterationRooms.Add(iPDRoom);
+
+        CalculateAmount();
+        //ProductService.CreateProduct((ProductDto)args.Item);
+        //LoadData();
+    }
+
+    private void DeleteRoom(GridCommandEventArgs args)
+    {
+
+        IPDRegisterationRoomViewModel iPDRoom = (IPDRegisterationRoomViewModel)args.Item;
+
+        iPDRegisterationRooms.Remove(iPDRoom);
+
+        CalculateAmount();
+        //ProductService.DeleteProduct((ProductDto)args.Item);
+        //LoadData();
+    }
+
+    private async void CreateService(GridCommandEventArgs args)
     {
         IPDRegisterationServiceViewModel billService = (IPDRegisterationServiceViewModel)args.Item;
 
@@ -463,12 +558,46 @@
         //LoadData();
     }
 
-    private void DeleteItem(GridCommandEventArgs args)
+    private void DeleteService(GridCommandEventArgs args)
     {
 
         IPDRegisterationServiceViewModel billService = (IPDRegisterationServiceViewModel)args.Item;
 
         iPDRegisterationServices.Remove(billService);
+
+        CalculateAmount();
+        //ProductService.DeleteProduct((ProductDto)args.Item);
+        //LoadData();
+    }
+
+    private async void CreatePayment(GridCommandEventArgs args)
+    {
+        IPDRegisterationPaymentViewModel iPDPayment = (IPDRegisterationPaymentViewModel)args.Item;
+
+        var payment = await mediator.Send(new GetBasicInformationByIdQuery(iPDPayment.PaymentTypeId ?? 0));
+
+        if (payment != null)
+        {
+            iPDPayment.PaymentTypeCode = payment.Code;
+            iPDPayment.PaymentTypeStrCode = payment.StrCode;
+            iPDPayment.PaymentTypeName = payment.Name;
+            
+        }
+
+
+        iPDRegisterationPayments.Add(iPDPayment);
+
+        CalculateAmount();
+        //ProductService.CreateProduct((ProductDto)args.Item);
+        //LoadData();
+    }
+
+    private void DeletePayment(GridCommandEventArgs args)
+    {
+
+        IPDRegisterationPaymentViewModel iPDPayment = (IPDRegisterationPaymentViewModel)args.Item;
+
+        iPDRegisterationPayments.Remove(iPDPayment);
 
         CalculateAmount();
         //ProductService.DeleteProduct((ProductDto)args.Item);
