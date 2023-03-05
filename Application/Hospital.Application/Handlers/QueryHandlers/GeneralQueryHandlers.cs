@@ -634,4 +634,55 @@ namespace Hospital.Application.Handlers.QueryHandlers
 
 
     #endregion
+
+    #region Setting
+
+    public class GetAllSettingsHandler : IRequestHandler<GetAllSettingsQuery, List<SettingViewModel>>
+    {
+        private readonly ISettingQueryRepository _SettingQueryRepository;
+
+        public GetAllSettingsHandler(ISettingQueryRepository SettingQueryRepository)
+        {
+            _SettingQueryRepository = SettingQueryRepository;
+        }
+
+        public async Task<List<SettingViewModel>> Handle(GetAllSettingsQuery request, CancellationToken cancellationToken)
+        {
+            List<Setting> Settings = (List<Setting>)await _SettingQueryRepository.GetAllAsync();
+
+            return MapperConfig.Mapper.Map<List<SettingViewModel>>(Settings);
+        }
+    }
+
+    public class GetSettingByIdHandler : IRequestHandler<GetSettingByIdQuery, SettingViewModel>
+    {
+        private readonly ISettingQueryRepository _SettingQueryRepository;
+
+        public GetSettingByIdHandler(ISettingQueryRepository SettingQueryRepository)
+        {
+            _SettingQueryRepository = SettingQueryRepository;
+        }
+
+        public async Task<SettingViewModel> Handle(GetSettingByIdQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<SettingViewModel>(await _SettingQueryRepository.GetByIdAsync(request.Id));
+        }
+    }
+
+    public class GetSettingByKeyHandler : IRequestHandler<GetSettingByKeyQuery, SettingViewModel>
+    {
+        private readonly ISettingQueryRepository _SettingQueryRepository;
+
+        public GetSettingByKeyHandler(ISettingQueryRepository SettingQueryRepository)
+        {
+            _SettingQueryRepository = SettingQueryRepository;
+        }
+
+        public async Task<SettingViewModel> Handle(GetSettingByKeyQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<SettingViewModel>(await _SettingQueryRepository.GetByKeyAsync(request.Key));
+        }
+    }
+
+    #endregion
 }

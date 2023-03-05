@@ -4,6 +4,8 @@
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Domain.Core.Helpers;
+@using Hospital.Web.BlazorServer.Helpers;
 @using MediatR
 @inject IMediator mediator;
 @inject IDialogService DialogService
@@ -29,9 +31,11 @@
                             <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Clearable></MudTextField>
                         </ToolBarContent>
                         <HeaderContent>
-                            <MudTh>NationalIdCart</MudTh>
+                            <MudTh>Patient Id</MudTh>
+                            <MudTh>National Id</MudTh>
                             <MudTh>Name</MudTh>
-                            <MudTh>Date Of Birth</MudTh>
+                            <MudTh>DoB</MudTh>
+                            <MudTh>Age</MudTh>
                             <MudTh>Gender</MudTh>
                             <MudTh>FatherName</MudTh>
                             <MudTh>Mobile</MudTh>
@@ -52,9 +56,34 @@
                             }
                             </HeaderContent>
                         <RowTemplate>
+                            <MudTd DataLabel="PatientId">
+                                @UtilityHelper.GenerateIdentifier(patientIdPrefix.Value,context.Id)
+                            </MudTd>
+
                             <MudTd DataLabel="NationalIdCart">@context.NationalIdCart</MudTd>
                             <MudTd DataLabel="Name">@context.NamePrefixName @context.Name</MudTd>
-                            <MudTd DataLabel="DateOfBirth">@context.DateOfBirth</MudTd>
+                            
+                            @if (context.DateOfBirth != null)
+                            {
+                                DateTime date = context.DateOfBirth??DateTime.Now;
+                                <MudTd DataLabel="DoB">
+                                    @date.ToShortDateString()
+                                </MudTd>
+                                <MudTd DataLabel="Age">
+                                    @DateHelper.CalculateAgeYear(date)
+                                </MudTd>
+                            }
+                            else
+                            {
+                                <MudTd DataLabel="DoB">
+                                    Unknown
+                                </MudTd>
+
+                                <MudTd DataLabel="Age">
+                                    Unknown
+                                </MudTd>
+                            }
+                            
                             <MudTd DataLabel="GenderName">@context.GenderName</MudTd>
                             <MudTd DataLabel="FatherName">@context.FatherName</MudTd>
                             <MudTd DataLabel="Mobile">@context.Mobile</MudTd>
@@ -99,11 +128,14 @@
     public EventCallback<int> OnPatientSelected { get; set; }
     private MudTable<PatientViewModel> _table;
     private List<PatientViewModel> Elements;
+    private SettingViewModel patientIdPrefix;
     private bool loading = false;
     private string searchString = "";
 
     protected override async Task OnInitializedAsync()
     {
+        patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
+
         Elements = await mediator.Send(new GetAllPatientsQuery());
     }
 

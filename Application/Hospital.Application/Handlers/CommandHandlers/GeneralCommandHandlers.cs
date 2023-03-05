@@ -1607,4 +1607,177 @@ namespace Hospital.Application.Handlers.CommandHandlers
     }
 
     #endregion
+
+    #region Setting
+    public class CreateSettingHandler : IRequestHandler<CreateSettingCommand, CommandResponse>
+    {
+        private readonly ISettingCommandRepository _SettingCommandRepository;
+
+        public CreateSettingHandler(ISettingCommandRepository SettingCommandRepository)
+        {
+            _SettingCommandRepository = SettingCommandRepository;
+        }
+
+        public async Task<CommandResponse> Handle(CreateSettingCommand request, CancellationToken cancellationToken)
+        {
+            var SettingEntity = MapperConfig.Mapper.Map<Setting>(request);
+            SettingEntity.CreatedDate = DateTime.Now;
+
+
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (SettingEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+            else
+            {
+                try
+                {
+                    var newSetting = await _SettingCommandRepository.AddAsync(SettingEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = newSetting.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Saved successfully"
+                    };
+
+                }
+                catch (Exception exp)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = -1,
+                        ResultType = ResultType.Error,
+                        ResultMessage = "Error in operation\n" + exp.Message
+                    };
+                }
+
+            }
+
+            return response;
+        }
+    }
+
+    public class EditSettingHandler : IRequestHandler<EditSettingCommand, CommandResponse>
+    {
+        private readonly ISettingCommandRepository _SettingCommandRepository;
+        private readonly ISettingQueryRepository _SettingQueryRepository;
+
+        public EditSettingHandler(ISettingCommandRepository SettingCommandRepository, ISettingQueryRepository SettingQueryRepository)
+        {
+            _SettingCommandRepository = SettingCommandRepository;
+            _SettingQueryRepository = SettingQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(EditSettingCommand request, CancellationToken cancellationToken)
+        {
+            var SettingEntity = MapperConfig.Mapper.Map<Setting>(request);
+            SettingEntity.ModifiedDate = DateTime.Now;
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (SettingEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+
+            try
+            {
+                await _SettingCommandRepository.UpdateAsync(SettingEntity);
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            var modifiedSetting = await _SettingQueryRepository.GetByIdAsync(request.Id);
+
+            response = new CommandResponse()
+            {
+                Id = modifiedSetting.Id,
+                ResultType = ResultType.Success,
+                ResultMessage = "Updated successfully"
+            };
+
+            return response;
+        }
+    }
+
+    public class DeleteSettingHandler : IRequestHandler<DeleteSettingCommand, CommandResponse>
+    {
+        private readonly ISettingCommandRepository _SettingCommandRepository;
+        private readonly ISettingQueryRepository _SettingQueryRepository;
+
+        public DeleteSettingHandler(ISettingCommandRepository SettingCommandRepository, ISettingQueryRepository SettingQueryRepository)
+        {
+            _SettingCommandRepository = SettingCommandRepository;
+            _SettingQueryRepository = SettingQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(DeleteSettingCommand request, CancellationToken cancellationToken)
+        {
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            try
+            {
+                var SettingEntity = await _SettingQueryRepository.GetByIdAsync(request.Id);
+
+
+                await _SettingCommandRepository.DeleteAsync(SettingEntity);
+
+                response = new CommandResponse()
+                {
+                    Id = request.Id,
+                    ResultType = ResultType.Success,
+                    ResultMessage = "Removed successfully"
+                };
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            return response;
+        }
+    }
+
+    #endregion
 }

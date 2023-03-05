@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Hospital.Application.Responses;
 using Hospital.Application.ViewModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace Hospital.Application.Commands
 {
@@ -482,6 +483,53 @@ namespace Hospital.Application.Commands
         public int Id { get; set; }
 
         public DeleteReportTemplateCommand(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
+
+    #region Setting
+    public class CreateSettingCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Key { get; set; }
+        public string Value { get; set; }
+        public string Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedSetting { get; set; }
+
+        public CreateSettingCommand()
+        {
+            this.CreatedDate = DateTime.Now;
+        }
+    }
+
+    public class EditSettingCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Key { get; set; }
+        public string Value { get; set; }
+        public string Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedSetting { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string? ModifiedSetting { get; set; }
+
+        public EditSettingCommand()
+        {
+            this.ModifiedDate = DateTime.Now;
+        }
+    }
+
+    public class DeleteSettingCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+
+        public DeleteSettingCommand(int Id)
         {
             this.Id = Id;
         }

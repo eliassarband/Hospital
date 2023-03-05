@@ -370,4 +370,33 @@ namespace Hospital.Application.Queries
 
 
     #endregion
+
+    #region Setting
+    public record GetAllSettingsQuery : IRequest<List<SettingViewModel>>
+    {
+
+    }
+
+
+    public record GetSettingByIdQuery : IRequest<SettingViewModel>
+    {
+        public int Id { get; private set; }
+
+        public GetSettingByIdQuery(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    public record GetSettingByKeyQuery : IRequest<SettingViewModel>
+    {
+        public string Key { get; private set; }
+
+        public GetSettingByKeyQuery(string Key)
+        {
+            this.Key = Key;
+        }
+    }
+
+    #endregion
 }

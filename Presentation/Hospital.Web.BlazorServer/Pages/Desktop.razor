@@ -35,43 +35,49 @@
             </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;">
+            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;" @onclick="( () => OPDIPDClick())">
                 <MudImage Src="images/Dashboard/registerform.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
                 <MudText Class="text-secondary mt-2">OPD / IPD</MudText>
             </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;">
+            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;" @onclick="( () => PrecryptionClick())">
                 <MudImage Src="images/Dashboard/Precryption.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
                 <MudText Class="text-secondary mt-2">E-Precryption</MudText>
             </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;">
+            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;" @onclick="( () => LabratoryClick())">
                 <MudImage Src="images/Dashboard/Laboratory.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
                 <MudText Class="text-secondary mt-2">Labratory</MudText>
             </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;">
+            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;" @onclick="( () => PharmacyClick())">
                 <MudImage Src="images/Dashboard/Pharmacy.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
                 <MudText Class="text-secondary mt-2">Pharmacy</MudText>
             </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;">
+            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;" @onclick="( () => FinancialClick())">
                 <MudImage Src="images/Dashboard/Financial.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
                 <MudText Class="text-secondary mt-2">Financial</MudText>
             </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;">
+            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;" @onclick="( () => HRClick())">
+                <MudImage Src="images/Dashboard/HR.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
+                <MudText Class="text-secondary mt-2">Human Resources</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;" @onclick="( () => SettingClick())">
                 <MudImage Src="images/Dashboard/Setting.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
                 <MudText Class="text-secondary mt-2">Setting</MudText>
             </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;">
+            <MudPaper Elevation="2" Class="pa-1 zoom" Style="height: 200px;" @onclick="( () => ReportsClick())">
                 <MudImage Src="images/Dashboard/Reports.jpeg" Height="150" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Top" Class="card-img"></MudImage>
                 <MudText Class="text-secondary mt-2">Reports</MudText>
             </MudPaper>
@@ -112,6 +118,46 @@
 
     protected async Task AppointmentClick()
     {
-        navManager.NavigateTo("Appointment");
+        navManager.NavigateTo("AppointmentDashboard");
+    }
+
+    protected async Task OPDIPDClick()
+    {
+        navManager.NavigateTo("OPDIPDDashboard");
+    }
+
+    protected async Task PrecryptionClick()
+    {
+        navManager.NavigateTo("PrecryptionDashboard");
+    }
+
+    protected async Task LabratoryClick()
+    {
+        navManager.NavigateTo("LabratoryDashboard");
+    }
+
+    protected async Task PharmacyClick()
+    {
+        navManager.NavigateTo("PharmacyDashboard");
+    }
+
+    protected async Task FinancialClick()
+    {
+        navManager.NavigateTo("FinancialDashboard");
+    }
+
+    protected async Task HRClick()
+    {
+        navManager.NavigateTo("HRDashboard");
+    }
+
+    protected async Task SettingClick()
+    {
+        navManager.NavigateTo("SettingDashboard");
+    }
+
+    protected async Task ReportsClick()
+    {
+        navManager.NavigateTo("ReportsDashboard");
     }
 }

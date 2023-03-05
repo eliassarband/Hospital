@@ -38,7 +38,9 @@ namespace Hospital.Infrastructure.Data
                 new BasicInformationCategory() { Id = 4, Code = "Qualification", Name = "Qualification", Viewable = true, RelatedCategoryId = null, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
                 new BasicInformationCategory() { Id = 5, Code = "City", Name = "City", Viewable = true, RelatedCategoryId = null, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
                 new BasicInformationCategory() { Id = 6, Code = "Area", Name = "Area", Viewable = true, RelatedCategoryId = 5, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
-                new BasicInformationCategory() { Id = 7, Code = "PaymentType", Name = "Payment Type", Viewable = false, RelatedCategoryId = null, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" }
+                new BasicInformationCategory() { Id = 7, Code = "PaymentType", Name = "Payment Type", Viewable = false, RelatedCategoryId = null, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
+                new BasicInformationCategory() { Id = 8, Code = "Gender", Name = "Gender", Viewable = true, RelatedCategoryId = null, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
+                new BasicInformationCategory() { Id = 9, Code = "Ward", Name = "Ward", Viewable = true, RelatedCategoryId = null, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" }
             );
 
             modelBuilder.Entity<BasicInformation>().HasData(
@@ -50,7 +52,15 @@ namespace Hospital.Infrastructure.Data
                   new BasicInformation() { Id = 202, Code = 2, StrCode = "Mrs", Name = "Mrs", CategoryId = 2, Priority = 2, RelatedBasicInformationId = null, Active = true, IsDeleted = false, AllowChange = false, AllowDelete = false, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
 
                  new BasicInformation() { Id = 701, Code = 1, StrCode = "Cash", Name = "Cash", CategoryId = 7, Priority = 1, RelatedBasicInformationId = null, Active = true, IsDeleted = false, AllowChange = false, AllowDelete = false, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
-                  new BasicInformation() { Id = 702, Code = 2, StrCode = "Credit", Name = "Credit", CategoryId = 7, Priority = 2, RelatedBasicInformationId = null, Active = true, IsDeleted = false, AllowChange = false, AllowDelete = false, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" }
+                  new BasicInformation() { Id = 702, Code = 2, StrCode = "Credit", Name = "Credit", CategoryId = 7, Priority = 2, RelatedBasicInformationId = null, Active = true, IsDeleted = false, AllowChange = false, AllowDelete = false, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
+
+                  new BasicInformation() { Id = 801, Code = 1, StrCode = "Male", Name = "Male", CategoryId = 8, Priority = 1, RelatedBasicInformationId = null, Active = true, IsDeleted = false, AllowChange = false, AllowDelete = false, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
+                  new BasicInformation() { Id = 802, Code = 2, StrCode = "Female", Name = "Female", CategoryId = 8, Priority = 2, RelatedBasicInformationId = null, Active = true, IsDeleted = false, AllowChange = false, AllowDelete = false, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" }
+            );
+
+            modelBuilder.Entity<Setting>().HasData(
+                new Setting() { Id = 1, Name = "Patient Identifier Prefix", Key = "PatientIdPrefix", Value="P", CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
+                new Setting() { Id = 2, Name = "OPD Receipt Identifier Prefix", Key = "OPDReceiptNoPrefix", Value = "OP", CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" }
             );
 
         }
@@ -79,5 +89,7 @@ namespace Hospital.Infrastructure.Data
         public DbSet<IPDRegisterationRoom> IPDRegisterationRooms { get;set; }
         public DbSet<IPDRegisterationService> IPDRegisterationServices { get;}
         public DbSet<IPDRegisterationPayment> IPDRegisterationPayments { get; set; }
+        public DbSet<Setting> Settings { get; set; }
+
     }
 }

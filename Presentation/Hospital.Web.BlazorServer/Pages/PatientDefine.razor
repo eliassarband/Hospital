@@ -6,6 +6,8 @@
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Domain.Core.Helpers;
+@using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth
 @using MediatR
 @using System.ComponentModel.DataAnnotations
@@ -28,7 +30,15 @@
                 </FormValidation>
                 <FormItems>
                     <MudGrid Spacing="1">
-                            
+                        <MudItem md="12">
+                            @if(patient!=null)
+                            {
+                                <MudText>
+                                    Patient Id : @UtilityHelper.GenerateIdentifier(patientIdPrefix.Value,patient.Id)
+                                </MudText>
+                                
+                            }
+                        </MudItem>
                             <MudItem md="6">
                                 <TelerikFloatingLabel Text="National Id Cart" Class="custom-label w-100">
                                     <div class="k-form-field-wrap">
@@ -39,7 +49,7 @@
                                 <TelerikValidationMessage For="@(() => patient.NationalIdCart)" />
                             </MudItem>
                             <MudItem md="6">
-                                <TelerikFloatingLabel Text="National Id Cart" Class="custom-label w-100">
+                                <TelerikFloatingLabel Text="Name Prefix" Class="custom-label w-100">
                                     <div class="k-form-field-wrap">
                                     <TelerikComboBox @bind-Value="@patient.NamePrefixId"
                                                      Data="@namePrefixes"
@@ -67,8 +77,19 @@
                                     <div class="k-form-field-wrap">
                                         <TelerikDatePicker @bind-Value="@patient.DateOfBirth"
                                                            Format="dddd, dd MMMM, yyyy"
+                                                           OnChange="DateOfBirthChanged"
                                                            Id="opd-date">
                                         </TelerikDatePicker>
+                                    </div>
+                                </TelerikFloatingLabel>
+                                <TelerikValidationMessage For="@(() => patient.DateOfBirth)" />
+                            </MudItem>
+                            <MudItem md="6">
+                                <TelerikFloatingLabel Text="Age" Class="custom-label w-100">
+                                    <div class="k-form-field-wrap">
+                                        <TelerikTextBox Placeholder="Patient Age"
+                                                    @bind-Value="@patientAge"
+                                                    Enabled="false"></TelerikTextBox>
                                     </div>
                                 </TelerikFloatingLabel>
                                 <TelerikValidationMessage For="@(() => patient.DateOfBirth)" />
@@ -185,79 +206,87 @@
                                 <TelerikValidationMessage For="@(() => patient.RefferById)" />
                             </MudItem>
                             <MudItem md="6">
-                                <TelerikFloatingLabel Text="Occupation" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikTextBox Placeholder="Occupation"
-                                                    @bind-Value="@patient.Occupation"></TelerikTextBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => patient.Occupation)" />
+                                
+                                    <MudItem md="12">
+                                        <TelerikFloatingLabel Text="Occupation" Class="custom-label w-100">
+                                            <div class="k-form-field-wrap">
+                                                <TelerikTextBox Placeholder="Occupation"
+                                                                @bind-Value="@patient.Occupation"></TelerikTextBox>
+                                            </div>
+                                        </TelerikFloatingLabel>
+                                        <TelerikValidationMessage For="@(() => patient.Occupation)" />
+                                    </MudItem>
+                                    <MudItem md="12">
+                                        <TelerikFloatingLabel Text="Insurance" Class="custom-label w-100">
+                                            <div class="k-form-field-wrap">
+                                                <TelerikComboBox @bind-Value="@patient.InsuranceId"
+                                                                 Data="@insurances"
+                                                                 Placeholder="Select Insurance"
+                                                                 TextField="@nameof(InsuranceViewModel.Name)"
+                                                                 ValueField="@nameof(InsuranceViewModel.Id)"
+                                                                 Filterable="true"
+                                                                 Id="insurance">
+                                                </TelerikComboBox>
+                                            </div>
+                                        </TelerikFloatingLabel>
+                                        <TelerikValidationMessage For="@(() => patient.Insurance)" />
+                                    </MudItem>
+                                    <MudItem md="12">
+                                        <TelerikFloatingLabel Text="Insurance Number" Class="custom-label w-100">
+                                            <div class="k-form-field-wrap">
+                                                <TelerikTextBox Placeholder="Insurance Number"
+                                                            @bind-Value="@patient.InsuranceNumber"></TelerikTextBox>
+                                            </div>
+                                        </TelerikFloatingLabel>
+                                        <TelerikValidationMessage For="@(() => patient.InsuranceNumber)" />
+                                    </MudItem>
+                                    <MudItem md="12">
+                                        <TelerikFloatingLabel Text="Proposal Number" Class="custom-label w-100">
+                                            <div class="k-form-field-wrap">
+                                                <TelerikTextBox Placeholder="Proposal Number"
+                                                                @bind-Value="@patient.ProposalNumber"></TelerikTextBox>
+                                            </div>
+                                        </TelerikFloatingLabel>
+                                        <TelerikValidationMessage For="@(() => patient.ProposalNumber   )" />
+                                    </MudItem>
+                                
                             </MudItem>
                             <MudItem md="6">
-                                <TelerikFloatingLabel Text="Insurance" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikComboBox @bind-Value="@patient.InsuranceId"
-                                                         Data="@insurances"
-                                                         Placeholder="Select Insurance"
-                                                         TextField="@nameof(InsuranceViewModel.Name)"
-                                                         ValueField="@nameof(InsuranceViewModel.Id)"
-                                                         Filterable="true"
-                                                         Id="insurance">
-                                        </TelerikComboBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => patient.Insurance)" />    
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Insurance Number" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikTextBox Placeholder="Insurance Number"
-                                                    @bind-Value="@patient.InsuranceNumber"></TelerikTextBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => patient.InsuranceNumber)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Proposal Number" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikTextBox Placeholder="Proposal Number"
-                                                    @bind-Value="@patient.ProposalNumber"></TelerikTextBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => patient.ProposalNumber   )" />
-                            </MudItem>
-                            <MudItem md="2">
-                                <MudFileUpload T="IBrowserFile" FilesChanged="UploadPhoto" Accept=".jpg,.jpeg,.png">
-                                    <ButtonTemplate>
-                                        <MudButton HtmlTag="label"
-                                                   Variant="Variant.Filled"
-                                                   Color="Color.Primary"
-                                                   StartIcon="@Icons.Filled.CloudUpload"
-                                                   for="@context">
-                                            Upload Photo
-                                        </MudButton>
-                                    </ButtonTemplate>
-                                </MudFileUpload>
-                            </MudItem>
-                            <MudItem md="4">
-                                @if (photo != null)
-                                {
-                                    <MudImage Style="border-radius : 50%" Src=@String.Format("data:{0};base64,{1}",photoContentType,photo) Height="150"></MudImage>
-                                }
-                                else
-                                {
-                                    <MudImage Src="/images/User.png" Height="150"></MudImage>
-                                }
+                                <MudItem md="12" Class="mt-2">
+                                    <MudFileUpload T="IBrowserFile" FilesChanged="UploadPhoto" Accept=".jpg,.jpeg,.png">
+                                        <ButtonTemplate>
+                                            <MudButton HtmlTag="label"
+                                                       Variant="Variant.Filled"
+                                                       Color="Color.Primary"
+                                                       StartIcon="@Icons.Filled.CloudUpload"
+                                                       for="@context">
+                                                Upload Photo
+                                            </MudButton>
+                                        </ButtonTemplate>
+                                    </MudFileUpload>
+                                </MudItem>
+                                <MudItem md="12" Class="mt-3">
+                                    @if (photo != null)
+                                    {
+                                        <MudImage Style="border-radius : 50%" Src=@String.Format("data:{0};base64,{1}",photoContentType,photo) Height="150"></MudImage>
+                                    }
+                                    else
+                                    {
+                                        <MudImage Src="/images/User.png" Height="150"></MudImage>
+                                    }
+
+                                </MudItem>
 
                             </MudItem>
+                            
                         </MudGrid>
                 </FormItems>
                 <FormButtons>
-                   <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SavePatient">Save</MudButton>
+                   <MudButton Class="mr-2 mt-3" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SavePatient">Save</MudButton>
 
                    @if(String.IsNullOrEmpty(Mode))
                    {
-                        <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="Patients">Return</MudButton>
+                        <MudButton Class="mt-3" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="Patients">Return</MudButton>
                    }
                 </FormButtons>
             </TelerikForm>
@@ -287,17 +316,18 @@
     private List<BasicInformationViewModel> areas;
     private List<RefferByViewModel> refferBies;
     private List<InsuranceViewModel> insurances;
-
+    private SettingViewModel patientIdPrefix;
 
     bool success;
     TelerikForm form;
     private string photo;
     private string photoContentType;
     private bool attachmentChanged = false;
+    private string patientAge = "";
 
     protected override async Task OnInitializedAsync()
     {
-
+        patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
         namePrefixes = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("NamePrefix"));
         genders = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Gender"));
         cities = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("City"));
@@ -315,7 +345,7 @@
 
                 if (patient != null)
                 {
-
+                    DateOfBirthChanged();
                     photo = Convert.ToBase64String(patient.AttachmentContent);
                     photoContentType = patient.AttachmentContentType;
                 }
@@ -340,6 +370,21 @@
     void HandleInvalidSubmit()
     {
         ValidSubmit = false;
+    }
+
+    protected async Task DateOfBirthChanged()
+    {
+        if (patient.DateOfBirth != null)
+        {
+
+            patientAge = DateHelper.CalculateAgeDescription(patient.DateOfBirth ?? DateTime.Now);
+            
+        }
+        else
+        {
+            patientAge = "Unknown";
+        }
+
     }
 
     protected async Task UploadPhoto(IBrowserFile file)

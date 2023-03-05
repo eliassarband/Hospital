@@ -175,6 +175,20 @@ namespace Hospital.Application.Mapper
 
             #endregion
 
+            #region Setting
+
+            CreateMap<Setting, CreateSettingCommand>().ReverseMap();
+
+            CreateMap<Setting, EditSettingCommand>().ReverseMap();
+
+            CreateMap<Setting, SettingViewModel>().ReverseMap();
+
+            CreateMap<CreateSettingCommand, SettingViewModel>().ReverseMap();
+
+            CreateMap<EditSettingCommand, SettingViewModel>().ReverseMap();
+
+            #endregion
+
         }
     }
 }

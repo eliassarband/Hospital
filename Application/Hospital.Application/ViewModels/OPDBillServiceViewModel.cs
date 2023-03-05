@@ -23,7 +23,7 @@ namespace Hospital.Application.ViewModels
 
         [Required]
         [Range(1, int.MaxValue)]
-        public int Quantity { get; set; }
+        public int Quantity { get; set; } = 1;
         public int Rate { get; set; }
         public int Discount { get; set; }
         public int Amount { get; set; }

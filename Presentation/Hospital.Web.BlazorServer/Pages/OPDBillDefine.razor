@@ -6,9 +6,12 @@
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth
+@using Hospital.Web.BlazorServer.Models;
 @using MediatR
 @using System.ComponentModel.DataAnnotations
+@using System.Globalization;
 @inject IMediator mediator
 @inject NavigationManager navManager
 @inject ISnackbar Snackbar
@@ -30,17 +33,39 @@
                 </FormValidation>
                 <FormItems>
                     <MudGrid Spacing="1">
-                        <MudItem md="12">
+                        <MudItem md="6">
                             <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@NewPatient">Add New Patient</TelerikButton>
                         
                             <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@SearchPatient">Search Patient</TelerikButton>
+                            
+                                
+                            
+                        </MudItem>
+                        <MudItem md="3">
+                            @if (oPDBill.PatientId > 0)
+                            {
+                                <MudText>
+                                    Patient Id : @UtilityHelper.GenerateIdentifier(patientIdPrefix.Value,oPDBill.PatientId)
+                                </MudText>
+
+                            }
+                        </MudItem>
+                        <MudItem md="3">
+                            @if (oPDBill != null)
+                            {
+                                <MudText>
+                                    Receipt No : @UtilityHelper.GenerateIdentifier(receiptNoPrefix.Value,oPDBill.Id)
+                                </MudText>
+
+                            }
                         </MudItem>
                         <MudItem md="6">
                             <TelerikFloatingLabel Text="Date" Class="custom-label w-100">
                                 <div class="k-form-field-wrap">
                                     <TelerikDatePicker @bind-Value="@oPDBill.Date"
                                                         Format="dddd, dd MMMM, yyyy"
-                                                        Id="opd-date">
+                                                        Id="opd-date"
+                                                        Enabled="@(oPDBill.Id > 0 ? false : true)">
                                     </TelerikDatePicker>
                                 </div>
                             </TelerikFloatingLabel>
@@ -76,7 +101,7 @@
 
                             
                         </MudItem>
-                       
+                        
                         <MudItem md="12">
                             <TelerikGrid Data=@oPDBillServices EditMode="@GridEditMode.Inline"
                                             Height="300px" Pageable="true" PageSize="5"
@@ -85,35 +110,57 @@
                                     <GridCommandButton Command="Add">Add Service</GridCommandButton>
                                 </GridToolBar>
                                 <GridColumns>
-                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.ServiceName) Title="Service Name" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.ServiceName) Title="Service Name" Editable="true" Width="30vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
                                         <EditorTemplate>
                                             @{
                                                 var ServiceToEdit = context as OPDBillServiceViewModel;
-                                                <TelerikComboBox @bind-Value="@ServiceToEdit.ServiceId"
-                                                             Data="@services"
-                                                             Placeholder="Select Service"
-                                                             TextField="@nameof(ServiceViewModel.Name)"
-                                                             ValueField="@nameof(ServiceViewModel.Id)"
-                                                             Filterable="true"
-                                                             Id="service">
-                                                </TelerikComboBox>
+                                                //<TelerikComboBox @bind-Value="@ServiceToEdit.ServiceId"
+                                                //             Data="@services"
+                                                //             Placeholder="Select Service"
+                                                //             TextField="@nameof(ServiceViewModel.Name)"
+                                                //             ValueField="@nameof(ServiceViewModel.Id)"
+                                                //             Filterable="true"
+                                                //             Id="service">
+                                                //</TelerikComboBox>
+
+                                                <TelerikMultiColumnComboBox Data="@services"
+                                                                        TextField="@nameof(ServiceViewModel.Name)"
+                                                                        ValueField="@nameof(ServiceViewModel.Id)"
+                                                                            Filterable="true"
+                                                                            @bind-Value="@ServiceToEdit.ServiceId"
+                                                                            Id="patient"
+                                                                            ListHeight="250px"
+                                                                            Placeholder="Hint: You can filter by the Service Name">
+                                                    <MultiColumnComboBoxColumns>
+                                                        <MultiColumnComboBoxColumn Field="@nameof(ServiceViewModel.Name)" Title="Name" Width="200px" />
+                                                        <MultiColumnComboBoxColumn Field="@nameof(ServiceViewModel.DepartmentName)" Title="Department Name" Width="150px" />
+                                                        <MultiColumnComboBoxColumn Field="@nameof(ServiceViewModel.OPDRate)" Title="OPD Rate" Width="150px" />
+                                                    </MultiColumnComboBoxColumns>
+                                                    <FooterTemplate>
+                                                        <span class="combobox-footer k-display-flex k-align-items-center k-justify-content-center">
+                                                            Total: @services.Count() records
+                                                        </span>
+                                                    </FooterTemplate>
+                                                </TelerikMultiColumnComboBox>
+
                                                 <TelerikValidationMessage For="@(() => ServiceToEdit.ServiceId)" />
                                             }
                                         </EditorTemplate>
                                     </GridColumn>
-                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.Quantity) Title="Quantity" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.Quantity) Title="QTY" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
                                         <EditorTemplate>
                                             @{
                                                 var ServiceToEdit = context as OPDBillServiceViewModel;
+                                                
                                                 <TelerikNumericTextBox Placeholder="Quantity"
                                                                        @bind-Value="@ServiceToEdit.Quantity"
-                                                                   Decimals="0"></TelerikNumericTextBox>
+                                                                       Decimals="0"></TelerikNumericTextBox>
                                                 <TelerikValidationMessage For="@(() => ServiceToEdit.Quantity)" />
                                             }
                                         </EditorTemplate>
                                     </GridColumn>
-                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.Rate) Title="Rate" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
-                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.Discount) Title="Discount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.Rate) Title="Rate" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat" />
+                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.Discount) Title="Dis" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat" />
                                     <GridColumn Field=@nameof(OPDBillServiceViewModel.StaffName) Title="Staff Name" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
                                         <EditorTemplate>
                                             @{
@@ -130,7 +177,7 @@
                                             }
                                         </EditorTemplate>
                                     </GridColumn>
-                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.Amount) Title="Amount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.Amount) Title="Amount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat" />
                                     <GridCommandColumn Title="Action" Width="10vw" HeaderClass="k-text-center">
 
                                         <GridCommandButton Command="Delete" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Delete</GridCommandButton>
@@ -160,7 +207,7 @@
                                 <div class="k-form-field-wrap">
                                     <TelerikNumericTextBox Placeholder="Total Amount"
                                                             @bind-Value="@oPDBill.TotalAmount"
-                                                            Format="C"
+                                                            Format="@currencySetting.CurrencyTextBoxFormat"
                                                             Decimals="0"></TelerikNumericTextBox>
                                 </div>
                             </TelerikFloatingLabel>
@@ -171,7 +218,7 @@
                                 <div class="k-form-field-wrap">
                                     <TelerikNumericTextBox Placeholder="Total Discount"
                                                            @bind-Value="@totalDiscount"
-                                                           Format="C"
+                                                           Format="@currencySetting.CurrencyTextBoxFormat"
                                                            Decimals="0"></TelerikNumericTextBox>
                                 </div>
                             </TelerikFloatingLabel>
@@ -181,7 +228,7 @@
                                 <div class="k-form-field-wrap">
                                     <TelerikNumericTextBox Placeholder="Payable Amount"
                                                             @bind-Value="@oPDBill.PayableAmount"
-                                                            Format="C"
+                                                           Format="@currencySetting.CurrencyTextBoxFormat"
                                                             Decimals="0"></TelerikNumericTextBox>
                                 </div>
                             </TelerikFloatingLabel>
@@ -237,6 +284,8 @@
     public int? Id { get; set; }
     [CascadingParameter]
     public LoginedUser? userInfo { get; set; }
+    [CascadingParameter]
+    public CurrencySetting currencySetting { get; set; }
 
     private string caption = "Add OPD Bill";
     private OPDBillViewModel oPDBill = new OPDBillViewModel();
@@ -245,17 +294,23 @@
     private List<ServiceViewModel> services;
     private List<StaffViewModel> staffs;
     private List<OPDBillServiceViewModel> oPDBillServices = new List<OPDBillServiceViewModel>();
+    private SettingViewModel patientIdPrefix;
+    private SettingViewModel receiptNoPrefix;
 
     private bool success;
     TelerikForm form; 
     private int totalDiscount = 0;
     private bool addPatientWindowState = false;
     private bool searchPatientWindowState = false;
+    
 
 
 
     protected override async Task OnInitializedAsync()
     {
+        
+        patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
+        receiptNoPrefix = await mediator.Send(new GetSettingByKeyQuery("OPDReceiptNoPrefix"));
         patients = await mediator.Send(new GetAllPatientsQuery());
         services = await mediator.Send(new GetAllServicesQuery());
         staffs = await mediator.Send(new GetAllStaffsQuery());
@@ -265,7 +320,7 @@
 
         if (Id > 0)
         {
-            caption = "Edit OPDBill";
+            caption = "Edit OPD Bill";
 
             oPDBill = await mediator.Send(new GetOPDBillByIdQuery(Convert.ToInt32(Id)));
 

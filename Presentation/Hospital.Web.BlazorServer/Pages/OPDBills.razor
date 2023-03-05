@@ -4,6 +4,7 @@
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Helpers;
 @using MediatR
 @inject IMediator mediator;
 @inject IDialogService DialogService
@@ -26,8 +27,10 @@
                             <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Clearable></MudTextField>
                         </ToolBarContent>
                         <HeaderContent>
-                            <MudTh>Date</MudTh>
+                            <MudTh>Receipt No</MudTh>
+                            <MudTh>Patient Id</MudTh>
                             <MudTh>Patient</MudTh>
+                            <MudTh>Date</MudTh>
                             <MudTh>Payment Type</MudTh>
                             <MudTh>Total Amount</MudTh>
                             <MudTh>Payable Amount</MudTh>
@@ -35,8 +38,14 @@
                             <MudTh>Delete</MudTh>
                         </HeaderContent>
                         <RowTemplate>
-                            <MudTd DataLabel="Date">@context.Date</MudTd>
+                            <MudTd DataLabel="ReceiptNo">
+                                @UtilityHelper.GenerateIdentifier(receiptNoPrefix.Value,context.Id)
+                            </MudTd>
+                            <MudTd DataLabel="PatientId">
+                                @UtilityHelper.GenerateIdentifier(patientIdPrefix.Value,context.PatientId)
+                            </MudTd>
                             <MudTd DataLabel="Patient">@context.PatientName</MudTd>
+                            <MudTd DataLabel="Date">@context.Date</MudTd>
                             <MudTd DataLabel="PaymentType">@context.PaymentTypeName</MudTd>
                             <MudTd DataLabel="TotalAmount">@context.TotalAmount</MudTd>
                             <MudTd DataLabel="PayableAmount">@context.PayableAmount</MudTd>
@@ -61,12 +70,18 @@
 
 @code {
     private MudTable<OPDBillViewModel> _table;
-    private List<OPDBillViewModel> Elements;
+    private List<OPDBillViewModel> Elements; 
+    private SettingViewModel patientIdPrefix;
+    private SettingViewModel receiptNoPrefix;
+
     private bool loading = false;
     private string searchString = "";
 
     protected override async Task OnInitializedAsync()
     {
+        patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
+        receiptNoPrefix = await mediator.Send(new GetSettingByKeyQuery("OPDReceiptNoPrefix"));
+
         Elements = await mediator.Send(new GetAllOPDBillsQuery());
     }
 

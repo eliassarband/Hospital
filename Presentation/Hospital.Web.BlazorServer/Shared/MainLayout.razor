@@ -4,6 +4,7 @@
 @using Hospital.Application.Queries
 @using Hospital.Application.ViewModels;
 @using Hospital.Web.BlazorServer.Models.Auth
+@using Hospital.Web.BlazorServer.Models;
 @using MediatR
 @inherits LayoutComponentBase
 @inject NavigationManager NavManager
@@ -92,8 +93,9 @@
         <MudMainContent>
             <MudContainer MaxWidth="MaxWidth.Large" Fixed="true">
                 <CascadingValue Value="@userInfo">
-                      
-                    @Body
+                    <CascadingValue Value="@currencySetting">
+                        @Body
+                    </CascadingValue>
                 </CascadingValue>
             </MudContainer>
         </MudMainContent>
@@ -105,6 +107,13 @@
     @code {
     bool _drawerOpen = true;
     private LoginedUser? userInfo;
+    private CurrencySetting currencySetting=new CurrencySetting()
+    {
+        CurrencySymbol ="$",
+        CurrencyTextBoxFormat = "#,##0 $",
+        CurrencyGridCellFormat = "{0:#,##0 $}"
+    };
+
     public bool ThemeState { get; set; }
     private string photo { get; set; }
     public Color DrawerColor { get; set; }
@@ -192,7 +201,18 @@
 
         if (hospitalInformation != null)
         {
-
+            if(String.IsNullOrEmpty(hospitalInformation.CurrencySymbol))
+            {
+                currencySetting.CurrencySymbol = "$";
+                currencySetting.CurrencyTextBoxFormat = "#,##0 $";
+                currencySetting.CurrencyGridCellFormat = "{0:#,##0 $}";
+            }
+            else
+            {
+                currencySetting.CurrencySymbol = hospitalInformation.CurrencySymbol;
+                currencySetting.CurrencyTextBoxFormat = "#,##0 " + hospitalInformation.CurrencySymbol;
+                currencySetting.CurrencyGridCellFormat = "{0:#,##0 " + hospitalInformation.CurrencySymbol + "}";
+            }
         }
     }
 

@@ -136,6 +136,9 @@ builder.Services.AddTransient<IIPDRegisterationRoomCommandRepository, IPDRegiste
 builder.Services.AddTransient<IIPDRegisterationPaymentQueryRepository, IPDRegisterationPaymentQueryRepository>();
 builder.Services.AddTransient<IIPDRegisterationPaymentCommandRepository, IPDRegisterationPaymentCommandRepository>();
 
+builder.Services.AddTransient<ISettingQueryRepository, SettingQueryRepository>();
+builder.Services.AddTransient<ISettingCommandRepository, SettingCommandRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

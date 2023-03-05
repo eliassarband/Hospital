@@ -229,5 +229,7 @@ namespace Hospital.Domain.Core.Helpers
 
             return result;
         }
+
+
     }
 }
