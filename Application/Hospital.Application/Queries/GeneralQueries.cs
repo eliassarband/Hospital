@@ -226,6 +226,15 @@ namespace Hospital.Application.Queries
 
     }
 
+    public record GetRoomTypeByWardIdQuery : IRequest<List<RoomTypeViewModel>>
+    {
+        public int WardId { get; private set; }
+
+        public GetRoomTypeByWardIdQuery(int WardId)
+        {
+            this.WardId = WardId;
+        }
+    }
 
     public record GetRoomTypeByIdQuery : IRequest<RoomTypeViewModel>
     {
@@ -247,15 +256,7 @@ namespace Hospital.Application.Queries
         }
     }
 
-    public record GetRoomTypeByNameQuery : IRequest<RoomTypeViewModel>
-    {
-        public string Name { get; private set; }
-
-        public GetRoomTypeByNameQuery(string Name)
-        {
-            this.Name = Name;
-        }
-    }
+    
 
     #endregion
 
@@ -397,6 +398,45 @@ namespace Hospital.Application.Queries
             this.Key = Key;
         }
     }
+
+    #endregion
+
+    #region Bed
+    public record GetAllBedsQuery : IRequest<List<BedViewModel>>
+    {
+
+    }
+
+    public record GetBedByRoomIdQuery : IRequest<List<BedViewModel>>
+    {
+        public int RoomId { get; private set; }
+
+        public GetBedByRoomIdQuery(int RoomId)
+        {
+            this.RoomId = RoomId;
+        }
+    }
+    public record GetBedByIdQuery : IRequest<BedViewModel>
+    {
+        public int Id { get; private set; }
+
+        public GetBedByIdQuery(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    public record GetBedByCodeQuery : IRequest<BedViewModel>
+    {
+        public string Code { get; private set; }
+
+        public GetBedByCodeQuery(string Code)
+        {
+            this.Code = Code;
+        }
+    }
+
+    
 
     #endregion
 }

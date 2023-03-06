@@ -535,8 +535,20 @@ namespace Hospital.Application.Commands
         public DateTime Date { get; set; }
         public int? PatientId { get; set; }
         public int? RefferById { get; set; }
+        public int? ConsultantInchargeId { get; set; }
+        public int? SecondConsultantId { get; set; }
+        public int? ThirdConsultantId { get; set; }
+        public int? WardId { get; set; }
+        public int? RoomTypeId { get; set; }
+        public int? RoomId { get; set; }
+        public int? BedId { get; set; }
+        public int? CaseTypeId { get; set; }
+        public string? WitnessName { get; set; }
+        public int? RelationshipId { get; set; }
         public int TotalAmount { get; set; }
         public int PayableAmount { get; set; }
+        public string? Details { get; set; }
+        public string? Agreement { get; set; }
         public string? Description { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedUser { get; set; }
@@ -553,8 +565,20 @@ namespace Hospital.Application.Commands
         public DateTime Date { get; set; }
         public int? PatientId { get; set; }
         public int? RefferById { get; set; }
+        public int? ConsultantInchargeId { get; set; }
+        public int? SecondConsultantId { get; set; }
+        public int? ThirdConsultantId { get; set; }
+        public int? WardId { get; set; }
+        public int? RoomTypeId { get; set; }
+        public int? RoomId { get; set; }
+        public int? BedId { get; set; }
+        public int? CaseTypeId { get; set; }
+        public string? WitnessName { get; set; }
+        public int? RelationshipId { get; set; }
         public int TotalAmount { get; set; }
         public int PayableAmount { get; set; }
+        public string? Details { get; set; }
+        public string? Agreement { get; set; }
         public string? Description { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedUser { get; set; }
@@ -643,7 +667,7 @@ namespace Hospital.Application.Commands
         public int Id { get; set; }
         public int? IPDRegisterationId { get; set; }
         public DateTime Date { get; set; }
-        public int? RoomId { get; set; }
+        public int? BedId { get; set; }
         public int Days { get; set; }
         public int Rate { get; set; }
         public int Amount { get; set; }
@@ -662,7 +686,7 @@ namespace Hospital.Application.Commands
         public int Id { get; set; }
         public int? IPDRegisterationId { get; set; }
         public DateTime Date { get; set; }
-        public int? RoomId { get; set; }
+        public int? BedId { get; set; }
         public int Days { get; set; }
         public int Rate { get; set; }
         public int Amount { get; set; }

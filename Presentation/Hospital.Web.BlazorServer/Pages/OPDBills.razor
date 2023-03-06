@@ -1,4 +1,4 @@
-﻿@page "/OPDBills"
+﻿@page "/OPDBills/{Mode?}"
 @using Hospital.Application.Commands
 @using Hospital.Application.Queries
 @using Hospital.Application.Responses
@@ -34,8 +34,18 @@
                             <MudTh>Payment Type</MudTh>
                             <MudTh>Total Amount</MudTh>
                             <MudTh>Payable Amount</MudTh>
-                            <MudTh>Edit</MudTh>
-                            <MudTh>Delete</MudTh>
+                            @if (String.IsNullOrEmpty(Mode))
+                            {
+                                <MudTh>Edit</MudTh>
+                                <MudTh>Delete</MudTh>
+                            }
+                            else
+                            {
+                                if (Mode == "Search")
+                                {
+                                    <MudTh>Select</MudTh>
+                                }
+                            }
                         </HeaderContent>
                         <RowTemplate>
                             <MudTd DataLabel="ReceiptNo">
@@ -49,12 +59,24 @@
                             <MudTd DataLabel="PaymentType">@context.PaymentTypeName</MudTd>
                             <MudTd DataLabel="TotalAmount">@context.TotalAmount</MudTd>
                             <MudTd DataLabel="PayableAmount">@context.PayableAmount</MudTd>
-                            <MudTd DataLabel="Edit">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("OPDBillDefine/{0}",context.Id)></MudIconButton>
-                            </MudTd>
-                            <MudTd DataLabel="Delete">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteOPDBill(@context.Id))"></MudIconButton>
-                            </MudTd>
+                            @if (String.IsNullOrEmpty(Mode))
+                            {
+                                <MudTd DataLabel="Edit">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("OPDBillDefine/{0}",context.Id)></MudIconButton>
+                                </MudTd>
+                                <MudTd DataLabel="Delete">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteOPDBill(@context.Id))"></MudIconButton>
+                                </MudTd>
+                            }
+                            else
+                            {
+                                if (Mode == "Search")
+                                {
+                                    <MudTd DataLabel="Select">
+                                        <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.PersonAdd" Color="Color.Tertiary" OnClick="@(()=> SelectPatient(@context.PatientId))"></MudIconButton>
+                                    </MudTd>
+                                }
+                            }
                         </RowTemplate>
                         <PagerContent>
                             <MudPagination ShowFirstButton="true" ShowLastButton="true" SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
@@ -69,6 +91,11 @@
 
 
 @code {
+    [Parameter]
+    public string? Mode { get; set; }
+    [Parameter]
+    public EventCallback<int> OnPatientSelected { get; set; }
+
     private MudTable<OPDBillViewModel> _table;
     private List<OPDBillViewModel> Elements; 
     private SettingViewModel patientIdPrefix;
@@ -105,6 +132,13 @@
         if ($"{element.Date.ToString()} {element.PatientName} {element.PaymentTypeName}".Contains(searchString))
             return true;
         return false;
+    }
+
+    protected async Task SelectPatient(int PatientId)
+    {
+        
+        if (Mode == "Search")
+            await OnPatientSelected.InvokeAsync(PatientId);
     }
 
     protected async Task DeleteOPDBill(int Id)

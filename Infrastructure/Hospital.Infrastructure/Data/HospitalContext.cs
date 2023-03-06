@@ -40,7 +40,9 @@ namespace Hospital.Infrastructure.Data
                 new BasicInformationCategory() { Id = 6, Code = "Area", Name = "Area", Viewable = true, RelatedCategoryId = 5, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
                 new BasicInformationCategory() { Id = 7, Code = "PaymentType", Name = "Payment Type", Viewable = false, RelatedCategoryId = null, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
                 new BasicInformationCategory() { Id = 8, Code = "Gender", Name = "Gender", Viewable = true, RelatedCategoryId = null, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
-                new BasicInformationCategory() { Id = 9, Code = "Ward", Name = "Ward", Viewable = true, RelatedCategoryId = null, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" }
+                new BasicInformationCategory() { Id = 9, Code = "Ward", Name = "Ward", Viewable = true, RelatedCategoryId = null, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
+                new BasicInformationCategory() { Id = 10, Code = "CaseType", Name = "Case Type", Viewable = true, RelatedCategoryId = null, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
+                new BasicInformationCategory() { Id = 11, Code = "Relationship", Name = "Relationship", Viewable = true, RelatedCategoryId = null, CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" }
             );
 
             modelBuilder.Entity<BasicInformation>().HasData(
@@ -60,8 +62,10 @@ namespace Hospital.Infrastructure.Data
 
             modelBuilder.Entity<Setting>().HasData(
                 new Setting() { Id = 1, Name = "Patient Identifier Prefix", Key = "PatientIdPrefix", Value="P", CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
-                new Setting() { Id = 2, Name = "OPD Receipt Identifier Prefix", Key = "OPDReceiptNoPrefix", Value = "OP", CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" }
+                new Setting() { Id = 2, Name = "OPD Receipt Identifier Prefix", Key = "OPDReceiptNoPrefix", Value = "OP", CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
+                new Setting() { Id = 3, Name = "IPD No Prefix", Key = "OPDNoPrefix", Value = "IP", CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" }
             );
+
 
         }
 
@@ -90,6 +94,9 @@ namespace Hospital.Infrastructure.Data
         public DbSet<IPDRegisterationService> IPDRegisterationServices { get;}
         public DbSet<IPDRegisterationPayment> IPDRegisterationPayments { get; set; }
         public DbSet<Setting> Settings { get; set; }
+        public DbSet<Bed> Beds { get; set; }
+
+        
 
     }
 }

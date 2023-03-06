@@ -36,6 +36,7 @@
                                     <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@NewPatient">Add New Patient</TelerikButton>
                         
                                     <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@SearchPatient">Search Patient</TelerikButton>
+                                    <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@SearchOPDPatient">Search Patient from OPD List</TelerikButton>
                                 </MudItem>
                                 <MudItem md="6">
                                     <TelerikFloatingLabel Text="Date" Class="custom-label w-100">
@@ -94,6 +95,169 @@
                                     <TelerikValidationMessage For="@(() => iPDRegisteration.RefferById)" />
                                 </MudItem>
                                 <MudItem md="6">
+                                    <TelerikFloatingLabel Text="Consultant Incharge" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikComboBox @bind-Value="@iPDRegisteration.ConsultantInchargeId"
+                                                             Data="@staffs"
+                                                             Placeholder="Select Consultant Incharge"
+                                                             TextField="@nameof(StaffViewModel.Name)"
+                                                             ValueField="@nameof(StaffViewModel.Id)"
+                                                             Filterable="true"
+                                                             Id="consultantIncharge">
+                                            </TelerikComboBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => iPDRegisteration.ConsultantInchargeId)" />
+                                </MudItem>
+                                <MudItem md="6">
+                                    <TelerikFloatingLabel Text="Second Consultant" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikComboBox @bind-Value="@iPDRegisteration.SecondConsultantId"
+                                                             Data="@staffs"
+                                                             Placeholder="Select Second Consultant"
+                                                             TextField="@nameof(StaffViewModel.Name)"
+                                                             ValueField="@nameof(StaffViewModel.Id)"
+                                                             Filterable="true"
+                                                             Id="secondConsultant">
+                                            </TelerikComboBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => iPDRegisteration.SecondConsultantId)" />
+                                </MudItem>
+                                <MudItem md="6">
+                                    <TelerikFloatingLabel Text="Third Consultant" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikComboBox @bind-Value="@iPDRegisteration.ThirdConsultantId"
+                                                             Data="@staffs"
+                                                             Placeholder="Select Third Consultant"
+                                                             TextField="@nameof(StaffViewModel.Name)"
+                                                             ValueField="@nameof(StaffViewModel.Id)"
+                                                             Filterable="true"
+                                                             Id="thirdConsultant">
+                                            </TelerikComboBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => iPDRegisteration.ThirdConsultantId)" />
+                                </MudItem>
+                                <MudItem md="6">
+                                    <TelerikFloatingLabel Text="Ward" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikComboBox @bind-Value="@iPDRegisteration.WardId"
+                                                             Data="@wards"
+                                                             Placeholder="Select Ward"
+                                                             TextField="@nameof(BasicInformationViewModel.Name)"
+                                                             ValueField="@nameof(BasicInformationViewModel.Id)"
+                                                             Filterable="true"
+                                                             Id="ward">
+                                            </TelerikComboBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => iPDRegisteration.WardId)" />
+                                </MudItem>
+                                <MudItem md="6">
+                                    <TelerikFloatingLabel Text="Room Type" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikComboBox @bind-Value="@iPDRegisteration.RoomTypeId"
+                                                             Data="@roomTypes"
+                                                             Placeholder="Select Room Type"
+                                                             TextField="@nameof(RoomTypeViewModel.Name)"
+                                                             ValueField="@nameof(RoomTypeViewModel.Id)"
+                                                             Filterable="true"
+                                                             Enabled="@(iPDRegisteration.WardId > 0)"
+                                                             Id="roomtype">
+                                            </TelerikComboBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => iPDRegisteration.RoomTypeId)" />
+                                </MudItem>
+                                <MudItem md="6">
+                                    <TelerikFloatingLabel Text="Room" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikComboBox @bind-Value="@iPDRegisteration.RoomId"
+                                                             Data="@rooms"
+                                                             Placeholder="Select Room"
+                                                             TextField="@nameof(RoomViewModel.Name)"
+                                                             ValueField="@nameof(RoomViewModel.Id)"
+                                                             Filterable="true"
+                                                             Enabled="@(iPDRegisteration.RoomTypeId > 0)"
+                                                             Id="room">
+                                            </TelerikComboBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => iPDRegisteration.RoomId)" />
+                                </MudItem>
+                                <MudItem md="6">
+                                    <TelerikFloatingLabel Text="Bed" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikComboBox @bind-Value="@iPDRegisteration.BedId"
+                                                             Data="@beds"
+                                                             Placeholder="Select Bed"
+                                                             TextField="@nameof(BedViewModel.Name)"
+                                                             ValueField="@nameof(BedViewModel.Id)"
+                                                             Filterable="true"
+                                                             Enabled="@(iPDRegisteration.RoomId > 0)"
+                                                             Id="bed">
+                                            </TelerikComboBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => iPDRegisteration.BedId)" />
+                                </MudItem>
+                                <MudItem md="4">
+                                    <TelerikFloatingLabel Text="Case Type" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikComboBox @bind-Value="@iPDRegisteration.CaseTypeId"
+                                                             Data="@caseTypes"
+                                                             Placeholder="Select Case Type"
+                                                             TextField="@nameof(BasicInformationViewModel.Name)"
+                                                             ValueField="@nameof(BasicInformationViewModel.Id)"
+                                                             Filterable="true"
+                                                             Id="caseType">
+                                            </TelerikComboBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => iPDRegisteration.CaseTypeId)" />
+                                </MudItem>
+                                <MudItem md="4">
+                                    <TelerikFloatingLabel Text="Witness" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikTextBox Placeholder="Witness"
+                                                            @bind-Value="@iPDRegisteration.WitnessName"></TelerikTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => iPDRegisteration.WitnessName)" />
+                                </MudItem>
+                                <MudItem md="4">
+                                    <TelerikFloatingLabel Text="Relationship" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikComboBox @bind-Value="@iPDRegisteration.RelationshipId"
+                                                             Data="@relationships"
+                                                             Placeholder="Select Relationship"
+                                                             TextField="@nameof(BasicInformationViewModel.Name)"
+                                                             ValueField="@nameof(BasicInformationViewModel.Id)"
+                                                             Filterable="true"
+                                                             Id="relationship">
+                                            </TelerikComboBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => iPDRegisteration.RelationshipId)" />
+                                </MudItem>
+                                <MudItem md="12" Class="mb-2">
+                                    <TelerikFloatingLabel Text="Details" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikTextBox Placeholder="Details"
+                                                            @bind-Value="@iPDRegisteration.Details"></TelerikTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                </MudItem>
+                                <MudItem md="12" Class="mb-2">
+                                    <TelerikFloatingLabel Text="Agreement" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikTextBox Placeholder="Agreement"
+                                                            @bind-Value="@iPDRegisteration.Agreement"></TelerikTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                </MudItem>
+                                <MudItem md="4">
                                     <TelerikFloatingLabel Text="Total Amount" Class="custom-label w-100">
                                         <div class="k-form-field-wrap">
                                             <TelerikNumericTextBox Placeholder="Total Amount"
@@ -104,7 +268,7 @@
                                     </TelerikFloatingLabel>
                                     <TelerikValidationMessage For="@(() => iPDRegisteration.TotalAmount)" />
                                 </MudItem>
-                                <MudItem md="6">
+                                <MudItem md="4">
                                     <TelerikFloatingLabel Text="Total Discount" Class="custom-label w-100">
                                         <div class="k-form-field-wrap">
                                             <TelerikNumericTextBox Placeholder="Total Discount"
@@ -114,7 +278,7 @@
                                         </div>
                                     </TelerikFloatingLabel>
                                 </MudItem>
-                                <MudItem md="6">
+                                <MudItem md="4">
                                     <TelerikFloatingLabel Text="Payable Amount" Class="custom-label w-100">
                                         <div class="k-form-field-wrap">
                                             <TelerikNumericTextBox Placeholder="Payable Amount"
@@ -141,14 +305,13 @@
                                                  Height="300px" Pageable="true" PageSize="5"
                                                  OnDelete=@DeleteRoom OnCreate=@CreateRoom>
                                         <GridToolBar>
-                                            <GridCommandButton Command="Add">Add Service</GridCommandButton>
+                                            <GridCommandButton Command="Add">Add Room</GridCommandButton>
                                         </GridToolBar>
                                         <GridColumns>
                                             <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.Date) Title="Date" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
                                                 <EditorTemplate>
                                                     @{
                                                         var RoomToEdit = context as IPDRegisterationRoomViewModel;
-                                                        RoomToEdit.Date=DateTime.Today;
 
                                                         <TelerikDatePicker @bind-Value="@RoomToEdit.Date"
                                                                        Format="dddd, dd MMMM, yyyy"
@@ -158,19 +321,33 @@
                                                     }
                                                 </EditorTemplate>
                                             </GridColumn>
-                                            <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.RoomName) Title="Room Name" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                            <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.BedName) Title="Bed Name" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
                                                 <EditorTemplate>
                                                     @{
                                                         var RoomToEdit = context as IPDRegisterationRoomViewModel;
-                                                        <TelerikComboBox @bind-Value="@RoomToEdit.RoomId"
-                                                                     Data="@rooms"
-                                                                     Placeholder="Select Room"
-                                                                     TextField="@nameof(RoomViewModel.Name)"
-                                                                     ValueField="@nameof(RoomViewModel.Id)"
-                                                                     Filterable="true"
-                                                                     Id="room">
-                                                        </TelerikComboBox>
-                                                        <TelerikValidationMessage For="@(() => RoomToEdit.RoomId)" />
+
+                                                        <TelerikMultiColumnComboBox Data="@beds"
+                                                                                    TextField="@nameof(BedViewModel.Name)"
+                                                                                    ValueField="@nameof(BedViewModel.Id)"
+                                                                                    Filterable="true"
+                                                                                    @bind-Value="@RoomToEdit.BedId"
+                                                                                    Id="bed"
+                                                                                    ListHeight="250px"
+                                                                                    Placeholder="Hint: You can filter by the bed Name">
+                                                            <MultiColumnComboBoxColumns>
+                                                                <MultiColumnComboBoxColumn Field="@nameof(BedViewModel.Name)" Title="Bed" Width="150px" />
+                                                                <MultiColumnComboBoxColumn Field="@nameof(BedViewModel.RoomName)" Title="Room" Width="150px" />
+                                                                <MultiColumnComboBoxColumn Field="@nameof(BedViewModel.RoomTypeName)" Title="Room Type" Width="150px" />
+                                                                <MultiColumnComboBoxColumn Field="@nameof(BedViewModel.WardName)" Title="Ward" Width="150px" />
+                                                                BedViewModel
+                                                            </MultiColumnComboBoxColumns>
+                                                            <FooterTemplate>
+                                                                <span class="combobox-footer k-display-flex k-align-items-center k-justify-content-center">
+                                                                    Total: @beds.Count() records
+                                                                </span>
+                                                            </FooterTemplate>
+                                                        </TelerikMultiColumnComboBox>
+                                                        <TelerikValidationMessage For="@(() => RoomToEdit.BedId)" />
                                                     }
                                                 </EditorTemplate>
                                             </GridColumn>
@@ -206,15 +383,14 @@
                                                  Height="300px" Pageable="true" PageSize="5"
                                                  OnDelete=@DeleteService OnCreate=@CreateService>
                                         <GridToolBar>
-                                            <GridCommandButton Command="Add">Add Room</GridCommandButton>
+                                            <GridCommandButton Command="Add">Add Service</GridCommandButton>
                                         </GridToolBar>
                                         <GridColumns>
                                             <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Date) Title="Date" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
                                                 <EditorTemplate>
                                                     @{
                                                         var ServiceToEdit = context as IPDRegisterationServiceViewModel;
-                                                        ServiceToEdit.Date = DateTime.Today;
-
+                                                        
                                                         <TelerikDatePicker @bind-Value="@ServiceToEdit.Date"
                                                                        Format="yyyy-MM-dd"
                                                                        Id="ipd-service-date">
@@ -227,14 +403,26 @@
                                                 <EditorTemplate>
                                                     @{
                                                         var ServiceToEdit = context as IPDRegisterationServiceViewModel;
-                                                        <TelerikComboBox @bind-Value="@ServiceToEdit.ServiceId"
-                                                                     Data="@services"
-                                                                     Placeholder="Select Service"
-                                                                     TextField="@nameof(ServiceViewModel.Name)"
-                                                                     ValueField="@nameof(ServiceViewModel.Id)"
-                                                                     Filterable="true"
-                                                                     Id="service">
-                                                        </TelerikComboBox>
+                                                        <TelerikMultiColumnComboBox Data="@services"
+                                                                                TextField="@nameof(ServiceViewModel.Name)"
+                                                                                ValueField="@nameof(ServiceViewModel.Id)"
+                                                                                Filterable="true"
+                                                                                    @bind-Value="@ServiceToEdit.ServiceId"
+                                                                                Id="patient"
+                                                                                ListHeight="250px"
+                                                                                Placeholder="Hint: You can filter by the Service Name">
+                                                            <MultiColumnComboBoxColumns>
+                                                                <MultiColumnComboBoxColumn Field="@nameof(ServiceViewModel.Name)" Title="Name" Width="200px" />
+                                                                <MultiColumnComboBoxColumn Field="@nameof(ServiceViewModel.DepartmentName)" Title="Department Name" Width="150px" />
+                                                                <MultiColumnComboBoxColumn Field="@nameof(ServiceViewModel.OPDRate)" Title="OPD Rate" Width="150px" />
+                                                            </MultiColumnComboBoxColumns>
+                                                            <FooterTemplate>
+                                                                <span class="combobox-footer k-display-flex k-align-items-center k-justify-content-center">
+                                                                    Total: @services.Count() records
+                                                                </span>
+                                                            </FooterTemplate>
+                                                        </TelerikMultiColumnComboBox>
+
                                                         <TelerikValidationMessage For="@(() => ServiceToEdit.ServiceId)" />
                                                     }
                                                 </EditorTemplate>
@@ -294,7 +482,6 @@
                                                 <EditorTemplate>
                                                     @{
                                                         var RoomToEdit = context as IPDRegisterationPaymentViewModel;
-                                                        RoomToEdit.Date = DateTime.Today;
 
                                                         <TelerikDatePicker @bind-Value="@RoomToEdit.Date"
                                                                        Format="dddd, dd MMMM, yyyy"
@@ -382,6 +569,18 @@
     </WindowContent>
 </TelerikWindow>
 
+<TelerikWindow Class="demo-window" Width="80vw" Height="80vh" Centered="true" @bind-Visible=@searchOPDPatientWindowState Modal="true">
+    <WindowTitle>
+        <strong>Search Patient from OPD List</strong>
+    </WindowTitle>
+    <WindowActions>
+        <WindowAction Name="Close" />
+    </WindowActions>
+    <WindowContent>
+        <OPDBills Mode="Search" OnPatientSelected="OPDPatientSelected"></OPDBills>
+    </WindowContent>
+</TelerikWindow>
+
 
 @code {
     [Parameter]
@@ -397,7 +596,12 @@
     private List<BasicInformationViewModel> paymentTypes;
     private List<ServiceViewModel> services;
     private List<StaffViewModel> staffs;
+    private List<BasicInformationViewModel> wards;
+    private List<RoomTypeViewModel> roomTypes;
     private List<RoomViewModel> rooms;
+    private List<BedViewModel> beds;
+    private List<BasicInformationViewModel> caseTypes;
+    private List<BasicInformationViewModel> relationships;
     private List<IPDRegisterationServiceViewModel> iPDRegisterationServices = new List<IPDRegisterationServiceViewModel>();
     private List<IPDRegisterationRoomViewModel> iPDRegisterationRooms = new List<IPDRegisterationRoomViewModel>();
     private List<IPDRegisterationPaymentViewModel> iPDRegisterationPayments = new List<IPDRegisterationPaymentViewModel>();
@@ -407,7 +611,7 @@
     private int totalDiscount = 0;
     private bool addPatientWindowState = false;
     private bool searchPatientWindowState = false;
-
+    private bool searchOPDPatientWindowState = false;
 
 
     protected override async Task OnInitializedAsync()
@@ -417,7 +621,12 @@
         services = await mediator.Send(new GetAllServicesQuery());
         staffs = await mediator.Send(new GetAllStaffsQuery());
         paymentTypes = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("PaymentType"));
+        wards = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Ward"));
+        roomTypes = await mediator.Send(new GetAllRoomTypesQuery());
         rooms = await mediator.Send(new GetAllRoomsQuery());
+        beds = await mediator.Send(new GetAllBedsQuery());
+        caseTypes = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("CaseType"));
+        relationships = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Relationship"));
 
         iPDRegisteration.Date = DateTime.Now;
 
@@ -492,15 +701,15 @@
     {
         IPDRegisterationRoomViewModel iPDRoom = (IPDRegisterationRoomViewModel)args.Item;
 
-        var room = await mediator.Send(new GetRoomByIdQuery(iPDRoom.RoomId ?? 0));
+        var bed = await mediator.Send(new GetBedByIdQuery(iPDRoom.BedId ?? 0));
 
-        if (room != null)
+        if (bed != null)
         {
-            iPDRoom.RoomCode = room.Code;
-            iPDRoom.RoomName = room.Name;
-            iPDRoom.Rate = room.Cost;
+            iPDRoom.BedCode = bed.Code;
+            iPDRoom.BedName = bed.Name;
+            iPDRoom.Rate = bed.Room.Cost;
 
-            iPDRoom.Amount = iPDRoom.Days * room.Cost;
+            iPDRoom.Amount = iPDRoom.Days * bed.Room.Cost;
         }
 
 
@@ -581,7 +790,7 @@
             iPDPayment.PaymentTypeCode = payment.Code;
             iPDPayment.PaymentTypeStrCode = payment.StrCode;
             iPDPayment.PaymentTypeName = payment.Name;
-            
+
         }
 
 
@@ -653,6 +862,19 @@
         iPDRegisteration.PatientId = PatientId;
 
         searchPatientWindowState = false;
+    }
+
+    protected async Task SearchOPDPatient()
+    {
+        searchOPDPatientWindowState = true;
+        
+    }
+
+    protected async Task OPDPatientSelected(int PatientId)
+    {
+        iPDRegisteration.PatientId = PatientId;
+
+        searchOPDPatientWindowState = false;
     }
 
     //protected async Task DateOfBirthChange()

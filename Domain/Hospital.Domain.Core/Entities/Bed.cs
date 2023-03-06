@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace Hospital.Domain.Core.Entities
 {
-    [Table("RoomType", Schema = "Gnr")]
-    public class RoomType : BaseEntity
+    [Table("Bed", Schema = "Gnr")]
+    public class Bed : BaseEntity
     {
         [Required]
         [MaxLength(100)]
@@ -21,14 +21,10 @@ namespace Hospital.Domain.Core.Entities
         public string Name { get; set; }
 
         [Required]
-        [MaxLength(50)]
-        public string Floor { get; set; }
-
-        [Required]
-        [ForeignKey("WardId")]
-        public int? WardId { get; set; }
-        public virtual BasicInformation Ward { get; set; }
-
+        [ForeignKey("RoomId")]
+        public int? RoomId { get; set; }
+        public virtual Room Room { get; set; }
+                
         public bool NotInUse { get; set; }
 
     }

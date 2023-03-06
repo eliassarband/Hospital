@@ -17,7 +17,7 @@ namespace Hospital.Application.ViewModels
         public virtual IPDRegisterationViewModel IPDRegisteration { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
 
         [Required]
         public int? ServiceId { get; set; }
@@ -27,7 +27,7 @@ namespace Hospital.Application.ViewModels
 
         [Required]
         [Range(1, int.MaxValue)]
-        public int Quantity { get; set; }
+        public int Quantity { get; set; } = 1;
 
         public int Rate { get; set; }
 

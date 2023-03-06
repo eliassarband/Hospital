@@ -17,7 +17,7 @@ namespace Hospital.Application.ViewModels
         public virtual IPDRegisterationViewModel IPDRegisteration { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; }=DateTime.Now;
 
         [Required]
         public int? PaymentTypeId { get; set; }

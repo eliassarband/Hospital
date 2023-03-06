@@ -236,7 +236,7 @@ namespace Hospital.Application.Commands
         public string Code { get; set; }
         public string Name { get; set; }
         public string Floor { get; set; }
-        public string? Ward { get; set; }
+        public int? WardId { get; set; }
         public bool NotInUse { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedRoomType { get; set; }
@@ -253,7 +253,7 @@ namespace Hospital.Application.Commands
         public string Code { get; set; }
         public string Name { get; set; }
         public string Floor { get; set; }
-        public string? Ward { get; set; }
+        public int? WardId { get; set; }
         public bool NotInUse { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedRoomType { get; set; }
@@ -530,6 +530,53 @@ namespace Hospital.Application.Commands
         public int Id { get; set; }
 
         public DeleteSettingCommand(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
+
+    #region Bed
+    public class CreateBedCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public int? RoomId { get; set; }
+        public bool NotInUse { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedBed { get; set; }
+
+        public CreateBedCommand()
+        {
+            this.CreatedDate = DateTime.Now;
+        }
+    }
+
+    public class EditBedCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public int? RoomId { get; set; }
+        public bool NotInUse { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedBed { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string? ModifiedBed { get; set; }
+
+        public EditBedCommand()
+        {
+            this.ModifiedDate = DateTime.Now;
+        }
+    }
+
+    public class DeleteBedCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+
+        public DeleteBedCommand(int Id)
         {
             this.Id = Id;
         }

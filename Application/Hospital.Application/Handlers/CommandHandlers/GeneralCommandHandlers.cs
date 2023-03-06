@@ -1780,4 +1780,177 @@ namespace Hospital.Application.Handlers.CommandHandlers
     }
 
     #endregion
+
+    #region Bed
+    public class CreateBedHandler : IRequestHandler<CreateBedCommand, CommandResponse>
+    {
+        private readonly IBedCommandRepository _BedCommandRepository;
+
+        public CreateBedHandler(IBedCommandRepository BedCommandRepository)
+        {
+            _BedCommandRepository = BedCommandRepository;
+        }
+
+        public async Task<CommandResponse> Handle(CreateBedCommand request, CancellationToken cancellationToken)
+        {
+            var BedEntity = MapperConfig.Mapper.Map<Bed>(request);
+            BedEntity.CreatedDate = DateTime.Now;
+
+
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (BedEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+            else
+            {
+                try
+                {
+                    var newBed = await _BedCommandRepository.AddAsync(BedEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = newBed.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Saved successfully"
+                    };
+
+                }
+                catch (Exception exp)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = -1,
+                        ResultType = ResultType.Error,
+                        ResultMessage = "Error in operation\n" + exp.Message
+                    };
+                }
+
+            }
+
+            return response;
+        }
+    }
+
+    public class EditBedHandler : IRequestHandler<EditBedCommand, CommandResponse>
+    {
+        private readonly IBedCommandRepository _BedCommandRepository;
+        private readonly IBedQueryRepository _BedQueryRepository;
+
+        public EditBedHandler(IBedCommandRepository BedCommandRepository, IBedQueryRepository BedQueryRepository)
+        {
+            _BedCommandRepository = BedCommandRepository;
+            _BedQueryRepository = BedQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(EditBedCommand request, CancellationToken cancellationToken)
+        {
+            var BedEntity = MapperConfig.Mapper.Map<Bed>(request);
+            BedEntity.ModifiedDate = DateTime.Now;
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (BedEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+
+            try
+            {
+                await _BedCommandRepository.UpdateAsync(BedEntity);
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            var modifiedBed = await _BedQueryRepository.GetByIdAsync(request.Id);
+
+            response = new CommandResponse()
+            {
+                Id = modifiedBed.Id,
+                ResultType = ResultType.Success,
+                ResultMessage = "Updated successfully"
+            };
+
+            return response;
+        }
+    }
+
+    public class DeleteBedHandler : IRequestHandler<DeleteBedCommand, CommandResponse>
+    {
+        private readonly IBedCommandRepository _BedCommandRepository;
+        private readonly IBedQueryRepository _BedQueryRepository;
+
+        public DeleteBedHandler(IBedCommandRepository BedCommandRepository, IBedQueryRepository BedQueryRepository)
+        {
+            _BedCommandRepository = BedCommandRepository;
+            _BedQueryRepository = BedQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(DeleteBedCommand request, CancellationToken cancellationToken)
+        {
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            try
+            {
+                var BedEntity = await _BedQueryRepository.GetByIdAsync(request.Id);
+
+
+                await _BedCommandRepository.DeleteAsync(BedEntity);
+
+                response = new CommandResponse()
+                {
+                    Id = request.Id,
+                    ResultType = ResultType.Success,
+                    ResultMessage = "Removed successfully"
+                };
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            return response;
+        }
+    }
+
+    #endregion
 }

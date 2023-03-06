@@ -1,4 +1,4 @@
-﻿@page "/RoomTypeDefine/{Id}"
+﻿@page "/BedDefine/{Id}"
 
 @using Hospital.Application.Commands
 @using Hospital.Application.Mapper
@@ -25,30 +25,27 @@
                     <MudCardContent>
                         <MudGrid>
                             <MudItem md="12">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@roomType.Code" Required="true" RequiredError="Please Enter Code" MaxLength="100" Label="Code" Placeholder="Room Type Code" Variant="Variant.Outlined" Clearable></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@bed.Code" Required="true" RequiredError="Please Enter Code" MaxLength="100" Label="Code" Placeholder="Bed Code" Variant="Variant.Outlined" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="12">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@roomType.Name" Required="true" RequiredError="Please Enter Name" MaxLength="200" Label="Name" Placeholder="Room Type Name" Variant="Variant.Outlined" Clearable></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@bed.Name" Required="true" RequiredError="Please Enter Name" MaxLength="200" Label="Name" Placeholder="Bed Name" Variant="Variant.Outlined" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="12">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@roomType.Floor" Required="true" RequiredError="Please Enter Floor" MaxLength="50" Label="Floor" Placeholder="Floor" Variant="Variant.Outlined" Clearable></MudTextField>
-                            </MudItem>
-                            <MudItem md="12">
-                                <MudSelect Class="mt-1" T="int" Label="Ward" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Room Type" @bind-value="@roomType.WardId" @bind-Text="@roomType.WardName" Clearable>
-                                    @foreach (var r in wards)
+                                <MudSelect Class="mt-1" T="int" Label="Room" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Room" @bind-value="@bed.RoomId" @bind-Text="@bed.RoomName" Clearable>
+                                    @foreach (var r in rooms)
                                     {
                                         <MudSelectItem T="int" Value="@r.Id">@r.Name</MudSelectItem>
                                     }
                                 </MudSelect>
                             </MudItem>
                             <MudItem md="12">
-                                <MudSwitch T="bool" Class="mt-1" @bind-Checked="@roomType.NotInUse" Label="Not In Use" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
+                                <MudSwitch T="bool" Class="mt-1" @bind-Checked="@bed.NotInUse" Label="Not In Use" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
                             </MudItem>
                         </MudGrid>
                     </MudCardContent>
                     <MudCardActions>
-                        <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveRoomType" Disabled="@(!success)">Save</MudButton>
-                        <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="RoomTypes">Return</MudButton>
+                        <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveBed" Disabled="@(!success)">Save</MudButton>
+                        <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="Beds">Return</MudButton>
                     </MudCardActions>
                 </MudCard>
             </MudForm>
@@ -64,25 +61,25 @@
     [CascadingParameter]
     public LoginedUser? userInfo { get; set; }
 
-    private string caption = "Add Room Type";
-    private RoomTypeViewModel roomType = new RoomTypeViewModel();
-    private List<BasicInformationViewModel> wards;
+    private string caption = "Add Bed";
+    private BedViewModel bed = new BedViewModel();
+    private List<RoomViewModel> rooms;
     bool success;
     MudForm form;
 
     protected override async Task OnInitializedAsync()
     {
-        wards = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Ward"));
+        rooms = await mediator.Send(new GetAllRoomsQuery());
 
         if (!String.IsNullOrEmpty(Id))
         {
             if (Convert.ToInt32(Id) > 0)
             {
-                caption = "Edit Room Type";
+                caption = "Edit Bed";
 
-                roomType = await mediator.Send(new GetRoomTypeByIdQuery(Convert.ToInt32(Id)));
+                bed = await mediator.Send(new GetBedByIdQuery(Convert.ToInt32(Id)));
 
-                if (roomType != null)
+                if (bed != null)
                 {
 
                 }
@@ -91,7 +88,7 @@
 
     }
 
-    protected async Task SaveRoomType()
+    protected async Task SaveBed()
     {
         form.Validate();
 
@@ -100,12 +97,12 @@
             CommandResponse result;
 
 
-            if (roomType.Id > 0)
+            if (bed.Id > 0)
             {
                 try
                 {
-                    roomType.ModifiedUser = userInfo?.Username;
-                    var command = MapperConfig.Mapper.Map<EditRoomTypeCommand>(roomType);
+                    bed.ModifiedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<EditBedCommand>(bed);
 
                     if (command.Id > 0)
                     {
@@ -115,7 +112,7 @@
                         {
                             Snackbar.Add(result.ResultMessage, Severity.Success);
 
-                            navManager.NavigateTo("RoomTypes");
+                            navManager.NavigateTo("Beds");
                         }
                         else if (result.ResultType == ResultType.Warning)
                         {
@@ -129,7 +126,7 @@
                     }
                     else
                     {
-                        Snackbar.Add("Error in selected Room Type", Severity.Warning);
+                        Snackbar.Add("Error in selected Bed", Severity.Warning);
                     }
                 }
                 catch (Exception exp)
@@ -141,8 +138,8 @@
             {
                 try
                 {
-                    roomType.CreatedUser = userInfo?.Username;
-                    var command = MapperConfig.Mapper.Map<CreateRoomTypeCommand>(roomType);
+                    bed.CreatedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<CreateBedCommand>(bed);
 
                     result = await mediator.Send(command);
 
@@ -150,7 +147,7 @@
                     {
                         Snackbar.Add(result.ResultMessage, Severity.Success);
 
-                        navManager.NavigateTo("RoomTypes");
+                        navManager.NavigateTo("Beds");
                     }
                     else if (result.ResultType == ResultType.Warning)
                     {

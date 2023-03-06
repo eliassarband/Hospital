@@ -23,7 +23,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.IPDRegisterationRooms.Include(s => s.Room).Include(s => s.IPDRegisteration).ToList();
+                return _context.IPDRegisterationRooms.Include(s => s.Bed).Include(s => s.IPDRegisteration).ToList();
             }
             catch (Exception exp)
             {
@@ -35,7 +35,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.IPDRegisterationRooms.Where(s => s.IPDRegisterationId == IPDRegisterationId).Include(s => s.Room).Include(s => s.IPDRegisteration).ToList();
+                return _context.IPDRegisterationRooms.Where(s => s.IPDRegisterationId == IPDRegisterationId).Include(s => s.Bed).Include(s => s.IPDRegisteration).ToList();
             }
             catch (Exception exp)
             {
@@ -47,7 +47,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.IPDRegisterationRooms.Where(t => t.Id == id).Include(s => s.Room).Include(s => s.IPDRegisteration).FirstOrDefault();
+                return _context.IPDRegisterationRooms.Where(t => t.Id == id).Include(s => s.Bed).Include(s => s.IPDRegisteration).FirstOrDefault();
             }
             catch (Exception exp)
             {

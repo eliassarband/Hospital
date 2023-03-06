@@ -18,17 +18,17 @@ namespace Hospital.Application.ViewModels
         public virtual IPDRegisterationViewModel IPDRegisteration { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; }=DateTime.Now;
 
         [Required]
-        public int? RoomId { get; set; }
-        public string RoomCode { get; set; }
-        public string RoomName { get; set; }
-        public virtual RoomViewModel Room { get; set; }
+        public int? BedId { get; set; }
+        public string BedCode { get; set; }
+        public string BedName { get; set; }
+        public virtual BedViewModel Bed { get; set; }
 
         [Required]
-        [Range(1,int.MaxValue)]
-        public int Days { get; set; }
+        [Range(1, int.MaxValue)]
+        public int Days { get; set; } = 1;
 
         
         public int Rate { get; set; }

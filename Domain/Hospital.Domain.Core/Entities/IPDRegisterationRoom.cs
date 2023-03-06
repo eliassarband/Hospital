@@ -16,9 +16,9 @@ namespace Hospital.Domain.Core.Entities
         public DateTime Date { get; set; }
 
         [Required]
-        [ForeignKey("RoomId")]
-        public int? RoomId { get; set; }
-        public virtual Room Room { get; set; }
+        [ForeignKey("BedId")]
+        public int? BedId { get; set; }
+        public virtual Bed Bed { get; set; }
 
         [Required]
         public int Days { get; set; }

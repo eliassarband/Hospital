@@ -139,6 +139,9 @@ builder.Services.AddTransient<IIPDRegisterationPaymentCommandRepository, IPDRegi
 builder.Services.AddTransient<ISettingQueryRepository, SettingQueryRepository>();
 builder.Services.AddTransient<ISettingCommandRepository, SettingCommandRepository>();
 
+builder.Services.AddTransient<IBedQueryRepository, BedQueryRepository>();
+builder.Services.AddTransient<IBedCommandRepository, BedCommandRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

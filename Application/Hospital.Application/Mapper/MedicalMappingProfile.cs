@@ -299,17 +299,53 @@ namespace Hospital.Application.Mapper
 
             CreateMap<IPDRegisteration, CreateIPDRegisterationCommand>().ReverseMap()
                 .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => (src.PatientId == 0 ? null : src.PatientId)))
-                .ForMember(dest => dest.RefferById, opt => opt.MapFrom(src => (src.RefferById == 0 ? null : src.RefferById)));
+                .ForMember(dest => dest.RefferById, opt => opt.MapFrom(src => (src.RefferById == 0 ? null : src.RefferById)))
+                .ForMember(dest => dest.ConsultantInchargeId, opt => opt.MapFrom(src => (src.ConsultantInchargeId == 0 ? null : src.ConsultantInchargeId)))
+                .ForMember(dest => dest.SecondConsultantId, opt => opt.MapFrom(src => (src.SecondConsultantId == 0 ? null : src.SecondConsultantId)))
+                .ForMember(dest => dest.ThirdConsultantId, opt => opt.MapFrom(src => (src.ThirdConsultantId == 0 ? null : src.ThirdConsultantId)))
+                .ForMember(dest => dest.WardId, opt => opt.MapFrom(src => (src.WardId == 0 ? null : src.WardId)))
+                .ForMember(dest => dest.RoomTypeId, opt => opt.MapFrom(src => (src.RoomTypeId == 0 ? null : src.RoomTypeId)))
+                .ForMember(dest => dest.RoomId, opt => opt.MapFrom(src => (src.RoomId == 0 ? null : src.RoomId)))
+                .ForMember(dest => dest.BedId, opt => opt.MapFrom(src => (src.BedId == 0 ? null : src.BedId)))
+                .ForMember(dest => dest.CaseTypeId, opt => opt.MapFrom(src => (src.CaseTypeId == 0 ? null : src.CaseTypeId)))
+                .ForMember(dest => dest.RelationshipId, opt => opt.MapFrom(src => (src.RelationshipId == 0 ? null : src.RelationshipId)));
 
             CreateMap<IPDRegisteration, EditIPDRegisterationCommand>().ReverseMap()
                 .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => (src.PatientId == 0 ? null : src.PatientId)))
-                .ForMember(dest => dest.RefferById, opt => opt.MapFrom(src => (src.RefferById == 0 ? null : src.RefferById)));
+                .ForMember(dest => dest.RefferById, opt => opt.MapFrom(src => (src.RefferById == 0 ? null : src.RefferById)))
+                .ForMember(dest => dest.ConsultantInchargeId, opt => opt.MapFrom(src => (src.ConsultantInchargeId == 0 ? null : src.ConsultantInchargeId)))
+                .ForMember(dest => dest.SecondConsultantId, opt => opt.MapFrom(src => (src.SecondConsultantId == 0 ? null : src.SecondConsultantId)))
+                .ForMember(dest => dest.ThirdConsultantId, opt => opt.MapFrom(src => (src.ThirdConsultantId == 0 ? null : src.ThirdConsultantId)))
+                .ForMember(dest => dest.WardId, opt => opt.MapFrom(src => (src.WardId == 0 ? null : src.WardId)))
+                .ForMember(dest => dest.RoomTypeId, opt => opt.MapFrom(src => (src.RoomTypeId == 0 ? null : src.RoomTypeId)))
+                .ForMember(dest => dest.RoomId, opt => opt.MapFrom(src => (src.RoomId == 0 ? null : src.RoomId)))
+                .ForMember(dest => dest.BedId, opt => opt.MapFrom(src => (src.BedId == 0 ? null : src.BedId)))
+                .ForMember(dest => dest.CaseTypeId, opt => opt.MapFrom(src => (src.CaseTypeId == 0 ? null : src.CaseTypeId)))
+                .ForMember(dest => dest.RelationshipId, opt => opt.MapFrom(src => (src.RelationshipId == 0 ? null : src.RelationshipId)));
 
             CreateMap<IPDRegisteration, IPDRegisterationViewModel>()
                 .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => (src.Patient != null ? src.Patient.Id : 0)))
                 .ForMember(dest => dest.PatientName, opt => opt.MapFrom(src => (src.Patient != null ? src.Patient.Name : "")))
                 .ForMember(dest => dest.RefferById, opt => opt.MapFrom(src => (src.RefferBy != null ? src.RefferBy.Id : 0)))
-                .ForMember(dest => dest.RefferByName, opt => opt.MapFrom(src => (src.RefferBy != null ? src.RefferBy.Name : "")));
+                .ForMember(dest => dest.RefferByName, opt => opt.MapFrom(src => (src.RefferBy != null ? src.RefferBy.Name : "")))
+                .ForMember(dest => dest.ConsultantInchargeId, opt => opt.MapFrom(src => (src.ConsultantIncharge != null ? src.ConsultantIncharge.Id : 0)))
+                .ForMember(dest => dest.ConsultantInchargeName, opt => opt.MapFrom(src => (src.ConsultantIncharge != null ? src.ConsultantIncharge.Name : "")))
+                .ForMember(dest => dest.SecondConsultantId, opt => opt.MapFrom(src => (src.SecondConsultant != null ? src.SecondConsultant.Id : 0)))
+                .ForMember(dest => dest.SecondConsultantName, opt => opt.MapFrom(src => (src.SecondConsultant != null ? src.SecondConsultant.Name : "")))
+                .ForMember(dest => dest.ThirdConsultantId, opt => opt.MapFrom(src => (src.ThirdConsultant != null ? src.ThirdConsultant.Id : 0)))
+                .ForMember(dest => dest.ThirdConsultantName, opt => opt.MapFrom(src => (src.ThirdConsultant != null ? src.ThirdConsultant.Name : "")))
+                .ForMember(dest => dest.WardId, opt => opt.MapFrom(src => (src.Ward != null ? src.Ward.Id : 0)))
+                .ForMember(dest => dest.WardName, opt => opt.MapFrom(src => (src.Ward != null ? src.Ward.Name : "")))
+                .ForMember(dest => dest.RoomTypeId, opt => opt.MapFrom(src => (src.RoomType != null ? src.RoomType.Id : 0)))
+                .ForMember(dest => dest.RoomTypeName, opt => opt.MapFrom(src => (src.RoomType != null ? src.RoomType.Name : "")))
+                .ForMember(dest => dest.RoomId, opt => opt.MapFrom(src => (src.Room != null ? src.Room.Id : 0)))
+                .ForMember(dest => dest.RoomName, opt => opt.MapFrom(src => (src.Room != null ? src.Room.Name : "")))
+                .ForMember(dest => dest.BedId, opt => opt.MapFrom(src => (src.Bed != null ? src.Bed.Id : 0)))
+                .ForMember(dest => dest.BedName, opt => opt.MapFrom(src => (src.Bed != null ? src.Bed.Name : "")))
+                .ForMember(dest => dest.CaseTypeId, opt => opt.MapFrom(src => (src.CaseType != null ? src.CaseType.Id : 0)))
+                .ForMember(dest => dest.CaseTypeName, opt => opt.MapFrom(src => (src.CaseType != null ? src.CaseType.Name : "")))
+                .ForMember(dest => dest.RelationshipId, opt => opt.MapFrom(src => (src.Relationship != null ? src.Relationship.Id : 0)))
+                .ForMember(dest => dest.RelationshipName, opt => opt.MapFrom(src => (src.Relationship != null ? src.Relationship.Name : "")));
 
             CreateMap<IPDRegisterationViewModel, IPDRegisteration>();
 
@@ -352,17 +388,17 @@ namespace Hospital.Application.Mapper
 
             CreateMap<IPDRegisterationRoom, CreateIPDRegisterationRoomCommand>().ReverseMap()
                 .ForMember(dest => dest.IPDRegisterationId, opt => opt.MapFrom(src => (src.IPDRegisterationId == 0 ? null : src.IPDRegisterationId)))
-                .ForMember(dest => dest.RoomId, opt => opt.MapFrom(src => (src.RoomId == 0 ? null : src.RoomId)));
+                .ForMember(dest => dest.BedId, opt => opt.MapFrom(src => (src.BedId == 0 ? null : src.BedId)));
 
             CreateMap<IPDRegisterationRoom, EditIPDRegisterationRoomCommand>().ReverseMap()
                 .ForMember(dest => dest.IPDRegisterationId, opt => opt.MapFrom(src => (src.IPDRegisterationId == 0 ? null : src.IPDRegisterationId)))
-                .ForMember(dest => dest.RoomId, opt => opt.MapFrom(src => (src.RoomId == 0 ? null : src.RoomId)));
+                .ForMember(dest => dest.BedId, opt => opt.MapFrom(src => (src.BedId == 0 ? null : src.BedId)));
 
             CreateMap<IPDRegisterationRoom, IPDRegisterationRoomViewModel>()
                 .ForMember(dest => dest.IPDRegisterationId, opt => opt.MapFrom(src => (src.IPDRegisteration != null ? src.IPDRegisteration.Id : 0)))
-                .ForMember(dest => dest.RoomId, opt => opt.MapFrom(src => (src.Room != null ? src.Room.Id : 0)))
-                .ForMember(dest => dest.RoomCode, opt => opt.MapFrom(src => (src.Room != null ? src.Room.Code : "")))
-                .ForMember(dest => dest.RoomName, opt => opt.MapFrom(src => (src.Room != null ? src.Room.Name : "")));
+                .ForMember(dest => dest.BedId, opt => opt.MapFrom(src => (src.Bed != null ? src.Bed.Id : 0)))
+                .ForMember(dest => dest.BedCode, opt => opt.MapFrom(src => (src.Bed != null ? src.Bed.Code : "")))
+                .ForMember(dest => dest.BedName, opt => opt.MapFrom(src => (src.Bed != null ? src.Bed.Name : "")));
 
             CreateMap<IPDRegisterationRoomViewModel, IPDRegisterationRoom>();
 

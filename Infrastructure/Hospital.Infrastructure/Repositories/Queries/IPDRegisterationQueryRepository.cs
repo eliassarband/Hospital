@@ -23,7 +23,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.IPDRegisterations.Include(b => b.Patient).Include(b => b.RefferBy).Include(b => b.IPDRegisterationServices).Include(b => b.IPDRegisterationRooms).Include(b => b.IPDRegisterationPayments).ToList();
+                return _context.IPDRegisterations.Include(b => b.Patient).Include(b => b.RefferBy).Include(b => b.ConsultantIncharge).Include(b => b.SecondConsultant).Include(b => b.ThirdConsultant).Include(b => b.Ward).Include(b => b.RoomType).Include(b => b.Room).Include(b => b.Bed).Include(b => b.CaseType).Include(b => b.Relationship).Include(b => b.IPDRegisterationServices).Include(b => b.IPDRegisterationRooms).Include(b => b.IPDRegisterationPayments).ToList();
             }
             catch (Exception exp)
             {
@@ -35,7 +35,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.IPDRegisterations.Where(t => t.Id == id).Include(b => b.Patient).Include(b => b.RefferBy).Include(b => b.IPDRegisterationServices).Include(b => b.IPDRegisterationRooms).Include(b => b.IPDRegisterationPayments).FirstOrDefault();
+                return _context.IPDRegisterations.Where(t => t.Id == id).Include(b => b.Patient).Include(b => b.RefferBy).Include(b => b.ConsultantIncharge).Include(b => b.SecondConsultant).Include(b => b.ThirdConsultant).Include(b => b.Ward).Include(b => b.RoomType).Include(b => b.Room).Include(b => b.Bed).Include(b => b.CaseType).Include(b => b.Relationship).Include(b => b.IPDRegisterationServices).Include(b => b.IPDRegisterationRooms).Include(b => b.IPDRegisterationPayments).FirstOrDefault();
             }
             catch (Exception exp)
             {

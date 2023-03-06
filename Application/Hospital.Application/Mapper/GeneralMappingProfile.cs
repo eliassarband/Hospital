@@ -100,11 +100,18 @@ namespace Hospital.Application.Mapper
 
             #region RoomType
 
-            CreateMap<RoomType, CreateRoomTypeCommand>().ReverseMap();
+            CreateMap<RoomType, CreateRoomTypeCommand>().ReverseMap()
+                .ForMember(dest => dest.WardId, opt => opt.MapFrom(src => (src.WardId == 0 ? null : src.WardId)));
 
-            CreateMap<RoomType, EditRoomTypeCommand>().ReverseMap();
+            CreateMap<RoomType, EditRoomTypeCommand>().ReverseMap()
+                .ForMember(dest => dest.WardId, opt => opt.MapFrom(src => (src.WardId == 0 ? null : src.WardId)));
 
-            CreateMap<RoomType, RoomTypeViewModel>().ReverseMap();
+            CreateMap<RoomType, RoomTypeViewModel>()
+                .ForMember(dest => dest.WardId, opt => opt.MapFrom(src => (src.Ward != null ? src.Ward.Id : 0)))
+                .ForMember(dest => dest.WardCode, opt => opt.MapFrom(src => (src.Ward != null ? src.Ward.Code : 0)))
+                .ForMember(dest => dest.WardName, opt => opt.MapFrom(src => (src.Ward != null ? src.Ward.Name : "")));
+
+            CreateMap<RoomTypeViewModel, RoomType>();
 
             CreateMap<CreateRoomTypeCommand, RoomTypeViewModel>().ReverseMap();
 
@@ -188,6 +195,34 @@ namespace Hospital.Application.Mapper
             CreateMap<EditSettingCommand, SettingViewModel>().ReverseMap();
 
             #endregion
+
+            #region Bed
+
+            CreateMap<Bed, CreateBedCommand>().ReverseMap()
+                .ForMember(dest => dest.RoomId, opt => opt.MapFrom(src => (src.RoomId == 0 ? null : src.RoomId)));
+
+            CreateMap<Bed, EditBedCommand>().ReverseMap()
+                .ForMember(dest => dest.RoomId, opt => opt.MapFrom(src => (src.RoomId == 0 ? null : src.RoomId)));
+
+            CreateMap<Bed, BedViewModel>()
+                .ForMember(dest => dest.RoomId, opt => opt.MapFrom(src => (src.Room != null ? src.Room.Id : 0)))
+                .ForMember(dest => dest.RoomCode, opt => opt.MapFrom(src => (src.Room != null ? src.Room.Code : "")))
+                .ForMember(dest => dest.RoomName, opt => opt.MapFrom(src => (src.Room != null ? src.Room.Name : "")))
+                .ForMember(dest => dest.RoomTypeId, opt => opt.MapFrom(src => (src.Room.RoomType != null ? src.Room.RoomType.Id : 0)))
+                .ForMember(dest => dest.RoomTypeCode, opt => opt.MapFrom(src => (src.Room.RoomType != null ? src.Room.RoomType.Code : "")))
+                .ForMember(dest => dest.RoomTypeName, opt => opt.MapFrom(src => (src.Room.RoomType != null ? src.Room.RoomType.Name : "")))
+                .ForMember(dest => dest.WardId, opt => opt.MapFrom(src => (src.Room.RoomType.Ward != null ? src.Room.RoomType.Ward.Id : 0)))
+                .ForMember(dest => dest.WardCode, opt => opt.MapFrom(src => (src.Room.RoomType.Ward != null ? src.Room.RoomType.Ward.Code : 0)))
+                .ForMember(dest => dest.WardName, opt => opt.MapFrom(src => (src.Room.RoomType.Ward != null ? src.Room.RoomType.Ward.Name : "")));
+
+            CreateMap<BedViewModel, Bed>();
+
+            CreateMap<CreateBedCommand, BedViewModel>().ReverseMap();
+
+            CreateMap<EditBedCommand, BedViewModel>().ReverseMap();
+
+            #endregion
+
 
         }
     }

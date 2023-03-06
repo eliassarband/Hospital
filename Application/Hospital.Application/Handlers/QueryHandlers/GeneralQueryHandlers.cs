@@ -400,6 +400,21 @@ namespace Hospital.Application.Handlers.QueryHandlers
         }
     }
 
+    public class GetRoomTypeByWardIdHandler : IRequestHandler<GetRoomTypeByWardIdQuery, List<RoomTypeViewModel>>
+    {
+        private readonly IRoomTypeQueryRepository _RoomTypeQueryRepository;
+
+        public GetRoomTypeByWardIdHandler(IRoomTypeQueryRepository RoomTypeQueryRepository)
+        {
+            _RoomTypeQueryRepository = RoomTypeQueryRepository;
+        }
+
+        public async Task<List<RoomTypeViewModel>> Handle(GetRoomTypeByWardIdQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<List<RoomTypeViewModel>>(await _RoomTypeQueryRepository.GetByWardIdAsync(request.WardId));
+        }
+    }
+
     public class GetRoomTypeByIdHandler : IRequestHandler<GetRoomTypeByIdQuery, RoomTypeViewModel>
     {
         private readonly IRoomTypeQueryRepository _RoomTypeQueryRepository;
@@ -430,20 +445,7 @@ namespace Hospital.Application.Handlers.QueryHandlers
         }
     }
 
-    public class GetRoomTypeByNameHandler : IRequestHandler<GetRoomTypeByNameQuery, RoomTypeViewModel>
-    {
-        private readonly IRoomTypeQueryRepository _RoomTypeQueryRepository;
-
-        public GetRoomTypeByNameHandler(IRoomTypeQueryRepository RoomTypeQueryRepository)
-        {
-            _RoomTypeQueryRepository = RoomTypeQueryRepository;
-        }
-
-        public async Task<RoomTypeViewModel> Handle(GetRoomTypeByNameQuery request, CancellationToken cancellationToken)
-        {
-            return MapperConfig.Mapper.Map<RoomTypeViewModel>(await _RoomTypeQueryRepository.GetByNameAsync(request.Name));
-        }
-    }
+    
 
     #endregion
 
@@ -683,6 +685,74 @@ namespace Hospital.Application.Handlers.QueryHandlers
             return MapperConfig.Mapper.Map<SettingViewModel>(await _SettingQueryRepository.GetByKeyAsync(request.Key));
         }
     }
+
+    #endregion
+
+    #region Bed
+
+    public class GetAllBedsHandler : IRequestHandler<GetAllBedsQuery, List<BedViewModel>>
+    {
+        private readonly IBedQueryRepository _BedQueryRepository;
+
+        public GetAllBedsHandler(IBedQueryRepository BedQueryRepository)
+        {
+            _BedQueryRepository = BedQueryRepository;
+        }
+
+        public async Task<List<BedViewModel>> Handle(GetAllBedsQuery request, CancellationToken cancellationToken)
+        {
+            List<Bed> Beds = (List<Bed>)await _BedQueryRepository.GetAllAsync();
+
+            return MapperConfig.Mapper.Map<List<BedViewModel>>(Beds);
+        }
+    }
+
+    public class GetBedByRoomIdHandler : IRequestHandler<GetBedByRoomIdQuery, List<BedViewModel>>
+    {
+        private readonly IBedQueryRepository _BedQueryRepository;
+
+        public GetBedByRoomIdHandler(IBedQueryRepository BedQueryRepository)
+        {
+            _BedQueryRepository = BedQueryRepository;
+        }
+
+        public async Task<List<BedViewModel>> Handle(GetBedByRoomIdQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<List<BedViewModel>>(await _BedQueryRepository.GetByRoomIdAsync(request.RoomId));
+        }
+    }
+
+    public class GetBedByIdHandler : IRequestHandler<GetBedByIdQuery, BedViewModel>
+    {
+        private readonly IBedQueryRepository _BedQueryRepository;
+
+        public GetBedByIdHandler(IBedQueryRepository BedQueryRepository)
+        {
+            _BedQueryRepository = BedQueryRepository;
+        }
+
+        public async Task<BedViewModel> Handle(GetBedByIdQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<BedViewModel>(await _BedQueryRepository.GetByIdAsync(request.Id));
+        }
+    }
+
+    public class GetBedByCodeHandler : IRequestHandler<GetBedByCodeQuery, BedViewModel>
+    {
+        private readonly IBedQueryRepository _BedQueryRepository;
+
+        public GetBedByCodeHandler(IBedQueryRepository BedQueryRepository)
+        {
+            _BedQueryRepository = BedQueryRepository;
+        }
+
+        public async Task<BedViewModel> Handle(GetBedByCodeQuery request, CancellationToken cancellationToken)
+        {
+            return MapperConfig.Mapper.Map<BedViewModel>(await _BedQueryRepository.GetByCodeAsync(request.Code));
+        }
+    }
+
+    
 
     #endregion
 }
