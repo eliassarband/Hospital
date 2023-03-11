@@ -23,7 +23,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.IPDRegisterationServices.Include(s => s.Service).Include(s => s.Staff).Include(s => s.IPDRegisteration).Include(s => s.Service).Include(s => s.Staff).ToList();
+                return _context.IPDRegisterationServices.Include(s => s.Service).Include(s => s.Staff).Include(s => s.IPDRegisteration).ToList();
             }
             catch (Exception exp)
             {

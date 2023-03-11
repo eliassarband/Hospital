@@ -619,7 +619,7 @@ namespace Hospital.Application.Handlers.QueryHandlers
         }
     }
 
-    public class GetReportTemplateByCodeHandler : IRequestHandler<GetReportTemplateByCodeQuery, ReportTemplateViewModel>
+    public class GetReportTemplateByCodeHandler : IRequestHandler<GetReportTemplateByCodeQuery, List<ReportTemplateViewModel>>
     {
         private readonly IReportTemplateQueryRepository _ReportTemplateQueryRepository;
 
@@ -628,9 +628,11 @@ namespace Hospital.Application.Handlers.QueryHandlers
             _ReportTemplateQueryRepository = ReportTemplateQueryRepository;
         }
 
-        public async Task<ReportTemplateViewModel> Handle(GetReportTemplateByCodeQuery request, CancellationToken cancellationToken)
+        public async Task<List<ReportTemplateViewModel>> Handle(GetReportTemplateByCodeQuery request, CancellationToken cancellationToken)
         {
-            return MapperConfig.Mapper.Map<ReportTemplateViewModel>(await _ReportTemplateQueryRepository.GetByCodeAsync(request.Code));
+            List<ReportTemplate> ReportTemplates = (List<ReportTemplate>)await _ReportTemplateQueryRepository.GetByCodeAsync(request.Code);
+
+            return MapperConfig.Mapper.Map<List<ReportTemplateViewModel>>(ReportTemplates);
         }
     }
 

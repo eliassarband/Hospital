@@ -246,6 +246,11 @@
                 </FormItems>
                 <FormButtons>
                     <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveOPDBill">Save</MudButton>
+
+                    <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveAndPrintOPDBill">Save/Print</MudButton>
+
+                    <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Print" Disabled="@(oPDBill.Id==0)" OnClick="Print">Print</MudButton>
+
                     <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="OPDBills">Return</MudButton>
                 </FormButtons>
             </TelerikForm>
@@ -278,6 +283,17 @@
     </WindowContent>
 </TelerikWindow>
 
+<TelerikWindow Class="demo-window" Width="50vw" Height="70vh" Centered="true" @bind-Visible=@selectReportTemplate Modal="true">
+    <WindowTitle>
+        <strong>Select Report Template</strong>
+    </WindowTitle>
+    <WindowActions>
+        <WindowAction Name="Close" />
+    </WindowActions>
+    <WindowContent>
+        <ReportTemplatesSelect Id="@oPDBill.Id" ReportCode="OPD"></ReportTemplatesSelect>
+    </WindowContent>
+</TelerikWindow>
 
 @code {
     [Parameter]
@@ -302,13 +318,14 @@
     private int totalDiscount = 0;
     private bool addPatientWindowState = false;
     private bool searchPatientWindowState = false;
-    
+    private bool selectReportTemplate = false;
+
 
 
 
     protected override async Task OnInitializedAsync()
     {
-        
+
         patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
         receiptNoPrefix = await mediator.Send(new GetSettingByKeyQuery("OPDReceiptNoPrefix"));
         patients = await mediator.Send(new GetAllPatientsQuery());
@@ -357,7 +374,7 @@
 
 
                     CalculateAmount();
-                
+
                 }
             }
         }
@@ -440,18 +457,7 @@
         totalDiscount = total - payable;
     }
 
-    protected async Task Print()
-    {
-        if (oPDBill.Id > 0)
-        {
 
-            if (oPDBill.Id > 0)
-            {
-                navManager.NavigateTo("/ReportShow/OPDBill/" + oPDBill.Id.ToString());
-            }
-        }
-
-    }
 
     protected async Task NewPatient()
     {
@@ -509,7 +515,12 @@
         if (form.IsValid())
         {
 
-            CommandResponse result;
+            CommandResponse result=new CommandResponse()
+            {
+                Id=oPDBill.Id,
+                ResultType=ResultType.None,
+                ResultMessage=""
+            };
 
 
             if (oPDBill.Id > 0)
@@ -527,54 +538,13 @@
                         {
                             Snackbar.Add(result.ResultMessage, Severity.Success);
 
-                            var billServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(result.Id));
-
-                            foreach (var service in oPDBillServices)
-                            {
-                                service.OPDBillId = result.Id;
-                                if (billServices.Exists(b => b.ServiceId == service.Id))
-                                {
-                                    
-
-                                    var editCommand = MapperConfig.Mapper.Map<EditOPDBillServiceCommand>(service);
-
-                                    await mediator.Send(editCommand);
-                                }
-                                else
-                                {
-                                    var addCommand = MapperConfig.Mapper.Map<CreateOPDBillServiceCommand>(service);
-
-                                    await mediator.Send(addCommand);
-                                }
-                            }
-
-                            foreach (var billService in billServices)
-                            {
-                                if(!oPDBillServices.Exists(b => b.ServiceId==billService.ServiceId))
-                                {
-                                    await mediator.Send(new DeleteOPDBillServiceCommand(billService.Id));
-                                }
-
-                            }
-
                             oPDBill.Id = result.Id;
 
-                            bool? dialogResult = await DialogService.ShowMessageBox(
-                                "Print",
-                                "Do you want to Print؟",
-                                yesText: "Yes", cancelText: "No");
+                            SaveServices();
 
-                            if (dialogResult == true)
-                            {
-                                if (result.Id > 0)
-                                {
-                                    Print();
-                                }
-                            }
-                            else if(Id>0)
-                            {
-                                navManager.NavigateTo("OPDBills");
-                            }
+
+
+
                         }
                         else if (result.ResultType == ResultType.Warning)
                         {
@@ -608,51 +578,11 @@
                     if (result.ResultType == ResultType.Success)
                     {
                         Snackbar.Add(result.ResultMessage, Severity.Success);
-                        var billServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(result.Id));
-
-                        foreach (var service in oPDBillServices)
-                        {
-                            service.OPDBillId = result.Id;
-
-                            if (billServices.Exists(b => b.ServiceId == service.Id))
-                            {
-                                var editCommand = MapperConfig.Mapper.Map<EditOPDBillServiceCommand>(service);
-
-                                await mediator.Send(editCommand);
-                            }
-                            else
-                            {
-                                var addCommand = MapperConfig.Mapper.Map<CreateOPDBillServiceCommand>(service);
-
-                                await mediator.Send(addCommand);
-                            }
-                        }
-
-                        foreach (var billService in billServices)
-                        {
-                            if (!oPDBillServices.Exists(b => b.ServiceId == billService.ServiceId))
-                            {
-                                await mediator.Send(new DeleteOPDBillServiceCommand(billService.Id));
-                            }
-
-                        }
 
                         oPDBill.Id = result.Id;
 
-                        bool? dialogResult = await DialogService.ShowMessageBox(
-                            "Print",
-                            "Do you want to Print؟",
-                            yesText: "Yes", cancelText: "No");
+                        SaveServices();
 
-                        if (dialogResult == true)
-                        {
-                            if (result.Id > 0)
-                            {
-                                Print();
-                            }
-                        }
-                        else if (Id > 0)
-                            navManager.NavigateTo("OPDBills");
                     }
                     else if (result.ResultType == ResultType.Warning)
                     {
@@ -668,9 +598,151 @@
                     Snackbar.Add(exp.Message, Severity.Error);
                 }
             }
+
+            if (result.ResultType == ResultType.Success)
+            {
+                navManager.NavigateTo("OPDBills");
+            }
         }
 
     }
 
+    protected async Task SaveAndPrintOPDBill()
+    {
+        if (form.IsValid())
+        {
+
+            CommandResponse result = new CommandResponse()
+                {
+                    Id = oPDBill.Id,
+                    ResultType = ResultType.None,
+                    ResultMessage = ""
+                };
+
+
+            if (oPDBill.Id > 0)
+            {
+                try
+                {
+                    oPDBill.ModifiedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<EditOPDBillCommand>(oPDBill);
+
+                    if (command.Id > 0)
+                    {
+                        result = await mediator.Send(command);
+
+                        if (result.ResultType == ResultType.Success)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                            oPDBill.Id = result.Id;
+
+                            SaveServices();
+
+
+
+
+                        }
+                        else if (result.ResultType == ResultType.Warning)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Warning);
+                        }
+                        else if (result.ResultType == ResultType.Error)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Error);
+                        }
+
+                    }
+                    else
+                    {
+                        Snackbar.Add("Error in selected OPDBill", Severity.Warning);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+            else
+            {
+                try
+                {
+                    oPDBill.CreatedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<CreateOPDBillCommand>(oPDBill);
+
+                    result = await mediator.Send(command);
+
+                    if (result.ResultType == ResultType.Success)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                        oPDBill.Id = result.Id;
+
+                        SaveServices();
+
+                    }
+                    else if (result.ResultType == ResultType.Warning)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Warning);
+                    }
+                    else if (result.ResultType == ResultType.Error)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Error);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+
+            if (result.ResultType == ResultType.Success)
+            {
+                Print();
+            }
+        }
+    }
+
+    protected async Task SaveServices()
+    {
+        var billServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(oPDBill.Id));
+
+        foreach (var service in oPDBillServices)
+        {
+            service.OPDBillId = oPDBill.Id;
+            if (billServices.Exists(b => b.ServiceId == service.Id))
+            {
+
+
+                var editCommand = MapperConfig.Mapper.Map<EditOPDBillServiceCommand>(service);
+
+                await mediator.Send(editCommand);
+            }
+            else
+            {
+                var addCommand = MapperConfig.Mapper.Map<CreateOPDBillServiceCommand>(service);
+
+                await mediator.Send(addCommand);
+            }
+        }
+
+        foreach (var billService in billServices)
+        {
+            if (!oPDBillServices.Exists(b => b.ServiceId == billService.ServiceId))
+            {
+                await mediator.Send(new DeleteOPDBillServiceCommand(billService.Id));
+            }
+
+        }
+
+
+    }
+
+    protected async Task Print()
+    {
+        selectReportTemplate = true;
+
+    }
+    
 }
 

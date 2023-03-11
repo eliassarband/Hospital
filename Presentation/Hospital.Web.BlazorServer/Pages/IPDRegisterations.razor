@@ -32,6 +32,7 @@
                             <MudTh>Total Amount</MudTh>
                             <MudTh>Payable Amount</MudTh>
                             <MudTh>Edit</MudTh>
+                            <MudTh>Print</MudTh>
                             <MudTh>Delete</MudTh>
                         </HeaderContent>
                         <RowTemplate>
@@ -42,6 +43,9 @@
                             <MudTd DataLabel="PayableAmount">@context.PayableAmount</MudTd>
                             <MudTd DataLabel="Edit">
                                 <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("IPDRegisterationDefine/{0}",context.Id)></MudIconButton>
+                            </MudTd>
+                            <MudTd DataLabel="Print">
+                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Print" Color="Color.Tertiary" OnClick="@(()=> Print(@context.Id))"></MudIconButton>
                             </MudTd>
                             <MudTd DataLabel="Delete">
                                 <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteIPDRegisteration(@context.Id))"></MudIconButton>
@@ -57,13 +61,25 @@
     </MudItem>
 </MudGrid>
 
-
+<TelerikWindow Class="demo-window" Width="50vw" Height="70vh" Centered="true" @bind-Visible=@selectReportTemplate Modal="true">
+    <WindowTitle>
+        <strong>Select Report Template</strong>
+    </WindowTitle>
+    <WindowActions>
+        <WindowAction Name="Close" />
+    </WindowActions>
+    <WindowContent>
+        <ReportTemplatesSelect Id="@IPDId" ReportCode="IPD"></ReportTemplatesSelect>
+    </WindowContent>
+</TelerikWindow>
 
 @code {
     private MudTable<IPDRegisterationViewModel> _table;
     private List<IPDRegisterationViewModel> Elements;
     private bool loading = false;
     private string searchString = "";
+    private bool selectReportTemplate = false;
+    private int IPDId = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -90,6 +106,12 @@
         if ($"{element.Date.ToString()} {element.PatientName} {element.RefferByName}".Contains(searchString))
             return true;
         return false;
+    }
+
+    protected async Task Print(int IPDRegisterationId)
+    {
+        IPDId = IPDRegisterationId;
+        selectReportTemplate = true;
     }
 
     protected async Task DeleteIPDRegisteration(int Id)

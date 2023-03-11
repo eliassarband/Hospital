@@ -13,6 +13,6 @@ namespace Hospital.Domain.Core.Repositories.Queries
         //Custom operation which is not generic
         Task<IReadOnlyList<ReportTemplate>> GetAllAsync();
         Task<ReportTemplate> GetByIdAsync(int id);
-        Task<ReportTemplate> GetByCodeAsync(string code);
+        Task<IReadOnlyList<ReportTemplate>> GetByCodeAsync(string code);
     }
 }

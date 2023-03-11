@@ -37,6 +37,7 @@
                             @if (String.IsNullOrEmpty(Mode))
                             {
                                 <MudTh>Edit</MudTh>
+                                <MudTh>Print</MudTh>
                                 <MudTh>Delete</MudTh>
                             }
                             else
@@ -64,6 +65,9 @@
                                 <MudTd DataLabel="Edit">
                                     <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("OPDBillDefine/{0}",context.Id)></MudIconButton>
                                 </MudTd>
+                                <MudTd DataLabel="Print">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Print" Color="Color.Tertiary" OnClick="@(()=> Print(@context.Id))"></MudIconButton>
+                                </MudTd>
                                 <MudTd DataLabel="Delete">
                                     <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteOPDBill(@context.Id))"></MudIconButton>
                                 </MudTd>
@@ -88,6 +92,17 @@
     </MudItem>
 </MudGrid>
 
+<TelerikWindow Class="demo-window" Width="50vw" Height="70vh" Centered="true" @bind-Visible=@selectReportTemplate Modal="true">
+    <WindowTitle>
+        <strong>Select Report Template</strong>
+    </WindowTitle>
+    <WindowActions>
+        <WindowAction Name="Close" />
+    </WindowActions>
+    <WindowContent>
+        <ReportTemplatesSelect Id="@OPDId" ReportCode="OPD"></ReportTemplatesSelect>
+    </WindowContent>
+</TelerikWindow>
 
 
 @code {
@@ -103,6 +118,8 @@
 
     private bool loading = false;
     private string searchString = "";
+    private bool selectReportTemplate=false;
+    private int OPDId = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -136,9 +153,15 @@
 
     protected async Task SelectPatient(int PatientId)
     {
-        
+
         if (Mode == "Search")
             await OnPatientSelected.InvokeAsync(PatientId);
+    }
+
+    protected async Task Print(int OPDBillId)
+    {
+        OPDId = OPDBillId;
+        selectReportTemplate = true;
     }
 
     protected async Task DeleteOPDBill(int Id)

@@ -1,4 +1,4 @@
-﻿@page "/StaffTimingDefine/{Id}"
+﻿@page "/ReportTemplateDefine/{Id}"
 
 @using Hospital.Application.Commands
 @using Hospital.Application.Mapper
@@ -25,36 +25,19 @@
                     <MudCardContent>
                         <MudGrid>
                             <MudItem md="12">
-                                <MudSelect Class="mt-1" T="int" Label="Staff" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Staff" @bind-value="@staffTiming.StaffId" @bind-Text="@staffTiming.StaffName" Clearable Required="true" RequiredError="Please Select a Staff">
-                                    @foreach (var s in staffs)
-                                    {
-                                        <MudSelectItem T="int" Value="@s.Id">@s.Name</MudSelectItem>
-                                    }
+                                <MudSelect Class="mt-1" T="string" Label="Code" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Report Template Code" @bind-value="@reportTemplate.Code" @bind-Text="@reportTemplate.Code" Clearable>
+                                    <MudSelectItem T="string" Value="@("OPD")">OPD</MudSelectItem>
+                                    <MudSelectItem T="string" Value="@("IPD")">IPD</MudSelectItem>
                                 </MudSelect>
                             </MudItem>
                             <MudItem md="12">
-                                <MudSelect Class="mt-1" T="int" Label="Week Day" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Week Day" @bind-value="@staffTiming.WeekDayNo" @bind-Text="@staffTiming.WeekDayName" Clearable Required="true" RequiredError="Please Select a Day">
-                                    <MudSelectItem T="int" Value="0">Saturday</MudSelectItem>
-                                    <MudSelectItem T="int" Value="1">Sunday</MudSelectItem>
-                                    <MudSelectItem T="int" Value="2">Monday</MudSelectItem>
-                                    <MudSelectItem T="int" Value="3">Tuesday</MudSelectItem>
-                                    <MudSelectItem T="int" Value="4">Wednesday</MudSelectItem>
-                                    <MudSelectItem T="int" Value="5">Thursday</MudSelectItem>
-                                    <MudSelectItem T="int" Value="6">Friday</MudSelectItem>
-                                </MudSelect>
-                            </MudItem>
-
-                            <MudItem md="12">
-                                <MudTimePicker Label="Start Time" @bind-Time="@staffTiming.StartTime" Editable="true" Clearable Required="true" RequiredError="Please Enter Start Time" />
-                            </MudItem>
-                            <MudItem md="12">
-                                <MudTimePicker Label="End Time" @bind-Time="@staffTiming.EndTime" Editable="true" Clearable Required="true" RequiredError="Please Enter End Time" />
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@reportTemplate.Name" Required="true" RequiredError="Please Enter Name" MaxLength="200" Label="Name" Placeholder="Report Template Name" Variant="Variant.Outlined" Clearable></MudTextField>
                             </MudItem>
                         </MudGrid>
                     </MudCardContent>
                     <MudCardActions>
-                        <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveStaffTiming" Disabled="@(!success)">Save</MudButton>
-                        <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="StaffTimings">Return</MudButton>
+                        <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveReportTemplate" Disabled="@(!success)">Save</MudButton>
+                        <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="ReportTemplates">Return</MudButton>
                     </MudCardActions>
                 </MudCard>
             </MudForm>
@@ -70,25 +53,23 @@
     [CascadingParameter]
     public LoginedUser? userInfo { get; set; }
 
-    private string caption = "Add Staff Timing";
-    private StaffTimingViewModel staffTiming = new StaffTimingViewModel();
-    private List<StaffViewModel> staffs;
+    private string caption = "Add Report Template";
+    private ReportTemplateViewModel reportTemplate = new ReportTemplateViewModel();
     bool success;
     MudForm form;
 
     protected override async Task OnInitializedAsync()
     {
-        staffs = await mediator.Send(new GetAllStaffsQuery());
 
         if (!String.IsNullOrEmpty(Id))
         {
             if (Convert.ToInt32(Id) > 0)
             {
-                caption = "Edit Staff Timing";
+                caption = "Edit Report Template";
 
-                staffTiming = await mediator.Send(new GetStaffTimingByIdQuery(Convert.ToInt32(Id)));
+                reportTemplate = await mediator.Send(new GetReportTemplateByIdQuery(Convert.ToInt32(Id)));
 
-                if (staffTiming != null)
+                if (reportTemplate != null)
                 {
 
                 }
@@ -97,7 +78,7 @@
 
     }
 
-    protected async Task SaveStaffTiming()
+    protected async Task SaveReportTemplate()
     {
         form.Validate();
 
@@ -106,12 +87,12 @@
             CommandResponse result;
 
 
-            if (staffTiming.Id > 0)
+            if (reportTemplate.Id > 0)
             {
                 try
                 {
-                    staffTiming.ModifiedUser = userInfo?.Username;
-                    var command = MapperConfig.Mapper.Map<EditStaffTimingCommand>(staffTiming);
+                    reportTemplate.ModifiedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<EditReportTemplateCommand>(reportTemplate);
 
                     if (command.Id > 0)
                     {
@@ -121,7 +102,7 @@
                         {
                             Snackbar.Add(result.ResultMessage, Severity.Success);
 
-                            navManager.NavigateTo("StaffTimings");
+                            navManager.NavigateTo("ReportTemplates");
                         }
                         else if (result.ResultType == ResultType.Warning)
                         {
@@ -135,7 +116,7 @@
                     }
                     else
                     {
-                        Snackbar.Add("Error in selected StaffTiming", Severity.Warning);
+                        Snackbar.Add("Error in selected ReportTemplate", Severity.Warning);
                     }
                 }
                 catch (Exception exp)
@@ -147,8 +128,9 @@
             {
                 try
                 {
-                    staffTiming.CreatedUser = userInfo?.Username;
-                    var command = MapperConfig.Mapper.Map<CreateStaffTimingCommand>(staffTiming);
+                    reportTemplate.Content = "";
+                    reportTemplate.CreatedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<CreateReportTemplateCommand>(reportTemplate);
 
                     result = await mediator.Send(command);
 
@@ -156,7 +138,7 @@
                     {
                         Snackbar.Add(result.ResultMessage, Severity.Success);
 
-                        navManager.NavigateTo("StaffTimings");
+                        navManager.NavigateTo("ReportTemplates");
                     }
                     else if (result.ResultType == ResultType.Warning)
                     {

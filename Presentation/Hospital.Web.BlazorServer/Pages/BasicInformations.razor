@@ -1,4 +1,4 @@
-﻿@page "/BasicInformations"
+﻿@page "/BasicInformations/{CategoryCode?}"
 @using Hospital.Application.Commands
 @using Hospital.Application.Queries
 @using Hospital.Application.Responses
@@ -17,7 +17,16 @@
             <MudCard Class="pl-2 pr-2 mt-2">
                 <MudCardHeader>Basic Information</MudCardHeader>
                 <MudCardActions>
-                    <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("BasicInformationDefine/0")>Add Basic Information</MudButton>
+                    @if (String.IsNullOrEmpty(CategoryCode))
+                    {
+                        <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("BasicInformationDefine/0")>Add Basic Information</MudButton>
+                    }
+                    else
+                    {
+                        
+                        <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("BasicInformationDefine/0/{0}",CategoryCode)>Add Basic Information</MudButton>
+                        
+                    }
                 </MudCardActions>
                 <MudCardContent>
                     <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<BasicInformationViewModel,bool>(FilterBasicInformationInit)">
@@ -84,7 +93,14 @@
                                 }
                             </MudTd>
                             <MudTd DataLabel="Edit">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Disabled="!context.AllowChange" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("BasicInformationDefine/{0}",context.Id)></MudIconButton>
+                                @if (!String.IsNullOrEmpty(CategoryCode))
+                                {
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Disabled="!context.AllowChange" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("BasicInformationDefine/{0}/{1}",context.Id,context.CategoryCode)></MudIconButton>
+                                }
+                                else
+                                {
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Disabled="!context.AllowChange" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("BasicInformationDefine/{0}",context.Id)></MudIconButton>
+                                }
                             </MudTd>
                             <MudTd DataLabel="Delete">
                                 <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Disabled="!context.AllowDelete" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteBasicInformation(@context.Id))"></MudIconButton>
@@ -103,14 +119,23 @@
 
 
 @code {
+    [Parameter]
+    public string? CategoryCode { get; set; }
     private MudTable<BasicInformationViewModel> _table;
     private List<BasicInformationViewModel> Elements;
     private bool loading = false;
     private string searchString = "";
-    
+
     protected override async Task OnInitializedAsync()
     {
-        Elements = await mediator.Send(new GetAllBasicInformationsQuery());
+        if (String.IsNullOrEmpty(CategoryCode))
+        {
+            Elements = await mediator.Send(new GetAllBasicInformationsQuery());
+        }
+        else
+        {
+            Elements = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery(CategoryCode));
+        }
     }
 
     private void PageChanged(int i)

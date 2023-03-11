@@ -1,4 +1,4 @@
-﻿@page "/StaffDefine/{Id}"
+﻿@page "/ConsultantDefine/{Id}"
 
 @using Hospital.Application.Commands
 @using Hospital.Application.Mapper
@@ -25,7 +25,7 @@
                     <MudCardContent>
                         <MudGrid>
                             <MudItem md="6">
-                                <MudSelect Class="mt-1" T="int" Label="Staff Type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Staff Type" @bind-value="@staff.StaffTypeId" @bind-Text="@staff.StaffTypeName" Clearable>
+                                <MudSelect Class="mt-1" T="int" Label="Consultant Type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Consultant Type" @bind-value="@staff.StaffTypeId" @bind-Text="@staff.StaffTypeName" Clearable>
                                     @foreach (var s in staffTypes)
                                     {
                                             <MudSelectItem T="int" Value="@s.Id">@s.Name</MudSelectItem>
@@ -33,7 +33,7 @@
                                 </MudSelect>
                             </MudItem>
                             <MudItem md="6">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@staff.Code" Required="true" RequiredError="Please Enter Code" MaxLength="100" Label="Code" Placeholder="Staff Code" Variant="Variant.Outlined" Clearable></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@staff.Code" Required="true" RequiredError="Please Enter Code" MaxLength="100" Label="Code" Placeholder="Consultant Code" Variant="Variant.Outlined" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="6">
                                 <MudSelect Class="mt-1" T="int" Label="Name Prefix" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Name Prefix" @bind-value="@staff.NamePrefixId" @bind-Text="@staff.NamePrefixName" Clearable>
@@ -44,7 +44,7 @@
                                 </MudSelect>
                             </MudItem>
                             <MudItem md="6">
-                                <MudTextField T="string" Class="mt-1" @bind-Value="@staff.Name" Required="true" RequiredError="Please Enter Name" MaxLength="100" Label="Name" Placeholder="Staff Name" Variant="Variant.Outlined" Clearable></MudTextField>
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@staff.Name" Required="true" RequiredError="Please Enter Name" MaxLength="100" Label="Name" Placeholder="Consultant Name" Variant="Variant.Outlined" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="6">
                                 <MudDatePicker Label="Date of Joining" @bind-Date="@staff.DateOfJoining" TitleDateFormat="dddd, dd MMMM" Variant="Variant.Outlined" Required="true" RequiredError="Please Select Date" />
@@ -109,7 +109,7 @@
                     </MudCardContent>
                     <MudCardActions>
                         <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveStaff" Disabled="@(!success)">Save</MudButton>
-                        <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="Staffs">Return</MudButton>
+                        <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="Consultants">Return</MudButton>
                     </MudCardActions>
                 </MudCard>
             </MudForm>
@@ -125,7 +125,7 @@
     [CascadingParameter]
     public LoginedUser? userInfo { get; set; }
 
-    private string caption = "Add Staff";
+    private string caption = "Add Consultant";
     private StaffViewModel staff = new StaffViewModel();
     private List<BasicInformationViewModel> staffTypes;
     private List<BasicInformationViewModel> namePrefixes;
@@ -150,7 +150,7 @@
         {
             if (Convert.ToInt32(Id) > 0)
             {
-                caption = "Edit Staff";
+                caption = "Edit Consultant";
 
                 staff = await mediator.Send(new GetStaffByIdQuery(Convert.ToInt32(Id)));
 
@@ -187,7 +187,7 @@
                         {
                             Snackbar.Add(result.ResultMessage, Severity.Success);
 
-                            navManager.NavigateTo("Staffs");
+                            navManager.NavigateTo("Consultants");
                         }
                         else if (result.ResultType == ResultType.Warning)
                         {
@@ -201,7 +201,7 @@
                     }
                     else
                     {
-                        Snackbar.Add("Error in selected Staff", Severity.Warning);
+                        Snackbar.Add("Error in selected Consultant", Severity.Warning);
                     }
                 }
                 catch (Exception exp)
@@ -222,7 +222,7 @@
                     {
                         Snackbar.Add(result.ResultMessage, Severity.Success);
 
-                        navManager.NavigateTo("Staffs");
+                        navManager.NavigateTo("Consultants");
                     }
                     else if (result.ResultType == ResultType.Warning)
                     {

@@ -1,4 +1,4 @@
-﻿@page "/BasicInformationDefine/{Id}"
+﻿@page "/BasicInformationDefine/{Id}/{CategoryCode?}"
 
 @using Hospital.Application.Commands
 @using Hospital.Application.Mapper
@@ -26,7 +26,7 @@
                         <MudNumericField T="int" Class="mt-3" @bind-Value="@basicInformation.Code" Required="true" RequiredError="Please Enter Basic Information Code" Min="1" Label="Code" Placeholder="Basic Information Code" Variant="Variant.Outlined" Clearable></MudNumericField>
                         <MudTextField T="string" Class="mt-3" @bind-Value="@basicInformation.StrCode" Required="true" RequiredError="Please Enter Basic Information Strin Code" MaxLength="50" Label="String Code" Placeholder="Basic Information String Code" Variant="Variant.Outlined" Clearable></MudTextField>
                         <MudTextField T="string" Class="mt-3" @bind-Value="@basicInformation.Name" Required="true" RequiredError="Please Enter Basic Information Name" MaxLength="100" Label="Name" Placeholder="Basic Information Name" Variant="Variant.Outlined" Clearable></MudTextField>
-                        <MudSelect Class="mt-3" T="int" Required="true" RequiredError="Please Select Category" Label="Category" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Category" @bind-value="@basicInformation.CategoryId" @bind-Text="@basicInformation.CategoryName" Clearable>
+                        <MudSelect Class="mt-3" T="int" Required="true" RequiredError="Please Select Category" Label="Category" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Category" Value="@basicInformation.CategoryId" Text="@basicInformation.CategoryName" Clearable ValueChanged="@( (int c) => CategoryChanged(c) )" Disabled=@(!String.IsNullOrEmpty(CategoryCode))>
                             @foreach (var c in categories)
                             {
                                 <MudSelectItem T="int" Value="@c.Id">@c.Name</MudSelectItem>
@@ -46,7 +46,15 @@
                     </MudCardContent>
                     <MudCardActions>
                         <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveBasicInformation" Disabled="@(!success)">Save</MudButton>
-                        <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="basicInformations">Return</MudButton>
+
+                        @if (String.IsNullOrEmpty(CategoryCode))
+                        {
+                            <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="basicInformations">Return</MudButton>
+                        }
+                        else
+                        {
+                            <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="@String.Format("basicInformations/{0}",CategoryCode)">Return</MudButton>
+                        }
                     </MudCardActions>
                 </MudCard>
             </MudForm>
@@ -59,6 +67,10 @@
 @code {
     [Parameter]
     public string Id { get; set; }
+
+    [Parameter]
+    public string? CategoryCode { get; set; }
+
     [CascadingParameter]
     public LoginedUser? userInfo { get; set; }
 
@@ -85,11 +97,40 @@
 
                 if (basicInformation != null)
                 {
+                    CategoryChanged(basicInformation.CategoryId);
+                }
+            }
+            else
+            {
+                if (!String.IsNullOrEmpty(CategoryCode))
+                {
+                    var category = await mediator.Send(new GetBasicInformationCategoryByCodeQuery(CategoryCode));
 
+                    basicInformation.CategoryId = category.Id;
+
+                    CategoryChanged(basicInformation.CategoryId);
                 }
             }
         }
 
+    }
+
+    protected async Task CategoryChanged(int categoryId)
+    {
+        basicInformation.CategoryId = categoryId;
+        basicInformations = null;
+
+        if (categoryId > 0)
+        {
+            BasicInformationCategoryViewModel category = await mediator.Send(new GetBasicInformationCategoryByIdQuery(categoryId));
+            
+            if (category != null)
+            {
+                string relatedCode = category.RelatedCategoryCode;
+
+                basicInformations = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery(relatedCode));
+            }
+        }
     }
 
     protected async Task SaveBasicInformation()

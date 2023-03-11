@@ -42,11 +42,11 @@ namespace Hospital.Infrastructure.Repositories.Queries
             }
         }
 
-        public async Task<ReportTemplate> GetByCodeAsync(string code)
+        public async Task<IReadOnlyList<ReportTemplate>> GetByCodeAsync(string code)
         {
             try
             {
-                return _context.ReportTemplates.Where(t => t.Code == code).FirstOrDefault();
+                return _context.ReportTemplates.Where(t => t.Code == code).ToList();
             }
             catch (Exception exp)
             {

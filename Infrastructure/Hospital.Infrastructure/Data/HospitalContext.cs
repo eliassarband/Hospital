@@ -91,7 +91,7 @@ namespace Hospital.Infrastructure.Data
         public DbSet<ReportTemplate> ReportTemplates { get; set; }
         public DbSet<IPDRegisteration> IPDRegisterations { get; set;}
         public DbSet<IPDRegisterationRoom> IPDRegisterationRooms { get;set; }
-        public DbSet<IPDRegisterationService> IPDRegisterationServices { get;}
+        public DbSet<IPDRegisterationService> IPDRegisterationServices { get; set; }
         public DbSet<IPDRegisterationPayment> IPDRegisterationPayments { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Bed> Beds { get; set; }

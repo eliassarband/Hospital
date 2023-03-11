@@ -3,6 +3,7 @@
 
     <Authorized>
         <MudNavGroup Icon="@Icons.Material.Filled.Dashboard" IconColor="Color.Inherit" Title="Dashboard">
+            <MudNavLink Href="Desktop" Icon="@Icons.Material.Filled.DesktopWindows" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Main Dashboard</MudNavLink>
             <MudNavLink Href="AppointmentDashboard" Icon="@Icons.Material.Filled.DesktopWindows" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Appointment Dashboard</MudNavLink>
             <MudNavLink Href="OPDIPDDashboard" Icon="@Icons.Material.Filled.DesktopWindows" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">OPD/IPD Dashboard</MudNavLink>
             <MudNavLink Href="PrecryptionDashboard" Icon="@Icons.Material.Filled.DesktopWindows" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">E-Precryption Dashboard</MudNavLink>
@@ -10,7 +11,6 @@
             <MudNavLink Href="PharmacyDashboard" Icon="@Icons.Material.Filled.DesktopWindows" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Pharmacy Dashboard</MudNavLink>
             <MudNavLink Href="FinancialDashboard" Icon="@Icons.Material.Filled.DesktopWindows" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Financial Dashboard</MudNavLink>
             <MudNavLink Href="HRDashboard" Icon="@Icons.Material.Filled.DesktopWindows" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Human Resources Dashboard</MudNavLink>
-            <MudNavLink Href="SettingDashboard" Icon="@Icons.Material.Filled.DesktopWindows" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Setting Dashboard</MudNavLink>
             <MudNavLink Href="ReportsDashboard" Icon="@Icons.Material.Filled.DesktopWindows" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Reports Dashboard</MudNavLink>
         </MudNavGroup>
         
@@ -44,7 +44,7 @@
 
         </MudNavGroup>
         <MudNavGroup Icon="@Icons.Material.Filled.BarChart" IconColor="Color.Inherit" Title="Reports">
-
+            <MudNavLink Href="ReportTemplates" Icon="@Icons.Material.Filled.Report" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Report Templates</MudNavLink>
         </MudNavGroup>
         <MudNavGroup Icon="@Icons.Material.Filled.Security" IconColor="Color.Inherit" Title="Security">
             <MudNavLink Href="Users" Icon="@Icons.Material.Filled.People" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Users</MudNavLink>
@@ -55,9 +55,8 @@
             <MudNavLink Href="HospitalInformation" Icon="@Icons.Material.Filled.Apartment" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Hospital Information</MudNavLink>
             <MudNavLink Href="Departments" Icon="@Icons.Material.Filled.LocalHospital" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Department</MudNavLink>
             <MudNavLink Href="Services" Icon="@Icons.Material.Filled.MedicalServices" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Service</MudNavLink>
-            <MudNavLink Href="ConsultantMasters" Icon="@Icons.Material.Filled.People" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Consultant Master</MudNavLink>
-            <MudNavLink Href="Staffs" Icon="@Icons.Material.Filled.People" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Staffs</MudNavLink>
-            <MudNavLink Href="StaffTimings" Icon="@Icons.Material.Filled.People" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Staff Timings</MudNavLink>
+            <MudNavLink Href="Consultants" Icon="@Icons.Material.Filled.People" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Consultant Masters</MudNavLink>
+            <MudNavLink Href="ConsultantTimings" Icon="@Icons.Material.Filled.People" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Consultant Timings</MudNavLink>
             <MudNavLink Href="RefferBies" Icon="@Icons.Material.Filled.People" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Reffer Bies</MudNavLink>
             <MudNavLink Href="Medicines" Icon="@Icons.Material.Filled.Medication" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Medicines</MudNavLink>
             <MudNavLink Href="RoomTypes" Icon="@Icons.Material.Filled.Room" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Room Types</MudNavLink>
@@ -65,6 +64,8 @@
             <MudNavLink Href="Beds" Icon="@Icons.Material.Filled.Bed" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Beds</MudNavLink>
             <MudNavLink Href="Insurances" Icon="@Icons.Material.Filled.AdminPanelSettings" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Insurances</MudNavLink>
             <MudNavLink Href="InsuranceAgreements" Icon="@Icons.Material.Filled.AdminPanelSettings" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Insurance Agreements</MudNavLink>
+            <MudNavLink Href="BasicInformations/City" Icon="@Icons.Material.Filled.LocationCity" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">City Master</MudNavLink>
+            <MudNavLink Href="BasicInformations/Area" Icon="@Icons.Material.Filled.MyLocation" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Area Master</MudNavLink>
             <MudNavLink Href="Settings" Icon="@Icons.Material.Filled.Settings" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Setting</MudNavLink>
             <MudNavLink Href="BasicInformationCategories" Icon="@Icons.Material.Sharp.Category" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Basic Information Category</MudNavLink>
             <MudNavLink Href="BasicInformations" Icon="@Icons.Material.Filled.Workspaces" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Basic Information</MudNavLink>
