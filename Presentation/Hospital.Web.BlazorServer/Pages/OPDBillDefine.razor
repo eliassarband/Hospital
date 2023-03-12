@@ -6,6 +6,7 @@
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Domain.Core.Helpers;
 @using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth
 @using Hospital.Web.BlazorServer.Models;
@@ -78,10 +79,13 @@
                                                                 TextField="@nameof(PatientViewModel.Name)"
                                                                 ValueField="@nameof(PatientViewModel.Id)"
                                                                 Filterable="true"
-                                                                @bind-Value="@oPDBill.PatientId"
+                                                                Value="@oPDBill.PatientId"
+                                                                ValueExpression="@( () => oPDBill.PatientId )"
                                                                 Id="patient"
                                                                 ListHeight="250px"
-                                                                Placeholder="Hint: You can filter by the Patient Name">
+                                                                Placeholder="Hint: You can filter by the Patient Name"
+                                                                ValueChanged="@( (int c) => PatientChanged(c) )"
+                                                                >
                                         <MultiColumnComboBoxColumns>
                                             <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.Name)" Title="Name" Width="200px" />
                                             <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.NationalIdCart)" Title="National ID" Width="150px" />
@@ -101,7 +105,68 @@
 
                             
                         </MudItem>
-                        
+                        @if(oPDBill.PatientId>0)
+                        {
+                             <MudItem md="12">
+                                 <MudExpansionPanels>
+                                    <MudExpansionPanel Text="@String.Format("{0} {1} Information ",patient.NamePrefixName, patient.Name)">
+                                        <MudGrid Spacing="1" Class="m-2">
+                                            <MudItem md="4">
+                                                <MudText>Patient Id : @UtilityHelper.GenerateIdentifier(patientIdPrefix.Value,patient.Id)</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>National Card Id : @patient.NationalIdCart</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Father : @patient.FatherName</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Date of Birth : @Convert.ToDateTime(patient.DateOfBirth??DateTime.Now).ToLongDateString()</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Age : @DateHelper.CalculateAgeDescription(patient.DateOfBirth ?? DateTime.Now)</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Gender : @patient.GenderName</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Reffer By : @patient.RefferByName</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Occupation : @patient.Occupation</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Insurance : @patient.InsuranceName</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Insurance Number : @patient.InsuranceNumber</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Proposal Number : @patient.ProposalNumber</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Phone No : @patient.Phone</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Mobile No : @patient.Mobile</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Email Address : @patient.Email</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>City : @patient.CityName</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Area : @patient.AreaName</MudText>
+                                            </MudItem>
+                                            <MudItem md="8">
+                                                <MudText>Address : @patient.Address</MudText>
+                                            </MudItem>
+                                        </MudGrid>
+                                    </MudExpansionPanel>
+                                </MudExpansionPanels>
+                             </MudItem>
+                        }
                         <MudItem md="12">
                             <TelerikGrid Data=@oPDBillServices EditMode="@GridEditMode.Inline"
                                             Height="300px" Pageable="true" PageSize="5"
@@ -190,13 +255,15 @@
                         <MudItem md="6">
                             <TelerikFloatingLabel Text="Payment Type" Class="custom-label w-100">
                                 <div class="k-form-field-wrap">
-                                    <TelerikComboBox @bind-Value="@oPDBill.PaymentTypeId"
+                                    <TelerikComboBox Value="@oPDBill.PaymentTypeId"
+                                                     ValueExpression="@( () => oPDBill.PaymentTypeId )"
                                                      Data="@paymentTypes"
                                                      Placeholder="Select Payment Type"
                                                      TextField="@nameof(BasicInformationViewModel.Name)"
                                                      ValueField="@nameof(BasicInformationViewModel.Id)"
                                                      Filterable="true"
-                                                     Id="paymentType">
+                                                     Id="paymentType"
+                                                     ValueChanged="@( (int p) => PaymentTypeChanged(p) )">
                                     </TelerikComboBox>
                                 </div>
                             </TelerikFloatingLabel>
@@ -233,6 +300,30 @@
                                 </div>
                             </TelerikFloatingLabel>
                         </MudItem>
+                        @if (oPDBill.PaymentTypeStrCode == "Credit")
+                        {
+                            <MudItem md="6">
+                                <TelerikFloatingLabel Text="Paid Amount" Class="custom-label w-100">
+                                    <div class="k-form-field-wrap">
+                                        <TelerikNumericTextBox Placeholder="Paid Amount"
+                                                               @bind-Value="@oPDBill.PaidAmount"
+                                                               Format="@currencySetting.CurrencyTextBoxFormat"
+                                                               Decimals="0"></TelerikNumericTextBox>
+                                    </div>
+                                </TelerikFloatingLabel>
+                            </MudItem>
+                            <MudItem md="6">
+                                <TelerikFloatingLabel Text="Debt Amount" Class="custom-label w-100">
+                                    <div class="k-form-field-wrap">
+                                        <TelerikNumericTextBox Placeholder="Debt Amount"
+                                                           @bind-Value="@oPDBill.DebtAmount"
+                                                           Format="@currencySetting.CurrencyTextBoxFormat"
+                                                           Decimals="0"
+                                                           Enabled="false"></TelerikNumericTextBox>
+                                    </div>
+                                </TelerikFloatingLabel>
+                            </MudItem>
+                        }
                         <MudItem md="12" Class="mb-2">
                             <TelerikFloatingLabel Text="Description" Class="custom-label w-100">
                                 <div class="k-form-field-wrap">
@@ -283,7 +374,7 @@
     </WindowContent>
 </TelerikWindow>
 
-<TelerikWindow Class="demo-window" Width="50vw" Height="70vh" Centered="true" @bind-Visible=@selectReportTemplate Modal="true">
+<TelerikWindow Class="demo-window" Width="40vw" Height="70vh" Centered="true" @bind-Visible=@selectReportTemplate Modal="true">
     <WindowTitle>
         <strong>Select Report Template</strong>
     </WindowTitle>
@@ -305,6 +396,7 @@
 
     private string caption = "Add OPD Bill";
     private OPDBillViewModel oPDBill = new OPDBillViewModel();
+    private PatientViewModel patient = new PatientViewModel();
     private List<PatientViewModel> patients;
     private List<BasicInformationViewModel> paymentTypes;
     private List<ServiceViewModel> services;
@@ -345,6 +437,9 @@
             {
 
                 oPDBillServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(oPDBill.Id));
+                patient = await mediator.Send(new GetPatientByIdQuery(oPDBill.PatientId));
+
+                PaymentTypeChanged(oPDBill.PaymentTypeId);
 
                 foreach (var billService in oPDBillServices)
                 {
@@ -471,6 +566,8 @@
         patients = await mediator.Send(new GetAllPatientsQuery());
         oPDBill.PatientId = PatientId;
 
+        patient = await mediator.Send(new GetPatientByIdQuery(oPDBill.PatientId));
+
         addPatientWindowState = false;
     }
 
@@ -484,7 +581,33 @@
     {
         oPDBill.PatientId = PatientId;
 
+        patient = await mediator.Send(new GetPatientByIdQuery(oPDBill.PatientId));
+
         searchPatientWindowState = false;
+    }
+
+    protected async Task PatientChanged(int PatientId)
+    {
+        oPDBill.PatientId = PatientId;
+        patient = await mediator.Send(new GetPatientByIdQuery(oPDBill.PatientId));
+    }
+
+    protected async Task PaymentTypeChanged(int PaymentTypeId)
+    {
+        oPDBill.PaymentTypeId = PaymentTypeId;
+        var paymentType = await mediator.Send(new GetBasicInformationByIdQuery(PaymentTypeId));
+        oPDBill.PaymentTypeStrCode = paymentType.StrCode;
+
+        if (oPDBill.PaymentTypeStrCode=="Cash")
+        {
+            oPDBill.PaidAmount=oPDBill.PayableAmount;
+            oPDBill.DebtAmount = 0;
+        }
+        else
+        {
+            oPDBill.PaidAmount = 0;
+            oPDBill.DebtAmount = oPDBill.PayableAmount-(oPDBill.PaidAmount??0 + oPDBill.OPDBillPayments.Sum(p => p.Amount));
+        }
     }
 
     //protected async Task DateOfBirthChange()

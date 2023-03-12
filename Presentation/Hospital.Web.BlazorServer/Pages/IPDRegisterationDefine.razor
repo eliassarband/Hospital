@@ -6,6 +6,8 @@
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Domain.Core.Helpers;
+@using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth
 @using MediatR
 @using System.ComponentModel.DataAnnotations
@@ -56,10 +58,12 @@
                                                                         TextField="@nameof(PatientViewModel.Name)"
                                                                         ValueField="@nameof(PatientViewModel.Id)"
                                                                         Filterable="true"
-                                                                        @bind-Value="@iPDRegisteration.PatientId"
+                                                                        Value="@iPDRegisteration.PatientId"
+                                                                        ValueExpression="@( () => iPDRegisteration.PatientId )"
                                                                         Id="patient"
                                                                         ListHeight="250px"
-                                                                        Placeholder="Hint: You can filter by the Patient Name">
+                                                                        Placeholder="Hint: You can filter by the Patient Name"
+                                                                        ValueChanged="@( (int c) => PatientChanged(c) )">
                                                 <MultiColumnComboBoxColumns>
                                                     <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.Name)" Title="Name" Width="200px" />
                                                     <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.NationalIdCart)" Title="National ID" Width="150px" />
@@ -79,6 +83,68 @@
 
                             
                                 </MudItem>
+                                @if (iPDRegisteration.PatientId > 0)
+                                {
+                                    <MudItem md="12">
+                                        <MudExpansionPanels>
+                                            <MudExpansionPanel Text="@String.Format("{0} {1} Information ",patient.NamePrefixName, patient.Name)">
+                                                <MudGrid Spacing="1" Class="m-2">
+                                                    <MudItem md="4">
+                                                        <MudText>Patient Id : @UtilityHelper.GenerateIdentifier(patientIdPrefix.Value,patient.Id)</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>National Card Id : @patient.NationalIdCart</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Father : @patient.FatherName</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Date of Birth : @Convert.ToDateTime(patient.DateOfBirth??DateTime.Now).ToLongDateString()</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Age : @DateHelper.CalculateAgeDescription(patient.DateOfBirth ?? DateTime.Now)</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Gender : @patient.GenderName</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Reffer By : @patient.RefferByName</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Occupation : @patient.Occupation</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Insurance : @patient.InsuranceName</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Insurance Number : @patient.InsuranceNumber</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Proposal Number : @patient.ProposalNumber</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Phone No : @patient.Phone</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Mobile No : @patient.Mobile</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Email Address : @patient.Email</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>City : @patient.CityName</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Area : @patient.AreaName</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="8">
+                                                        <MudText>Address : @patient.Address</MudText>
+                                                    </MudItem>
+                                                </MudGrid>
+                                            </MudExpansionPanel>
+                                        </MudExpansionPanels>
+                                    </MudItem>
+                                }
                                 <MudItem md="6">
                                     <TelerikFloatingLabel Text="Reffer By" Class="custom-label w-100">
                                         <div class="k-form-field-wrap">
@@ -587,7 +653,7 @@
     </WindowContent>
 </TelerikWindow>
 
-<TelerikWindow Class="demo-window" Width="50vw" Height="70vh" Centered="true" @bind-Visible=@selectReportTemplate Modal="true">
+<TelerikWindow Class="demo-window" Width="40vw" Height="70vh" Centered="true" @bind-Visible=@selectReportTemplate Modal="true">
     <WindowTitle>
         <strong>Select Report Template</strong>
     </WindowTitle>
@@ -608,6 +674,7 @@
     public int ActiveTabIndex { get; set; } = 0;
     private string caption = "Add IPD Registeration";
     private IPDRegisterationViewModel iPDRegisteration = new IPDRegisterationViewModel();
+    private PatientViewModel patient = new PatientViewModel();
     private List<PatientViewModel> patients;
     private List<RefferByViewModel> refferBies;
     private List<BasicInformationViewModel> paymentTypes;
@@ -622,6 +689,7 @@
     private List<IPDRegisterationServiceViewModel> iPDRegisterationServices = new List<IPDRegisterationServiceViewModel>();
     private List<IPDRegisterationRoomViewModel> iPDRegisterationRooms = new List<IPDRegisterationRoomViewModel>();
     private List<IPDRegisterationPaymentViewModel> iPDRegisterationPayments = new List<IPDRegisterationPaymentViewModel>();
+    private SettingViewModel patientIdPrefix;
 
     private bool success;
     TelerikForm form;
@@ -633,6 +701,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
         patients = await mediator.Send(new GetAllPatientsQuery());
         refferBies = await mediator.Send(new GetAllRefferBiesQuery());
         services = await mediator.Send(new GetAllServicesQuery());
@@ -652,9 +721,11 @@
             caption = "Edit IPD Registeration";
 
             iPDRegisteration = await mediator.Send(new GetIPDRegisterationByIdQuery(Convert.ToInt32(Id)));
+            
 
             if (iPDRegisteration != null)
             {
+                patient = await mediator.Send(new GetPatientByIdQuery(iPDRegisteration.PatientId));
 
                 iPDRegisterationRooms = await mediator.Send(new GetIPDRegisterationRoomsByIPDRegisterationIdQuery(iPDRegisteration.Id));
                 iPDRegisterationServices = await mediator.Send(new GetIPDRegisterationServicesByIPDRegisterationIdQuery(iPDRegisteration.Id));
@@ -855,6 +926,8 @@
         patients = await mediator.Send(new GetAllPatientsQuery());
         iPDRegisteration.PatientId = PatientId;
 
+        patient = await mediator.Send(new GetPatientByIdQuery(iPDRegisteration.PatientId));
+
         addPatientWindowState = false;
     }
 
@@ -868,6 +941,8 @@
     {
         iPDRegisteration.PatientId = PatientId;
 
+        patient = await mediator.Send(new GetPatientByIdQuery(iPDRegisteration.PatientId));
+
         searchPatientWindowState = false;
     }
 
@@ -877,11 +952,25 @@
 
     }
 
-    protected async Task OPDPatientSelected(int PatientId)
+    protected async Task OPDPatientSelected(int OPDBillId)
     {
-        iPDRegisteration.PatientId = PatientId;
+        var oPDBill = await mediator.Send(new GetOPDBillByIdQuery(OPDBillId));
+
+        if (oPDBill != null)
+        {
+            iPDRegisteration.OPDBillId = oPDBill.Id;
+            iPDRegisteration.PatientId = oPDBill.PatientId;
+
+            patient = await mediator.Send(new GetPatientByIdQuery(iPDRegisteration.PatientId));
+        }
 
         searchOPDPatientWindowState = false;
+    }
+
+    protected async Task PatientChanged(int PatientId)
+    {
+        iPDRegisteration.PatientId = PatientId;
+        patient = await mediator.Send(new GetPatientByIdQuery(iPDRegisteration.PatientId));
     }
 
     //protected async Task DateOfBirthChange()

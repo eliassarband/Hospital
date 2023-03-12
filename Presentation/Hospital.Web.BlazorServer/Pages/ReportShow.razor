@@ -4,6 +4,7 @@
 @using Hospital.Application.Queries;
 @using Hospital.Application.Responses;
 @using Hospital.Application.ViewModels;
+@using Hospital.Domain.Core.Helpers;
 @using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth;
 
@@ -71,11 +72,29 @@
                     var hospital = await mediator.Send(new GetHospitalInformationByIdQuery(1));
                     report.RegBusinessObject("HospitalInformation", hospital);
 
-                    var patients = await mediator.Send(new GetPatientByIdQuery(oPDBill.PatientId));
-                    report.RegBusinessObject("Patient", patients);
+                    var patient = await mediator.Send(new GetPatientByIdQuery(oPDBill.PatientId));
+                    report.RegBusinessObject("Patient", patient);
+
+                    SettingViewModel patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
+                    SettingViewModel receiptNoPrefix = await mediator.Send(new GetSettingByKeyQuery("OPDReceiptNoPrefix"));
+
+                    oPDBill.ReceiptNo = UtilityHelper.GenerateIdentifier(receiptNoPrefix.Value, oPDBill.Id);
+                    patient.PatientId = UtilityHelper.GenerateIdentifier(patientIdPrefix.Value, oPDBill.PatientId);
+                    patient.Age = DateHelper.CalculateAgeDescription(patient.DateOfBirth ?? DateTime.Now);
 
                     report.Dictionary.Synchronize();
 
+                    if (oPDBill.PrintCount == null)
+                    {
+                        oPDBill.PrintCount = 1;
+                    }
+                    else
+                    {
+                        oPDBill.PrintCount += 1;
+                    }
+
+                    var command = MapperConfig.Mapper.Map<EditOPDBillCommand>(oPDBill);
+                    await mediator.Send(command);
                     //report.Print();
 
                     //base.OnInitialized();
@@ -112,8 +131,15 @@
                     var hospital = await mediator.Send(new GetHospitalInformationByIdQuery(1));
                     report.RegBusinessObject("HospitalInformation", hospital);
 
-                    var patients = await mediator.Send(new GetPatientByIdQuery(iPDRegisteration.PatientId??0));
-                    report.RegBusinessObject("Patient", patients);
+                    var patient = await mediator.Send(new GetPatientByIdQuery(iPDRegisteration.PatientId));
+                    report.RegBusinessObject("Patient", patient);
+
+                    SettingViewModel patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
+                    SettingViewModel iPDNoPrefix = await mediator.Send(new GetSettingByKeyQuery("IPDNoPrefix"));
+
+                    iPDRegisteration.IPDNo = UtilityHelper.GenerateIdentifier(iPDNoPrefix.Value, iPDRegisteration.Id);
+                    patient.PatientId = UtilityHelper.GenerateIdentifier(patientIdPrefix.Value, iPDRegisteration.PatientId);
+                    patient.Age = DateHelper.CalculateAgeDescription(patient.DateOfBirth ?? DateTime.Now);
 
                     report.Dictionary.Synchronize();
 
@@ -121,6 +147,17 @@
 
                     //base.OnInitialized();
 
+                    if (iPDRegisteration.PrintCount == null)
+                    {
+                        iPDRegisteration.PrintCount = 1;
+                    }
+                    else
+                    {
+                        iPDRegisteration.PrintCount += 1;
+                    }
+
+                    var command = MapperConfig.Mapper.Map<EditIPDRegisterationCommand>(iPDRegisteration);
+                    await mediator.Send(command);
 
                 }
             

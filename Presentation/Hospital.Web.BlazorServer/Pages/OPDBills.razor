@@ -34,9 +34,12 @@
                             <MudTh>Payment Type</MudTh>
                             <MudTh>Total Amount</MudTh>
                             <MudTh>Payable Amount</MudTh>
+                            <MudTh>Paid Amount</MudTh>
+                            <MudTh>Debt Amount</MudTh>
                             @if (String.IsNullOrEmpty(Mode))
                             {
                                 <MudTh>Edit</MudTh>
+                                <MudTh>Payment</MudTh>
                                 <MudTh>Print</MudTh>
                                 <MudTh>Delete</MudTh>
                             }
@@ -60,10 +63,18 @@
                             <MudTd DataLabel="PaymentType">@context.PaymentTypeName</MudTd>
                             <MudTd DataLabel="TotalAmount">@context.TotalAmount</MudTd>
                             <MudTd DataLabel="PayableAmount">@context.PayableAmount</MudTd>
+                            <MudTd DataLabel="PaidAmount">@context.PaidAmount</MudTd>
+                            <MudTd DataLabel="DebtAmount">@context.DebtAmount</MudTd>
                             @if (String.IsNullOrEmpty(Mode))
                             {
                                 <MudTd DataLabel="Edit">
                                     <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("OPDBillDefine/{0}",context.Id)></MudIconButton>
+                                </MudTd>
+                                <MudTd DataLabel="Payment">
+                                    @if (context.DebtAmount > 0)
+                                    {
+                                        <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Payment" Color="Color.Info" Href=@String.Format("OPDBillPayments/{0}",context.Id)></MudIconButton>
+                                    }
                                 </MudTd>
                                 <MudTd DataLabel="Print">
                                     <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Print" Color="Color.Tertiary" OnClick="@(()=> Print(@context.Id))"></MudIconButton>
@@ -77,7 +88,7 @@
                                 if (Mode == "Search")
                                 {
                                     <MudTd DataLabel="Select">
-                                        <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.PersonAdd" Color="Color.Tertiary" OnClick="@(()=> SelectPatient(@context.PatientId))"></MudIconButton>
+                                        <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.PersonAdd" Color="Color.Tertiary" OnClick="@(()=> SelectPatient(@context.Id))"></MudIconButton>
                                     </MudTd>
                                 }
                             }
@@ -92,7 +103,7 @@
     </MudItem>
 </MudGrid>
 
-<TelerikWindow Class="demo-window" Width="50vw" Height="70vh" Centered="true" @bind-Visible=@selectReportTemplate Modal="true">
+<TelerikWindow Class="demo-window" Width="40vw" Height="70vh" Centered="true" @bind-Visible=@selectReportTemplate Modal="true">
     <WindowTitle>
         <strong>Select Report Template</strong>
     </WindowTitle>
@@ -151,11 +162,11 @@
         return false;
     }
 
-    protected async Task SelectPatient(int PatientId)
+    protected async Task SelectPatient(int OPDBillId)
     {
 
         if (Mode == "Search")
-            await OnPatientSelected.InvokeAsync(PatientId);
+            await OnPatientSelected.InvokeAsync(OPDBillId);
     }
 
     protected async Task Print(int OPDBillId)

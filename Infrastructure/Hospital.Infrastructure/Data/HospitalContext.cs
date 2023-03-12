@@ -63,7 +63,7 @@ namespace Hospital.Infrastructure.Data
             modelBuilder.Entity<Setting>().HasData(
                 new Setting() { Id = 1, Name = "Patient Identifier Prefix", Key = "PatientIdPrefix", Value="P", CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
                 new Setting() { Id = 2, Name = "OPD Receipt Identifier Prefix", Key = "OPDReceiptNoPrefix", Value = "OP", CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" },
-                new Setting() { Id = 3, Name = "IPD No Prefix", Key = "OPDNoPrefix", Value = "IP", CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" }
+                new Setting() { Id = 3, Name = "IPD No Prefix", Key = "IPDNoPrefix", Value = "IP", CreatedDate = DateTime.Now, CreatedUser = "elias.sarband" }
             );
 
 
@@ -95,6 +95,7 @@ namespace Hospital.Infrastructure.Data
         public DbSet<IPDRegisterationPayment> IPDRegisterationPayments { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Bed> Beds { get; set; }
+        public DbSet<OPDBillPayment> OPDBillPayments { get; set;}
 
         
 

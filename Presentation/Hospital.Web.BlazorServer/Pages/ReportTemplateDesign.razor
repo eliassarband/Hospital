@@ -5,6 +5,7 @@
 @using Hospital.Application.Responses;
 @using Hospital.Application.ViewModels;
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Domain.Core.Helpers;
 @using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth;
 
@@ -66,6 +67,8 @@
 
                     var patients = await mediator.Send(new GetAllPatientsQuery());
                     report.RegBusinessObject("Patient", patients.FirstOrDefault());
+
+                    
                 }
                 else if(reportTemplate.Code == "IPD")
                 {

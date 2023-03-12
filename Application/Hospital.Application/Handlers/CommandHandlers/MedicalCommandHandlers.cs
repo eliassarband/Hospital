@@ -2053,4 +2053,174 @@ namespace Hospital.Application.Handlers.CommandHandlers
     }
 
     #endregion
+
+    #region OPDBillPayment
+    public class CreateOPDBillPaymentHandler : IRequestHandler<CreateOPDBillPaymentCommand, CommandResponse>
+    {
+        private readonly IOPDBillPaymentCommandRepository _OPDBillPaymentCommandRepository;
+
+        public CreateOPDBillPaymentHandler(IOPDBillPaymentCommandRepository OPDBillPaymentCommandRepository)
+        {
+            _OPDBillPaymentCommandRepository = OPDBillPaymentCommandRepository;
+        }
+
+        public async Task<CommandResponse> Handle(CreateOPDBillPaymentCommand request, CancellationToken cancellationToken)
+        {
+            var OPDBillPaymentEntity = MapperConfig.Mapper.Map<OPDBillPayment>(request);
+            OPDBillPaymentEntity.CreatedDate = DateTime.Now;
+
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (OPDBillPaymentEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+            else
+            {
+                try
+                {
+                    var newOPDBillPayment = await _OPDBillPaymentCommandRepository.AddAsync(OPDBillPaymentEntity);
+
+                    response = new CommandResponse()
+                    {
+                        Id = newOPDBillPayment.Id,
+                        ResultType = ResultType.Success,
+                        ResultMessage = "Saved successfully"
+                    };
+
+                }
+                catch (Exception exp)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = -1,
+                        ResultType = ResultType.Error,
+                        ResultMessage = "Error in operation\n" + exp.Message
+                    };
+                }
+
+            }
+
+            return response;
+        }
+    }
+
+    public class EditOPDBillPaymentHandler : IRequestHandler<EditOPDBillPaymentCommand, CommandResponse>
+    {
+        private readonly IOPDBillPaymentCommandRepository _OPDBillPaymentCommandRepository;
+        private readonly IOPDBillPaymentQueryRepository _OPDBillPaymentQueryRepository;
+
+        public EditOPDBillPaymentHandler(IOPDBillPaymentCommandRepository OPDBillPaymentCommandRepository, IOPDBillPaymentQueryRepository OPDBillPaymentQueryRepository)
+        {
+            _OPDBillPaymentCommandRepository = OPDBillPaymentCommandRepository;
+            _OPDBillPaymentQueryRepository = OPDBillPaymentQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(EditOPDBillPaymentCommand request, CancellationToken cancellationToken)
+        {
+            var OPDBillPaymentEntity = MapperConfig.Mapper.Map<OPDBillPayment>(request);
+            OPDBillPaymentEntity.ModifiedDate = DateTime.Now;
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            if (OPDBillPaymentEntity is null)
+            {
+                return new CommandResponse()
+                {
+                    Id = 0,
+                    ResultType = ResultType.Warning,
+                    ResultMessage = "There is a problem in mapper"
+                };
+            }
+
+            try
+            {
+                await _OPDBillPaymentCommandRepository.UpdateAsync(OPDBillPaymentEntity);
+
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            var modifiedOPDBillPayment = await _OPDBillPaymentQueryRepository.GetByIdAsync(request.Id);
+
+            response = new CommandResponse()
+            {
+                Id = modifiedOPDBillPayment.Id,
+                ResultType = ResultType.Success,
+                ResultMessage = "Updated successfully"
+            };
+
+            return response;
+        }
+    }
+
+    public class DeleteOPDBillPaymentHandler : IRequestHandler<DeleteOPDBillPaymentCommand, CommandResponse>
+    {
+        private readonly IOPDBillPaymentCommandRepository _OPDBillPaymentCommandRepository;
+        private readonly IOPDBillPaymentQueryRepository _OPDBillPaymentQueryRepository;
+
+        public DeleteOPDBillPaymentHandler(IOPDBillPaymentCommandRepository OPDBillPaymentCommandRepository, IOPDBillPaymentQueryRepository OPDBillPaymentQueryRepository)
+        {
+            _OPDBillPaymentCommandRepository = OPDBillPaymentCommandRepository;
+            _OPDBillPaymentQueryRepository = OPDBillPaymentQueryRepository;
+        }
+
+        public async Task<CommandResponse> Handle(DeleteOPDBillPaymentCommand request, CancellationToken cancellationToken)
+        {
+            CommandResponse response = new CommandResponse()
+            {
+                Id = 0,
+                ResultType = ResultType.None,
+                ResultMessage = "Unknown"
+            };
+
+            try
+            {
+                var OPDBillPaymentEntity = await _OPDBillPaymentQueryRepository.GetByIdAsync(request.Id);
+
+                await _OPDBillPaymentCommandRepository.DeleteAsync(OPDBillPaymentEntity);
+
+                response = new CommandResponse()
+                {
+                    Id = request.Id,
+                    ResultType = ResultType.Success,
+                    ResultMessage = "Removed successfully"
+                };
+            }
+            catch (Exception exp)
+            {
+                return new CommandResponse()
+                {
+                    Id = -1,
+                    ResultType = ResultType.Error,
+                    ResultMessage = "Error in operation\n" + exp.Message
+                };
+            }
+
+            return response;
+        }
+    }
+
+    #endregion
 }
