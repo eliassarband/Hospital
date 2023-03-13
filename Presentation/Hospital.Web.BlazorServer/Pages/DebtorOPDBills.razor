@@ -1,4 +1,4 @@
-﻿@page "/OPDBills/{Mode?}"
+﻿@page "/DebtorOPDBills"
 @using Hospital.Application.Commands
 @using Hospital.Application.Queries
 @using Hospital.Application.Responses
@@ -16,9 +16,9 @@
     <MudItem md="12">
         <MudPaper Class="mt-2" Elevation="10">
             <MudCard Class="pl-2 pr-2 mt-2">
-                <MudCardHeader>OPDBills</MudCardHeader>
+                <MudCardHeader>Debtor OPD Bills</MudCardHeader>
                 <MudCardActions>
-                    <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("OPDBillDefine/0")>Add OPDBill</MudButton>
+                    
                 </MudCardActions>
                 <MudCardContent>
                     <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<OPDBillViewModel,bool>(FilterOPDBillInit)">
@@ -36,20 +36,8 @@
                             <MudTh>Payable Amount</MudTh>
                             <MudTh>Paid Amount</MudTh>
                             <MudTh>Debt Amount</MudTh>
-                            @if (String.IsNullOrEmpty(Mode))
-                            {
-                                <MudTh>Edit</MudTh>
-                                <MudTh>Payment</MudTh>
-                                <MudTh>Print</MudTh>
-                                <MudTh>Delete</MudTh>
-                            }
-                            else
-                            {
-                                if (Mode == "Search")
-                                {
-                                    <MudTh>Select</MudTh>
-                                }
-                            }
+                            <MudTh>Payment</MudTh>
+                            
                         </HeaderContent>
                         <RowTemplate>
                             <MudTd DataLabel="ReceiptNo">
@@ -63,33 +51,14 @@
                             <MudTd DataLabel="PaymentType">@context.PaymentTypeName</MudTd>
                             <MudTd DataLabel="TotalAmount">@context.TotalAmount</MudTd>
                             <MudTd DataLabel="PayableAmount">@context.PayableAmount</MudTd>
-                            <MudTd DataLabel="PaidAmount">@(context.PaidAmount+context.OPDBillPayments.Sum(p => p.Amount))</MudTd>
+                            <MudTd DataLabel="PaidAmount">@(context.PaidAmount + context.OPDBillPayments.Sum(p => p.Amount))</MudTd>
                             <MudTd DataLabel="DebtAmount">@context.DebtAmount</MudTd>
-                            @if (String.IsNullOrEmpty(Mode))
-                            {
-                                <MudTd DataLabel="Edit">
-                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("OPDBillDefine/{0}",context.Id)></MudIconButton>
-                                </MudTd>
-                                <MudTd DataLabel="Payment">
-                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Payment" Color="Color.Tertiary" OnClick="@(()=> OPDPayment(@context.Id))"></MudIconButton>
-                                    
-                                </MudTd>
-                                <MudTd DataLabel="Print">
-                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Print" Color="Color.Tertiary" OnClick="@(()=> Print(@context.Id))"></MudIconButton>
-                                </MudTd>
-                                <MudTd DataLabel="Delete">
-                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteOPDBill(@context.Id))"></MudIconButton>
-                                </MudTd>
-                            }
-                            else
-                            {
-                                if (Mode == "Search")
+                            <MudTd DataLabel="Payment">
+                                @if (context.DebtAmount > 0)
                                 {
-                                    <MudTd DataLabel="Select">
-                                        <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.PersonAdd" Color="Color.Tertiary" OnClick="@(()=> SelectPatient(@context.Id))"></MudIconButton>
-                                    </MudTd>
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Payment" Color="Color.Tertiary" OnClick="@(()=> OPDPayment(@context.Id))"></MudIconButton>
                                 }
-                            }
+                            </MudTd>
                         </RowTemplate>
                         <PagerContent>
                             <MudPagination ShowFirstButton="true" ShowLastButton="true" SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
@@ -101,18 +70,6 @@
     </MudItem>
 </MudGrid>
 
-<TelerikWindow Class="demo-window" Width="40vw" Height="70vh" Centered="true" @bind-Visible=@selectReportTemplate Modal="true">
-    <WindowTitle>
-        <strong>Select Report Template</strong>
-    </WindowTitle>
-    <WindowActions>
-        <WindowAction Name="Close" />
-    </WindowActions>
-    <WindowContent>
-        <ReportTemplatesSelect Id="@OPDId" ReportCode="OPD"></ReportTemplatesSelect>
-    </WindowContent>
-</TelerikWindow>
-
 <TelerikWindow Class="demo-window" Width="60vw" Height="70vh" Centered="true" @bind-Visible=@showPayments Modal="true">
     <WindowTitle>
         <strong>OPD Balance Payment</strong>
@@ -121,27 +78,23 @@
         <WindowAction Name="Close" />
     </WindowActions>
     <WindowContent>
-         <OPDBillPayments OPDId="@OPDId" OnPaymentAdded="PaymentAdded"></OPDBillPayments>
+        <OPDBillPayments OPDId="@OPDId" OnPaymentAdded="PaymentAdded"></OPDBillPayments>
     </WindowContent>
 </TelerikWindow>
 
-
 @code {
-    [Parameter]
-    public string? Mode { get; set; }
-    [Parameter]
-    public EventCallback<int> OnPatientSelected { get; set; }
+
 
     private MudTable<OPDBillViewModel> _table;
-    private List<OPDBillViewModel> Elements; 
+    private List<OPDBillViewModel> Elements;
     private SettingViewModel patientIdPrefix;
     private SettingViewModel receiptNoPrefix;
 
     private bool loading = false;
     private string searchString = "";
-    private bool selectReportTemplate=false;
     private bool showPayments = false;
     private int OPDId = 0;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -149,6 +102,8 @@
         receiptNoPrefix = await mediator.Send(new GetSettingByKeyQuery("OPDReceiptNoPrefix"));
 
         Elements = await mediator.Send(new GetAllOPDBillsQuery());
+
+        Elements = Elements.Where(d => d.DebtAmount > 0).ToList();
     }
 
     private void PageChanged(int i)
@@ -173,19 +128,6 @@
         return false;
     }
 
-    protected async Task SelectPatient(int OPDBillId)
-    {
-
-        if (Mode == "Search")
-            await OnPatientSelected.InvokeAsync(OPDBillId);
-    }
-
-    protected async Task Print(int OPDBillId)
-    {
-        OPDId = OPDBillId;
-        selectReportTemplate = true;
-    }
-
     protected async Task OPDPayment(int OPDBillId)
     {
         OPDId = OPDBillId;
@@ -195,50 +137,8 @@
     protected async Task PaymentAdded(int OPDBillId)
     {
         Elements = await mediator.Send(new GetAllOPDBillsQuery());
-    }
 
-    protected async Task DeleteOPDBill(int Id)
-    {
-        bool? dialogResult = await DialogService.ShowMessageBox(
-            "Delete OPD Bill",
-            "Are you sure?",
-            yesText: "Delete!", cancelText: "No");
-
-        if (dialogResult == true)
-        {
-            loading = true;
-            try
-            {
-                CommandResponse result;
-
-                result = await mediator.Send(new DeleteOPDBillCommand(Id));
-
-                if (result.ResultType == ResultType.Success)
-                {
-                    Elements = await mediator.Send(new GetAllOPDBillsQuery());
-                    Snackbar.Add(result.ResultMessage, Severity.Success);
-                }
-                else if (result.ResultType == ResultType.Warning)
-                {
-                    Snackbar.Add(result.ResultMessage, Severity.Warning);
-                }
-                else if (result.ResultType == ResultType.Error)
-                {
-                    Snackbar.Add(result.ResultMessage, Severity.Error);
-                }
-
-
-
-            }
-            catch (Exception exp)
-            {
-                Snackbar.Add(exp.Message, Severity.Error);
-            }
-            loading = false;
-
-        }
-
-
+        Elements = Elements.Where(d => d.DebtAmount > 0).ToList();
     }
 
 

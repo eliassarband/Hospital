@@ -250,7 +250,7 @@ namespace Hospital.Application.Mapper
                 .ForMember(dest => dest.PaymentTypeCode, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.Code : 0)))
                 .ForMember(dest => dest.PaymentTypeStrCode, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.StrCode : "")))
                 .ForMember(dest => dest.PaymentTypeName, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.Name : "")))
-                .ForMember(dest => dest.DebtAmount, opt => opt.MapFrom(src => (src.PayableAmount - (src.PaidAmount??0 + src.OPDBillPayments.Sum(p => p.Amount)))));
+                .ForMember(dest => dest.DebtAmount, opt => opt.MapFrom(src => (src.PayableAmount - ((src.PaidAmount??0) + src.OPDBillPayments.Sum(p => p.Amount)))));
 
             CreateMap<OPDBillViewModel, OPDBill>();
 

@@ -60,6 +60,8 @@
                     {
                         var oPDBillServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(0));
                         report.RegBusinessObject("OPDBillServices", oPDBillServices);
+
+                        
                     }
 
                     var hospital = await mediator.Send(new GetHospitalInformationByIdQuery(1));
@@ -69,6 +71,31 @@
                     report.RegBusinessObject("Patient", patients.FirstOrDefault());
 
                     
+                }
+                else if (reportTemplate.Code == "OPDPayment")
+                {
+                    var oPDBillPayment = await mediator.Send(new GetAllOPDBillPaymentsQuery());
+                    report.RegBusinessObject("OPDBillPayment", oPDBillPayment.FirstOrDefault());
+                    
+                    if (oPDBillPayment != null)
+                    {
+                        var oPDBill = await mediator.Send(new GetOPDBillByIdQuery(oPDBillPayment.FirstOrDefault().OPDBillId??0));
+                        report.RegBusinessObject("OPDBill", oPDBill);
+                    
+                        //var oPDBillServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(0));
+                        //report.RegBusinessObject("OPDBillServices", oPDBillServices);
+
+                        //var oPDBillPayments = await mediator.Send(new GetOPDBillPaymentsByOPDBillIdQuery(0));
+                        //report.RegBusinessObject("OPDBillPayments", oPDBillPayments);
+                    }
+
+                    var hospital = await mediator.Send(new GetHospitalInformationByIdQuery(1));
+                    report.RegBusinessObject("HospitalInformation", hospital);
+
+                    var patients = await mediator.Send(new GetAllPatientsQuery());
+                    report.RegBusinessObject("Patient", patients.FirstOrDefault());
+
+
                 }
                 else if(reportTemplate.Code == "IPD")
                 {

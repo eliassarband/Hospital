@@ -102,6 +102,66 @@
 
                 }
             }
+            else if (reportTemplate.Code == "OPDPayment")
+            {
+                
+                var oPDBillPayment = await mediator.Send(new GetOPDBillPaymentByIdQuery(Id));
+
+                if (oPDBillPayment != null)
+                {
+                    report = StiReport.CreateNewReport();
+
+                    report.Dictionary.Databases.Clear();
+
+                    if (reportTemplate != null)
+                    {
+                        report.LoadFromString(reportTemplate.Content);
+                    }
+
+                    report.RegBusinessObject("OPDBillPayment", oPDBillPayment);
+
+                    var oPDBill = await mediator.Send(new GetOPDBillByIdQuery(oPDBillPayment.OPDBillId ?? 0));
+                    report.RegBusinessObject("OPDBill", oPDBill);
+
+                    //var oPDBillServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(oPDBill.Id));
+                    //report.RegBusinessObject("OPDBillServices", oPDBillServices);
+
+                    //var oPDBillPayments = await mediator.Send(new GetOPDBillPaymentsByOPDBillIdQuery(oPDBill.Id));
+                    //report.RegBusinessObject("OPDBillPayments", oPDBillPayments);
+
+                    var hospital = await mediator.Send(new GetHospitalInformationByIdQuery(1));
+                    report.RegBusinessObject("HospitalInformation", hospital);
+
+                    var patient = await mediator.Send(new GetPatientByIdQuery(oPDBill.PatientId));
+                    report.RegBusinessObject("Patient", patient);
+
+                    SettingViewModel patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
+                    SettingViewModel receiptNoPrefix = await mediator.Send(new GetSettingByKeyQuery("OPDReceiptNoPrefix"));
+
+                    oPDBill.ReceiptNo = UtilityHelper.GenerateIdentifier(receiptNoPrefix.Value, oPDBill.Id);
+                    patient.PatientId = UtilityHelper.GenerateIdentifier(patientIdPrefix.Value, oPDBill.PatientId);
+                    patient.Age = DateHelper.CalculateAgeDescription(patient.DateOfBirth ?? DateTime.Now);
+
+                    report.Dictionary.Synchronize();
+
+                    if (oPDBill.PrintCount == null)
+                    {
+                        oPDBill.PrintCount = 1;
+                    }
+                    else
+                    {
+                        oPDBill.PrintCount += 1;
+                    }
+
+                    var command = MapperConfig.Mapper.Map<EditOPDBillCommand>(oPDBill);
+                    await mediator.Send(command);
+                    //report.Print();
+
+                    //base.OnInitialized();
+
+
+                }
+            }
             else if (reportTemplate.Code == "IPD")
             {
                 var iPDRegisteration = await mediator.Send(new GetIPDRegisterationByIdQuery(Id));

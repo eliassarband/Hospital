@@ -27,6 +27,7 @@
                             <MudItem md="12">
                                 <MudSelect Class="mt-1" T="string" Label="Code" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Report Template Code" @bind-value="@reportTemplate.Code" @bind-Text="@reportTemplate.Code" Clearable>
                                     <MudSelectItem T="string" Value="@("OPD")">OPD</MudSelectItem>
+                                    <MudSelectItem T="string" Value="@("OPDPayment")">OPD Payment</MudSelectItem>
                                     <MudSelectItem T="string" Value="@("IPD")">IPD</MudSelectItem>
                                 </MudSelect>
                             </MudItem>

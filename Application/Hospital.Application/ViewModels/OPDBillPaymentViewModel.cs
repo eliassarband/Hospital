@@ -16,7 +16,7 @@ namespace Hospital.Application.ViewModels
         public OPDBillViewModel OPDBill { get; set; }
 
         [Required]
-        public DateTime? Date { get; set; }
+        public DateTime? Date { get; set; } = DateTime.Now;
 
         [Required]
         [Range(1,int.MaxValue)]
