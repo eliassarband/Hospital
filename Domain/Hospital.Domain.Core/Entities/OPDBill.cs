@@ -34,6 +34,8 @@ namespace Hospital.Domain.Core.Entities
 
         public int? PrintCount { get; set; } = 0;
 
+        public bool Canceled { get; set; } = false;
+
 
         public virtual ICollection<OPDBillService> OPDBillServices { get; set; }
         public virtual ICollection<OPDBillPayment> OPDBillPayments { get; set; }

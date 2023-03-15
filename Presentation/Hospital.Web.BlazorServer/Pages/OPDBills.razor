@@ -1,5 +1,6 @@
 ﻿@page "/OPDBills/{Mode?}"
 @using Hospital.Application.Commands
+@using Hospital.Application.Mapper;
 @using Hospital.Application.Queries
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
@@ -41,7 +42,7 @@
                                 <MudTh>Edit</MudTh>
                                 <MudTh>Payment</MudTh>
                                 <MudTh>Print</MudTh>
-                                <MudTh>Delete</MudTh>
+                                <MudTh>Cancel</MudTh>
                             }
                             else
                             {
@@ -77,8 +78,8 @@
                                 <MudTd DataLabel="Print">
                                     <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Print" Color="Color.Tertiary" OnClick="@(()=> Print(@context.Id))"></MudIconButton>
                                 </MudTd>
-                                <MudTd DataLabel="Delete">
-                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteOPDBill(@context.Id))"></MudIconButton>
+                                <MudTd DataLabel="Cancel">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Cancel" Color="Color.Secondary" OnClick="@(()=> DeleteOPDBill(@context.Id))"></MudIconButton>
                                 </MudTd>
                             }
                             else
@@ -200,9 +201,9 @@
     protected async Task DeleteOPDBill(int Id)
     {
         bool? dialogResult = await DialogService.ShowMessageBox(
-            "Delete OPD Bill",
+            "Cancel OPD Bill",
             "Are you sure?",
-            yesText: "Delete!", cancelText: "No");
+            yesText: "Cancel!", cancelText: "No");
 
         if (dialogResult == true)
         {
@@ -211,7 +212,12 @@
             {
                 CommandResponse result;
 
-                result = await mediator.Send(new DeleteOPDBillCommand(Id));
+                var oPDBill = await mediator.Send(new GetOPDBillByIdQuery(Id));
+                oPDBill.Canceled = true;
+
+                var command = MapperConfig.Mapper.Map<EditOPDBillCommand>(oPDBill);
+
+                result = await mediator.Send(command);
 
                 if (result.ResultType == ResultType.Success)
                 {

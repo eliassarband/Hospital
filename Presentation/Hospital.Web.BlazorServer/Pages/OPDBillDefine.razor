@@ -225,7 +225,18 @@
                                         </EditorTemplate>
                                     </GridColumn>
                                     <GridColumn Field=@nameof(OPDBillServiceViewModel.Rate) Title="Rate" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat" />
-                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.Discount) Title="Dis" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat" />
+                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.Discount) Title="Dis" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat">
+                                        <EditorTemplate>
+                                            @{
+                                                var ServiceToEdit = context as OPDBillServiceViewModel;
+                                                <TelerikNumericTextBox Placeholder="Discount"
+                                                                       @bind-Value="@ServiceToEdit.Discount"
+                                                                   Format="@currencySetting.CurrencyTextBoxFormat"
+                                                                   Decimals="0"></TelerikNumericTextBox>
+                                                <TelerikValidationMessage For="@(() => ServiceToEdit.Discount)" />
+                                            }
+                                        </EditorTemplate>
+                                    </GridColumn>
                                     <GridColumn Field=@nameof(OPDBillServiceViewModel.StaffName) Title="Staff Name" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
                                         <EditorTemplate>
                                             @{
@@ -506,12 +517,21 @@
             billService.ServiceCode = service.Code;
             billService.ServiceName=service.Name;
             billService.Rate = service.OPDRate;
-            if (service.DiscountAmount > 0)
-                billService.Discount = service.DiscountAmount;
-
-            if (service.DiscountPercentage > 0)
-                billService.Discount = (service.OPDRate * service.DiscountPercentage) / 100;
-
+            if(billService.Discount>0)
+            {
+                billService.Discount = billService.Discount;
+            }
+            else
+            {
+                if (service.DiscountAmount > 0)
+                {
+                    billService.Discount = service.DiscountAmount;
+                }
+            
+                if (service.DiscountPercentage > 0)
+                    billService.Discount = (service.OPDRate * service.DiscountPercentage) / 100;
+            }
+            
             billService.Amount = billService.Quantity * (billService.Rate - billService.Discount);
         }
 

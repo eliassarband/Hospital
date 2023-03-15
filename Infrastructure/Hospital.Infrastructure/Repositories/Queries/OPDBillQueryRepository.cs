@@ -23,7 +23,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.OPDBills.Include(b => b.Patient).Include(b => b.PaymentType).Include(b => b.OPDBillServices).Include(b => b.OPDBillPayments).ToList();
+                return _context.OPDBills.Where(b => !b.Canceled).Include(b => b.Patient).Include(b => b.PaymentType).Include(b => b.OPDBillServices).Include(b => b.OPDBillPayments).ToList();
             }
             catch (Exception exp)
             {

@@ -438,6 +438,7 @@ namespace Hospital.Application.Commands
         public int? PaidAmount { get; set; }
         public string Description { get; set; }
         public int? PrintCount { get; set; } = 0;
+        public bool Canceled { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedUser { get; set; }
 
@@ -458,6 +459,7 @@ namespace Hospital.Application.Commands
         public int? PaidAmount { get; set; }
         public string Description { get; set; }
         public int? PrintCount { get; set; } = 0;
+        public bool Canceled { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedUser { get; set; }
         public DateTime ModifiedDate { get; set; }
