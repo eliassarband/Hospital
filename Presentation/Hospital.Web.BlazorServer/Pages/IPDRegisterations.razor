@@ -43,6 +43,7 @@
                             <MudTh>Bed</MudTh>
                             <MudTh>Edit</MudTh>
                             <MudTh>Print</MudTh>
+                            <MudTh>Discharge</MudTh>
                             <MudTh>Cancel</MudTh>
                         </HeaderContent>
                         <RowTemplate>
@@ -68,6 +69,9 @@
                             </MudTd>
                             <MudTd DataLabel="Print">
                                 <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Print" Color="Color.Tertiary" OnClick="@(()=> Print(@context.Id))"></MudIconButton>
+                            </MudTd>
+                            <MudTd DataLabel="Discharge">
+                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.NewReleases" Color="Color.Info" ></MudIconButton>
                             </MudTd>
                             <MudTd DataLabel="Cancel">
                                 <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Cancel" Color="Color.Secondary" OnClick="@(()=> DeleteIPDRegisteration(@context.Id))"></MudIconButton>
