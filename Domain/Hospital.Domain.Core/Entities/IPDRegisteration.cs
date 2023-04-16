@@ -72,6 +72,9 @@ namespace Hospital.Domain.Core.Entities
         [MaxLength(1000)]
         public string? Description { get; set; }
 
+        public int? PrintCount { get; set; } = 0;
+
+        public int? OPDBillId { get; set; } 
 
         public virtual ICollection<IPDRegisterationService> IPDRegisterationServices { get; set; }
         public virtual ICollection<IPDRegisterationRoom> IPDRegisterationRooms { get; set; }

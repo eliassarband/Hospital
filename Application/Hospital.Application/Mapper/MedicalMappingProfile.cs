@@ -249,7 +249,8 @@ namespace Hospital.Application.Mapper
                 .ForMember(dest => dest.PaymentTypeId, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.Id : 0)))
                 .ForMember(dest => dest.PaymentTypeCode, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.Code : 0)))
                 .ForMember(dest => dest.PaymentTypeStrCode, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.StrCode : "")))
-                .ForMember(dest => dest.PaymentTypeName, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.Name : "")));
+                .ForMember(dest => dest.PaymentTypeName, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.Name : "")))
+                .ForMember(dest => dest.DebtAmount, opt => opt.MapFrom(src => (src.PayableAmount - ((src.PaidAmount??0) + src.OPDBillPayments.Sum(p => p.Amount)))));
 
             CreateMap<OPDBillViewModel, OPDBill>();
 
@@ -430,6 +431,25 @@ namespace Hospital.Application.Mapper
             CreateMap<CreateIPDRegisterationPaymentCommand, IPDRegisterationPaymentViewModel>().ReverseMap();
 
             CreateMap<EditIPDRegisterationPaymentCommand, IPDRegisterationPaymentViewModel>().ReverseMap();
+
+            #endregion
+
+            #region OPDBillPayment
+
+            CreateMap<OPDBillPayment, CreateOPDBillPaymentCommand>().ReverseMap()
+                .ForMember(dest => dest.OPDBillId, opt => opt.MapFrom(src => (src.OPDBillId == 0 ? null : src.OPDBillId)));
+
+            CreateMap<OPDBillPayment, EditOPDBillPaymentCommand>().ReverseMap()
+                .ForMember(dest => dest.OPDBillId, opt => opt.MapFrom(src => (src.OPDBillId == 0 ? null : src.OPDBillId)));
+
+            CreateMap<OPDBillPayment, OPDBillPaymentViewModel>()
+                .ForMember(dest => dest.OPDBillId, opt => opt.MapFrom(src => (src.OPDBill != null ? src.OPDBill.Id : 0)));
+
+            CreateMap<OPDBillPaymentViewModel, OPDBillPayment>();
+
+            CreateMap<CreateOPDBillPaymentCommand, OPDBillPaymentViewModel>().ReverseMap();
+
+            CreateMap<EditOPDBillPaymentCommand, OPDBillPaymentViewModel>().ReverseMap();
 
             #endregion
         }

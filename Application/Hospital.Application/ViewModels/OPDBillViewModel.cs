@@ -13,6 +13,8 @@ namespace Hospital.Application.ViewModels
     {
         public int Id { get; set; }
 
+        public string? ReceiptNo { get; set; }
+
         [Required]
         public DateTime? Date { get; set; }
 
@@ -36,8 +38,14 @@ namespace Hospital.Application.ViewModels
         public int TotalAmount { get; set; }
 
         public int PayableAmount { get; set; }
+
+        public int? PaidAmount { get; set; }
+        public int DebtAmount { get; set; }
         public string Description { get; set; }
+        public int? PrintCount { get; set; } = 0;
+        public bool Canceled { get; set; } = false;
         public virtual ICollection<OPDBillServiceViewModel> OPDBillServices { get; set; }
+        public virtual ICollection<OPDBillPaymentViewModel> OPDBillPayments { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedUser { get; set; }
         public DateTime ModifiedDate { get; set; }

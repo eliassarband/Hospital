@@ -11,19 +11,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Infrastructure.Repositories.Queries
 {
-    public class IPDRegisterationServiceQueryRepository : QueryRepository<IPDRegisterationService>, IIPDRegisterationServiceQueryRepository
+    public class OPDBillPaymentQueryRepository : QueryRepository<OPDBillPayment>, IOPDBillPaymentQueryRepository
     {
         protected readonly HospitalContext _context;
-        public IPDRegisterationServiceQueryRepository(HospitalContext context) : base(context)
+        public OPDBillPaymentQueryRepository(HospitalContext context) : base(context)
         {
             _context = context;
         }
 
-        public async Task<IReadOnlyList<IPDRegisterationService>> GetAllAsync()
+        public async Task<IReadOnlyList<OPDBillPayment>> GetAllAsync()
         {
             try
             {
-                return _context.IPDRegisterationServices.Include(s => s.Service).Include(s => s.Staff).Include(s => s.IPDRegisteration).ToList();
+                return _context.OPDBillPayments.Include(s => s.OPDBill).ToList();
             }
             catch (Exception exp)
             {
@@ -31,11 +31,11 @@ namespace Hospital.Infrastructure.Repositories.Queries
             }
         }
 
-        public async Task<IReadOnlyList<IPDRegisterationService>> GetByIPDRegisterationIdAsync(int IPDRegisterationId)
+        public async Task<IReadOnlyList<OPDBillPayment>> GetByOPDBillIdAsync(int OPDBillId)
         {
             try
             {
-                return _context.IPDRegisterationServices.Where(s => s.IPDRegisterationId == IPDRegisterationId).Include(s => s.Service).Include(s => s.Staff).Include(s => s.IPDRegisteration).ToList();
+                return _context.OPDBillPayments.Where(s => s.OPDBillId==OPDBillId).Include(s => s.OPDBill).ToList();
             }
             catch (Exception exp)
             {
@@ -43,11 +43,11 @@ namespace Hospital.Infrastructure.Repositories.Queries
             }
         }
 
-        public async Task<IPDRegisterationService> GetByIdAsync(int id)
+        public async Task<OPDBillPayment> GetByIdAsync(int id)
         {
             try
             {
-                return _context.IPDRegisterationServices.Where(t => t.Id == id).Include(s => s.Service).Include(s => s.Staff).Include(s => s.IPDRegisteration).FirstOrDefault();
+                return _context.OPDBillPayments.Where(t => t.Id == id).Include(s => s.OPDBill).FirstOrDefault();
             }
             catch (Exception exp)
             {

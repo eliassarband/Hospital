@@ -1558,7 +1558,7 @@ namespace Hospital.Infrastructure.Migrations
                             Id = 3,
                             CreatedDate = new DateTime(2023, 3, 6, 12, 11, 33, 254, DateTimeKind.Local).AddTicks(9700),
                             CreatedUser = "elias.sarband",
-                            Key = "OPDNoPrefix",
+                            Key = "IPDNoPrefix",
                             ModifiedDate = new DateTime(2023, 3, 6, 12, 11, 33, 254, DateTimeKind.Local).AddTicks(9699),
                             Name = "IPD No Prefix",
                             Value = "IP"

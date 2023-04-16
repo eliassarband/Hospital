@@ -13,11 +13,13 @@ namespace Hospital.Application.ViewModels
     {
         public int Id { get; set; }
 
+        public string? IPDNo { get; set; }
+
         [Required]
         public DateTime Date { get; set; }
 
         [Required]
-        public int? PatientId { get; set; }
+        public int PatientId { get; set; }
         public string PatientName { get; set; }
         public virtual PatientViewModel Patient { get; set; }
 
@@ -82,6 +84,9 @@ namespace Hospital.Application.ViewModels
         [MaxLength(1000)]
         public string? Description { get; set; }
 
+        public int? PrintCount { get; set; } = 0;
+
+        public int? OPDBillId { get; set; }
 
         public virtual ICollection<IPDRegisterationServiceViewModel> IPDRegisterationServices { get; set; }
         public virtual ICollection<IPDRegisterationRoomViewModel> IPDRegisterationRooms { get; set; }

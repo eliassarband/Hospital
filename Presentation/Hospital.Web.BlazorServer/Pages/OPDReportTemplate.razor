@@ -33,37 +33,37 @@
 
     protected override async Task OnInitializedAsync()
     {
-        reportTemplate = await mediator.Send(new GetReportTemplateByCodeQuery("OPDBill"));
+        //reportTemplate = await mediator.Send(new GetReportTemplateByCodeQuery("OPDBill"));
 
-        report = StiReport.CreateNewReport();
+        //report = StiReport.CreateNewReport();
 
-        report.Dictionary.Databases.Clear();
+        //report.Dictionary.Databases.Clear();
 
-        if (reportTemplate != null)
-        {
-            report.LoadFromString(reportTemplate.Content);
-        }
+        //if (reportTemplate != null)
+        //{
+        //    report.LoadFromString(reportTemplate.Content);
+        //}
 
-        var oPDBills = await mediator.Send(new GetAllOPDBillsQuery()); 
-        report.RegBusinessObject("OPDBill", oPDBills.FirstOrDefault());
+        //var oPDBills = await mediator.Send(new GetAllOPDBillsQuery()); 
+        //report.RegBusinessObject("OPDBill", oPDBills.FirstOrDefault());
 
-        if (oPDBills != null)
-        {
-            var oPDBillServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(0));
-            report.RegBusinessObject("OPDBillServices", oPDBillServices);
-        }
+        //if (oPDBills != null)
+        //{
+        //    var oPDBillServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(0));
+        //    report.RegBusinessObject("OPDBillServices", oPDBillServices);
+        //}
 
-        var hospital = await mediator.Send(new GetHospitalInformationByIdQuery(1));
-        report.RegBusinessObject("HospitalInformation", hospital);
+        //var hospital = await mediator.Send(new GetHospitalInformationByIdQuery(1));
+        //report.RegBusinessObject("HospitalInformation", hospital);
 
-        var patients = await mediator.Send(new GetAllPatientsQuery());
-        report.RegBusinessObject("Patient", patients.FirstOrDefault());
+        //var patients = await mediator.Send(new GetAllPatientsQuery());
+        //report.RegBusinessObject("Patient", patients.FirstOrDefault());
 
-        report.Dictionary.Synchronize();
+        //report.Dictionary.Synchronize();
 
-        report.Render();
+        //report.Render();
 
-        base.OnInitialized();
+        //base.OnInitialized();
 
     }
 

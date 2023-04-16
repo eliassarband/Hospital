@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Hospital.Domain.Core.Repositories.Queries
 {
-    public interface IReportTemplateQueryRepository : IQueryRepository<ReportTemplate>
+    public interface IOPDBillPaymentQueryRepository : IQueryRepository<OPDBillPayment>
     {
         //Custom operation which is not generic
-        Task<IReadOnlyList<ReportTemplate>> GetAllAsync();
-        Task<ReportTemplate> GetByIdAsync(int id);
-        Task<IReadOnlyList<ReportTemplate>> GetByCodeAsync(string code);
+        Task<IReadOnlyList<OPDBillPayment>> GetAllAsync();
+        Task<IReadOnlyList<OPDBillPayment>> GetByOPDBillIdAsync(int OPDBillId);
+        Task<OPDBillPayment> GetByIdAsync(int id);
     }
 }

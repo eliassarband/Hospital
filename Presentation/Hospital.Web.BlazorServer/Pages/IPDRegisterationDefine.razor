@@ -6,6 +6,8 @@
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Domain.Core.Helpers;
+@using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth
 @using MediatR
 @using System.ComponentModel.DataAnnotations
@@ -56,10 +58,12 @@
                                                                         TextField="@nameof(PatientViewModel.Name)"
                                                                         ValueField="@nameof(PatientViewModel.Id)"
                                                                         Filterable="true"
-                                                                        @bind-Value="@iPDRegisteration.PatientId"
+                                                                        Value="@iPDRegisteration.PatientId"
+                                                                        ValueExpression="@( () => iPDRegisteration.PatientId )"
                                                                         Id="patient"
                                                                         ListHeight="250px"
-                                                                        Placeholder="Hint: You can filter by the Patient Name">
+                                                                        Placeholder="Hint: You can filter by the Patient Name"
+                                                                        ValueChanged="@( (int c) => PatientChanged(c) )">
                                                 <MultiColumnComboBoxColumns>
                                                     <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.Name)" Title="Name" Width="200px" />
                                                     <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.NationalIdCart)" Title="National ID" Width="150px" />
@@ -79,6 +83,68 @@
 
                             
                                 </MudItem>
+                                @if (iPDRegisteration.PatientId > 0)
+                                {
+                                    <MudItem md="12">
+                                        <MudExpansionPanels>
+                                            <MudExpansionPanel Text="@String.Format("{0} {1} Information ",patient.NamePrefixName, patient.Name)">
+                                                <MudGrid Spacing="1" Class="m-2">
+                                                    <MudItem md="4">
+                                                        <MudText>Patient Id : @UtilityHelper.GenerateIdentifier(patientIdPrefix.Value,patient.Id)</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>National Card Id : @patient.NationalIdCart</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Father : @patient.FatherName</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Date of Birth : @Convert.ToDateTime(patient.DateOfBirth??DateTime.Now).ToLongDateString()</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Age : @DateHelper.CalculateAgeDescription(patient.DateOfBirth ?? DateTime.Now)</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Gender : @patient.GenderName</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Reffer By : @patient.RefferByName</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Occupation : @patient.Occupation</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Insurance : @patient.InsuranceName</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Insurance Number : @patient.InsuranceNumber</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Proposal Number : @patient.ProposalNumber</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Phone No : @patient.Phone</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Mobile No : @patient.Mobile</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Email Address : @patient.Email</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>City : @patient.CityName</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="4">
+                                                        <MudText>Area : @patient.AreaName</MudText>
+                                                    </MudItem>
+                                                    <MudItem md="8">
+                                                        <MudText>Address : @patient.Address</MudText>
+                                                    </MudItem>
+                                                </MudGrid>
+                                            </MudExpansionPanel>
+                                        </MudExpansionPanels>
+                                    </MudItem>
+                                }
                                 <MudItem md="6">
                                     <TelerikFloatingLabel Text="Reffer By" Class="custom-label w-100">
                                         <div class="k-form-field-wrap">
@@ -536,7 +602,13 @@
                     
                 </FormItems>
                 <FormButtons>
+
                     <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveIPDRegisteration">Save</MudButton>
+
+                    <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveAndPrintIPDRegisteration">Save/Print</MudButton>
+
+                    <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Print" Disabled="@(iPDRegisteration.Id==0)" OnClick="Print">Print</MudButton>
+
                     <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="IPDRegisterations">Return</MudButton>
                 </FormButtons>
             </TelerikForm>
@@ -581,6 +653,17 @@
     </WindowContent>
 </TelerikWindow>
 
+<TelerikWindow Class="demo-window" Width="40vw" Height="70vh" Centered="true" @bind-Visible=@selectReportTemplate Modal="true">
+    <WindowTitle>
+        <strong>Select Report Template</strong>
+    </WindowTitle>
+    <WindowActions>
+        <WindowAction Name="Close" />
+    </WindowActions>
+    <WindowContent>
+        <ReportTemplatesSelect Id="@iPDRegisteration.Id" ReportCode="IPD"></ReportTemplatesSelect>
+    </WindowContent>
+</TelerikWindow>
 
 @code {
     [Parameter]
@@ -591,6 +674,7 @@
     public int ActiveTabIndex { get; set; } = 0;
     private string caption = "Add IPD Registeration";
     private IPDRegisterationViewModel iPDRegisteration = new IPDRegisterationViewModel();
+    private PatientViewModel patient = new PatientViewModel();
     private List<PatientViewModel> patients;
     private List<RefferByViewModel> refferBies;
     private List<BasicInformationViewModel> paymentTypes;
@@ -605,6 +689,7 @@
     private List<IPDRegisterationServiceViewModel> iPDRegisterationServices = new List<IPDRegisterationServiceViewModel>();
     private List<IPDRegisterationRoomViewModel> iPDRegisterationRooms = new List<IPDRegisterationRoomViewModel>();
     private List<IPDRegisterationPaymentViewModel> iPDRegisterationPayments = new List<IPDRegisterationPaymentViewModel>();
+    private SettingViewModel patientIdPrefix;
 
     private bool success;
     TelerikForm form;
@@ -612,10 +697,11 @@
     private bool addPatientWindowState = false;
     private bool searchPatientWindowState = false;
     private bool searchOPDPatientWindowState = false;
-
+    private bool selectReportTemplate = false;
 
     protected override async Task OnInitializedAsync()
     {
+        patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
         patients = await mediator.Send(new GetAllPatientsQuery());
         refferBies = await mediator.Send(new GetAllRefferBiesQuery());
         services = await mediator.Send(new GetAllServicesQuery());
@@ -635,9 +721,11 @@
             caption = "Edit IPD Registeration";
 
             iPDRegisteration = await mediator.Send(new GetIPDRegisterationByIdQuery(Convert.ToInt32(Id)));
+            
 
             if (iPDRegisteration != null)
             {
+                patient = await mediator.Send(new GetPatientByIdQuery(iPDRegisteration.PatientId));
 
                 iPDRegisterationRooms = await mediator.Send(new GetIPDRegisterationRoomsByIPDRegisterationIdQuery(iPDRegisteration.Id));
                 iPDRegisterationServices = await mediator.Send(new GetIPDRegisterationServicesByIPDRegisterationIdQuery(iPDRegisteration.Id));
@@ -815,25 +903,15 @@
 
     private async void CalculateAmount()
     {
-        var total = iPDRegisterationServices.Sum(b => b.Rate * b.Quantity);
-        var payable = iPDRegisterationServices.Sum(b => b.Amount);
+        var serviceTotal = iPDRegisterationServices.Sum(b => b.Rate * b.Quantity);
+        var servicePayable = iPDRegisterationServices.Sum(b => b.Amount);
 
-        iPDRegisteration.TotalAmount = total;
-        iPDRegisteration.PayableAmount = payable;
-        totalDiscount = total - payable;
-    }
+        var roomTotal = iPDRegisterationRooms.Sum(b => b.Rate * b.Days);
+        var roomPayable = iPDRegisterationRooms.Sum(b => b.Amount);
 
-    protected async Task Print()
-    {
-        if (iPDRegisteration.Id > 0)
-        {
-
-            if (iPDRegisteration.Id > 0)
-            {
-                navManager.NavigateTo("/ReportShow/IPDRegisteration/" + iPDRegisteration.Id.ToString());
-            }
-        }
-
+        iPDRegisteration.TotalAmount = serviceTotal + roomTotal;
+        iPDRegisteration.PayableAmount = servicePayable + roomPayable;
+        totalDiscount = (serviceTotal + roomTotal) - (servicePayable + roomPayable);
     }
 
     protected async Task NewPatient()
@@ -848,6 +926,8 @@
         patients = await mediator.Send(new GetAllPatientsQuery());
         iPDRegisteration.PatientId = PatientId;
 
+        patient = await mediator.Send(new GetPatientByIdQuery(iPDRegisteration.PatientId));
+
         addPatientWindowState = false;
     }
 
@@ -861,20 +941,36 @@
     {
         iPDRegisteration.PatientId = PatientId;
 
+        patient = await mediator.Send(new GetPatientByIdQuery(iPDRegisteration.PatientId));
+
         searchPatientWindowState = false;
     }
 
     protected async Task SearchOPDPatient()
     {
         searchOPDPatientWindowState = true;
-        
+
     }
 
-    protected async Task OPDPatientSelected(int PatientId)
+    protected async Task OPDPatientSelected(int OPDBillId)
     {
-        iPDRegisteration.PatientId = PatientId;
+        var oPDBill = await mediator.Send(new GetOPDBillByIdQuery(OPDBillId));
+
+        if (oPDBill != null)
+        {
+            iPDRegisteration.OPDBillId = oPDBill.Id;
+            iPDRegisteration.PatientId = oPDBill.PatientId;
+
+            patient = await mediator.Send(new GetPatientByIdQuery(iPDRegisteration.PatientId));
+        }
 
         searchOPDPatientWindowState = false;
+    }
+
+    protected async Task PatientChanged(int PatientId)
+    {
+        iPDRegisteration.PatientId = PatientId;
+        patient = await mediator.Send(new GetPatientByIdQuery(iPDRegisteration.PatientId));
     }
 
     //protected async Task DateOfBirthChange()
@@ -905,8 +1001,12 @@
         if (form.IsValid())
         {
 
-            CommandResponse result;
-
+            CommandResponse result = new CommandResponse()
+                {
+                    Id = iPDRegisteration.Id,
+                    ResultType = ResultType.None,
+                    ResultMessage = ""
+                };
 
             if (iPDRegisteration.Id > 0)
             {
@@ -923,54 +1023,15 @@
                         {
                             Snackbar.Add(result.ResultMessage, Severity.Success);
 
-                            var billServices = await mediator.Send(new GetIPDRegisterationServicesByIPDRegisterationIdQuery(result.Id));
-
-                            foreach (var service in iPDRegisterationServices)
-                            {
-                                service.IPDRegisterationId = result.Id;
-                                if (billServices.Exists(b => b.ServiceId == service.Id))
-                                {
-
-
-                                    var editCommand = MapperConfig.Mapper.Map<EditIPDRegisterationServiceCommand>(service);
-
-                                    await mediator.Send(editCommand);
-                                }
-                                else
-                                {
-                                    var addCommand = MapperConfig.Mapper.Map<CreateIPDRegisterationServiceCommand>(service);
-
-                                    await mediator.Send(addCommand);
-                                }
-                            }
-
-                            foreach (var billService in billServices)
-                            {
-                                if (!iPDRegisterationServices.Exists(b => b.ServiceId == billService.ServiceId))
-                                {
-                                    await mediator.Send(new DeleteIPDRegisterationServiceCommand(billService.Id));
-                                }
-
-                            }
-
                             iPDRegisteration.Id = result.Id;
 
-                            bool? dialogResult = await DialogService.ShowMessageBox(
-                                "Print",
-                                "Do you want to Print؟",
-                                yesText: "Yes", cancelText: "No");
+                            SaveServices();
 
-                            if (dialogResult == true)
-                            {
-                                if (result.Id > 0)
-                                {
-                                    Print();
-                                }
-                            }
-                            else if (Id > 0)
-                            {
-                                navManager.NavigateTo("IPDRegisterations");
-                            }
+                            SaveRooms();
+
+                            SavePayments();
+
+
                         }
                         else if (result.ResultType == ResultType.Warning)
                         {
@@ -1004,51 +1065,16 @@
                     if (result.ResultType == ResultType.Success)
                     {
                         Snackbar.Add(result.ResultMessage, Severity.Success);
-                        var billServices = await mediator.Send(new GetIPDRegisterationServicesByIPDRegisterationIdQuery(result.Id));
-
-                        foreach (var service in iPDRegisterationServices)
-                        {
-                            service.IPDRegisterationId = result.Id;
-
-                            if (billServices.Exists(b => b.ServiceId == service.Id))
-                            {
-                                var editCommand = MapperConfig.Mapper.Map<EditIPDRegisterationServiceCommand>(service);
-
-                                await mediator.Send(editCommand);
-                            }
-                            else
-                            {
-                                var addCommand = MapperConfig.Mapper.Map<CreateIPDRegisterationServiceCommand>(service);
-
-                                await mediator.Send(addCommand);
-                            }
-                        }
-
-                        foreach (var billService in billServices)
-                        {
-                            if (!iPDRegisterationServices.Exists(b => b.ServiceId == billService.ServiceId))
-                            {
-                                await mediator.Send(new DeleteIPDRegisterationServiceCommand(billService.Id));
-                            }
-
-                        }
 
                         iPDRegisteration.Id = result.Id;
 
-                        bool? dialogResult = await DialogService.ShowMessageBox(
-                            "Print",
-                            "Do you want to Print؟",
-                            yesText: "Yes", cancelText: "No");
+                        SaveServices();
 
-                        if (dialogResult == true)
-                        {
-                            if (result.Id > 0)
-                            {
-                                Print();
-                            }
-                        }
-                        else if (Id > 0)
-                            navManager.NavigateTo("IPDRegisterations");
+                        SaveRooms();
+
+                        SavePayments();
+
+
                     }
                     else if (result.ResultType == ResultType.Warning)
                     {
@@ -1064,9 +1090,224 @@
                     Snackbar.Add(exp.Message, Severity.Error);
                 }
             }
+
+            if (result.ResultType == ResultType.Success)
+            {
+                navManager.NavigateTo("IPDRegisterations");
+            }
         }
 
     }
 
+    protected async Task SaveAndPrintIPDRegisteration()
+    {
+
+        if (form.IsValid())
+        {
+
+            CommandResponse result = new CommandResponse()
+                {
+                    Id = iPDRegisteration.Id,
+                    ResultType = ResultType.None,
+                    ResultMessage = ""
+                };
+
+            if (iPDRegisteration.Id > 0)
+            {
+                try
+                {
+                    iPDRegisteration.ModifiedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<EditIPDRegisterationCommand>(iPDRegisteration);
+
+                    if (command.Id > 0)
+                    {
+                        result = await mediator.Send(command);
+
+                        if (result.ResultType == ResultType.Success)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                            iPDRegisteration.Id = result.Id;
+
+                            SaveServices();
+
+                            SaveRooms();
+
+                            SavePayments();
+
+
+                        }
+                        else if (result.ResultType == ResultType.Warning)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Warning);
+                        }
+                        else if (result.ResultType == ResultType.Error)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Error);
+                        }
+
+                    }
+                    else
+                    {
+                        Snackbar.Add("Error in selected IPDRegisteration", Severity.Warning);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+            else
+            {
+                try
+                {
+                    iPDRegisteration.CreatedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<CreateIPDRegisterationCommand>(iPDRegisteration);
+
+                    result = await mediator.Send(command);
+
+                    if (result.ResultType == ResultType.Success)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                        iPDRegisteration.Id = result.Id;
+
+                        SaveServices();
+
+                        SaveRooms();
+
+                        SavePayments();
+
+
+                    }
+                    else if (result.ResultType == ResultType.Warning)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Warning);
+                    }
+                    else if (result.ResultType == ResultType.Error)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Error);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+
+            if (result.ResultType == ResultType.Success)
+            {
+                Print();
+            }
+        }
+
+    }
+
+    protected async Task SaveRooms()
+    {
+        var billRooms = await mediator.Send(new GetIPDRegisterationRoomsByIPDRegisterationIdQuery(iPDRegisteration.Id));
+
+        foreach (var room in iPDRegisterationRooms)
+        {
+            room.IPDRegisterationId = iPDRegisteration.Id;
+            if (billRooms.Exists(b => b.BedId == room.BedId))
+            {
+
+
+                var editCommand = MapperConfig.Mapper.Map<EditIPDRegisterationRoomCommand>(room);
+
+                await mediator.Send(editCommand);
+            }
+            else
+            {
+                var addCommand = MapperConfig.Mapper.Map<CreateIPDRegisterationRoomCommand>(room);
+
+                await mediator.Send(addCommand);
+            }
+        }
+
+        foreach (var billRoom in billRooms)
+        {
+            if (!iPDRegisterationRooms.Exists(b => b.BedId == billRoom.BedId))
+            {
+                await mediator.Send(new DeleteIPDRegisterationRoomCommand(billRoom.Id));
+            }
+
+        }
+    }
+
+    protected async Task SaveServices()
+    {
+        var billServices = await mediator.Send(new GetIPDRegisterationServicesByIPDRegisterationIdQuery(iPDRegisteration.Id));
+
+        foreach (var service in iPDRegisterationServices)
+        {
+            service.IPDRegisterationId = iPDRegisteration.Id;
+            if (billServices.Exists(b => b.ServiceId == service.ServiceId))
+            {
+
+
+                var editCommand = MapperConfig.Mapper.Map<EditIPDRegisterationServiceCommand>(service);
+
+                await mediator.Send(editCommand);
+            }
+            else
+            {
+                var addCommand = MapperConfig.Mapper.Map<CreateIPDRegisterationServiceCommand>(service);
+
+                await mediator.Send(addCommand);
+            }
+        }
+
+        foreach (var billService in billServices)
+        {
+            if (!iPDRegisterationServices.Exists(b => b.ServiceId == billService.ServiceId))
+            {
+                await mediator.Send(new DeleteIPDRegisterationServiceCommand(billService.Id));
+            }
+
+        }
+
+    }
+
+    protected async Task SavePayments()
+    {
+        var billPayments = await mediator.Send(new GetIPDRegisterationPaymentsByIPDRegisterationIdQuery(iPDRegisteration.Id));
+
+        foreach (var payment in iPDRegisterationPayments)
+        {
+            payment.IPDRegisterationId = iPDRegisteration.Id;
+            if (billPayments.Exists(b => b.Date == payment.Date))
+            {
+
+
+                var editCommand = MapperConfig.Mapper.Map<EditIPDRegisterationPaymentCommand>(payment);
+
+                await mediator.Send(editCommand);
+            }
+            else
+            {
+                var addCommand = MapperConfig.Mapper.Map<CreateIPDRegisterationPaymentCommand>(payment);
+
+                await mediator.Send(addCommand);
+            }
+        }
+
+        foreach (var billPayment in billPayments)
+        {
+            if (!iPDRegisterationPayments.Exists(b => b.Date == billPayment.Date))
+            {
+                await mediator.Send(new DeleteIPDRegisterationPaymentCommand(billPayment.Id));
+            }
+
+        }
+
+    }
+
+    protected async Task Print()
+    {
+        selectReportTemplate = true;
+
+    }
 }
 

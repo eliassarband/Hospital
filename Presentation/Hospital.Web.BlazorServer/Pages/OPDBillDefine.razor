@@ -6,6 +6,7 @@
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Domain.Core.Helpers;
 @using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth
 @using Hospital.Web.BlazorServer.Models;
@@ -78,10 +79,13 @@
                                                                 TextField="@nameof(PatientViewModel.Name)"
                                                                 ValueField="@nameof(PatientViewModel.Id)"
                                                                 Filterable="true"
-                                                                @bind-Value="@oPDBill.PatientId"
+                                                                Value="@oPDBill.PatientId"
+                                                                ValueExpression="@( () => oPDBill.PatientId )"
                                                                 Id="patient"
                                                                 ListHeight="250px"
-                                                                Placeholder="Hint: You can filter by the Patient Name">
+                                                                Placeholder="Hint: You can filter by the Patient Name"
+                                                                ValueChanged="@( (int c) => PatientChanged(c) )"
+                                                                >
                                         <MultiColumnComboBoxColumns>
                                             <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.Name)" Title="Name" Width="200px" />
                                             <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.NationalIdCart)" Title="National ID" Width="150px" />
@@ -101,7 +105,68 @@
 
                             
                         </MudItem>
-                        
+                        @if(oPDBill.PatientId>0)
+                        {
+                             <MudItem md="12">
+                                 <MudExpansionPanels>
+                                    <MudExpansionPanel Text="@String.Format("{0} {1} Information ",patient.NamePrefixName, patient.Name)">
+                                        <MudGrid Spacing="1" Class="m-2">
+                                            <MudItem md="4">
+                                                <MudText>Patient Id : @UtilityHelper.GenerateIdentifier(patientIdPrefix.Value,patient.Id)</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>National Card Id : @patient.NationalIdCart</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Father : @patient.FatherName</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Date of Birth : @Convert.ToDateTime(patient.DateOfBirth??DateTime.Now).ToLongDateString()</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Age : @DateHelper.CalculateAgeDescription(patient.DateOfBirth ?? DateTime.Now)</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Gender : @patient.GenderName</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Reffer By : @patient.RefferByName</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Occupation : @patient.Occupation</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Insurance : @patient.InsuranceName</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Insurance Number : @patient.InsuranceNumber</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Proposal Number : @patient.ProposalNumber</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Phone No : @patient.Phone</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Mobile No : @patient.Mobile</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Email Address : @patient.Email</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>City : @patient.CityName</MudText>
+                                            </MudItem>
+                                            <MudItem md="4">
+                                                <MudText>Area : @patient.AreaName</MudText>
+                                            </MudItem>
+                                            <MudItem md="8">
+                                                <MudText>Address : @patient.Address</MudText>
+                                            </MudItem>
+                                        </MudGrid>
+                                    </MudExpansionPanel>
+                                </MudExpansionPanels>
+                             </MudItem>
+                        }
                         <MudItem md="12">
                             <TelerikGrid Data=@oPDBillServices EditMode="@GridEditMode.Inline"
                                             Height="300px" Pageable="true" PageSize="5"
@@ -160,7 +225,18 @@
                                         </EditorTemplate>
                                     </GridColumn>
                                     <GridColumn Field=@nameof(OPDBillServiceViewModel.Rate) Title="Rate" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat" />
-                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.Discount) Title="Dis" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat" />
+                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.Discount) Title="Dis" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat">
+                                        <EditorTemplate>
+                                            @{
+                                                var ServiceToEdit = context as OPDBillServiceViewModel;
+                                                <TelerikNumericTextBox Placeholder="Discount"
+                                                                       @bind-Value="@ServiceToEdit.Discount"
+                                                                   Format="@currencySetting.CurrencyTextBoxFormat"
+                                                                   Decimals="0"></TelerikNumericTextBox>
+                                                <TelerikValidationMessage For="@(() => ServiceToEdit.Discount)" />
+                                            }
+                                        </EditorTemplate>
+                                    </GridColumn>
                                     <GridColumn Field=@nameof(OPDBillServiceViewModel.StaffName) Title="Staff Name" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
                                         <EditorTemplate>
                                             @{
@@ -190,13 +266,15 @@
                         <MudItem md="6">
                             <TelerikFloatingLabel Text="Payment Type" Class="custom-label w-100">
                                 <div class="k-form-field-wrap">
-                                    <TelerikComboBox @bind-Value="@oPDBill.PaymentTypeId"
+                                    <TelerikComboBox Value="@oPDBill.PaymentTypeId"
+                                                     ValueExpression="@( () => oPDBill.PaymentTypeId )"
                                                      Data="@paymentTypes"
                                                      Placeholder="Select Payment Type"
                                                      TextField="@nameof(BasicInformationViewModel.Name)"
                                                      ValueField="@nameof(BasicInformationViewModel.Id)"
                                                      Filterable="true"
-                                                     Id="paymentType">
+                                                     Id="paymentType"
+                                                     ValueChanged="@( (int p) => PaymentTypeChanged(p) )">
                                     </TelerikComboBox>
                                 </div>
                             </TelerikFloatingLabel>
@@ -233,6 +311,30 @@
                                 </div>
                             </TelerikFloatingLabel>
                         </MudItem>
+                        @if (oPDBill.PaymentTypeStrCode == "Credit")
+                        {
+                            <MudItem md="6">
+                                <TelerikFloatingLabel Text="Paid Amount" Class="custom-label w-100">
+                                    <div class="k-form-field-wrap">
+                                        <TelerikNumericTextBox Placeholder="Paid Amount"
+                                                               @bind-Value="@oPDBill.PaidAmount"
+                                                               Format="@currencySetting.CurrencyTextBoxFormat"
+                                                               Decimals="0"></TelerikNumericTextBox>
+                                    </div>
+                                </TelerikFloatingLabel>
+                            </MudItem>
+                            <MudItem md="6">
+                                <TelerikFloatingLabel Text="Debt Amount" Class="custom-label w-100">
+                                    <div class="k-form-field-wrap">
+                                        <TelerikNumericTextBox Placeholder="Debt Amount"
+                                                           @bind-Value="@oPDBill.DebtAmount"
+                                                           Format="@currencySetting.CurrencyTextBoxFormat"
+                                                           Decimals="0"
+                                                           Enabled="false"></TelerikNumericTextBox>
+                                    </div>
+                                </TelerikFloatingLabel>
+                            </MudItem>
+                        }
                         <MudItem md="12" Class="mb-2">
                             <TelerikFloatingLabel Text="Description" Class="custom-label w-100">
                                 <div class="k-form-field-wrap">
@@ -246,6 +348,11 @@
                 </FormItems>
                 <FormButtons>
                     <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveOPDBill">Save</MudButton>
+
+                    <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveAndPrintOPDBill">Save/Print</MudButton>
+
+                    <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Print" Disabled="@(oPDBill.Id==0)" OnClick="Print">Print</MudButton>
+
                     <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="OPDBills">Return</MudButton>
                 </FormButtons>
             </TelerikForm>
@@ -278,6 +385,17 @@
     </WindowContent>
 </TelerikWindow>
 
+<TelerikWindow Class="demo-window" Width="40vw" Height="70vh" Centered="true" @bind-Visible=@selectReportTemplate Modal="true">
+    <WindowTitle>
+        <strong>Select Report Template</strong>
+    </WindowTitle>
+    <WindowActions>
+        <WindowAction Name="Close" />
+    </WindowActions>
+    <WindowContent>
+        <ReportTemplatesSelect Id="@oPDBill.Id" ReportCode="OPD"></ReportTemplatesSelect>
+    </WindowContent>
+</TelerikWindow>
 
 @code {
     [Parameter]
@@ -289,6 +407,7 @@
 
     private string caption = "Add OPD Bill";
     private OPDBillViewModel oPDBill = new OPDBillViewModel();
+    private PatientViewModel patient = new PatientViewModel();
     private List<PatientViewModel> patients;
     private List<BasicInformationViewModel> paymentTypes;
     private List<ServiceViewModel> services;
@@ -302,13 +421,14 @@
     private int totalDiscount = 0;
     private bool addPatientWindowState = false;
     private bool searchPatientWindowState = false;
-    
+    private bool selectReportTemplate = false;
+
 
 
 
     protected override async Task OnInitializedAsync()
     {
-        
+
         patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
         receiptNoPrefix = await mediator.Send(new GetSettingByKeyQuery("OPDReceiptNoPrefix"));
         patients = await mediator.Send(new GetAllPatientsQuery());
@@ -328,6 +448,9 @@
             {
 
                 oPDBillServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(oPDBill.Id));
+                patient = await mediator.Send(new GetPatientByIdQuery(oPDBill.PatientId));
+
+                PaymentTypeChanged(oPDBill.PaymentTypeId);
 
                 foreach (var billService in oPDBillServices)
                 {
@@ -357,7 +480,7 @@
 
 
                     CalculateAmount();
-                
+
                 }
             }
         }
@@ -394,12 +517,21 @@
             billService.ServiceCode = service.Code;
             billService.ServiceName=service.Name;
             billService.Rate = service.OPDRate;
-            if (service.DiscountAmount > 0)
-                billService.Discount = service.DiscountAmount;
-
-            if (service.DiscountPercentage > 0)
-                billService.Discount = (service.OPDRate * service.DiscountPercentage) / 100;
-
+            if(billService.Discount>0)
+            {
+                billService.Discount = billService.Discount;
+            }
+            else
+            {
+                if (service.DiscountAmount > 0)
+                {
+                    billService.Discount = service.DiscountAmount;
+                }
+            
+                if (service.DiscountPercentage > 0)
+                    billService.Discount = (service.OPDRate * service.DiscountPercentage) / 100;
+            }
+            
             billService.Amount = billService.Quantity * (billService.Rate - billService.Discount);
         }
 
@@ -440,18 +572,7 @@
         totalDiscount = total - payable;
     }
 
-    protected async Task Print()
-    {
-        if (oPDBill.Id > 0)
-        {
 
-            if (oPDBill.Id > 0)
-            {
-                navManager.NavigateTo("/ReportShow/OPDBill/" + oPDBill.Id.ToString());
-            }
-        }
-
-    }
 
     protected async Task NewPatient()
     {
@@ -464,6 +585,8 @@
     {
         patients = await mediator.Send(new GetAllPatientsQuery());
         oPDBill.PatientId = PatientId;
+
+        patient = await mediator.Send(new GetPatientByIdQuery(oPDBill.PatientId));
 
         addPatientWindowState = false;
     }
@@ -478,7 +601,33 @@
     {
         oPDBill.PatientId = PatientId;
 
+        patient = await mediator.Send(new GetPatientByIdQuery(oPDBill.PatientId));
+
         searchPatientWindowState = false;
+    }
+
+    protected async Task PatientChanged(int PatientId)
+    {
+        oPDBill.PatientId = PatientId;
+        patient = await mediator.Send(new GetPatientByIdQuery(oPDBill.PatientId));
+    }
+
+    protected async Task PaymentTypeChanged(int PaymentTypeId)
+    {
+        oPDBill.PaymentTypeId = PaymentTypeId;
+        var paymentType = await mediator.Send(new GetBasicInformationByIdQuery(PaymentTypeId));
+        oPDBill.PaymentTypeStrCode = paymentType.StrCode;
+
+        if (oPDBill.PaymentTypeStrCode=="Cash")
+        {
+            oPDBill.PaidAmount=oPDBill.PayableAmount;
+            oPDBill.DebtAmount = 0;
+        }
+        else
+        {
+            oPDBill.PaidAmount = 0;
+            oPDBill.DebtAmount = oPDBill.PayableAmount-(oPDBill.PaidAmount??0 + oPDBill.OPDBillPayments.Sum(p => p.Amount));
+        }
     }
 
     //protected async Task DateOfBirthChange()
@@ -509,7 +658,12 @@
         if (form.IsValid())
         {
 
-            CommandResponse result;
+            CommandResponse result=new CommandResponse()
+            {
+                Id=oPDBill.Id,
+                ResultType=ResultType.None,
+                ResultMessage=""
+            };
 
 
             if (oPDBill.Id > 0)
@@ -527,54 +681,13 @@
                         {
                             Snackbar.Add(result.ResultMessage, Severity.Success);
 
-                            var billServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(result.Id));
-
-                            foreach (var service in oPDBillServices)
-                            {
-                                service.OPDBillId = result.Id;
-                                if (billServices.Exists(b => b.ServiceId == service.Id))
-                                {
-                                    
-
-                                    var editCommand = MapperConfig.Mapper.Map<EditOPDBillServiceCommand>(service);
-
-                                    await mediator.Send(editCommand);
-                                }
-                                else
-                                {
-                                    var addCommand = MapperConfig.Mapper.Map<CreateOPDBillServiceCommand>(service);
-
-                                    await mediator.Send(addCommand);
-                                }
-                            }
-
-                            foreach (var billService in billServices)
-                            {
-                                if(!oPDBillServices.Exists(b => b.ServiceId==billService.ServiceId))
-                                {
-                                    await mediator.Send(new DeleteOPDBillServiceCommand(billService.Id));
-                                }
-
-                            }
-
                             oPDBill.Id = result.Id;
 
-                            bool? dialogResult = await DialogService.ShowMessageBox(
-                                "Print",
-                                "Do you want to Print؟",
-                                yesText: "Yes", cancelText: "No");
+                            SaveServices();
 
-                            if (dialogResult == true)
-                            {
-                                if (result.Id > 0)
-                                {
-                                    Print();
-                                }
-                            }
-                            else if(Id>0)
-                            {
-                                navManager.NavigateTo("OPDBills");
-                            }
+
+
+
                         }
                         else if (result.ResultType == ResultType.Warning)
                         {
@@ -608,51 +721,11 @@
                     if (result.ResultType == ResultType.Success)
                     {
                         Snackbar.Add(result.ResultMessage, Severity.Success);
-                        var billServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(result.Id));
-
-                        foreach (var service in oPDBillServices)
-                        {
-                            service.OPDBillId = result.Id;
-
-                            if (billServices.Exists(b => b.ServiceId == service.Id))
-                            {
-                                var editCommand = MapperConfig.Mapper.Map<EditOPDBillServiceCommand>(service);
-
-                                await mediator.Send(editCommand);
-                            }
-                            else
-                            {
-                                var addCommand = MapperConfig.Mapper.Map<CreateOPDBillServiceCommand>(service);
-
-                                await mediator.Send(addCommand);
-                            }
-                        }
-
-                        foreach (var billService in billServices)
-                        {
-                            if (!oPDBillServices.Exists(b => b.ServiceId == billService.ServiceId))
-                            {
-                                await mediator.Send(new DeleteOPDBillServiceCommand(billService.Id));
-                            }
-
-                        }
 
                         oPDBill.Id = result.Id;
 
-                        bool? dialogResult = await DialogService.ShowMessageBox(
-                            "Print",
-                            "Do you want to Print؟",
-                            yesText: "Yes", cancelText: "No");
+                        SaveServices();
 
-                        if (dialogResult == true)
-                        {
-                            if (result.Id > 0)
-                            {
-                                Print();
-                            }
-                        }
-                        else if (Id > 0)
-                            navManager.NavigateTo("OPDBills");
                     }
                     else if (result.ResultType == ResultType.Warning)
                     {
@@ -668,9 +741,151 @@
                     Snackbar.Add(exp.Message, Severity.Error);
                 }
             }
+
+            if (result.ResultType == ResultType.Success)
+            {
+                navManager.NavigateTo("OPDBills");
+            }
         }
 
     }
 
+    protected async Task SaveAndPrintOPDBill()
+    {
+        if (form.IsValid())
+        {
+
+            CommandResponse result = new CommandResponse()
+                {
+                    Id = oPDBill.Id,
+                    ResultType = ResultType.None,
+                    ResultMessage = ""
+                };
+
+
+            if (oPDBill.Id > 0)
+            {
+                try
+                {
+                    oPDBill.ModifiedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<EditOPDBillCommand>(oPDBill);
+
+                    if (command.Id > 0)
+                    {
+                        result = await mediator.Send(command);
+
+                        if (result.ResultType == ResultType.Success)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                            oPDBill.Id = result.Id;
+
+                            SaveServices();
+
+
+
+
+                        }
+                        else if (result.ResultType == ResultType.Warning)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Warning);
+                        }
+                        else if (result.ResultType == ResultType.Error)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Error);
+                        }
+
+                    }
+                    else
+                    {
+                        Snackbar.Add("Error in selected OPDBill", Severity.Warning);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+            else
+            {
+                try
+                {
+                    oPDBill.CreatedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<CreateOPDBillCommand>(oPDBill);
+
+                    result = await mediator.Send(command);
+
+                    if (result.ResultType == ResultType.Success)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                        oPDBill.Id = result.Id;
+
+                        SaveServices();
+
+                    }
+                    else if (result.ResultType == ResultType.Warning)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Warning);
+                    }
+                    else if (result.ResultType == ResultType.Error)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Error);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+
+            if (result.ResultType == ResultType.Success)
+            {
+                Print();
+            }
+        }
+    }
+
+    protected async Task SaveServices()
+    {
+        var billServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(oPDBill.Id));
+
+        foreach (var service in oPDBillServices)
+        {
+            service.OPDBillId = oPDBill.Id;
+            if (billServices.Exists(b => b.ServiceId == service.Id))
+            {
+
+
+                var editCommand = MapperConfig.Mapper.Map<EditOPDBillServiceCommand>(service);
+
+                await mediator.Send(editCommand);
+            }
+            else
+            {
+                var addCommand = MapperConfig.Mapper.Map<CreateOPDBillServiceCommand>(service);
+
+                await mediator.Send(addCommand);
+            }
+        }
+
+        foreach (var billService in billServices)
+        {
+            if (!oPDBillServices.Exists(b => b.ServiceId == billService.ServiceId))
+            {
+                await mediator.Send(new DeleteOPDBillServiceCommand(billService.Id));
+            }
+
+        }
+
+
+    }
+
+    protected async Task Print()
+    {
+        selectReportTemplate = true;
+
+    }
+    
 }
 

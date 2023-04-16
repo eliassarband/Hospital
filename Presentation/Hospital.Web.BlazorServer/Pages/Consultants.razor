@@ -1,4 +1,4 @@
-﻿@page "/Staffs"
+﻿@page "/Consultants"
 @using Hospital.Application.Commands
 @using Hospital.Application.Queries
 @using Hospital.Application.Responses
@@ -15,9 +15,9 @@
     <MudItem md="12">
         <MudPaper Class="mt-2" Elevation="10">
             <MudCard Class="pl-2 pr-2 mt-2">
-                <MudCardHeader>Staffs</MudCardHeader>
+                <MudCardHeader>Consultant Masters</MudCardHeader>
                 <MudCardActions>
-                    <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("StaffDefine/0")>Add Staff</MudButton>
+                    <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("ConsultantDefine/0")>Add Consultant</MudButton>
                 </MudCardActions>
                 <MudCardContent>
                     <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<StaffViewModel,bool>(FilterStaffInit)">
@@ -26,7 +26,7 @@
                             <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Clearable></MudTextField>
                         </ToolBarContent>
                         <HeaderContent>
-                            <MudTh>Staff Type</MudTh>
+                            <MudTh>Consultant Type</MudTh>
                             <MudTh>Code</MudTh>
                             <MudTh>Name</MudTh>
                             <MudTh>Date Of Joining</MudTh>
@@ -39,7 +39,7 @@
                             <MudTh>Delete</MudTh>
                         </HeaderContent>
                         <RowTemplate>
-                            <MudTd DataLabel="StaffTypeName">@context.StaffTypeName</MudTd>
+                            <MudTd DataLabel="ConsultantTypeName">@context.StaffTypeName</MudTd>
                             <MudTd DataLabel="Code">@context.Code</MudTd>
                             <MudTd DataLabel="Name">@context.NamePrefixName @context.Name</MudTd>
                             <MudTd DataLabel="DateOfJoining">@context.DateOfJoining</MudTd>
@@ -49,7 +49,7 @@
                             <MudTd DataLabel="CityName">@context.CityName</MudTd>
                             <MudTd DataLabel="AreaName">@context.AreaName</MudTd>
                             <MudTd DataLabel="Edit">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("StaffDefine/{0}",context.Id)></MudIconButton>
+                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("ConsultantDefine/{0}",context.Id)></MudIconButton>
                             </MudTd>
                             <MudTd DataLabel="Delete">
                                 <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteStaff(@context.Id))"></MudIconButton>
@@ -111,7 +111,7 @@
     protected async Task DeleteStaff(int Id)
     {
         bool? dialogResult = await DialogService.ShowMessageBox(
-            "Delete Staff",
+            "Delete Consultant",
             "Are you sure?",
             yesText: "Delete!", cancelText: "No");
 

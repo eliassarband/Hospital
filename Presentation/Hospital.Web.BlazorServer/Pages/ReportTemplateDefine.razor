@@ -1,0 +1,163 @@
+﻿@page "/ReportTemplateDefine/{Id}"
+
+@using Hospital.Application.Commands
+@using Hospital.Application.Mapper
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Models.Auth
+@using MediatR
+@using System.ComponentModel.DataAnnotations
+@inject IMediator mediator
+@inject NavigationManager navManager
+@inject ISnackbar Snackbar
+
+@attribute [Authorize(Roles = "Super,Admin")]
+
+<MudGrid Class="mt-2">
+    <MudItem md="3"></MudItem>
+    <MudItem md="6">
+        <MudPaper Class="mt-2" Elevation="10">
+            <MudForm @ref="form" @bind-IsValid="@success">
+                <MudCard Class="mt-2">
+                    <MudCardHeader>@caption</MudCardHeader>
+                    <MudCardContent>
+                        <MudGrid>
+                            <MudItem md="12">
+                                <MudSelect Class="mt-1" T="string" Label="Code" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="Report Template Code" @bind-value="@reportTemplate.Code" @bind-Text="@reportTemplate.Code" Clearable>
+                                    <MudSelectItem T="string" Value="@("OPD")">OPD</MudSelectItem>
+                                    <MudSelectItem T="string" Value="@("OPDPayment")">OPD Payment</MudSelectItem>
+                                    <MudSelectItem T="string" Value="@("IPD")">IPD</MudSelectItem>
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem md="12">
+                                <MudTextField T="string" Class="mt-1" @bind-Value="@reportTemplate.Name" Required="true" RequiredError="Please Enter Name" MaxLength="200" Label="Name" Placeholder="Report Template Name" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                        </MudGrid>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveReportTemplate" Disabled="@(!success)">Save</MudButton>
+                        <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="ReportTemplates">Return</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+    <MudItem md="3"></MudItem>
+</MudGrid>
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
+    private string caption = "Add Report Template";
+    private ReportTemplateViewModel reportTemplate = new ReportTemplateViewModel();
+    bool success;
+    MudForm form;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        if (!String.IsNullOrEmpty(Id))
+        {
+            if (Convert.ToInt32(Id) > 0)
+            {
+                caption = "Edit Report Template";
+
+                reportTemplate = await mediator.Send(new GetReportTemplateByIdQuery(Convert.ToInt32(Id)));
+
+                if (reportTemplate != null)
+                {
+
+                }
+            }
+        }
+
+    }
+
+    protected async Task SaveReportTemplate()
+    {
+        form.Validate();
+
+        if (form.IsValid)
+        {
+            CommandResponse result;
+
+
+            if (reportTemplate.Id > 0)
+            {
+                try
+                {
+                    reportTemplate.ModifiedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<EditReportTemplateCommand>(reportTemplate);
+
+                    if (command.Id > 0)
+                    {
+                        result = await mediator.Send(command);
+
+                        if (result.ResultType == ResultType.Success)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                            navManager.NavigateTo("ReportTemplates");
+                        }
+                        else if (result.ResultType == ResultType.Warning)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Warning);
+                        }
+                        else if (result.ResultType == ResultType.Error)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Error);
+                        }
+
+                    }
+                    else
+                    {
+                        Snackbar.Add("Error in selected ReportTemplate", Severity.Warning);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+            else
+            {
+                try
+                {
+                    reportTemplate.Content = "";
+                    reportTemplate.CreatedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<CreateReportTemplateCommand>(reportTemplate);
+
+                    result = await mediator.Send(command);
+
+                    if (result.ResultType == ResultType.Success)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                        navManager.NavigateTo("ReportTemplates");
+                    }
+                    else if (result.ResultType == ResultType.Warning)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Warning);
+                    }
+                    else if (result.ResultType == ResultType.Error)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Error);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+        }
+
+    }
+
+}
+

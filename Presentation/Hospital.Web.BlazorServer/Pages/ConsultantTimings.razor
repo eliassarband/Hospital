@@ -1,4 +1,4 @@
-﻿@page "/StaffTimings"
+﻿@page "/ConsultantTimings"
 @using Hospital.Application.Commands
 @using Hospital.Application.Queries
 @using Hospital.Application.Responses
@@ -15,9 +15,9 @@
     <MudItem md="12">
         <MudPaper Class="mt-2" Elevation="10">
             <MudCard Class="pl-2 pr-2 mt-2">
-                <MudCardHeader>StaffTimings</MudCardHeader>
+                <MudCardHeader>Consultant Timings</MudCardHeader>
                 <MudCardActions>
-                    <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("StaffTimingDefine/0")>Add StaffTiming</MudButton>
+                    <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("ConsultantTimingDefine/0")>Add Consultant Timing</MudButton>
                 </MudCardActions>
                 <MudCardContent>
                     <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<StaffTimingViewModel,bool>(FilterStaffTimingInit)">
@@ -26,8 +26,8 @@
                             <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Clearable></MudTextField>
                         </ToolBarContent>
                         <HeaderContent>
-                            <MudTh>Staff Code</MudTh>
-                            <MudTh>Staff Name</MudTh>
+                            <MudTh>Consultant Code</MudTh>
+                            <MudTh>Consultant Name</MudTh>
                             <MudTh>Week Day</MudTh>
                             <MudTh>Start Time</MudTh>
                             <MudTh>End Time</MudTh>
@@ -35,13 +35,13 @@
                             <MudTh>Delete</MudTh>
                         </HeaderContent>
                         <RowTemplate>
-                            <MudTd DataLabel="StaffCode">@context.StaffCode</MudTd>
-                            <MudTd DataLabel="StaffName">@context.StaffName</MudTd>
+                            <MudTd DataLabel="ConsultantCode">@context.StaffCode</MudTd>
+                            <MudTd DataLabel="ConsultantName">@context.StaffName</MudTd>
                             <MudTd DataLabel="WeekDayName">@context.WeekDayName</MudTd>
                             <MudTd DataLabel="StartTime">@context.StartTime</MudTd>
                             <MudTd DataLabel="EndTime">@context.EndTime</MudTd>
                             <MudTd DataLabel="Edit">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("StaffTimingDefine/{0}",context.Id)></MudIconButton>
+                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("ConsultantTimingDefine/{0}",context.Id)></MudIconButton>
                             </MudTd>
                             <MudTd DataLabel="Delete">
                                 <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteStaffTiming(@context.Id))"></MudIconButton>
@@ -95,7 +95,7 @@
     protected async Task DeleteStaffTiming(int Id)
     {
         bool? dialogResult = await DialogService.ShowMessageBox(
-            "Delete StaffTiming",
+            "Delete Consultant Timing",
             "Are you sure?",
             yesText: "Delete!", cancelText: "No");
 

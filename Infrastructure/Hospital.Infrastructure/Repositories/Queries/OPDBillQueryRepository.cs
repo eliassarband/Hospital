@@ -23,7 +23,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.OPDBills.Include(b => b.Patient).Include(b => b.PaymentType).Include(b => b.OPDBillServices).ToList();
+                return _context.OPDBills.Where(b => !b.Canceled).Include(b => b.Patient).Include(b => b.PaymentType).Include(b => b.OPDBillServices).Include(b => b.OPDBillPayments).ToList();
             }
             catch (Exception exp)
             {
@@ -35,7 +35,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.OPDBills.Where(t => t.Id == id).Include(b => b.Patient).Include(b => b.PaymentType).Include(b => b.OPDBillServices).FirstOrDefault();
+                return _context.OPDBills.Where(t => t.Id == id).Include(b => b.Patient).Include(b => b.PaymentType).Include(b => b.OPDBillServices).Include(b => b.OPDBillPayments).FirstOrDefault();
             }
             catch (Exception exp)
             {

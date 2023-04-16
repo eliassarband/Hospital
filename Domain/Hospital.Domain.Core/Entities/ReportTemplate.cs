@@ -14,6 +14,6 @@ namespace Hospital.Domain.Core.Entities
         public string Name { get; set; }
 
         [MaxLength]
-        public string Content { get; set; }
+        public string? Content { get; set; }
     }
 }

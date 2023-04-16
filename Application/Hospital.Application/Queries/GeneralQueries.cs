@@ -359,7 +359,7 @@ namespace Hospital.Application.Queries
         }
     }
 
-    public record GetReportTemplateByCodeQuery : IRequest<ReportTemplateViewModel>
+    public record GetReportTemplateByCodeQuery : IRequest<List<ReportTemplateViewModel>>
     {
         public string Code { get; private set; }
 

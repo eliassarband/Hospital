@@ -435,7 +435,10 @@ namespace Hospital.Application.Commands
         public int? PaymentTypeId { get; set; }
         public int TotalAmount { get; set; }
         public int PayableAmount { get; set; }
+        public int? PaidAmount { get; set; }
         public string Description { get; set; }
+        public int? PrintCount { get; set; } = 0;
+        public bool Canceled { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedUser { get; set; }
 
@@ -453,7 +456,10 @@ namespace Hospital.Application.Commands
         public int? PaymentTypeId { get; set; }
         public int TotalAmount { get; set; }
         public int PayableAmount { get; set; }
+        public int? PaidAmount { get; set; }
         public string Description { get; set; }
+        public int? PrintCount { get; set; } = 0;
+        public bool Canceled { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedUser { get; set; }
         public DateTime ModifiedDate { get; set; }
@@ -485,6 +491,7 @@ namespace Hospital.Application.Commands
         public int? ServiceId { get; set; }
         public int Quantity { get; set; }
         public int Rate { get; set; }
+        public int Discount { get; set; }
         public int Amount { get; set; }
         public int? StaffId { get; set; }
         public DateTime CreatedDate { get; set; }
@@ -503,6 +510,7 @@ namespace Hospital.Application.Commands
         public int? ServiceId { get; set; }
         public int Quantity { get; set; }
         public int Rate { get; set; }
+        public int Discount { get; set; }
         public int Amount { get; set; }
         public int? StaffId { get; set; }
         public DateTime CreatedDate { get; set; }
@@ -550,6 +558,8 @@ namespace Hospital.Application.Commands
         public string? Details { get; set; }
         public string? Agreement { get; set; }
         public string? Description { get; set; }
+        public int? PrintCount { get; set; } = 0;
+        public int? OPDBillId { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedUser { get; set; }
 
@@ -580,6 +590,8 @@ namespace Hospital.Application.Commands
         public string? Details { get; set; }
         public string? Agreement { get; set; }
         public string? Description { get; set; }
+        public int? PrintCount { get; set; } = 0;
+        public int? OPDBillId { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedUser { get; set; }
         public DateTime ModifiedDate { get; set; }
@@ -758,6 +770,53 @@ namespace Hospital.Application.Commands
         public int Id { get; set; }
 
         public DeleteIPDRegisterationPaymentCommand(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
+
+    #region OPDBillPayment
+    public class CreateOPDBillPaymentCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public int? OPDBillId { get; set; }
+        public DateTime? Date { get; set; }
+        public int Amount { get; set; }
+        public string? Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+
+        public CreateOPDBillPaymentCommand()
+        {
+            this.CreatedDate = DateTime.Now;
+        }
+    }
+
+    public class EditOPDBillPaymentCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+        public int? OPDBillId { get; set; }
+        public DateTime? Date { get; set; }
+        public int Amount { get; set; }
+        public string? Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string? ModifiedUser { get; set; }
+
+        public EditOPDBillPaymentCommand()
+        {
+            this.ModifiedDate = DateTime.Now;
+        }
+    }
+
+    public class DeleteOPDBillPaymentCommand : IRequest<CommandResponse>
+    {
+        public int Id { get; set; }
+
+        public DeleteOPDBillPaymentCommand(int Id)
         {
             this.Id = Id;
         }

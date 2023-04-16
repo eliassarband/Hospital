@@ -199,7 +199,7 @@ namespace Hospital.Infrastructure.Migrations
                 schema: "Gnr",
                 table: "Setting",
                 columns: new[] { "Id", "CreatedDate", "CreatedUser", "Description", "Key", "ModifiedDate", "ModifiedUser", "Name", "Value" },
-                values: new object[] { 3, new DateTime(2023, 3, 6, 12, 11, 33, 254, DateTimeKind.Local).AddTicks(9700), "elias.sarband", null, "OPDNoPrefix", new DateTime(2023, 3, 6, 12, 11, 33, 254, DateTimeKind.Local).AddTicks(9699), null, "IPD No Prefix", "IP" });
+                values: new object[] { 3, new DateTime(2023, 3, 6, 12, 11, 33, 254, DateTimeKind.Local).AddTicks(9700), "elias.sarband", null, "IPDNoPrefix", new DateTime(2023, 3, 6, 12, 11, 33, 254, DateTimeKind.Local).AddTicks(9699), null, "IPD No Prefix", "IP" });
 
             migrationBuilder.UpdateData(
                 schema: "Sec",

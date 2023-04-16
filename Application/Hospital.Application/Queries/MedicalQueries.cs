@@ -343,4 +343,32 @@ namespace Hospital.Application.Queries
     }
 
     #endregion
+
+    #region OPDBillPayment
+    public record GetAllOPDBillPaymentsQuery : IRequest<List<OPDBillPaymentViewModel>>
+    {
+
+    }
+
+    public record GetOPDBillPaymentsByOPDBillIdQuery : IRequest<List<OPDBillPaymentViewModel>>
+    {
+        public int OPDBillId { get; private set; }
+
+        public GetOPDBillPaymentsByOPDBillIdQuery(int OPDBillId)
+        {
+            this.OPDBillId = OPDBillId;
+        }
+    }
+
+    public class GetOPDBillPaymentByIdQuery : IRequest<OPDBillPaymentViewModel>
+    {
+        public int Id { get; private set; }
+
+        public GetOPDBillPaymentByIdQuery(int Id)
+        {
+            this.Id = Id;
+        }
+    }
+
+    #endregion
 }

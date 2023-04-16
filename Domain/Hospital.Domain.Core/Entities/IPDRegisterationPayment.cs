@@ -23,8 +23,8 @@ namespace Hospital.Domain.Core.Entities
         [Required]
         public int Amount { get; set; }
 
-        public string ChequeNumber { get; set; }
+        public string? ChequeNumber { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
     }
 }

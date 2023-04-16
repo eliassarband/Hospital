@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Infrastructure.Migrations
 {
     [DbContext(typeof(HospitalContext))]
-    [Migration("20230306113944_IPDRegisterationNewFields")]
-    partial class IPDRegisterationNewFields
+    [Migration("20230312052049_addPrintCount")]
+    partial class addPrintCount
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -144,10 +144,10 @@ namespace Hospital.Infrastructure.Migrations
                             AllowDelete = false,
                             CategoryId = 1,
                             Code = 1,
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8047),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7477),
                             CreatedUser = "elias.sarband",
                             IsDeleted = false,
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8041),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7472),
                             Name = "Doctor",
                             Priority = 1,
                             StrCode = "Doctor"
@@ -160,10 +160,10 @@ namespace Hospital.Infrastructure.Migrations
                             AllowDelete = false,
                             CategoryId = 1,
                             Code = 2,
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8049),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7480),
                             CreatedUser = "elias.sarband",
                             IsDeleted = false,
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8048),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7478),
                             Name = "Nurse",
                             Priority = 2,
                             StrCode = "Nurse"
@@ -176,10 +176,10 @@ namespace Hospital.Infrastructure.Migrations
                             AllowDelete = false,
                             CategoryId = 1,
                             Code = 3,
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8051),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7482),
                             CreatedUser = "elias.sarband",
                             IsDeleted = false,
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8050),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7481),
                             Name = "Staff",
                             Priority = 3,
                             StrCode = "Staff"
@@ -192,10 +192,10 @@ namespace Hospital.Infrastructure.Migrations
                             AllowDelete = false,
                             CategoryId = 2,
                             Code = 1,
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8053),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7484),
                             CreatedUser = "elias.sarband",
                             IsDeleted = false,
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8052),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7483),
                             Name = "Mr",
                             Priority = 1,
                             StrCode = "Mr"
@@ -208,10 +208,10 @@ namespace Hospital.Infrastructure.Migrations
                             AllowDelete = false,
                             CategoryId = 2,
                             Code = 2,
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8055),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7486),
                             CreatedUser = "elias.sarband",
                             IsDeleted = false,
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8054),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7485),
                             Name = "Mrs",
                             Priority = 2,
                             StrCode = "Mrs"
@@ -224,10 +224,10 @@ namespace Hospital.Infrastructure.Migrations
                             AllowDelete = false,
                             CategoryId = 7,
                             Code = 1,
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8057),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7488),
                             CreatedUser = "elias.sarband",
                             IsDeleted = false,
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8056),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7487),
                             Name = "Cash",
                             Priority = 1,
                             StrCode = "Cash"
@@ -240,10 +240,10 @@ namespace Hospital.Infrastructure.Migrations
                             AllowDelete = false,
                             CategoryId = 7,
                             Code = 2,
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8059),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7490),
                             CreatedUser = "elias.sarband",
                             IsDeleted = false,
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8058),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7489),
                             Name = "Credit",
                             Priority = 2,
                             StrCode = "Credit"
@@ -256,10 +256,10 @@ namespace Hospital.Infrastructure.Migrations
                             AllowDelete = false,
                             CategoryId = 8,
                             Code = 1,
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8061),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7493),
                             CreatedUser = "elias.sarband",
                             IsDeleted = false,
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8060),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7491),
                             Name = "Male",
                             Priority = 1,
                             StrCode = "Male"
@@ -272,10 +272,10 @@ namespace Hospital.Infrastructure.Migrations
                             AllowDelete = false,
                             CategoryId = 8,
                             Code = 2,
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8063),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7495),
                             CreatedUser = "elias.sarband",
                             IsDeleted = false,
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8061),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7494),
                             Name = "Female",
                             Priority = 2,
                             StrCode = "Female"
@@ -329,9 +329,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 1,
                             Code = "StaffType",
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8003),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7435),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(7995),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7433),
                             Name = "Staff Type",
                             Viewable = true
                         },
@@ -339,9 +339,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 2,
                             Code = "NamePrefix",
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8005),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7437),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8004),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7436),
                             Name = "Name Prefix",
                             Viewable = true
                         },
@@ -349,9 +349,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 3,
                             Code = "Speciality",
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8007),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7438),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8006),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7438),
                             Name = "Speciality",
                             Viewable = true
                         },
@@ -359,9 +359,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 4,
                             Code = "Qualification",
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8008),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7440),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8008),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7439),
                             Name = "Qualification",
                             Viewable = true
                         },
@@ -369,9 +369,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 5,
                             Code = "City",
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8010),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7442),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8009),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7441),
                             Name = "City",
                             Viewable = true
                         },
@@ -379,9 +379,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 6,
                             Code = "Area",
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8011),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7443),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8010),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7442),
                             Name = "Area",
                             RelatedCategoryId = 5,
                             Viewable = true
@@ -390,9 +390,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 7,
                             Code = "PaymentType",
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8013),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7445),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8012),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7444),
                             Name = "Payment Type",
                             Viewable = false
                         },
@@ -400,9 +400,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 8,
                             Code = "Gender",
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8014),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7447),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8013),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7446),
                             Name = "Gender",
                             Viewable = true
                         },
@@ -410,9 +410,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 9,
                             Code = "Ward",
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8015),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7448),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8015),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7447),
                             Name = "Ward",
                             Viewable = true
                         },
@@ -420,9 +420,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 10,
                             Code = "CaseType",
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8018),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7450),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8017),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7449),
                             Name = "Case Type",
                             Viewable = true
                         },
@@ -430,9 +430,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 11,
                             Code = "Relationship",
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8019),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7452),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8018),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7451),
                             Name = "Relationship",
                             Viewable = true
                         });
@@ -650,11 +650,17 @@ namespace Hospital.Infrastructure.Migrations
                     b.Property<string>("ModifiedUser")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("OPDBillId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("PatientId")
                         .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("PayableAmount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PrintCount")
                         .HasColumnType("int");
 
                     b.Property<int?>("RefferById")
@@ -724,7 +730,6 @@ namespace Hospital.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ChequeNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
@@ -737,7 +742,6 @@ namespace Hospital.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("IPDRegisterationId")
@@ -791,7 +795,6 @@ namespace Hospital.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("IPDRegisterationId")
@@ -837,7 +840,6 @@ namespace Hospital.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Discount")
@@ -1013,6 +1015,9 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.Property<int?>("PaymentTypeId")
                         .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PrintCount")
                         .HasColumnType("int");
 
                     b.Property<int>("TotalAmount")
@@ -1300,7 +1305,6 @@ namespace Hospital.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Content")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
@@ -1369,30 +1373,30 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 1,
                             Code = "Super",
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 597, DateTimeKind.Local).AddTicks(8192),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 535, DateTimeKind.Local).AddTicks(8566),
                             CreatedUser = "elias.sarband",
                             Description = "",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 597, DateTimeKind.Local).AddTicks(8178),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 535, DateTimeKind.Local).AddTicks(8552),
                             Name = "Super Admin"
                         },
                         new
                         {
                             Id = 2,
                             Code = "Admin",
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 597, DateTimeKind.Local).AddTicks(8195),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 535, DateTimeKind.Local).AddTicks(8569),
                             CreatedUser = "elias.sarband",
                             Description = "",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 597, DateTimeKind.Local).AddTicks(8195),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 535, DateTimeKind.Local).AddTicks(8568),
                             Name = "Administrator"
                         },
                         new
                         {
                             Id = 3,
                             Code = "Operator",
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 597, DateTimeKind.Local).AddTicks(8197),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 535, DateTimeKind.Local).AddTicks(8571),
                             CreatedUser = "elias.sarband",
                             Description = "",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 597, DateTimeKind.Local).AddTicks(8196),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 535, DateTimeKind.Local).AddTicks(8570),
                             Name = "Operator"
                         });
                 });
@@ -1610,30 +1614,30 @@ namespace Hospital.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8095),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7516),
                             CreatedUser = "elias.sarband",
                             Key = "PatientIdPrefix",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8093),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7514),
                             Name = "Patient Identifier Prefix",
                             Value = "P"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8097),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7518),
                             CreatedUser = "elias.sarband",
                             Key = "OPDReceiptNoPrefix",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8096),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7517),
                             Name = "OPD Receipt Identifier Prefix",
                             Value = "OP"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8098),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7519),
                             CreatedUser = "elias.sarband",
                             Key = "IPDNoPrefix",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(8097),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7518),
                             Name = "IPD No Prefix",
                             Value = "IP"
                         });
@@ -1852,12 +1856,12 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 1,
                             Active = true,
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 598, DateTimeKind.Local).AddTicks(8678),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 536, DateTimeKind.Local).AddTicks(8460),
                             CreatedUser = "elias.sarband",
                             Email = "elias.sarband@gmail.com",
                             FirstName = "Elias",
                             LastName = "Sarband",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 597, DateTimeKind.Local).AddTicks(8419),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 535, DateTimeKind.Local).AddTicks(8729),
                             Password = "SEIE/b+BtdSahkhMsl4KK3SuEjCF1OKUEn4oQYMaYSc=",
                             PhoneNumber = "9125056182",
                             Theme = "Light",
@@ -1867,12 +1871,12 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 2,
                             Active = true,
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(7889),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7282),
                             CreatedUser = "elias.sarband",
                             Email = "",
                             FirstName = "Admin",
                             LastName = "AccurateCo",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 598, DateTimeKind.Local).AddTicks(8682),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 536, DateTimeKind.Local).AddTicks(8465),
                             Password = "dW/0ZNtG5T5uIyhEYh0J9Q==",
                             PhoneNumber = "9125056182",
                             Theme = "Light",
@@ -1918,18 +1922,18 @@ namespace Hospital.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(7970),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7337),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(7969),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7335),
                             RoleId = 1,
                             UserId = 1
                         },
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(7972),
+                            CreatedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7340),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 3, 6, 15, 9, 43, 599, DateTimeKind.Local).AddTicks(7971),
+                            ModifiedDate = new DateTime(2023, 3, 12, 8, 50, 48, 537, DateTimeKind.Local).AddTicks(7339),
                             RoleId = 1,
                             UserId = 2
                         });

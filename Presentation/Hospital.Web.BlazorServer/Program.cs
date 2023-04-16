@@ -142,6 +142,9 @@ builder.Services.AddTransient<ISettingCommandRepository, SettingCommandRepositor
 builder.Services.AddTransient<IBedQueryRepository, BedQueryRepository>();
 builder.Services.AddTransient<IBedCommandRepository, BedCommandRepository>();
 
+builder.Services.AddTransient<IOPDBillPaymentQueryRepository, OPDBillPaymentQueryRepository>();
+builder.Services.AddTransient<IOPDBillPaymentCommandRepository, OPDBillPaymentCommandRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

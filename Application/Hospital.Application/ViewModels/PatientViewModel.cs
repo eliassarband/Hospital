@@ -12,6 +12,8 @@ namespace Hospital.Application.ViewModels
     public class PatientViewModel
     {
         public int Id { get; set; }
+        public string? PatientId { get; set; }
+        public String? Age { get; set; }
 
         [Required]
         public int NamePrefixId { get; set; }

@@ -26,10 +26,18 @@ namespace Hospital.Domain.Core.Entities
         [Required]
         public int PayableAmount { get; set; }
 
+        [Required]
+        public int? PaidAmount { get; set; }
+
         [MaxLength(1000)]
         public string? Description { get; set; }
 
+        public int? PrintCount { get; set; } = 0;
+
+        public bool Canceled { get; set; } = false;
+
 
         public virtual ICollection<OPDBillService> OPDBillServices { get; set; }
+        public virtual ICollection<OPDBillPayment> OPDBillPayments { get; set; }
     }
 }
