@@ -17,7 +17,7 @@
     <MudItem md="12">
         <MudPaper Class="mt-2" Elevation="10">
             <MudCard Class="pl-2 pr-2 mt-2">
-                <MudCardHeader>OPDBills</MudCardHeader>
+                <MudCardHeader>OPD Bills</MudCardHeader>
                 <MudCardActions>
                     <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("OPDBillDefine/0")>Add OPDBill</MudButton>
                 </MudCardActions>
@@ -150,6 +150,7 @@
         receiptNoPrefix = await mediator.Send(new GetSettingByKeyQuery("OPDReceiptNoPrefix"));
 
         Elements = await mediator.Send(new GetAllOPDBillsQuery());
+        Elements = Elements.Where(e => e.Canceled != true).ToList();
     }
 
     private void PageChanged(int i)

@@ -506,13 +506,13 @@
                                             </GridColumn>
                                             <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Rate) Title="Rate" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
                                             <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Discount) Title="Discount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
-                                            <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.StaffName) Title="Staff Name" Editable="true" Width="15vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                            <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.StaffName) Title="Consultant" Editable="true" Width="15vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
                                                 <EditorTemplate>
                                                     @{
                                                         var ServiceToEdit = context as IPDRegisterationServiceViewModel;
                                                         <TelerikComboBox @bind-Value="@ServiceToEdit.StaffId"
                                                                      Data="@staffs"
-                                                                     Placeholder="Select Staff"
+                                                                     Placeholder="Select Consultant"
                                                                      TextField="@nameof(StaffViewModel.Name)"
                                                                      ValueField="@nameof(StaffViewModel.Id)"
                                                                      Filterable="true"
@@ -595,6 +595,13 @@
                                             </GridCommandColumn>
                                         </GridColumns>
                                     </TelerikGrid>
+                                </MudItem>
+                            </MudGrid>
+                        </TabStripTab>
+                        <TabStripTab Title="Medicine(s)">
+                            <MudGrid Spacing="1">
+                                <MudItem md="12">
+
                                 </MudItem>
                             </MudGrid>
                         </TabStripTab>

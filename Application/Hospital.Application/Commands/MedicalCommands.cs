@@ -560,6 +560,7 @@ namespace Hospital.Application.Commands
         public string? Description { get; set; }
         public int? PrintCount { get; set; } = 0;
         public int? OPDBillId { get; set; }
+        public bool Canceled { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedUser { get; set; }
 
@@ -592,6 +593,7 @@ namespace Hospital.Application.Commands
         public string? Description { get; set; }
         public int? PrintCount { get; set; } = 0;
         public int? OPDBillId { get; set; }
+        public bool Canceled { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedUser { get; set; }
         public DateTime ModifiedDate { get; set; }

@@ -1,9 +1,11 @@
 ﻿@page "/IPDRegisterations"
 @using Hospital.Application.Commands
+@using Hospital.Application.Mapper;
 @using Hospital.Application.Queries
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Helpers;
 @using MediatR
 @inject IMediator mediator;
 @inject IDialogService DialogService
@@ -15,7 +17,7 @@
     <MudItem md="12">
         <MudPaper Class="mt-2" Elevation="10">
             <MudCard Class="pl-2 pr-2 mt-2">
-                <MudCardHeader>IPDRegisterations</MudCardHeader>
+                <MudCardHeader>Admated Patient List</MudCardHeader>
                 <MudCardActions>
                     <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("IPDRegisterationDefine/0")>Add IPD Registeration</MudButton>
                 </MudCardActions>
@@ -26,29 +28,49 @@
                             <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Clearable></MudTextField>
                         </ToolBarContent>
                         <HeaderContent>
-                            <MudTh>Date</MudTh>
+                            <MudTh>Patient Id</MudTh>
+                            <MudTh>IPD No</MudTh>
+                            <MudTh>Admation Date</MudTh>
+                            <MudTh>Gender</MudTh>
                             <MudTh>Patient</MudTh>
+                            <MudTh>F-Name</MudTh>
+                            <MudTh>Mob</MudTh>
                             <MudTh>Reffer By</MudTh>
-                            <MudTh>Total Amount</MudTh>
-                            <MudTh>Payable Amount</MudTh>
+                            <MudTh>Consultant</MudTh>
+                            <MudTh>Ward</MudTh>
+                            <MudTh>Room</MudTh>
+                            <MudTh>R-Type</MudTh>
+                            <MudTh>Bed</MudTh>
                             <MudTh>Edit</MudTh>
                             <MudTh>Print</MudTh>
-                            <MudTh>Delete</MudTh>
+                            <MudTh>Cancel</MudTh>
                         </HeaderContent>
                         <RowTemplate>
-                            <MudTd DataLabel="Date">@context.Date</MudTd>
+                            <MudTd DataLabel="PatientId">
+                                @UtilityHelper.GenerateIdentifier(patientIdPrefix.Value,context.PatientId)
+                            </MudTd>
+                            <MudTd DataLabel="IPDNO">
+                                @UtilityHelper.GenerateIdentifier(iPDNoPrefix.Value,context.Id)
+                            </MudTd>
+                            <MudTd DataLabel="AdmationDate">@context.Date</MudTd>
+                            <MudTd DataLabel="Gender">@context.Patient.Gender.Name</MudTd>
                             <MudTd DataLabel="Patient">@context.PatientName</MudTd>
-                            <MudTd DataLabel="Reffer By">@context.RefferByName</MudTd>
-                            <MudTd DataLabel="TotalAmount">@context.TotalAmount</MudTd>
-                            <MudTd DataLabel="PayableAmount">@context.PayableAmount</MudTd>
+                            <MudTd DataLabel="Father Name">@context.Patient.FatherName</MudTd>
+                            <MudTd DataLabel="Mobile">@context.Patient.Mobile</MudTd>
+                            <MudTd DataLabel="RefferBy">@context.RefferByName</MudTd>
+                            <MudTd DataLabel="Consultant">@context.ConsultantInchargeName</MudTd>
+                            <MudTd DataLabel="Ward">@context.WardName</MudTd>
+                            <MudTd DataLabel="Room">@context.RoomName</MudTd>
+                            <MudTd DataLabel="RoomType">@context.RoomTypeName</MudTd>
+                            <MudTd DataLabel="Bed">@context.BedName</MudTd>
                             <MudTd DataLabel="Edit">
                                 <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("IPDRegisterationDefine/{0}",context.Id)></MudIconButton>
                             </MudTd>
                             <MudTd DataLabel="Print">
                                 <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Print" Color="Color.Tertiary" OnClick="@(()=> Print(@context.Id))"></MudIconButton>
                             </MudTd>
-                            <MudTd DataLabel="Delete">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteIPDRegisteration(@context.Id))"></MudIconButton>
+                            <MudTd DataLabel="Cancel">
+                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Cancel" Color="Color.Secondary" OnClick="@(()=> DeleteIPDRegisteration(@context.Id))"></MudIconButton>
                             </MudTd>
                         </RowTemplate>
                         <PagerContent>
@@ -81,9 +103,16 @@
     private bool selectReportTemplate = false;
     private int IPDId = 0;
 
+    private SettingViewModel patientIdPrefix;
+    private SettingViewModel iPDNoPrefix;
+
     protected override async Task OnInitializedAsync()
     {
+        patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
+        iPDNoPrefix = await mediator.Send(new GetSettingByKeyQuery("IPDNoPrefix"));
+
         Elements = await mediator.Send(new GetAllIPDRegisterationsQuery());
+        Elements = Elements.Where(e => e.Canceled != true).ToList();
     }
 
     private void PageChanged(int i)
@@ -117,9 +146,9 @@
     protected async Task DeleteIPDRegisteration(int Id)
     {
         bool? dialogResult = await DialogService.ShowMessageBox(
-            "Delete IPD Registeration",
+            "Cancel IPD Registeration",
             "Are you sure?",
-            yesText: "Delete!", cancelText: "No");
+            yesText: "Cancel!", cancelText: "No");
 
         if (dialogResult == true)
         {
@@ -127,8 +156,12 @@
             try
             {
                 CommandResponse result;
+                var iPD = await mediator.Send(new GetIPDRegisterationByIdQuery(Id));
+                iPD.Canceled = true;
 
-                result = await mediator.Send(new DeleteIPDRegisterationCommand(Id));
+                var command = MapperConfig.Mapper.Map<EditIPDRegisterationCommand>(iPD);
+
+                result = await mediator.Send(command);
 
                 if (result.ResultType == ResultType.Success)
                 {

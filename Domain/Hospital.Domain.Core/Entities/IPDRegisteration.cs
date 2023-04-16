@@ -74,7 +74,9 @@ namespace Hospital.Domain.Core.Entities
 
         public int? PrintCount { get; set; } = 0;
 
-        public int? OPDBillId { get; set; } 
+        public int? OPDBillId { get; set; }
+
+        public bool Canceled { get; set; } = false;
 
         public virtual ICollection<IPDRegisterationService> IPDRegisterationServices { get; set; }
         public virtual ICollection<IPDRegisterationRoom> IPDRegisterationRooms { get; set; }
