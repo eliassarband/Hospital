@@ -323,37 +323,7 @@
                                         </div>
                                     </TelerikFloatingLabel>
                                 </MudItem>
-                                <MudItem md="4">
-                                    <TelerikFloatingLabel Text="Total Amount" Class="custom-label w-100">
-                                        <div class="k-form-field-wrap">
-                                            <TelerikNumericTextBox Placeholder="Total Amount"
-                                                                   @bind-Value="@iPDRegisteration.TotalAmount"
-                                                                   Format="C"
-                                                                   Decimals="0"></TelerikNumericTextBox>
-                                        </div>
-                                    </TelerikFloatingLabel>
-                                    <TelerikValidationMessage For="@(() => iPDRegisteration.TotalAmount)" />
-                                </MudItem>
-                                <MudItem md="4">
-                                    <TelerikFloatingLabel Text="Total Discount" Class="custom-label w-100">
-                                        <div class="k-form-field-wrap">
-                                            <TelerikNumericTextBox Placeholder="Total Discount"
-                                                                   @bind-Value="@totalDiscount"
-                                                                   Format="C"
-                                                                   Decimals="0"></TelerikNumericTextBox>
-                                        </div>
-                                    </TelerikFloatingLabel>
-                                </MudItem>
-                                <MudItem md="4">
-                                    <TelerikFloatingLabel Text="Payable Amount" Class="custom-label w-100">
-                                        <div class="k-form-field-wrap">
-                                            <TelerikNumericTextBox Placeholder="Payable Amount"
-                                                                   @bind-Value="@iPDRegisteration.PayableAmount"
-                                                                   Format="C"
-                                                                   Decimals="0"></TelerikNumericTextBox>
-                                        </div>
-                                    </TelerikFloatingLabel>
-                                </MudItem>
+                                
                                 <MudItem md="12" Class="mb-2">
                                     <TelerikFloatingLabel Text="Description" Class="custom-label w-100">
                                         <div class="k-form-field-wrap">
@@ -536,6 +506,87 @@
                         </TabStripTab>
                         <TabStripTab Title="Payment(s)">
                             <MudGrid Spacing="1">
+                                <MudItem md="4">
+                                    <TelerikFloatingLabel Text="Room Amount" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikNumericTextBox Placeholder="Room Amount" Enabled="false"
+                                                                   @bind-Value="@roomAmount"
+                                                                   Format="C"
+                                                                   Decimals="0"></TelerikNumericTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                </MudItem>
+                                <MudItem md="4">
+                                    <TelerikFloatingLabel Text="Service Amount" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikNumericTextBox Placeholder="Service Amount" Enabled="false"
+                                                                   @bind-Value="@serviceAmount"
+                                                                   Format="C"
+                                                                   Decimals="0"></TelerikNumericTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                </MudItem>
+                                <MudItem md="4">
+                                    <TelerikFloatingLabel Text="Medicine Amount" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikNumericTextBox Placeholder="Medicine Amount" Enabled="false"
+                                                                   @bind-Value="@medicineAmount"
+                                                                   Format="C"
+                                                                   Decimals="0"></TelerikNumericTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                </MudItem>
+                                <MudItem md="4">
+                                    <TelerikFloatingLabel Text="Total Amount" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikNumericTextBox Placeholder="Total Amount" Enabled="false"
+                                                                   @bind-Value="@iPDRegisteration.TotalAmount"
+                                                                   Format="C"
+                                                                   Decimals="0"></TelerikNumericTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => iPDRegisteration.TotalAmount)" />
+                                </MudItem>
+                                <MudItem md="4">
+                                    <TelerikFloatingLabel Text="Total Discount" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikNumericTextBox Placeholder="Total Discount" Enabled="false"
+                                                                   @bind-Value="@totalDiscount"
+                                                                   Format="C"
+                                                                   Decimals="0"></TelerikNumericTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                </MudItem>
+                                <MudItem md="4">
+                                    <TelerikFloatingLabel Text="Payable Amount" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikNumericTextBox Placeholder="Payable Amount" Enabled="false"
+                                                                   @bind-Value="@iPDRegisteration.PayableAmount"
+                                                                   Format="C"
+                                                                   Decimals="0"></TelerikNumericTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                </MudItem>
+                                <MudItem md="6">
+                                    <TelerikFloatingLabel Text="Paid Amount" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikNumericTextBox Placeholder="Paid Amount" Enabled="false"
+                                                                   @bind-Value="@paidAmount"
+                                                                   Format="C"
+                                                                   Decimals="0"></TelerikNumericTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                </MudItem>
+                                <MudItem md="6">
+                                    <TelerikFloatingLabel Text="Remain Amount" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikNumericTextBox Placeholder="Remain Amount" Enabled="false"
+                                                                   @bind-Value="@remainAmount"
+                                                                   Format="C"
+                                                                   Decimals="0"></TelerikNumericTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                </MudItem>
                                 <MudItem md="12">
                                     <TelerikGrid Data=@iPDRegisterationPayments EditMode="@GridEditMode.Inline"
                                                  Height="300px" Pageable="true" PageSize="5"
@@ -701,10 +752,17 @@
     private bool success;
     TelerikForm form;
     private int totalDiscount = 0;
+    private int roomAmount = 0;
+    private int serviceAmount = 0;
+    private int medicineAmount = 0;
+    private int paidAmount = 0;
+    private int remainAmount = 0;
     private bool addPatientWindowState = false;
     private bool searchPatientWindowState = false;
     private bool searchOPDPatientWindowState = false;
     private bool selectReportTemplate = false;
+
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -728,7 +786,7 @@
             caption = "Edit IPD Registeration";
 
             iPDRegisteration = await mediator.Send(new GetIPDRegisterationByIdQuery(Convert.ToInt32(Id)));
-            
+
 
             if (iPDRegisteration != null)
             {
@@ -919,6 +977,12 @@
         iPDRegisteration.TotalAmount = serviceTotal + roomTotal;
         iPDRegisteration.PayableAmount = servicePayable + roomPayable;
         totalDiscount = (serviceTotal + roomTotal) - (servicePayable + roomPayable);
+
+        roomAmount=roomTotal;
+        serviceAmount=serviceTotal;
+        medicineAmount = 0;
+        paidAmount= iPDRegisterationPayments.Sum(p => p.Amount);
+        remainAmount = iPDRegisteration.PayableAmount - paidAmount;
     }
 
     protected async Task NewPatient()
