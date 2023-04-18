@@ -36,6 +36,7 @@ namespace Hospital.Domain.Core.Entities
 
         public bool Canceled { get; set; } = false;
 
+        public string? CancelReason { get; set; }
 
         public virtual ICollection<OPDBillService> OPDBillServices { get; set; }
         public virtual ICollection<OPDBillPayment> OPDBillPayments { get; set; }

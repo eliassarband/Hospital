@@ -222,94 +222,68 @@
                 }
             
             }
+            else if (reportTemplate.Code == "IPDPayment")
+            {
 
-        //if (ReportCode=="OPDBill" && Id > 0)
-        //{
+                var iPDRegisterationPayment = await mediator.Send(new GetIPDRegisterationPaymentByIdQuery(Id));
 
-        //    PrinterSettings settings = new PrinterSettings();
-        //    string defaultPrinterName = settings.PrinterName;
+                if (iPDRegisterationPayment != null)
+                {
+                    report = StiReport.CreateNewReport();
 
-        //    var oPDBill = await mediator.Send(new GetOPDBillByIdQuery(Id));
+                    report.Dictionary.Databases.Clear();
 
-        //    if (oPDBill != null)
-        //    {
-        //        reportTemplate = await mediator.Send(new GetReportTemplateByCodeQuery(ReportCode));
+                    if (reportTemplate != null)
+                    {
+                        report.LoadFromString(reportTemplate.Content);
+                    }
 
-        //        report = StiReport.CreateNewReport();
+                    report.RegBusinessObject("IPDRegisterationPayment", iPDRegisterationPayment);
 
-        //        report.Dictionary.Databases.Clear();
+                    var iPDRegisteration = await mediator.Send(new GetIPDRegisterationByIdQuery(iPDRegisterationPayment.IPDRegisterationId ?? 0));
+                    report.RegBusinessObject("IPDRegisteration", iPDRegisteration);
 
-        //        if (reportTemplate != null)
-        //        {
-        //            report.LoadFromString(reportTemplate.Content);
-        //        }
-                
-        //        report.RegBusinessObject("OPDBill", oPDBill);
+                    //var oPDBillServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(oPDBill.Id));
+                    //report.RegBusinessObject("OPDBillServices", oPDBillServices);
 
-        //        var oPDBillServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(Id));
-        //        report.RegBusinessObject("OPDBillServices", oPDBillServices);
+                    //var oPDBillPayments = await mediator.Send(new GetOPDBillPaymentsByOPDBillIdQuery(oPDBill.Id));
+                    //report.RegBusinessObject("OPDBillPayments", oPDBillPayments);
 
-        //        var hospital = await mediator.Send(new GetHospitalInformationByIdQuery(1));
-        //        report.RegBusinessObject("HospitalInformation", hospital);
+                    var hospital = await mediator.Send(new GetHospitalInformationByIdQuery(1));
+                    report.RegBusinessObject("HospitalInformation", hospital);
 
-        //        var patients = await mediator.Send(new GetPatientByIdQuery(oPDBill.PatientId));
-        //        report.RegBusinessObject("Patient", patients);
+                    var patient = await mediator.Send(new GetPatientByIdQuery(iPDRegisteration.PatientId));
+                    report.RegBusinessObject("Patient", patient);
 
-        //        report.Dictionary.Synchronize();
+                    SettingViewModel patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
+                    SettingViewModel iPDNoPrefix = await mediator.Send(new GetSettingByKeyQuery("IPDNoPrefix"));
 
-        //        //report.Print();
+                    iPDRegisteration.IPDNo = UtilityHelper.GenerateIdentifier(iPDNoPrefix.Value, iPDRegisteration.Id);
+                    patient.PatientId = UtilityHelper.GenerateIdentifier(patientIdPrefix.Value, iPDRegisteration.PatientId);
+                    patient.Age = DateHelper.CalculateAgeDescription(patient.DateOfBirth ?? DateTime.Now);
 
-        //        //base.OnInitialized();
+                    report.Dictionary.Synchronize();
 
+                    if (iPDRegisteration.PrintCount == null)
+                    {
+                        iPDRegisteration.PrintCount = 1;
+                    }
+                    else
+                    {
+                        iPDRegisteration.PrintCount += 1;
+                    }
 
-        //    }
-        //}
-        //else if (ReportCode == "IPDRegisteration" && Id > 0)
-        //{
+                    var command = MapperConfig.Mapper.Map<EditIPDRegisterationCommand>(iPDRegisteration);
+                    await mediator.Send(command);
+                    //report.Print();
 
-        //    PrinterSettings settings = new PrinterSettings();
-        //    string defaultPrinterName = settings.PrinterName;
-
-        //    var iPDRegisteration = await mediator.Send(new GetIPDRegisterationByIdQuery(Id));
-
-        //    if (iPDRegisteration != null)
-        //    {
-        //        reportTemplate = await mediator.Send(new GetReportTemplateByCodeQuery(ReportCode));
-
-        //        report = StiReport.CreateNewReport();
-
-        //        report.Dictionary.Databases.Clear();
-
-        //        if (reportTemplate != null)
-        //        {
-        //            report.LoadFromString(reportTemplate.Content);
-        //        }
-
-        //        report.RegBusinessObject("IPDRegisteration", iPDRegisteration);
-
-        //        var iPDRegisterationRooms = await mediator.Send(new GetIPDRegisterationRoomsByIPDRegisterationIdQuery(iPDRegisteration.Id));
-        //        report.RegBusinessObject("IPDRegisterationRooms", iPDRegisterationRooms);
-
-        //        var iPDRegisterationServices = await mediator.Send(new GetIPDRegisterationServicesByIPDRegisterationIdQuery(iPDRegisteration.Id));
-        //        report.RegBusinessObject("IPDRegisterationServices", iPDRegisterationServices);
-
-        //        var iPDRegisterationPayments = await mediator.Send(new GetIPDRegisterationPaymentsByIPDRegisterationIdQuery(iPDRegisteration.Id));
-        //        report.RegBusinessObject("IPDRegisterationPayments", iPDRegisterationPayments);
-
-        //        var hospital = await mediator.Send(new GetHospitalInformationByIdQuery(1));
-        //        report.RegBusinessObject("HospitalInformation", hospital);
-
-        //        var patients = await mediator.Send(new GetPatientByIdQuery(iPDRegisteration.PatientId??0));
-        //        report.RegBusinessObject("Patient", patients);
-
-        //        report.Dictionary.Synchronize();
-
-        //        //report.Print();
-
-        //        //base.OnInitialized();
+                    //base.OnInitialized();
 
 
-        //    }
+                }
+            }
+
+        
         }
 
     }

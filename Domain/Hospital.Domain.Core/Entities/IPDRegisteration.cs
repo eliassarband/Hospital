@@ -78,6 +78,12 @@ namespace Hospital.Domain.Core.Entities
 
         public bool Canceled { get; set; } = false;
 
+        public string? CancelReason { get; set; }
+
+        public bool? Discharged { get; set; } = false;
+        public DateTime? DischargeDate { get; set; }
+        public string? DischargeDescription { get; set; }
+
         public virtual ICollection<IPDRegisterationService> IPDRegisterationServices { get; set; }
         public virtual ICollection<IPDRegisterationRoom> IPDRegisterationRooms { get; set; }
         public virtual ICollection<IPDRegisterationPayment> IPDRegisterationPayments { get; set; }

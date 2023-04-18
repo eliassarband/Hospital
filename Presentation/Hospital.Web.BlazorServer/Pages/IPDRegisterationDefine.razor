@@ -639,7 +639,7 @@
                                             <GridColumn Field=@nameof(IPDRegisterationPaymentViewModel.ChequeNumber) Title="Cheque Number" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
                                             <GridColumn Field=@nameof(IPDRegisterationPaymentViewModel.Description) Title="Description" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
                                             <GridCommandColumn Title="Action" Width="10vw" HeaderClass="k-text-center">
-
+                                                <GridCommandButton OnClick="@PrintPayment" ThemeColor="@ThemeConstants.Button.ThemeColor.Info">Print</GridCommandButton>
                                                 <GridCommandButton Command="Delete" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Delete</GridCommandButton>
                                                 <GridCommandButton Command="Save" ThemeColor="@ThemeConstants.Button.ThemeColor.Tertiary" ShowInEdit="true">Update</GridCommandButton>
                                                 <GridCommandButton Command="Cancel" ShowInEdit="true">Cancel</GridCommandButton>
@@ -723,6 +723,17 @@
     </WindowContent>
 </TelerikWindow>
 
+<TelerikWindow Class="demo-window" Width="40vw" Height="70vh" Centered="true" @bind-Visible=@selectPaymentReportTemplate Modal="true">
+    <WindowTitle>
+        <strong>Select Report Template</strong>
+    </WindowTitle>
+    <WindowActions>
+        <WindowAction Name="Close" />
+    </WindowActions>
+    <WindowContent>
+        <ReportTemplatesSelect Id="@IPDPaymentId" ReportCode="IPDPayment"></ReportTemplatesSelect>
+    </WindowContent>
+</TelerikWindow>
 @code {
     [Parameter]
     public int? Id { get; set; }
@@ -761,8 +772,8 @@
     private bool searchPatientWindowState = false;
     private bool searchOPDPatientWindowState = false;
     private bool selectReportTemplate = false;
-
-
+    private bool selectPaymentReportTemplate = false;
+    private int IPDPaymentId = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -964,6 +975,15 @@
         CalculateAmount();
         //ProductService.DeleteProduct((ProductDto)args.Item);
         //LoadData();
+    }
+
+    protected async Task PrintPayment(GridCommandEventArgs args)
+    {
+        IPDRegisterationPaymentViewModel iPDPayment = (IPDRegisterationPaymentViewModel)args.Item;
+
+        IPDPaymentId = iPDPayment.Id;
+
+        selectPaymentReportTemplate = true;
     }
 
     private async void CalculateAmount()

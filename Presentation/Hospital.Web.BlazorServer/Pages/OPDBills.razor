@@ -133,6 +133,9 @@
     [Parameter]
     public EventCallback<int> OnPatientSelected { get; set; }
 
+    [CascadingParameter]
+    public DialogFactory Dialogs { get; set; }
+
     private MudTable<OPDBillViewModel> _table;
     private List<OPDBillViewModel> Elements; 
     private SettingViewModel patientIdPrefix;
@@ -201,12 +204,16 @@
 
     protected async Task DeleteOPDBill(int Id)
     {
-        bool? dialogResult = await DialogService.ShowMessageBox(
-            "Cancel OPD Bill",
-            "Are you sure?",
-            yesText: "Cancel!", cancelText: "No");
+        string input;
 
-        if (dialogResult == true)
+        input = await Dialogs.PromptAsync("Please, enter your Reason.", "Cancel Reason");
+
+        //bool? dialogResult = await DialogService.ShowMessageBox(
+        //    "Cancel OPD Bill",
+        //    "Are you sure?",
+        //    yesText: "Cancel!", cancelText: "No");
+
+        if (!String.IsNullOrWhiteSpace(input))
         {
             loading = true;
             try
@@ -215,6 +222,7 @@
 
                 var oPDBill = await mediator.Send(new GetOPDBillByIdQuery(Id));
                 oPDBill.Canceled = true;
+                oPDBill.CancelReason = input;
 
                 var command = MapperConfig.Mapper.Map<EditOPDBillCommand>(oPDBill);
 
@@ -223,6 +231,7 @@
                 if (result.ResultType == ResultType.Success)
                 {
                     Elements = await mediator.Send(new GetAllOPDBillsQuery());
+                    Elements = Elements.Where(e => e.Canceled != true).ToList();
                     Snackbar.Add(result.ResultMessage, Severity.Success);
                 }
                 else if (result.ResultType == ResultType.Warning)

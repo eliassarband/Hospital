@@ -89,6 +89,13 @@ namespace Hospital.Application.ViewModels
         public int? OPDBillId { get; set; }
 
         public bool Canceled { get; set; } = false;
+
+        public string? CancelReason { get; set; }
+
+        public bool? Discharged { get; set; } = false;
+        public DateTime? DischargeDate { get; set; }
+        public string? DischargeDescription { get; set; }
+
         public virtual ICollection<IPDRegisterationServiceViewModel> IPDRegisterationServices { get; set; }
         public virtual ICollection<IPDRegisterationRoomViewModel> IPDRegisterationRooms { get; set; }
         public virtual ICollection<IPDRegisterationPaymentViewModel> IPDRegisterationPayments { get; set; }

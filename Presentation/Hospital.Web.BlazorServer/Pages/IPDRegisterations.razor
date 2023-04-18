@@ -31,6 +31,7 @@
                             <MudTh>Patient Id</MudTh>
                             <MudTh>IPD No</MudTh>
                             <MudTh>Admation Date</MudTh>
+                            <MudTh>Discharge Date</MudTh>
                             <MudTh>Gender</MudTh>
                             <MudTh>Patient</MudTh>
                             <MudTh>F-Name</MudTh>
@@ -54,6 +55,7 @@
                                 @UtilityHelper.GenerateIdentifier(iPDNoPrefix.Value,context.Id)
                             </MudTd>
                             <MudTd DataLabel="AdmationDate">@context.Date</MudTd>
+                            <MudTd DataLabel="DischargeDate">@context.DischargeDate</MudTd>
                             <MudTd DataLabel="Gender">@context.Patient.Gender.Name</MudTd>
                             <MudTd DataLabel="Patient">@context.PatientName</MudTd>
                             <MudTd DataLabel="Father Name">@context.Patient.FatherName</MudTd>
@@ -71,7 +73,12 @@
                                 <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Print" Color="Color.Tertiary" OnClick="@(()=> Print(@context.Id))"></MudIconButton>
                             </MudTd>
                             <MudTd DataLabel="Discharge">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.NewReleases" Color="Color.Info" ></MudIconButton>
+                            @if (context.PayableAmount == context.IPDRegisterationPayments.Sum(p => p.Amount) && !(context.Discharged??false))
+                            {
+
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.NewReleases" Color="Color.Info" OnClick="@(()=> Discharge(@context.Id))"></MudIconButton>
+                                
+                            }
                             </MudTd>
                             <MudTd DataLabel="Cancel">
                                 <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Cancel" Color="Color.Secondary" OnClick="@(()=> DeleteIPDRegisteration(@context.Id))"></MudIconButton>
@@ -100,6 +107,8 @@
 </TelerikWindow>
 
 @code {
+    [CascadingParameter]
+    public DialogFactory Dialogs { get; set; }
     private MudTable<IPDRegisterationViewModel> _table;
     private List<IPDRegisterationViewModel> Elements;
     private bool loading = false;
@@ -147,12 +156,16 @@
         selectReportTemplate = true;
     }
 
-    protected async Task DeleteIPDRegisteration(int Id)
+    protected async Task Discharge(int IPDRegisterationId)
     {
+        //string input;
+
+        //input = await Dialogs.PromptAsync("Please, enter your Reason.", "Cancel Reason");
+
         bool? dialogResult = await DialogService.ShowMessageBox(
-            "Cancel IPD Registeration",
+            "Discharge IPD Registeration",
             "Are you sure?",
-            yesText: "Cancel!", cancelText: "No");
+            yesText: "Discharge!", cancelText: "No");
 
         if (dialogResult == true)
         {
@@ -160,8 +173,9 @@
             try
             {
                 CommandResponse result;
-                var iPD = await mediator.Send(new GetIPDRegisterationByIdQuery(Id));
-                iPD.Canceled = true;
+                var iPD = await mediator.Send(new GetIPDRegisterationByIdQuery(IPDRegisterationId));
+                iPD.Discharged = true;
+                iPD.DischargeDate = DateTime.Now;
 
                 var command = MapperConfig.Mapper.Map<EditIPDRegisterationCommand>(iPD);
 
@@ -170,6 +184,59 @@
                 if (result.ResultType == ResultType.Success)
                 {
                     Elements = await mediator.Send(new GetAllIPDRegisterationsQuery());
+                    Elements = Elements.Where(e => e.Canceled != true).ToList();
+                    Snackbar.Add(result.ResultMessage, Severity.Success);
+                }
+                else if (result.ResultType == ResultType.Warning)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Warning);
+                }
+                else if (result.ResultType == ResultType.Error)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Error);
+                }
+
+
+
+            }
+            catch (Exception exp)
+            {
+                Snackbar.Add(exp.Message, Severity.Error);
+            }
+            loading = false;
+
+        }
+    }
+
+    protected async Task DeleteIPDRegisteration(int Id)
+    {
+        string input;
+
+        input = await Dialogs.PromptAsync("Please, enter your Reason.", "Cancel Reason");
+
+        //bool? dialogResult = await DialogService.ShowMessageBox(
+        //    "Cancel IPD Registeration",
+        //    "Are you sure?",
+        //    yesText: "Cancel!", cancelText: "No");
+
+        if (!String.IsNullOrWhiteSpace(input))
+        {
+            loading = true;
+            try
+            {
+                CommandResponse result;
+                var iPD = await mediator.Send(new GetIPDRegisterationByIdQuery(Id));
+                iPD.Canceled = true;
+                iPD.CancelReason = input;
+
+                var command = MapperConfig.Mapper.Map<EditIPDRegisterationCommand>(iPD);
+
+                result = await mediator.Send(command);
+
+                if (result.ResultType == ResultType.Success)
+                {
+                    Elements = await mediator.Send(new GetAllIPDRegisterationsQuery());
+                    Elements = Elements.Where(e => e.Canceled != true).ToList();
                     Snackbar.Add(result.ResultMessage, Severity.Success);
                 }
                 else if (result.ResultType == ResultType.Warning)

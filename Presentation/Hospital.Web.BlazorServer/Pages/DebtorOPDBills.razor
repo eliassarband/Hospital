@@ -103,7 +103,7 @@
 
         Elements = await mediator.Send(new GetAllOPDBillsQuery());
 
-        Elements = Elements.Where(d => d.DebtAmount > 0).ToList();
+        Elements = Elements.Where(d => !d.Canceled && d.DebtAmount > 0).ToList();
     }
 
     private void PageChanged(int i)
@@ -138,7 +138,7 @@
     {
         Elements = await mediator.Send(new GetAllOPDBillsQuery());
 
-        Elements = Elements.Where(d => d.DebtAmount > 0).ToList();
+        Elements = Elements.Where(d => !d.Canceled && d.DebtAmount > 0).ToList();
     }
 
 

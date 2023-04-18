@@ -44,6 +44,7 @@ namespace Hospital.Application.ViewModels
         public string Description { get; set; }
         public int? PrintCount { get; set; } = 0;
         public bool Canceled { get; set; } = false;
+        public string? CancelReason { get; set; }
         public virtual ICollection<OPDBillServiceViewModel> OPDBillServices { get; set; }
         public virtual ICollection<OPDBillPaymentViewModel> OPDBillPayments { get; set; }
         public DateTime CreatedDate { get; set; }

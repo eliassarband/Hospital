@@ -122,6 +122,31 @@
                     var patients = await mediator.Send(new GetAllPatientsQuery());
                     report.RegBusinessObject("Patient", patients.FirstOrDefault());
                 }
+                else if (reportTemplate.Code == "IPDPayment")
+                {
+                    var iPDRegisterationPayment = await mediator.Send(new GetAllIPDRegisterationPaymentsQuery());
+                    report.RegBusinessObject("IPDRegisterationPayment", iPDRegisterationPayment.FirstOrDefault());
+
+                    if (iPDRegisterationPayment != null)
+                    {
+                        var iPDRegisteration = await mediator.Send(new GetIPDRegisterationByIdQuery(iPDRegisterationPayment.FirstOrDefault().IPDRegisterationId ?? 0));
+                        report.RegBusinessObject("IPDRegisteration", iPDRegisteration);
+
+                        //var oPDBillServices = await mediator.Send(new GetOPDBillServicesByOPDBillIdQuery(0));
+                        //report.RegBusinessObject("OPDBillServices", oPDBillServices);
+
+                        //var oPDBillPayments = await mediator.Send(new GetOPDBillPaymentsByOPDBillIdQuery(0));
+                        //report.RegBusinessObject("OPDBillPayments", oPDBillPayments);
+                    }
+
+                    var hospital = await mediator.Send(new GetHospitalInformationByIdQuery(1));
+                    report.RegBusinessObject("HospitalInformation", hospital);
+
+                    var patients = await mediator.Send(new GetAllPatientsQuery());
+                    report.RegBusinessObject("Patient", patients.FirstOrDefault());
+
+
+                }
 
                 report.Dictionary.Synchronize();
 
