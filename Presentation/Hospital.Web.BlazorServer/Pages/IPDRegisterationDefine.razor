@@ -45,7 +45,7 @@
                                         <div class="k-form-field-wrap">
                                             <TelerikDatePicker @bind-Value="@iPDRegisteration.Date"
                                                                 Format="dddd, dd MMMM, yyyy"
-                                                                Id="ipd-date">
+                                                                Id="ipd-date" Enabled="false">
                                             </TelerikDatePicker>
                                         </div>
                                     </TelerikFloatingLabel>
@@ -506,7 +506,7 @@
                         </TabStripTab>
                         <TabStripTab Title="Payment(s)">
                             <MudGrid Spacing="1">
-                                <MudItem md="4">
+                                <MudItem md="3">
                                     <TelerikFloatingLabel Text="Room Amount" Class="custom-label w-100">
                                         <div class="k-form-field-wrap">
                                             <TelerikNumericTextBox Placeholder="Room Amount" Enabled="false"
@@ -516,7 +516,7 @@
                                         </div>
                                     </TelerikFloatingLabel>
                                 </MudItem>
-                                <MudItem md="4">
+                                <MudItem md="3">
                                     <TelerikFloatingLabel Text="Service Amount" Class="custom-label w-100">
                                         <div class="k-form-field-wrap">
                                             <TelerikNumericTextBox Placeholder="Service Amount" Enabled="false"
@@ -526,7 +526,7 @@
                                         </div>
                                     </TelerikFloatingLabel>
                                 </MudItem>
-                                <MudItem md="4">
+                                <MudItem md="3">
                                     <TelerikFloatingLabel Text="Medicine Amount" Class="custom-label w-100">
                                         <div class="k-form-field-wrap">
                                             <TelerikNumericTextBox Placeholder="Medicine Amount" Enabled="false"
@@ -536,7 +536,7 @@
                                         </div>
                                     </TelerikFloatingLabel>
                                 </MudItem>
-                                <MudItem md="4">
+                                <MudItem md="3">
                                     <TelerikFloatingLabel Text="Total Amount" Class="custom-label w-100">
                                         <div class="k-form-field-wrap">
                                             <TelerikNumericTextBox Placeholder="Total Amount" Enabled="false"
@@ -547,7 +547,7 @@
                                     </TelerikFloatingLabel>
                                     <TelerikValidationMessage For="@(() => iPDRegisteration.TotalAmount)" />
                                 </MudItem>
-                                <MudItem md="4">
+                                <MudItem md="3">
                                     <TelerikFloatingLabel Text="Total Discount" Class="custom-label w-100">
                                         <div class="k-form-field-wrap">
                                             <TelerikNumericTextBox Placeholder="Total Discount" Enabled="false"
@@ -557,7 +557,7 @@
                                         </div>
                                     </TelerikFloatingLabel>
                                 </MudItem>
-                                <MudItem md="4">
+                                <MudItem md="3">
                                     <TelerikFloatingLabel Text="Payable Amount" Class="custom-label w-100">
                                         <div class="k-form-field-wrap">
                                             <TelerikNumericTextBox Placeholder="Payable Amount" Enabled="false"
@@ -567,7 +567,7 @@
                                         </div>
                                     </TelerikFloatingLabel>
                                 </MudItem>
-                                <MudItem md="6">
+                                <MudItem md="3">
                                     <TelerikFloatingLabel Text="Paid Amount" Class="custom-label w-100">
                                         <div class="k-form-field-wrap">
                                             <TelerikNumericTextBox Placeholder="Paid Amount" Enabled="false"
@@ -577,7 +577,7 @@
                                         </div>
                                     </TelerikFloatingLabel>
                                 </MudItem>
-                                <MudItem md="6">
+                                <MudItem md="3">
                                     <TelerikFloatingLabel Text="Remain Amount" Class="custom-label w-100">
                                         <div class="k-form-field-wrap">
                                             <TelerikNumericTextBox Placeholder="Remain Amount" Enabled="false"

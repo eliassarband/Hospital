@@ -36,8 +36,9 @@ namespace Hospital.Domain.Core.Entities
         public virtual Attachment Attachment { get; set; }
 
         public virtual ICollection<UserRole> UserRoles { get; set; }
+		public virtual ICollection<GroupUser> GroupUsers { get; set; }
 
-        public string FullName()
+		public string FullName()
         {
             return FirstName + " " + LastName;
         }

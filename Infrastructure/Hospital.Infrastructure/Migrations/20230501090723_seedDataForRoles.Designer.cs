@@ -4,6 +4,7 @@ using Hospital.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Infrastructure.Migrations
 {
     [DbContext(typeof(HospitalContext))]
-    partial class HospitalContextModelSnapshot : ModelSnapshot
+    [Migration("20230501090723_seedDataForRoles")]
+    partial class seedDataForRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,10 +144,10 @@ namespace Hospital.Infrastructure.Migrations
                             AllowDelete = false,
                             CategoryId = 1,
                             Code = 1,
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4853),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3503),
                             CreatedUser = "elias.sarband",
                             IsDeleted = false,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4848),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3499),
                             Name = "Doctor",
                             Priority = 1,
                             StrCode = "Doctor"
@@ -157,10 +160,10 @@ namespace Hospital.Infrastructure.Migrations
                             AllowDelete = false,
                             CategoryId = 1,
                             Code = 2,
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4855),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3505),
                             CreatedUser = "elias.sarband",
                             IsDeleted = false,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4853),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3504),
                             Name = "Nurse",
                             Priority = 2,
                             StrCode = "Nurse"
@@ -173,10 +176,10 @@ namespace Hospital.Infrastructure.Migrations
                             AllowDelete = false,
                             CategoryId = 1,
                             Code = 3,
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4857),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3508),
                             CreatedUser = "elias.sarband",
                             IsDeleted = false,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4856),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3506),
                             Name = "Staff",
                             Priority = 3,
                             StrCode = "Staff"
@@ -189,10 +192,10 @@ namespace Hospital.Infrastructure.Migrations
                             AllowDelete = false,
                             CategoryId = 2,
                             Code = 1,
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4860),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3510),
                             CreatedUser = "elias.sarband",
                             IsDeleted = false,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4858),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3508),
                             Name = "Mr",
                             Priority = 1,
                             StrCode = "Mr"
@@ -205,10 +208,10 @@ namespace Hospital.Infrastructure.Migrations
                             AllowDelete = false,
                             CategoryId = 2,
                             Code = 2,
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4862),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3512),
                             CreatedUser = "elias.sarband",
                             IsDeleted = false,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4860),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3511),
                             Name = "Mrs",
                             Priority = 2,
                             StrCode = "Mrs"
@@ -221,10 +224,10 @@ namespace Hospital.Infrastructure.Migrations
                             AllowDelete = false,
                             CategoryId = 7,
                             Code = 1,
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4864),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3514),
                             CreatedUser = "elias.sarband",
                             IsDeleted = false,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4863),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3513),
                             Name = "Cash",
                             Priority = 1,
                             StrCode = "Cash"
@@ -237,10 +240,10 @@ namespace Hospital.Infrastructure.Migrations
                             AllowDelete = false,
                             CategoryId = 7,
                             Code = 2,
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4866),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3517),
                             CreatedUser = "elias.sarband",
                             IsDeleted = false,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4865),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3515),
                             Name = "Credit",
                             Priority = 2,
                             StrCode = "Credit"
@@ -253,10 +256,10 @@ namespace Hospital.Infrastructure.Migrations
                             AllowDelete = false,
                             CategoryId = 8,
                             Code = 1,
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4868),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3519),
                             CreatedUser = "elias.sarband",
                             IsDeleted = false,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4867),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3517),
                             Name = "Male",
                             Priority = 1,
                             StrCode = "Male"
@@ -269,10 +272,10 @@ namespace Hospital.Infrastructure.Migrations
                             AllowDelete = false,
                             CategoryId = 8,
                             Code = 2,
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4871),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3522),
                             CreatedUser = "elias.sarband",
                             IsDeleted = false,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4869),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3519),
                             Name = "Female",
                             Priority = 2,
                             StrCode = "Female"
@@ -326,9 +329,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 1,
                             Code = "StaffType",
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4796),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3432),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4793),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3430),
                             Name = "Staff Type",
                             Viewable = true
                         },
@@ -336,9 +339,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 2,
                             Code = "NamePrefix",
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4799),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3435),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4797),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3433),
                             Name = "Name Prefix",
                             Viewable = true
                         },
@@ -346,9 +349,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 3,
                             Code = "Speciality",
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4800),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3446),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4799),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3445),
                             Name = "Speciality",
                             Viewable = true
                         },
@@ -356,9 +359,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 4,
                             Code = "Qualification",
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4802),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3448),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4801),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3447),
                             Name = "Qualification",
                             Viewable = true
                         },
@@ -366,9 +369,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 5,
                             Code = "City",
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4803),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3449),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4802),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3449),
                             Name = "City",
                             Viewable = true
                         },
@@ -376,9 +379,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 6,
                             Code = "Area",
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4805),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3451),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4804),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3450),
                             Name = "Area",
                             RelatedCategoryId = 5,
                             Viewable = true
@@ -387,9 +390,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 7,
                             Code = "PaymentType",
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4806),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3453),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4805),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3452),
                             Name = "Payment Type",
                             Viewable = false
                         },
@@ -397,9 +400,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 8,
                             Code = "Gender",
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4811),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3459),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4810),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3458),
                             Name = "Gender",
                             Viewable = true
                         },
@@ -407,9 +410,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 9,
                             Code = "Ward",
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4821),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3464),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4812),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3460),
                             Name = "Ward",
                             Viewable = true
                         },
@@ -417,9 +420,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 10,
                             Code = "CaseType",
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4827),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3474),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4826),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3473),
                             Name = "Case Type",
                             Viewable = true
                         },
@@ -427,9 +430,9 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 11,
                             Code = "Relationship",
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4829),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3476),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4828),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3475),
                             Name = "Relationship",
                             Viewable = true
                         });
@@ -585,7 +588,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "Desktop",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 1,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4945),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3607),
                             Name = "Main Dashboard",
                             Priority = 1,
                             ShowInMenu = true,
@@ -597,7 +600,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "Appointment",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 1,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4948),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3611),
                             Name = "Appointment",
                             Priority = 2,
                             ShowInMenu = true,
@@ -609,7 +612,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "OPD",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 1,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4950),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3613),
                             Name = "OPD",
                             Priority = 3,
                             ShowInMenu = true,
@@ -621,7 +624,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "IPD",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 1,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4952),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3614),
                             Name = "IPD",
                             Priority = 4,
                             ShowInMenu = true,
@@ -633,7 +636,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "EPrecryption",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 1,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4953),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3616),
                             Name = "E-Precryption",
                             Priority = 5,
                             ShowInMenu = true,
@@ -645,7 +648,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "Labratoy",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 1,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4954),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3617),
                             Name = "Labratoy",
                             Priority = 6,
                             ShowInMenu = true,
@@ -657,7 +660,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "Pharmacy",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 1,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4955),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3618),
                             Name = "Pharmacy",
                             Priority = 7,
                             ShowInMenu = true,
@@ -669,7 +672,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "Financial",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 1,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4956),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3619),
                             Name = "Financial",
                             Priority = 8,
                             ShowInMenu = true,
@@ -681,7 +684,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "HR",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 1,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4957),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3621),
                             Name = "Human Resources",
                             Priority = 9,
                             ShowInMenu = true,
@@ -693,7 +696,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "Reports",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 1,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4965),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3622),
                             Name = "Reports",
                             Priority = 10,
                             ShowInMenu = true,
@@ -705,7 +708,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "Patients",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 3,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4966),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3623),
                             Name = "Patinet List",
                             Priority = 1,
                             ShowInMenu = true,
@@ -717,7 +720,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "PatinetDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 3,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4967),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3625),
                             Name = "Patinet Define",
                             Priority = 2,
                             ShowInMenu = false,
@@ -729,7 +732,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "OPDBills",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 3,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4968),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3626),
                             Name = "OPD Billing List",
                             Priority = 3,
                             ShowInMenu = true,
@@ -741,7 +744,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "OPDBillDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 3,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4969),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3627),
                             Name = "OPD Billing Define",
                             Priority = 4,
                             ShowInMenu = true,
@@ -753,7 +756,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "OPDBillPayments",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 3,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4970),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3628),
                             Name = "OPD Billing Payment",
                             Priority = 5,
                             ShowInMenu = false,
@@ -765,7 +768,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "DebtorOPDBills",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 3,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4971),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3630),
                             Name = "Receive Balance Payment",
                             Priority = 6,
                             ShowInMenu = true,
@@ -777,7 +780,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "Patients",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 4,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4972),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3631),
                             Name = "Patinet List",
                             Priority = 1,
                             ShowInMenu = true,
@@ -789,7 +792,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "PatinetDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 4,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4974),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3638),
                             Name = "Patinet Define",
                             Priority = 2,
                             ShowInMenu = false,
@@ -801,7 +804,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "IPDRegisterations",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 4,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4976),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3639),
                             Name = "Admited Patinet List",
                             Priority = 3,
                             ShowInMenu = true,
@@ -813,7 +816,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "IPDRegisterationDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 4,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4977),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3645),
                             Name = "IPD Registeration",
                             Priority = 1,
                             ShowInMenu = true,
@@ -825,7 +828,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "ReportTemplates",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 10,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4978),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3646),
                             Name = "Report Template List",
                             Priority = 1,
                             ShowInMenu = true,
@@ -837,7 +840,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "ReportTemplateDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 10,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4979),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3647),
                             Name = "Report Template Define",
                             Priority = 2,
                             ShowInMenu = false,
@@ -849,7 +852,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "ReportTemplateDesign",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 10,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4980),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3649),
                             Name = "Report Template Design",
                             Priority = 3,
                             ShowInMenu = false,
@@ -861,7 +864,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "ReportShow",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 10,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4981),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3650),
                             Name = "Report Show",
                             Priority = 4,
                             ShowInMenu = false,
@@ -873,7 +876,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "HospitalInformation",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4982),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3651),
                             Name = "Hospital Information",
                             Priority = 1,
                             ShowInMenu = true,
@@ -885,7 +888,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "Departments",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4983),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3652),
                             Name = "Department List",
                             Priority = 2,
                             ShowInMenu = true,
@@ -897,7 +900,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "DepartmentDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4984),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3653),
                             Name = "Department Define",
                             Priority = 3,
                             ShowInMenu = false,
@@ -909,7 +912,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "Services",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4985),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3654),
                             Name = "Service List",
                             Priority = 4,
                             ShowInMenu = true,
@@ -921,7 +924,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "ServiceDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4986),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3656),
                             Name = "Service Define",
                             Priority = 5,
                             ShowInMenu = false,
@@ -933,7 +936,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "Consultants",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4987),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3657),
                             Name = "Consultant List",
                             Priority = 6,
                             ShowInMenu = true,
@@ -945,7 +948,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "ConsultantDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4989),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3658),
                             Name = "Consultant Define",
                             Priority = 7,
                             ShowInMenu = false,
@@ -957,7 +960,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "ConsultantTimings",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4990),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3659),
                             Name = "Consultant Timing List",
                             Priority = 8,
                             ShowInMenu = true,
@@ -969,7 +972,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "ConsultantTimingDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4991),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3661),
                             Name = "Consultant Timing Define",
                             Priority = 9,
                             ShowInMenu = false,
@@ -981,7 +984,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "RefferBies",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4992),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3662),
                             Name = "Reffer By List",
                             Priority = 10,
                             ShowInMenu = true,
@@ -993,7 +996,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "RefferByDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4993),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3663),
                             Name = "Reffer By Define",
                             Priority = 11,
                             ShowInMenu = false,
@@ -1005,7 +1008,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "Medicines",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4994),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3664),
                             Name = "Medicine List",
                             Priority = 12,
                             ShowInMenu = true,
@@ -1017,7 +1020,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "MedicineDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4996),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3666),
                             Name = "Medicine Define",
                             Priority = 13,
                             ShowInMenu = false,
@@ -1029,7 +1032,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "RoomTypes",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4997),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3668),
                             Name = "Room Type List",
                             Priority = 14,
                             ShowInMenu = true,
@@ -1041,7 +1044,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "RoomTypeDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4998),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3669),
                             Name = "Room Type Define",
                             Priority = 15,
                             ShowInMenu = false,
@@ -1053,7 +1056,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "Rooms",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4999),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3670),
                             Name = "Room List",
                             Priority = 16,
                             ShowInMenu = true,
@@ -1065,7 +1068,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "RoomDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5000),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3671),
                             Name = "Room Define",
                             Priority = 17,
                             ShowInMenu = false,
@@ -1077,7 +1080,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "Beds",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5001),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3672),
                             Name = "Bed List",
                             Priority = 18,
                             ShowInMenu = true,
@@ -1089,7 +1092,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "BedDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5002),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3674),
                             Name = "Bed Define",
                             Priority = 19,
                             ShowInMenu = false,
@@ -1101,7 +1104,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "Insurances",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5003),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3675),
                             Name = "Insurance List",
                             Priority = 20,
                             ShowInMenu = true,
@@ -1113,7 +1116,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "InsuranceDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5004),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3676),
                             Name = "Insurance Define",
                             Priority = 21,
                             ShowInMenu = false,
@@ -1125,7 +1128,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "InsuranceAgreements",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5005),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3677),
                             Name = "InsuranceAgreement List",
                             Priority = 22,
                             ShowInMenu = true,
@@ -1137,7 +1140,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "InsuranceAgreementDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5006),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3678),
                             Name = "Insurance Agreement Define",
                             Priority = 23,
                             ShowInMenu = false,
@@ -1149,7 +1152,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "Cities",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5007),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3679),
                             Name = "City List",
                             Priority = 24,
                             ShowInMenu = true,
@@ -1161,7 +1164,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "CityDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5008),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3681),
                             Name = "City Define",
                             Priority = 25,
                             ShowInMenu = false,
@@ -1173,7 +1176,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "Areas",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5009),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3682),
                             Name = "Area List",
                             Priority = 26,
                             ShowInMenu = true,
@@ -1185,7 +1188,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "AreaDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5010),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3684),
                             Name = "Area Define",
                             Priority = 27,
                             ShowInMenu = false,
@@ -1197,7 +1200,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "BasicInformationCategories",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5011),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3686),
                             Name = "Basic Information Category List",
                             Priority = 28,
                             ShowInMenu = true,
@@ -1209,7 +1212,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "BasicInformationCategoryDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5014),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3687),
                             Name = "Basic Information Category Define",
                             Priority = 29,
                             ShowInMenu = false,
@@ -1221,7 +1224,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "BasicInformations",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5015),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3688),
                             Name = "Basic Information List",
                             Priority = 30,
                             ShowInMenu = true,
@@ -1233,7 +1236,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "BasicInformationDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5016),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3689),
                             Name = "Basic Information Define",
                             Priority = 31,
                             ShowInMenu = false,
@@ -1245,7 +1248,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "Settings",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 11,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5017),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3690),
                             Name = "Setting",
                             Priority = 32,
                             ShowInMenu = true,
@@ -1257,7 +1260,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "Users",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 12,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5018),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3691),
                             Name = "User List",
                             Priority = 1,
                             ShowInMenu = true,
@@ -1269,7 +1272,7 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "UserDefine",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 12,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5019),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3693),
                             Name = "User Define",
                             Priority = 2,
                             ShowInMenu = false,
@@ -1281,12 +1284,52 @@ namespace Hospital.Infrastructure.Migrations
                             Code = "ChangePassword",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FormCategoryId = 12,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5020),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3694),
                             Name = "Change Password",
                             Priority = 3,
                             ShowInMenu = true,
                             Url = "ChangePassword"
                         });
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Core.Entities.FormAccess", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FormId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FormId");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FormAccess", "Sec");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Core.Entities.FormAction", b =>
@@ -1334,1758 +1377,6 @@ namespace Hospital.Infrastructure.Migrations
                     b.HasIndex("FormId");
 
                     b.ToTable("FormAction", "Sec");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 10101,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 101,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5060),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 10102,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 102,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5061),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 10103,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 103,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5063),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 10104,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 104,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5063),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 10105,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 105,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5064),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 10106,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 106,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5065),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 10107,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 107,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5066),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 10108,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 108,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5067),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 10109,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 109,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5068),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 10110,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 110,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5069),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 30101,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 301,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5070),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 30102,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 301,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5071),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 30103,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 301,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5073),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 30104,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 301,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5074),
-                            Name = "Delete",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 30105,
-                            Code = "Select",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 301,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5075),
-                            Name = "Select",
-                            Priority = 5
-                        },
-                        new
-                        {
-                            Id = 30201,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 302,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5076),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 30202,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 302,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5077),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 30301,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 303,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5078),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 30302,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 303,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5079),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 30303,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 303,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5080),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 30304,
-                            Code = "Cancel",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 303,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5080),
-                            Name = "Cancel",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 30305,
-                            Code = "Select",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 303,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5081),
-                            Name = "Select",
-                            Priority = 5
-                        },
-                        new
-                        {
-                            Id = 30306,
-                            Code = "Print",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 303,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5082),
-                            Name = "Print",
-                            Priority = 6
-                        },
-                        new
-                        {
-                            Id = 30307,
-                            Code = "Payment",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 303,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5083),
-                            Name = "Payment",
-                            Priority = 7
-                        },
-                        new
-                        {
-                            Id = 30401,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 304,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5084),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 30402,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 304,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5085),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 30403,
-                            Code = "Print",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 304,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5086),
-                            Name = "Print",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 30404,
-                            Code = "AddPatient",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 304,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5087),
-                            Name = "Add Patient",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 30405,
-                            Code = "SearchPatient",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 304,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5088),
-                            Name = "Search Patient",
-                            Priority = 5
-                        },
-                        new
-                        {
-                            Id = 30406,
-                            Code = "AddService",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 304,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5088),
-                            Name = "Add Service",
-                            Priority = 6
-                        },
-                        new
-                        {
-                            Id = 30407,
-                            Code = "DeleteService",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 304,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5089),
-                            Name = "Delete Service",
-                            Priority = 7
-                        },
-                        new
-                        {
-                            Id = 30501,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 305,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5092),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 30502,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 305,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5092),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 30503,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 305,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5093),
-                            Name = "Delete",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 30504,
-                            Code = "Print",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 305,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5094),
-                            Name = "Print",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 30601,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 306,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5095),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 30602,
-                            Code = "Payment",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 306,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5096),
-                            Name = "Payment",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 40101,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 401,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5097),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 40102,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 401,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5098),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 40103,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 401,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5099),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 40104,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 401,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5099),
-                            Name = "Delete",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 40105,
-                            Code = "Select",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 401,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5100),
-                            Name = "Select",
-                            Priority = 5
-                        },
-                        new
-                        {
-                            Id = 40201,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 402,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5101),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 40202,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 402,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5102),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 40301,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 403,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5103),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 40302,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 403,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5104),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 40303,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 403,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5105),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 40304,
-                            Code = "Cancel",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 403,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5106),
-                            Name = "Cancel",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 40305,
-                            Code = "Discharge",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 403,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5107),
-                            Name = "Discharge",
-                            Priority = 5
-                        },
-                        new
-                        {
-                            Id = 40306,
-                            Code = "Print",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 403,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5107),
-                            Name = "Print",
-                            Priority = 6
-                        },
-                        new
-                        {
-                            Id = 40401,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 404,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5108),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 40402,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 404,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5109),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 40403,
-                            Code = "Print",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 404,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5110),
-                            Name = "Print",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 40404,
-                            Code = "AddPatient",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 404,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5111),
-                            Name = "Add Patient",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 40405,
-                            Code = "SearchPatient",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 404,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5112),
-                            Name = "Search Patient",
-                            Priority = 5
-                        },
-                        new
-                        {
-                            Id = 40406,
-                            Code = "SearchOPD",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 404,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5114),
-                            Name = "Search OPD Billing",
-                            Priority = 6
-                        },
-                        new
-                        {
-                            Id = 40407,
-                            Code = "AddRoom",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 404,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5115),
-                            Name = "Add Room",
-                            Priority = 7
-                        },
-                        new
-                        {
-                            Id = 40408,
-                            Code = "DeleteRoom",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 404,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5115),
-                            Name = "Delete Room",
-                            Priority = 8
-                        },
-                        new
-                        {
-                            Id = 40409,
-                            Code = "AddService",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 404,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5116),
-                            Name = "Add Service",
-                            Priority = 9
-                        },
-                        new
-                        {
-                            Id = 40410,
-                            Code = "DeleteService",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 404,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5117),
-                            Name = "Delete Service",
-                            Priority = 10
-                        },
-                        new
-                        {
-                            Id = 40411,
-                            Code = "AddPayment",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 404,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5118),
-                            Name = "Add Payment",
-                            Priority = 11
-                        },
-                        new
-                        {
-                            Id = 40412,
-                            Code = "DeletePayment",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 404,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5119),
-                            Name = "Delete Payment",
-                            Priority = 12
-                        },
-                        new
-                        {
-                            Id = 40413,
-                            Code = "PrintPayment",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 404,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5120),
-                            Name = "Print Payment",
-                            Priority = 13
-                        },
-                        new
-                        {
-                            Id = 100101,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1001,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5121),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 100102,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1001,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5122),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 100103,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1001,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5122),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 100104,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1001,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5123),
-                            Name = "Delete",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 100105,
-                            Code = "Design",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1001,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5124),
-                            Name = "Design",
-                            Priority = 5
-                        },
-                        new
-                        {
-                            Id = 100201,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1002,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5125),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 100202,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1002,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5126),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 100301,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1003,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5127),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 100401,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1004,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5128),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 110101,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1101,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5129),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 110102,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1101,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5131),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 110201,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1102,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5132),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 110202,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1102,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5133),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 110203,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1102,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5133),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 110204,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1102,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5134),
-                            Name = "Delete",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 110301,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1103,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5135),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 110302,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1103,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5140),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 110401,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1104,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5142),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 110402,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1104,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5143),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 110403,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1104,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5144),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 110404,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1104,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5144),
-                            Name = "Delete",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 110501,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1105,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5145),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 110502,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1105,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5146),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 110601,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1106,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5147),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 110602,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1106,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5148),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 110603,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1106,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5149),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 110604,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1106,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5150),
-                            Name = "Delete",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 110701,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1107,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5151),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 110702,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1107,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5152),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 110801,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1108,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5153),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 110802,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1108,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5154),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 110803,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1108,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5154),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 110804,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1108,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5155),
-                            Name = "Delete",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 110901,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1109,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5156),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 110902,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1109,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5158),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 111001,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1110,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5159),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 111002,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1110,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5160),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 111003,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1110,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5161),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 111004,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1110,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5162),
-                            Name = "Delete",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 111101,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1111,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5163),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 111102,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1111,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5164),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 111201,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1112,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5165),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 111202,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1112,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5166),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 111203,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1112,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5167),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 111204,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1112,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5168),
-                            Name = "Delete",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 111301,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1113,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5169),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 111302,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1113,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5170),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 111401,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1114,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5171),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 111402,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1114,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5172),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 111403,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1114,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5173),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 111404,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1114,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5174),
-                            Name = "Delete",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 111501,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1115,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5175),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 111502,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1115,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5175),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 111601,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1116,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5176),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 111602,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1116,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5177),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 111603,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1116,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5179),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 111604,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1116,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5180),
-                            Name = "Delete",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 111701,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1117,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5181),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 111702,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1117,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5182),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 111801,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1118,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5183),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 111802,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1118,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5184),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 111803,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1118,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5185),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 111804,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1118,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5186),
-                            Name = "Delete",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 111901,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1119,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5187),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 111902,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1119,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5188),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 112001,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1120,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5189),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 112002,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1120,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5190),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 112003,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1120,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5191),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 112004,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1120,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5192),
-                            Name = "Delete",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 112101,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1121,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5193),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 112102,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1121,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5194),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 112201,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1122,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5195),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 112202,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1122,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5196),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 112203,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1122,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5197),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 112204,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1122,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5198),
-                            Name = "Delete",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 112301,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1123,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5199),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 112302,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1123,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5200),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 112401,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1124,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5201),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 112402,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1124,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5202),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 112403,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1124,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5203),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 112404,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1124,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5204),
-                            Name = "Delete",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 112501,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1125,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5205),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 112502,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1125,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5206),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 112601,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1126,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5207),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 112602,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1126,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5208),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 112603,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1126,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5210),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 112604,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1126,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5211),
-                            Name = "Delete",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 112701,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1127,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5212),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 112702,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1127,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5213),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 112801,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1128,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5214),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 112802,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1128,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5215),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 112803,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1128,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5216),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 112804,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1128,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5217),
-                            Name = "Delete",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 112901,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1129,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5218),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 112902,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1129,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5219),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 113001,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1130,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5220),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 113002,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1130,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5221),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 113003,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1130,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5222),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 113004,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1130,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5223),
-                            Name = "Delete",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 113101,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1131,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5224),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 113102,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1131,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5225),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 113201,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1132,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5230),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 113202,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1132,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5232),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 120101,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1201,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5233),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 120102,
-                            Code = "Add",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1201,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5234),
-                            Name = "Add",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 120103,
-                            Code = "Edit",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1201,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5235),
-                            Name = "Edit",
-                            Priority = 3
-                        },
-                        new
-                        {
-                            Id = 120104,
-                            Code = "Delete",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1201,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5236),
-                            Name = "Delete",
-                            Priority = 4
-                        },
-                        new
-                        {
-                            Id = 120105,
-                            Code = "Reset",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1201,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5237),
-                            Name = "Reset Password",
-                            Priority = 5
-                        },
-                        new
-                        {
-                            Id = 120201,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1202,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5238),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 120202,
-                            Code = "Save",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1202,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5239),
-                            Name = "Save",
-                            Priority = 2
-                        },
-                        new
-                        {
-                            Id = 120301,
-                            Code = "View",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1203,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5240),
-                            Name = "View",
-                            Priority = 1
-                        },
-                        new
-                        {
-                            Id = 120302,
-                            Code = "Change",
-                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FormId = 1203,
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(5241),
-                            Name = "Change Password",
-                            Priority = 2
-                        });
                 });
 
             modelBuilder.Entity("Hospital.Domain.Core.Entities.FormActionAccess", b =>
@@ -3178,7 +1469,7 @@ namespace Hospital.Infrastructure.Migrations
                             Id = 1,
                             Code = "Dashboards",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4911),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3572),
                             Name = "Dashboards",
                             Priority = 1,
                             ShowInDashboard = false
@@ -3188,7 +1479,7 @@ namespace Hospital.Infrastructure.Migrations
                             Id = 2,
                             Code = "Appointment",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4914),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3575),
                             Name = "Appointment",
                             Priority = 2,
                             ShowInDashboard = true
@@ -3198,7 +1489,7 @@ namespace Hospital.Infrastructure.Migrations
                             Id = 3,
                             Code = "OPD",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4915),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3576),
                             Name = "OPD",
                             Priority = 3,
                             ShowInDashboard = true
@@ -3208,7 +1499,7 @@ namespace Hospital.Infrastructure.Migrations
                             Id = 4,
                             Code = "IPD",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4916),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3577),
                             Name = "IPD",
                             Priority = 4,
                             ShowInDashboard = true
@@ -3218,7 +1509,7 @@ namespace Hospital.Infrastructure.Migrations
                             Id = 5,
                             Code = "EPrecryption",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4917),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3578),
                             Name = "E-Precryption",
                             Priority = 5,
                             ShowInDashboard = true
@@ -3228,7 +1519,7 @@ namespace Hospital.Infrastructure.Migrations
                             Id = 6,
                             Code = "Labratoy",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4918),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3579),
                             Name = "Labratoy",
                             Priority = 6,
                             ShowInDashboard = true
@@ -3238,7 +1529,7 @@ namespace Hospital.Infrastructure.Migrations
                             Id = 7,
                             Code = "Pharmacy",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4919),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3580),
                             Name = "Pharmacy",
                             Priority = 7,
                             ShowInDashboard = true
@@ -3248,7 +1539,7 @@ namespace Hospital.Infrastructure.Migrations
                             Id = 8,
                             Code = "Financial",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4920),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3581),
                             Name = "Financial",
                             Priority = 8,
                             ShowInDashboard = true
@@ -3258,7 +1549,7 @@ namespace Hospital.Infrastructure.Migrations
                             Id = 9,
                             Code = "HR",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4921),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3582),
                             Name = "Human Resoutces",
                             Priority = 9,
                             ShowInDashboard = true
@@ -3268,7 +1559,7 @@ namespace Hospital.Infrastructure.Migrations
                             Id = 10,
                             Code = "Reports",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4922),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3583),
                             Name = "Reports",
                             Priority = 10,
                             ShowInDashboard = true
@@ -3278,7 +1569,7 @@ namespace Hospital.Infrastructure.Migrations
                             Id = 11,
                             Code = "Setting",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4923),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3584),
                             Name = "Setting",
                             Priority = 11,
                             ShowInDashboard = false
@@ -3288,7 +1579,7 @@ namespace Hospital.Infrastructure.Migrations
                             Id = 12,
                             Code = "Security",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4924),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3585),
                             Name = "Security",
                             Priority = 12,
                             ShowInDashboard = false
@@ -4275,20 +2566,20 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 1,
                             Code = "Super",
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 688, DateTimeKind.Local).AddTicks(3427),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 360, DateTimeKind.Local).AddTicks(850),
                             CreatedUser = "elias.sarband",
                             Description = "",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 688, DateTimeKind.Local).AddTicks(3409),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 360, DateTimeKind.Local).AddTicks(834),
                             Name = "Super Admin"
                         },
                         new
                         {
                             Id = 2,
                             Code = "User",
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 688, DateTimeKind.Local).AddTicks(3429),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 360, DateTimeKind.Local).AddTicks(853),
                             CreatedUser = "elias.sarband",
                             Description = "",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 688, DateTimeKind.Local).AddTicks(3428),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 360, DateTimeKind.Local).AddTicks(851),
                             Name = "User"
                         });
                 });
@@ -4506,30 +2797,30 @@ namespace Hospital.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4891),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3547),
                             CreatedUser = "elias.sarband",
                             Key = "PatientIdPrefix",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4889),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3545),
                             Name = "Patient Identifier Prefix",
                             Value = "P"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4893),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3549),
                             CreatedUser = "elias.sarband",
                             Key = "OPDReceiptNoPrefix",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4892),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3548),
                             Name = "OPD Receipt Identifier Prefix",
                             Value = "OP"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4894),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3550),
                             CreatedUser = "elias.sarband",
                             Key = "IPDNoPrefix",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4893),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3549),
                             Name = "IPD No Prefix",
                             Value = "IP"
                         });
@@ -4748,12 +3039,12 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 1,
                             Active = true,
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 689, DateTimeKind.Local).AddTicks(4241),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 361, DateTimeKind.Local).AddTicks(2845),
                             CreatedUser = "elias.sarband",
                             Email = "elias.sarband@gmail.com",
                             FirstName = "Elias",
                             LastName = "Sarband",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 688, DateTimeKind.Local).AddTicks(3556),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 360, DateTimeKind.Local).AddTicks(1068),
                             Password = "SEIE/b+BtdSahkhMsl4KK3SuEjCF1OKUEn4oQYMaYSc=",
                             PhoneNumber = "9125056182",
                             Theme = "Light",
@@ -4763,12 +3054,12 @@ namespace Hospital.Infrastructure.Migrations
                         {
                             Id = 2,
                             Active = true,
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4691),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3340),
                             CreatedUser = "elias.sarband",
                             Email = "",
                             FirstName = "Admin",
                             LastName = "AccurateCo",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 689, DateTimeKind.Local).AddTicks(4244),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 361, DateTimeKind.Local).AddTicks(2849),
                             Password = "dW/0ZNtG5T5uIyhEYh0J9Q==",
                             PhoneNumber = "9125056182",
                             Theme = "Light",
@@ -4814,18 +3105,18 @@ namespace Hospital.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4766),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3405),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4764),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3403),
                             RoleId = 1,
                             UserId = 1
                         },
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4768),
+                            CreatedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3407),
                             CreatedUser = "elias.sarband",
-                            ModifiedDate = new DateTime(2023, 5, 1, 13, 35, 4, 690, DateTimeKind.Local).AddTicks(4767),
+                            ModifiedDate = new DateTime(2023, 5, 1, 12, 37, 23, 362, DateTimeKind.Local).AddTicks(3406),
                             RoleId = 1,
                             UserId = 2
                         });
@@ -4886,6 +3177,29 @@ namespace Hospital.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("FormCategory");
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Core.Entities.FormAccess", b =>
+                {
+                    b.HasOne("Hospital.Domain.Core.Entities.Form", "Form")
+                        .WithMany()
+                        .HasForeignKey("FormId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hospital.Domain.Core.Entities.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId");
+
+                    b.HasOne("Hospital.Domain.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Form");
+
+                    b.Navigation("Group");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Core.Entities.FormAction", b =>

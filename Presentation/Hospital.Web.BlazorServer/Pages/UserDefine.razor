@@ -67,9 +67,8 @@
 
                             </MudItem>
                             <MudItem md="6">
-                                <MudCheckBox @bind-Checked="@superAccess">Super</MudCheckBox>
-                                <MudCheckBox @bind-Checked="@adminAccess">Admin</MudCheckBox>
-                                <MudCheckBox @bind-Checked="@operatorAccess">Operator</MudCheckBox>
+                                <MudCheckBox @bind-Checked="@superAccess">Super Admin</MudCheckBox>
+                                <MudCheckBox @bind-Checked="@userAccess">User</MudCheckBox>
                             </MudItem>
                             
                         </MudGrid>
@@ -100,8 +99,7 @@
     private string photo;
     private string photoContentType;
     private bool superAccess = false;
-    private bool adminAccess = false;
-    private bool operatorAccess = false;
+    private bool userAccess = false;
     private bool attachmentChanged = false;
 
     protected override async Task OnInitializedAsync()
@@ -124,11 +122,8 @@
                         if (r.RoleCode == "Super")
                             superAccess = true;
 
-                        if (r.RoleCode == "Admin")
-                            adminAccess = true;
-
-                        if (r.RoleCode == "Operator")
-                            operatorAccess = true;
+                        if (r.RoleCode == "User")
+                            userAccess = true;
 
                     }
 
@@ -292,9 +287,7 @@
 
                     if(role.Code=="Super" && superAccess)
                         access=true;
-                    else if (role.Code == "Admin" && adminAccess)
-                        access = true;
-                    else if (role.Code == "Operator" && operatorAccess)
+                    else if (role.Code == "User" && userAccess)
                         access = true;
 
                     if (!access && userRoles.Exists(r => r.UserId == result.Id && r.RoleCode == role.Code))

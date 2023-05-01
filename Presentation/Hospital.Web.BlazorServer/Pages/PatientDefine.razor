@@ -18,8 +18,8 @@
 @attribute [Authorize(Roles = "Super,Admin")]
 
 <MudGrid Class="mt-2">
-    <MudItem md="1"></MudItem>
-    <MudItem md="10">
+    
+    <MudItem md="12">
         <MudPaper Class="p-3" Elevation="10">
             <TelerikForm @ref="form" Model="@patient"
                      OnValidSubmit="@HandleValidSubmit"
@@ -29,230 +29,233 @@
                     
                 </FormValidation>
                 <FormItems>
-                    <MudGrid Spacing="1">
-                        <MudItem md="12">
-                            @if(patient!=null)
-                            {
-                                <MudText>
+                    <MudGrid Spacing="0">
+                        
+                        @if (patient != null)
+                        {
+                            <MudItem md="12">
+                                <MudText Class="mt-5">
                                     Patient Id : @UtilityHelper.GenerateIdentifier(patientIdPrefix.Value,patient.Id)
                                 </MudText>
-                                
-                            }
+                            </MudItem>
+                        }
+                        
+                        <MudItem md="9">
+                            <MudGrid Spacing="0">
+                                <MudItem md="4" Class="pl-1 pr-1">
+                                    <TelerikFloatingLabel Text="National Id Cart" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikTextBox Placeholder="National Id Cart"
+                                                            @bind-Value="@patient.NationalIdCart"></TelerikTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => patient.NationalIdCart)" />
+                                </MudItem>
+                                <MudItem md="4" Class="pl-1 pr-1">
+                                    <TelerikFloatingLabel Text="Name Prefix" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikComboBox @bind-Value="@patient.NamePrefixId"
+                                                             Data="@namePrefixes"
+                                                             Placeholder="Select Name Prefix"
+                                                             TextField="@nameof(BasicInformationViewModel.Name)"
+                                                             ValueField="@nameof(BasicInformationViewModel.Id)"
+                                                             Filterable="true"
+                                                             Id="namePrefix">
+                                            </TelerikComboBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => patient.NamePrefix)" />
+                                </MudItem>
+                                <MudItem md="4" Class="pl-1 pr-1">
+                                    <TelerikFloatingLabel Text="Patient Name" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikTextBox Placeholder="Patient Name"
+                                                            @bind-Value="@patient.Name"></TelerikTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => patient.Name)" />
+                                </MudItem>
+                                <MudItem md="4" Class="pl-1 pr-1">
+                                    <TelerikFloatingLabel Text="Age" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikTextBox Placeholder="Patient Age"
+                                                        @bind-Value="@patientAge"
+                                                        Enabled="false"></TelerikTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => patient.DateOfBirth)" />
+                                </MudItem>
+                                <MudItem md="4" Class="pl-1 pr-1">
+                                    <TelerikFloatingLabel Text="Gender" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikComboBox @bind-Value="@patient.GenderId"
+                                                             Data="@genders"
+                                                         Placeholder="Select Gender"
+                                                             TextField="@nameof(BasicInformationViewModel.Name)"
+                                                             ValueField="@nameof(BasicInformationViewModel.Id)"
+                                                             Filterable="true"
+                                                             Id="gender">
+                                            </TelerikComboBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => patient.Gender)" />
+                                </MudItem>
+                                <MudItem md="4" Class="pl-1 pr-1">
+                                    <TelerikFloatingLabel Text="Father Name" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikTextBox Placeholder="Father Name"
+                                                        @bind-Value="@patient.FatherName"></TelerikTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => patient.FatherName)" />
+                                </MudItem>
+                                <MudItem md="4" Class="pl-1 pr-1">
+                                    <TelerikFloatingLabel Text="Phone Number" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikMaskedTextBox Id="phone-input"
+                                                                  @bind-Value="@patient.Phone"
+                                                                  PlaceHolder="Mobile Number"
+                                                                  Mask="(999) 000-0000"></TelerikMaskedTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => patient.Phone)" />
+                                </MudItem>
+                                <MudItem md="4" Class="pl-1 pr-1">
+                                    <TelerikFloatingLabel Text="Email Address" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikTextBox Placeholder="Email Address"
+                                                            @bind-Value="@patient.Email"></TelerikTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => patient.Email)" />
+                                </MudItem>
+                                <MudItem md="4" Class="pl-1 pr-1">
+                                    <TelerikFloatingLabel Text="City" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikComboBox @bind-Value="@patient.CityId"
+                                                             Data="@cities"
+                                                             Placeholder="Select City"
+                                                             TextField="@nameof(BasicInformationViewModel.Name)"
+                                                             ValueField="@nameof(BasicInformationViewModel.Id)"
+                                                             Filterable="true"
+                                                             Id="city">
+                                            </TelerikComboBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => patient.CityId)" />
+                                </MudItem>
+                                <MudItem md="4" Class="pl-1 pr-1">
+                                    <TelerikFloatingLabel Text="Area" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikComboBox @bind-Value="@patient.AreaId"
+                                                             Data="@areas"
+                                                             Placeholder="Select Area"
+                                                             TextField="@nameof(BasicInformationViewModel.Name)"
+                                                             ValueField="@nameof(BasicInformationViewModel.Id)"
+                                                             Filterable="true"
+                                                             Id="area">
+                                            </TelerikComboBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => patient.AreaId)" />
+                                </MudItem>
+                                <MudItem md="8" Class="pl-1 pr-1">
+                                    <TelerikFloatingLabel Text="Address" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikTextBox Placeholder="Address"
+                                                            @bind-Value="@patient.Address"></TelerikTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => patient.Address)" />
+
+                                </MudItem>
+                                <MudItem md="4" Class="pl-1 pr-1">
+                                    <TelerikFloatingLabel Text="Reffer By" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikComboBox @bind-Value="@patient.RefferById"
+                                                             Data="@refferBies"
+                                                             Placeholder="Select Reffer By"
+                                                             TextField="@nameof(RefferByViewModel.Name)"
+                                                             ValueField="@nameof(RefferByViewModel.Id)"
+                                                             Filterable="true"
+                                                             Id="refferBy">
+                                            </TelerikComboBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => patient.RefferById)" />
+                                </MudItem>
+                                <MudItem md="4" Class="pl-1 pr-1">
+                                    <TelerikFloatingLabel Text="Occupation" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikTextBox Placeholder="Occupation"
+                                                            @bind-Value="@patient.Occupation"></TelerikTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => patient.Occupation)" />
+                                </MudItem>
+                                <MudItem md="4" Class="pl-1 pr-1">
+                                    <TelerikFloatingLabel Text="Insurance" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikComboBox @bind-Value="@patient.InsuranceId"
+                                                                Data="@insurances"
+                                                                Placeholder="Select Insurance"
+                                                                TextField="@nameof(InsuranceViewModel.Name)"
+                                                                ValueField="@nameof(InsuranceViewModel.Id)"
+                                                                Filterable="true"
+                                                                Id="insurance">
+                                            </TelerikComboBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => patient.Insurance)" />
+                                </MudItem>
+                                <MudItem md="4" Class="pl-1 pr-1">
+                                    <TelerikFloatingLabel Text="Insurance Number" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikTextBox Placeholder="Insurance Number"
+                                                        @bind-Value="@patient.InsuranceNumber"></TelerikTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => patient.InsuranceNumber)" />
+                                </MudItem>
+                                <MudItem md="4" Class="pl-1 pr-1">
+                                    <TelerikFloatingLabel Text="Proposal Number" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikTextBox Placeholder="Proposal Number"
+                                                            @bind-Value="@patient.ProposalNumber"></TelerikTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => patient.ProposalNumber   )" />
+                                </MudItem>
+                            </MudGrid>
+                            
                         </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="National Id Cart" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                    <TelerikTextBox Placeholder="National Id Cart"
-                                                    @bind-Value="@patient.NationalIdCart"></TelerikTextBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => patient.NationalIdCart)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Name Prefix" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                    <TelerikComboBox @bind-Value="@patient.NamePrefixId"
-                                                     Data="@namePrefixes"
-                                                     Placeholder="Select Name Prefix"
-                                                     TextField="@nameof(BasicInformationViewModel.Name)"
-                                                     ValueField="@nameof(BasicInformationViewModel.Id)"
-                                                     Filterable="true"
-                                                     Id="namePrefix">
-                                    </TelerikComboBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => patient.NamePrefix)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Patient Name" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                    <TelerikTextBox Placeholder="Patient Name"
-                                                        @bind-Value="@patient.Name"></TelerikTextBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => patient.Name)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Date" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikDatePicker @bind-Value="@patient.DateOfBirth"
-                                                           Format="dddd, dd MMMM, yyyy"
-                                                           OnChange="DateOfBirthChanged"
-                                                           Id="opd-date">
-                                        </TelerikDatePicker>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => patient.DateOfBirth)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Age" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikTextBox Placeholder="Patient Age"
-                                                    @bind-Value="@patientAge"
-                                                    Enabled="false"></TelerikTextBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => patient.DateOfBirth)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Gender" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikComboBox @bind-Value="@patient.GenderId"
-                                                         Data="@genders"
-                                                     Placeholder="Select Gender"
-                                                         TextField="@nameof(BasicInformationViewModel.Name)"
-                                                         ValueField="@nameof(BasicInformationViewModel.Id)"
-                                                         Filterable="true"
-                                                         Id="gender">
-                                        </TelerikComboBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => patient.Gender)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Father Name" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikTextBox Placeholder="Father Name"
-                                                    @bind-Value="@patient.FatherName"></TelerikTextBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => patient.FatherName)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Mobile Number" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikMaskedTextBox Id="phone-input" 
-                                                    @bind-Value="@patient.Mobile" 
-                                                    PlaceHolder="Mobile Number"
-                                                    Mask="(999) 000-0000"></TelerikMaskedTextBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => patient.Mobile)" />
+                        <MudItem md="3">
+                            <MudGrid Spacing="0">
+                                <MudItem md="12" Class="pl-1 pr-1">
+                                    <TelerikFloatingLabel Text="Date" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikDatePicker @bind-Value="@patient.DateOfBirth"
+                                                               Format="dddd, dd MMMM, yyyy"
+                                                               OnChange="DateOfBirthChanged"
+                                                               Id="opd-date">
+                                            </TelerikDatePicker>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => patient.DateOfBirth)" />
+                                </MudItem>
+                                <MudItem md="12" Class="pl-1 pr-1">
+                                    <TelerikFloatingLabel Text="Mobile Number" Class="custom-label w-100">
+                                        <div class="k-form-field-wrap">
+                                            <TelerikMaskedTextBox Id="phone-input"
+                                                                  @bind-Value="@patient.Mobile"
+                                                                  PlaceHolder="Mobile Number"
+                                                                  Mask="(999) 000-0000"></TelerikMaskedTextBox>
+                                        </div>
+                                    </TelerikFloatingLabel>
+                                    <TelerikValidationMessage For="@(() => patient.Mobile)" />
 
-                            </MudItem>
-                             <MudItem md="6">
-                                <TelerikFloatingLabel Text="Phone Number" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikMaskedTextBox Id="phone-input"
-                                                          @bind-Value="@patient.Phone"
-                                                          PlaceHolder="Mobile Number"
-                                                    Mask="(999) 000-0000"></TelerikMaskedTextBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => patient.Phone)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Email Address" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikTextBox Placeholder="Email Address"
-                                                    @bind-Value="@patient.Email"></TelerikTextBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => patient.Email)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="City" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikComboBox @bind-Value="@patient.CityId"
-                                                         Data="@cities"
-                                                         Placeholder="Select City"
-                                                         TextField="@nameof(BasicInformationViewModel.Name)"
-                                                         ValueField="@nameof(BasicInformationViewModel.Id)"
-                                                         Filterable="true"
-                                                         Id="city">
-                                        </TelerikComboBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => patient.CityId)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Area" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikComboBox @bind-Value="@patient.AreaId"
-                                                         Data="@areas"
-                                                         Placeholder="Select Area"
-                                                         TextField="@nameof(BasicInformationViewModel.Name)"
-                                                         ValueField="@nameof(BasicInformationViewModel.Id)"
-                                                         Filterable="true"
-                                                         Id="area">
-                                        </TelerikComboBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => patient.AreaId)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Address" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikTextBox Placeholder="Address"
-                                                    @bind-Value="@patient.Address"></TelerikTextBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => patient.Address)" />
-
-                            </MudItem>
-                            <MudItem md="6">
-                                <TelerikFloatingLabel Text="Reffer By" Class="custom-label w-100">
-                                    <div class="k-form-field-wrap">
-                                        <TelerikComboBox @bind-Value="@patient.RefferById"
-                                                         Data="@refferBies"
-                                                         Placeholder="Select Reffer By"
-                                                         TextField="@nameof(RefferByViewModel.Name)"
-                                                         ValueField="@nameof(RefferByViewModel.Id)"
-                                                         Filterable="true"
-                                                         Id="refferBy">
-                                        </TelerikComboBox>
-                                    </div>
-                                </TelerikFloatingLabel>
-                                <TelerikValidationMessage For="@(() => patient.RefferById)" />
-                            </MudItem>
-                            <MudItem md="6">
-                                
-                                    <MudItem md="12">
-                                        <TelerikFloatingLabel Text="Occupation" Class="custom-label w-100">
-                                            <div class="k-form-field-wrap">
-                                                <TelerikTextBox Placeholder="Occupation"
-                                                                @bind-Value="@patient.Occupation"></TelerikTextBox>
-                                            </div>
-                                        </TelerikFloatingLabel>
-                                        <TelerikValidationMessage For="@(() => patient.Occupation)" />
-                                    </MudItem>
-                                    <MudItem md="12">
-                                        <TelerikFloatingLabel Text="Insurance" Class="custom-label w-100">
-                                            <div class="k-form-field-wrap">
-                                                <TelerikComboBox @bind-Value="@patient.InsuranceId"
-                                                                 Data="@insurances"
-                                                                 Placeholder="Select Insurance"
-                                                                 TextField="@nameof(InsuranceViewModel.Name)"
-                                                                 ValueField="@nameof(InsuranceViewModel.Id)"
-                                                                 Filterable="true"
-                                                                 Id="insurance">
-                                                </TelerikComboBox>
-                                            </div>
-                                        </TelerikFloatingLabel>
-                                        <TelerikValidationMessage For="@(() => patient.Insurance)" />
-                                    </MudItem>
-                                    <MudItem md="12">
-                                        <TelerikFloatingLabel Text="Insurance Number" Class="custom-label w-100">
-                                            <div class="k-form-field-wrap">
-                                                <TelerikTextBox Placeholder="Insurance Number"
-                                                            @bind-Value="@patient.InsuranceNumber"></TelerikTextBox>
-                                            </div>
-                                        </TelerikFloatingLabel>
-                                        <TelerikValidationMessage For="@(() => patient.InsuranceNumber)" />
-                                    </MudItem>
-                                    <MudItem md="12">
-                                        <TelerikFloatingLabel Text="Proposal Number" Class="custom-label w-100">
-                                            <div class="k-form-field-wrap">
-                                                <TelerikTextBox Placeholder="Proposal Number"
-                                                                @bind-Value="@patient.ProposalNumber"></TelerikTextBox>
-                                            </div>
-                                        </TelerikFloatingLabel>
-                                        <TelerikValidationMessage For="@(() => patient.ProposalNumber   )" />
-                                    </MudItem>
-                                
-                            </MudItem>
-                            <MudItem md="6">
-                                <MudItem md="12" Class="mt-2">
+                                </MudItem>
+                                <MudItem md="12" Class="mt-4 ml-4">
                                     <MudFileUpload T="IBrowserFile" FilesChanged="UploadPhoto" Accept=".jpg,.jpeg,.png">
                                         <ButtonTemplate>
                                             <MudButton HtmlTag="label"
@@ -265,7 +268,7 @@
                                         </ButtonTemplate>
                                     </MudFileUpload>
                                 </MudItem>
-                                <MudItem md="12" Class="mt-3">
+                                <MudItem md="12" Class="mt-4 ml-5">
                                     @if (photo != null)
                                     {
                                         <MudImage Style="border-radius : 50%" Src=@String.Format("data:{0};base64,{1}",photoContentType,photo) Height="150"></MudImage>
@@ -276,10 +279,10 @@
                                     }
 
                                 </MudItem>
-
-                            </MudItem>
-                            
-                        </MudGrid>
+                            </MudGrid>
+                        </MudItem>
+                        
+                    </MudGrid>
                 </FormItems>
                 <FormButtons>
                    <MudButton Class="mr-2 mt-3" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SavePatient">Save</MudButton>
@@ -293,7 +296,6 @@
                    
         </MudPaper>
     </MudItem>
-    <MudItem md="1"></MudItem>
 </MudGrid>
 
 

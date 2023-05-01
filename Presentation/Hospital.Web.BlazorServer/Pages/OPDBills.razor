@@ -19,7 +19,7 @@
             <MudCard Class="pl-2 pr-2 mt-2">
                 <MudCardHeader>OPD Bills</MudCardHeader>
                 <MudCardActions>
-                    <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("OPDBillDefine/0")>Add OPDBill</MudButton>
+                    <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("OPDBillDefine/0")>Add OPD Bill</MudButton>
                 </MudCardActions>
                 <MudCardContent>
                     <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<OPDBillViewModel,bool>(FilterOPDBillInit)">

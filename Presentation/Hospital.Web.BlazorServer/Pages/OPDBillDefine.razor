@@ -13,12 +13,15 @@
 @using MediatR
 @using System.ComponentModel.DataAnnotations
 @using System.Globalization;
+
 @inject IMediator mediator
 @inject NavigationManager navManager
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 
 @attribute [Authorize(Roles = "Super,Admin,Operator")]
+
+
 
 <h1>@caption</h1>
 
@@ -34,7 +37,7 @@
                 </FormValidation>
                 <FormItems>
                     <MudGrid Spacing="1">
-                        <MudItem md="6">
+                        <MudItem md="12">
                             <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@NewPatient">Add New Patient</TelerikButton>
                         
                             <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@SearchPatient">Search Patient</TelerikButton>
@@ -43,36 +46,18 @@
                             
                         </MudItem>
                         <MudItem md="3">
-                            @if (oPDBill.PatientId > 0)
-                            {
-                                <MudText>
-                                    Patient Id : @UtilityHelper.GenerateIdentifier(patientIdPrefix.Value,oPDBill.PatientId)
-                                </MudText>
-
-                            }
-                        </MudItem>
-                        <MudItem md="3">
-                            @if (oPDBill != null)
-                            {
-                                <MudText>
-                                    Receipt No : @UtilityHelper.GenerateIdentifier(receiptNoPrefix.Value,oPDBill.Id)
-                                </MudText>
-
-                            }
-                        </MudItem>
-                        <MudItem md="6">
                             <TelerikFloatingLabel Text="Date" Class="custom-label w-100">
                                 <div class="k-form-field-wrap">
                                     <TelerikDatePicker @bind-Value="@oPDBill.Date"
                                                         Format="dddd, dd MMMM, yyyy"
                                                         Id="opd-date"
-                                                        Enabled="@(oPDBill.Id > 0 ? false : true)">
+                                                        Enabled="false">
                                     </TelerikDatePicker>
                                 </div>
                             </TelerikFloatingLabel>
                             <TelerikValidationMessage For="@(() => oPDBill.Date)" />
                         </MudItem>
-                        <MudItem md="6">
+                        <MudItem md="3">
                             <TelerikFloatingLabel Text="Patient" Class="custom-label w-100">
                                 <div class="k-form-field-wrap">
                                     <TelerikMultiColumnComboBox Data="@patients"
@@ -84,8 +69,7 @@
                                                                 Id="patient"
                                                                 ListHeight="250px"
                                                                 Placeholder="Hint: You can filter by the Patient Name"
-                                                                ValueChanged="@( (int c) => PatientChanged(c) )"
-                                                                >
+                                                                ValueChanged="@( (int c) => PatientChanged(c) )">
                                         <MultiColumnComboBoxColumns>
                                             <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.Name)" Title="Name" Width="200px" />
                                             <MultiColumnComboBoxColumn Field="@nameof(PatientViewModel.NationalIdCart)" Title="National ID" Width="150px" />
@@ -103,8 +87,28 @@
                             </TelerikFloatingLabel>
                             <TelerikValidationMessage For="@(() => oPDBill.Patient)" />
 
-                            
+
                         </MudItem>
+                        <MudItem md="3">
+                            @if (oPDBill.PatientId > 0)
+                            {
+                                <MudText Class="mt-5">
+                                    Patient Id : @UtilityHelper.GenerateIdentifier(patientIdPrefix.Value,oPDBill.PatientId)
+                                </MudText>
+
+                            }
+                        </MudItem>
+                        <MudItem md="3">
+                            @if (oPDBill != null)
+                            {
+                                <MudText Class="mt-5">
+                                    Receipt No : @UtilityHelper.GenerateIdentifier(receiptNoPrefix.Value,oPDBill.Id)
+                                </MudText>
+
+                            }
+                        </MudItem>
+                        
+                        
                         @if(oPDBill.PatientId>0)
                         {
                              <MudItem md="12">
@@ -237,13 +241,13 @@
                                             }
                                         </EditorTemplate>
                                     </GridColumn>
-                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.StaffName) Title="Staff Name" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                    <GridColumn Field=@nameof(OPDBillServiceViewModel.StaffName) Title="Consultant Name" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
                                         <EditorTemplate>
                                             @{
                                                 var ServiceToEdit = context as OPDBillServiceViewModel;
                                                 <TelerikComboBox @bind-Value="@ServiceToEdit.StaffId"
                                                              Data="@staffs"
-                                                             Placeholder="Select Staff"
+                                                             Placeholder="Select Consultant"
                                                              TextField="@nameof(StaffViewModel.Name)"
                                                              ValueField="@nameof(StaffViewModel.Id)"
                                                              Filterable="true"
@@ -263,7 +267,7 @@
                                 </GridColumns>
                             </TelerikGrid>
                         </MudItem>
-                        <MudItem md="6">
+                        <MudItem md="3">
                             <TelerikFloatingLabel Text="Payment Type" Class="custom-label w-100">
                                 <div class="k-form-field-wrap">
                                     <TelerikComboBox Value="@oPDBill.PaymentTypeId"
@@ -280,40 +284,40 @@
                             </TelerikFloatingLabel>
                             <TelerikValidationMessage For="@(() => oPDBill.PaymentTypeId)" />
                         </MudItem>
-                        <MudItem md="6">
+                        <MudItem md="3">
                             <TelerikFloatingLabel Text="Total Amount" Class="custom-label w-100">
                                 <div class="k-form-field-wrap">
                                     <TelerikNumericTextBox Placeholder="Total Amount"
                                                             @bind-Value="@oPDBill.TotalAmount"
                                                             Format="@currencySetting.CurrencyTextBoxFormat"
-                                                            Decimals="0"></TelerikNumericTextBox>
+                                                            Decimals="0" Enabled="false"></TelerikNumericTextBox>
                                 </div>
                             </TelerikFloatingLabel>
                             <TelerikValidationMessage For="@(() => oPDBill.TotalAmount)" />
                         </MudItem>
-                        <MudItem md="6">
+                        <MudItem md="3">
                             <TelerikFloatingLabel Text="Total Discount" Class="custom-label w-100">
                                 <div class="k-form-field-wrap">
                                     <TelerikNumericTextBox Placeholder="Total Discount"
                                                            @bind-Value="@totalDiscount"
                                                            Format="@currencySetting.CurrencyTextBoxFormat"
-                                                           Decimals="0"></TelerikNumericTextBox>
+                                                           Decimals="0" Enabled="false"></TelerikNumericTextBox>
                                 </div>
                             </TelerikFloatingLabel>
                         </MudItem>
-                        <MudItem md="6">
+                        <MudItem md="3">
                             <TelerikFloatingLabel Text="Payable Amount" Class="custom-label w-100">
                                 <div class="k-form-field-wrap">
                                     <TelerikNumericTextBox Placeholder="Payable Amount"
                                                             @bind-Value="@oPDBill.PayableAmount"
                                                            Format="@currencySetting.CurrencyTextBoxFormat"
-                                                            Decimals="0"></TelerikNumericTextBox>
+                                                           Decimals="0" Enabled="false"></TelerikNumericTextBox>
                                 </div>
                             </TelerikFloatingLabel>
                         </MudItem>
                         @if (oPDBill.PaymentTypeStrCode == "Credit")
                         {
-                            <MudItem md="6">
+                            <MudItem md="3">
                                 <TelerikFloatingLabel Text="Paid Amount" Class="custom-label w-100">
                                     <div class="k-form-field-wrap">
                                         <TelerikNumericTextBox Placeholder="Paid Amount"
@@ -323,7 +327,7 @@
                                     </div>
                                 </TelerikFloatingLabel>
                             </MudItem>
-                            <MudItem md="6">
+                            <MudItem md="3">
                                 <TelerikFloatingLabel Text="Debt Amount" Class="custom-label w-100">
                                     <div class="k-form-field-wrap">
                                         <TelerikNumericTextBox Placeholder="Debt Amount"
@@ -335,7 +339,7 @@
                                 </TelerikFloatingLabel>
                             </MudItem>
                         }
-                        <MudItem md="12" Class="mb-2">
+                        <MudItem md="6" Class="mb-2">
                             <TelerikFloatingLabel Text="Description" Class="custom-label w-100">
                                 <div class="k-form-field-wrap">
                                     <TelerikTextBox Placeholder="Description"
@@ -354,6 +358,8 @@
                     <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Print" Disabled="@(oPDBill.Id==0)" OnClick="Print">Print</MudButton>
 
                     <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="OPDBills">Return</MudButton>
+
+                    <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" OnClick="PrintPDF">Print PDF</MudButton>
                 </FormButtons>
             </TelerikForm>
             
@@ -527,11 +533,11 @@
                 {
                     billService.Discount = service.DiscountAmount;
                 }
-            
+
                 if (service.DiscountPercentage > 0)
                     billService.Discount = (service.OPDRate * service.DiscountPercentage) / 100;
             }
-            
+
             billService.Amount = billService.Quantity * (billService.Rate - billService.Discount);
         }
 
@@ -886,6 +892,13 @@
         selectReportTemplate = true;
 
     }
-    
+
+    protected async Task PrintPDF()
+    {
+        var reportUrl = navManager.ToAbsoluteUri("RptOPDBill");
+
+        
+
+    }
 }
 

@@ -17,7 +17,7 @@
     <MudItem md="12">
         <MudPaper Class="mt-2" Elevation="10">
             <MudCard Class="pl-2 pr-2 mt-2">
-                <MudCardHeader>Admated Patient List</MudCardHeader>
+                <MudCardHeader>Admited Patient List</MudCardHeader>
                 <MudCardActions>
                     <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("IPDRegisterationDefine/0")>Add IPD Registeration</MudButton>
                 </MudCardActions>
@@ -25,12 +25,16 @@
                     <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<IPDRegisterationViewModel,bool>(FilterIPDRegisterationInit)">
                         <ToolBarContent>
                             <MudSpacer />
+                            <MudCheckBox Label="Admited Patient" Checked="@admitedCheched" CheckedChanged="@( (bool g) => AdmitedChanged(g) )" />
+                            <MudCheckBox Label="Discharge Patient" Checked="@dischargeCheched" CheckedChanged="@( (bool g) => DischargeChanged(g) )" />
+                            <MudSpacer />
                             <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Clearable></MudTextField>
+                            
                         </ToolBarContent>
                         <HeaderContent>
                             <MudTh>Patient Id</MudTh>
                             <MudTh>IPD No</MudTh>
-                            <MudTh>Admation Date</MudTh>
+                            <MudTh>admition Date</MudTh>
                             <MudTh>Discharge Date</MudTh>
                             <MudTh>Gender</MudTh>
                             <MudTh>Patient</MudTh>
@@ -54,7 +58,7 @@
                             <MudTd DataLabel="IPDNO">
                                 @UtilityHelper.GenerateIdentifier(iPDNoPrefix.Value,context.Id)
                             </MudTd>
-                            <MudTd DataLabel="AdmationDate">@context.Date</MudTd>
+                            <MudTd DataLabel="admitionDate">@context.Date</MudTd>
                             <MudTd DataLabel="DischargeDate">@context.DischargeDate</MudTd>
                             <MudTd DataLabel="Gender">@context.Patient.Gender.Name</MudTd>
                             <MudTd DataLabel="Patient">@context.PatientName</MudTd>
@@ -113,6 +117,8 @@
     private List<IPDRegisterationViewModel> Elements;
     private bool loading = false;
     private string searchString = "";
+    private bool admitedCheched = true;
+    private bool dischargeCheched = false;
     private bool selectReportTemplate = false;
     private int IPDId = 0;
 
@@ -124,8 +130,21 @@
         patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
         iPDNoPrefix = await mediator.Send(new GetSettingByKeyQuery("IPDNoPrefix"));
 
+        LoadData();
+    }
+
+    protected async Task LoadData()
+    {
         Elements = await mediator.Send(new GetAllIPDRegisterationsQuery());
-        Elements = Elements.Where(e => e.Canceled != true).ToList();
+
+        if (admitedCheched == true && dischargeCheched == true)
+            Elements = Elements.Where(e => e.Canceled != true).ToList();
+        else if (admitedCheched == true && dischargeCheched == false)
+            Elements = Elements.Where(e => e.Canceled != true && e.Discharged != true).ToList();
+        else if (admitedCheched == false && dischargeCheched == true)
+            Elements = Elements.Where(e => e.Canceled != true && e.Discharged == true).ToList();
+        else if (admitedCheched == false && dischargeCheched == false)
+            Elements = Elements.Where(e => e.Canceled != true && 1 == 2).ToList();
     }
 
     private void PageChanged(int i)
@@ -133,20 +152,38 @@
         _table.NavigateTo(i - 1);
     }
 
+    protected async Task AdmitedChanged(bool admited)
+    {
+        admitedCheched = admited;
+
+        LoadData();
+    }
+
+    protected async Task DischargeChanged(bool discharge)
+    {
+        dischargeCheched = discharge;
+
+        LoadData();
+    }
+
     private bool FilterIPDRegisterationInit(IPDRegisterationViewModel element) => FilterIPDRegisteration(element, searchString);
 
     private bool FilterIPDRegisteration(IPDRegisterationViewModel element, string searchString)
     {
+
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
         if (element.Date.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.DischargeDate.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         if (element.PatientName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         if (element.RefferByName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
-        if ($"{element.Date.ToString()} {element.PatientName} {element.RefferByName}".Contains(searchString))
+        if ($"{element.Date.ToString()} {element.DischargeDate.ToString()} {element.PatientName} {element.RefferByName}".Contains(searchString))
             return true;
+
         return false;
     }
 
@@ -183,8 +220,7 @@
 
                 if (result.ResultType == ResultType.Success)
                 {
-                    Elements = await mediator.Send(new GetAllIPDRegisterationsQuery());
-                    Elements = Elements.Where(e => e.Canceled != true).ToList();
+                    LoadData();
                     Snackbar.Add(result.ResultMessage, Severity.Success);
                 }
                 else if (result.ResultType == ResultType.Warning)
@@ -235,8 +271,7 @@
 
                 if (result.ResultType == ResultType.Success)
                 {
-                    Elements = await mediator.Send(new GetAllIPDRegisterationsQuery());
-                    Elements = Elements.Where(e => e.Canceled != true).ToList();
+                    LoadData();
                     Snackbar.Add(result.ResultMessage, Severity.Success);
                 }
                 else if (result.ResultType == ResultType.Warning)
