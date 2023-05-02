@@ -21,7 +21,8 @@ namespace Hospital.Domain.Core.Entities
 
 		public int Priority { get; set; }
 
-        public string Url { get; set; }
+		[MaxLength(200)]
+		public string Url { get; set; }
 
         [MaxLength(1000)]
         public string? Description { get; set; }

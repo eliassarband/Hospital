@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Hospital.Application.Responses;
 using Hospital.Application.ViewModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace Hospital.Application.Commands
 {
@@ -165,5 +166,290 @@ namespace Hospital.Application.Commands
     }
 
 
-    #endregion
+	#endregion
+
+	#region Group
+	public class CreateGroupCommand : IRequest<CommandResponse>
+	{
+		public int Id { get; set; }
+		public string Name { get; set; }
+		public string Description { get; set; }
+		public DateTime CreatedDate { get; set; }
+		public string? CreatedGroup { get; set; }
+
+		public CreateGroupCommand()
+		{
+			this.CreatedDate = DateTime.Now;
+		}
+	}
+
+	public class EditGroupCommand : IRequest<CommandResponse>
+	{
+		public int Id { get; set; }
+		public string Name { get; set; }
+		public string Description { get; set; }
+		public DateTime CreatedDate { get; set; }
+		public string? CreatedGroup { get; set; }
+		public DateTime ModifiedDate { get; set; }
+		public string? ModifiedGroup { get; set; }
+
+		public EditGroupCommand()
+		{
+			this.ModifiedDate = DateTime.Now;
+		}
+	}
+
+	public class DeleteGroupCommand : IRequest<CommandResponse>
+	{
+		public int Id { get; set; }
+
+		public DeleteGroupCommand(int Id)
+		{
+			this.Id = Id;
+		}
+	}
+
+	#endregion
+
+	#region GroupUser
+	public class CreateGroupUserCommand : IRequest<CommandResponse>
+	{
+		public int Id { get; set; }
+		public int UserId { get; set; }
+		public int GroupId { get; set; }
+		public DateTime CreatedDate { get; set; }
+		public string? CreatedGroupUser { get; set; }
+
+		public CreateGroupUserCommand()
+		{
+			this.CreatedDate = DateTime.Now;
+		}
+	}
+
+	public class EditGroupUserCommand : IRequest<CommandResponse>
+	{
+		public int Id { get; set; }
+		public int UserId { get; set; }
+		public int GroupId { get; set; }
+		public DateTime CreatedDate { get; set; }
+		public string? CreatedGroupUser { get; set; }
+		public DateTime ModifiedDate { get; set; }
+		public string? ModifiedGroupUser { get; set; }
+
+		public EditGroupUserCommand()
+		{
+			this.ModifiedDate = DateTime.Now;
+		}
+	}
+
+	public class DeleteGroupUserCommand : IRequest<CommandResponse>
+	{
+		public int Id { get; set; }
+
+		public DeleteGroupUserCommand(int Id)
+		{
+			this.Id = Id;
+		}
+	}
+
+
+	#endregion
+
+	#region FormCategory
+	public class CreateFormCategoryCommand : IRequest<CommandResponse>
+	{
+		public int Id { get; set; }
+		public string Code { get; set; }
+		public string Name { get; set; }
+		public bool ShowInDashboard { get; set; } = true;
+		public int Priority { get; set; }
+		public string? Description { get; set; }
+		public DateTime CreatedDate { get; set; }
+		public string? CreatedFormCategory { get; set; }
+
+		public CreateFormCategoryCommand()
+		{
+			this.CreatedDate = DateTime.Now;
+		}
+	}
+
+	public class EditFormCategoryCommand : IRequest<CommandResponse>
+	{
+		public int Id { get; set; }
+		public string Code { get; set; }
+		public string Name { get; set; }
+		public bool ShowInDashboard { get; set; } = true;
+		public int Priority { get; set; }
+		public string? Description { get; set; }
+		public DateTime CreatedDate { get; set; }
+		public string? CreatedFormCategory { get; set; }
+		public DateTime ModifiedDate { get; set; }
+		public string? ModifiedFormCategory { get; set; }
+
+		public EditFormCategoryCommand()
+		{
+			this.ModifiedDate = DateTime.Now;
+		}
+	}
+
+	public class DeleteFormCategoryCommand : IRequest<CommandResponse>
+	{
+		public int Id { get; set; }
+
+		public DeleteFormCategoryCommand(int Id)
+		{
+			this.Id = Id;
+		}
+	}
+
+	#endregion
+
+	#region Form
+	public class CreateFormCommand : IRequest<CommandResponse>
+	{
+		public int Id { get; set; }
+		public int FormCategoryId { get; set; }
+		public string Code { get; set; }
+		public string Name { get; set; }
+		public bool ShowInMenu { get; set; } = true;
+		public int Priority { get; set; }
+		public string Url { get; set; }
+		public string? Description { get; set; }
+		public DateTime CreatedDate { get; set; }
+		public string? CreatedForm { get; set; }
+
+		public CreateFormCommand()
+		{
+			this.CreatedDate = DateTime.Now;
+		}
+	}
+
+	public class EditFormCommand : IRequest<CommandResponse>
+	{
+		public int Id { get; set; }
+		public int FormCategoryId { get; set; }
+		public string Code { get; set; }
+		public string Name { get; set; }
+		public bool ShowInMenu { get; set; } = true;
+		public int Priority { get; set; }
+		public string Url { get; set; }
+		public string? Description { get; set; }
+		public DateTime CreatedDate { get; set; }
+		public string? CreatedForm { get; set; }
+		public DateTime ModifiedDate { get; set; }
+		public string? ModifiedForm { get; set; }
+
+		public EditFormCommand()
+		{
+			this.ModifiedDate = DateTime.Now;
+		}
+	}
+
+	public class DeleteFormCommand : IRequest<CommandResponse>
+	{
+		public int Id { get; set; }
+
+		public DeleteFormCommand(int Id)
+		{
+			this.Id = Id;
+		}
+	}
+
+
+	#endregion
+
+	#region FormAction
+	public class CreateFormActionCommand : IRequest<CommandResponse>
+	{
+		public int Id { get; set; }
+		public int FormId { get; set; }
+		public string Code { get; set; }
+		public string Name { get; set; }
+		public int Priority { get; set; }
+		public string? Description { get; set; }
+		public DateTime CreatedDate { get; set; }
+		public string? CreatedFormAction { get; set; }
+
+		public CreateFormActionCommand()
+		{
+			this.CreatedDate = DateTime.Now;
+		}
+	}
+
+	public class EditFormActionCommand : IRequest<CommandResponse>
+	{
+		public int Id { get; set; }
+		public int FormId { get; set; }
+		public string Code { get; set; }
+		public string Name { get; set; }
+		public int Priority { get; set; }
+		public DateTime CreatedDate { get; set; }
+		public string? CreatedFormAction { get; set; }
+		public DateTime ModifiedDate { get; set; }
+		public string? ModifiedFormAction { get; set; }
+
+		public EditFormActionCommand()
+		{
+			this.ModifiedDate = DateTime.Now;
+		}
+	}
+
+	public class DeleteFormActionCommand : IRequest<CommandResponse>
+	{
+		public int Id { get; set; }
+
+		public DeleteFormActionCommand(int Id)
+		{
+			this.Id = Id;
+		}
+	}
+
+
+	#endregion
+
+	#region FormActionAccess
+	public class CreateFormActionAccessCommand : IRequest<CommandResponse>
+	{
+		public int Id { get; set; }
+		public int UserId { get; set; }
+		public int GroupId { get; set; }
+		public int FormActionId { get; set; }
+		public DateTime CreatedDate { get; set; }
+		public string? CreatedFormActionAccess { get; set; }
+
+		public CreateFormActionAccessCommand()
+		{
+			this.CreatedDate = DateTime.Now;
+		}
+	}
+
+	public class EditFormActionAccessCommand : IRequest<CommandResponse>
+	{
+		public int Id { get; set; }
+		public int UserId { get; set; }
+		public int GroupId { get; set; }
+		public int FormActionId { get; set; }
+		public DateTime CreatedDate { get; set; }
+		public string? CreatedFormActionAccess { get; set; }
+		public DateTime ModifiedDate { get; set; }
+		public string? ModifiedFormActionAccess { get; set; }
+
+		public EditFormActionAccessCommand()
+		{
+			this.ModifiedDate = DateTime.Now;
+		}
+	}
+
+	public class DeleteFormActionAccessCommand : IRequest<CommandResponse>
+	{
+		public int Id { get; set; }
+
+		public DeleteFormActionAccessCommand(int Id)
+		{
+			this.Id = Id;
+		}
+	}
+
+
+	#endregion
 }

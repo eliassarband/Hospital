@@ -92,15 +92,15 @@ namespace Hospital.Infrastructure.Data
                 new Form() { Id = 109, FormCategoryId = 1, Code = "HR", Name = "Human Resources", ShowInMenu = true, Priority = 9, Url = "HRDashboard" },
                 new Form() { Id = 110, FormCategoryId = 1, Code = "Reports", Name = "Reports", ShowInMenu = true, Priority = 10, Url = "ReportsDashboard" },
 
-				new Form() { Id = 301, FormCategoryId = 3, Code = "Patients", Name = "Patinet List", ShowInMenu = true, Priority = 1, Url = "Patients" },
-				new Form() { Id = 302, FormCategoryId = 3, Code = "PatinetDefine", Name = "Patinet Define", ShowInMenu = false, Priority = 2, Url = "PatinetDefine" },
+				new Form() { Id = 301, FormCategoryId = 3, Code = "OPDPatients", Name = "Patinet List", ShowInMenu = true, Priority = 1, Url = "Patients" },
+				new Form() { Id = 302, FormCategoryId = 3, Code = "OPDPatinetDefine", Name = "Patinet Define", ShowInMenu = false, Priority = 2, Url = "PatinetDefine" },
 				new Form() { Id = 303, FormCategoryId = 3, Code = "OPDBills", Name = "OPD Billing List", ShowInMenu = true, Priority = 3, Url = "OPDBills" },
 				new Form() { Id = 304, FormCategoryId = 3, Code = "OPDBillDefine", Name = "OPD Billing Define", ShowInMenu = true, Priority = 4, Url = "OPDBillDefine" },
 				new Form() { Id = 305, FormCategoryId = 3, Code = "OPDBillPayments", Name = "OPD Billing Payment", ShowInMenu = false, Priority = 5, Url = "OPDBillPayments" },
 				new Form() { Id = 306, FormCategoryId = 3, Code = "DebtorOPDBills", Name = "Receive Balance Payment", ShowInMenu = true, Priority = 6, Url = "DebtorOPDBills" },
 
-				new Form() { Id = 401, FormCategoryId = 4, Code = "Patients", Name = "Patinet List", ShowInMenu = true, Priority = 1, Url = "Patients" },
-				new Form() { Id = 402, FormCategoryId = 4, Code = "PatinetDefine", Name = "Patinet Define", ShowInMenu = false, Priority = 2, Url = "PatinetDefine" },
+				new Form() { Id = 401, FormCategoryId = 4, Code = "IPDPatients", Name = "Patinet List", ShowInMenu = true, Priority = 1, Url = "Patients" },
+				new Form() { Id = 402, FormCategoryId = 4, Code = "IPDPatinetDefine", Name = "Patinet Define", ShowInMenu = false, Priority = 2, Url = "PatinetDefine" },
 				new Form() { Id = 403, FormCategoryId = 4, Code = "IPDRegisterations", Name = "Admited Patinet List", ShowInMenu = true, Priority = 3, Url = "IPDRegisterations" },
 				new Form() { Id = 404, FormCategoryId = 4, Code = "IPDRegisterationDefine", Name = "IPD Registeration", ShowInMenu = true, Priority = 1, Url = "IPDRegisterationDefine" },
 
@@ -410,7 +410,7 @@ namespace Hospital.Infrastructure.Data
         public DbSet<FormCategory> FormCategories { get; set; }
         public DbSet<Form> Forms { get; set; }
         public DbSet<FormAction> FormActions { get; set; }
-        public DbSet<FormActionAccess> FormActionsAccess { get; set; }
+        public DbSet<FormActionAccess> FormActionAccesses { get; set; }
 
     }
 }

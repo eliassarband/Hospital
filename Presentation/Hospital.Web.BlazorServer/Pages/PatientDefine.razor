@@ -11,6 +11,7 @@
 @using Hospital.Web.BlazorServer.Models.Auth
 @using MediatR
 @using System.ComponentModel.DataAnnotations
+@inject IHttpContextAccessor accessor
 @inject IMediator mediator
 @inject NavigationManager navManager
 @inject ISnackbar Snackbar
@@ -329,6 +330,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if(userInfo == null)
+        {
+            IdentityHelper identityHelper=new IdentityHelper(accessor,mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
         patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
         namePrefixes = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("NamePrefix"));
         genders = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Gender"));
