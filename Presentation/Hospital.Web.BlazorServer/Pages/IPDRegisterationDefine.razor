@@ -9,6 +9,7 @@
 @using Hospital.Domain.Core.Helpers;
 @using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth
+@using Hospital.Web.BlazorServer.Models;
 @using MediatR
 @using System.ComponentModel.DataAnnotations
 @inject IMediator mediator
@@ -412,8 +413,8 @@
                                                     }
                                                 </EditorTemplate>
                                             </GridColumn>
-                                            <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.Rate) Title="Rate" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
-                                            <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.Amount) Title="Amount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                            <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.Rate) Title="Rate" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat" />
+                                            <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.Amount) Title="Amount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat" />
                                             <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.Description) Title="Description" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
                                             <GridCommandColumn Title="Action" Width="10vw" HeaderClass="k-text-center">
                                                 @if (deleteRoomAccess)
@@ -469,7 +470,7 @@
                                                             <MultiColumnComboBoxColumns>
                                                                 <MultiColumnComboBoxColumn Field="@nameof(ServiceViewModel.Name)" Title="Name" Width="200px" />
                                                                 <MultiColumnComboBoxColumn Field="@nameof(ServiceViewModel.DepartmentName)" Title="Department Name" Width="150px" />
-                                                                <MultiColumnComboBoxColumn Field="@nameof(ServiceViewModel.OPDRate)" Title="OPD Rate" Width="150px" />
+                                                                <MultiColumnComboBoxColumn Field="@nameof(ServiceViewModel.OPDRate)" Title="OPD Rate" Width="150px"/>
                                                             </MultiColumnComboBoxColumns>
                                                             <FooterTemplate>
                                                                 <span class="combobox-footer k-display-flex k-align-items-center k-justify-content-center">
@@ -493,8 +494,8 @@
                                                     }
                                                 </EditorTemplate>
                                             </GridColumn>
-                                            <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Rate) Title="Rate" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
-                                            <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Discount) Title="Discount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                            <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Rate) Title="Rate" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat" />
+                                            <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Discount) Title="Discount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat" />
                                             <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.StaffName) Title="Consultant" Editable="true" Width="15vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
                                                 <EditorTemplate>
                                                     @{
@@ -511,7 +512,7 @@
                                                     }
                                                 </EditorTemplate>
                                             </GridColumn>
-                                            <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Amount) Title="Amount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
+                                            <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Amount) Title="Amount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat" />
                                             <GridCommandColumn Title="Action" Width="10vw" HeaderClass="k-text-center">
                                                 @if (deleteServiceAccess)
                                                 {
@@ -532,7 +533,7 @@
                                         <div class="k-form-field-wrap">
                                             <TelerikNumericTextBox Placeholder="Room Amount" Enabled="false"
                                                                    @bind-Value="@roomAmount"
-                                                                   Format="C"
+                                                                   Format="@currencySetting.CurrencyTextBoxFormat"
                                                                    Decimals="0"></TelerikNumericTextBox>
                                         </div>
                                     </TelerikFloatingLabel>
@@ -542,7 +543,7 @@
                                         <div class="k-form-field-wrap">
                                             <TelerikNumericTextBox Placeholder="Service Amount" Enabled="false"
                                                                    @bind-Value="@serviceAmount"
-                                                                   Format="C"
+                                                                   Format="@currencySetting.CurrencyTextBoxFormat"
                                                                    Decimals="0"></TelerikNumericTextBox>
                                         </div>
                                     </TelerikFloatingLabel>
@@ -552,7 +553,7 @@
                                         <div class="k-form-field-wrap">
                                             <TelerikNumericTextBox Placeholder="Medicine Amount" Enabled="false"
                                                                    @bind-Value="@medicineAmount"
-                                                                   Format="C"
+                                                                   Format="@currencySetting.CurrencyTextBoxFormat"
                                                                    Decimals="0"></TelerikNumericTextBox>
                                         </div>
                                     </TelerikFloatingLabel>
@@ -562,7 +563,7 @@
                                         <div class="k-form-field-wrap">
                                             <TelerikNumericTextBox Placeholder="Total Amount" Enabled="false"
                                                                    @bind-Value="@iPDRegisteration.TotalAmount"
-                                                                   Format="C"
+                                                                   Format="@currencySetting.CurrencyTextBoxFormat"
                                                                    Decimals="0"></TelerikNumericTextBox>
                                         </div>
                                     </TelerikFloatingLabel>
@@ -573,7 +574,7 @@
                                         <div class="k-form-field-wrap">
                                             <TelerikNumericTextBox Placeholder="Total Discount" Enabled="false"
                                                                    @bind-Value="@totalDiscount"
-                                                                   Format="C"
+                                                                   Format="@currencySetting.CurrencyTextBoxFormat"
                                                                    Decimals="0"></TelerikNumericTextBox>
                                         </div>
                                     </TelerikFloatingLabel>
@@ -583,7 +584,7 @@
                                         <div class="k-form-field-wrap">
                                             <TelerikNumericTextBox Placeholder="Payable Amount" Enabled="false"
                                                                    @bind-Value="@iPDRegisteration.PayableAmount"
-                                                                   Format="C"
+                                                                   Format="@currencySetting.CurrencyTextBoxFormat"
                                                                    Decimals="0"></TelerikNumericTextBox>
                                         </div>
                                     </TelerikFloatingLabel>
@@ -593,7 +594,7 @@
                                         <div class="k-form-field-wrap">
                                             <TelerikNumericTextBox Placeholder="Paid Amount" Enabled="false"
                                                                    @bind-Value="@paidAmount"
-                                                                   Format="C"
+                                                                   Format="@currencySetting.CurrencyTextBoxFormat"
                                                                    Decimals="0"></TelerikNumericTextBox>
                                         </div>
                                     </TelerikFloatingLabel>
@@ -603,7 +604,7 @@
                                         <div class="k-form-field-wrap">
                                             <TelerikNumericTextBox Placeholder="Remain Amount" Enabled="false"
                                                                    @bind-Value="@remainAmount"
-                                                                   Format="C"
+                                                                   Format="@currencySetting.CurrencyTextBoxFormat"
                                                                    Decimals="0"></TelerikNumericTextBox>
                                         </div>
                                     </TelerikFloatingLabel>
@@ -648,14 +649,14 @@
                                                     }
                                                 </EditorTemplate>
                                             </GridColumn>
-                                            <GridColumn Field=@nameof(IPDRegisterationPaymentViewModel.Amount) Title="Amount" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                            <GridColumn Field=@nameof(IPDRegisterationPaymentViewModel.Amount) Title="Amount" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat">
                                                 <EditorTemplate>
                                                     @{
                                                         var PaymentToEdit = context as IPDRegisterationPaymentViewModel;
                                                         <TelerikNumericTextBox Placeholder="Amount"
                                                                                @bind-Value="@PaymentToEdit.Amount"
-                                                                               Format="C"
-                                                                               Decimals="0"></TelerikNumericTextBox>
+                                                                               Format="@currencySetting.CurrencyTextBoxFormat"
+                                                                                Decimals="0"></TelerikNumericTextBox>
                                                         <TelerikValidationMessage For="@(() => PaymentToEdit.Amount)" />
                                                     }
                                                 </EditorTemplate>
@@ -774,6 +775,8 @@
     public int? Id { get; set; }
     [CascadingParameter]
     public LoginedUser? userInfo { get; set; }
+    [CascadingParameter]
+    public CurrencySetting currencySetting { get; set; }
 
     public int ActiveTabIndex { get; set; } = 0;
     private string caption = "Add IPD Registeration";
@@ -825,6 +828,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if(currencySetting ==null)
+        {
+            SettingHelper settingHelper = new SettingHelper(mediator);
+            currencySetting = await settingHelper.GetCurrencySetting();
+        }
+
         if (userInfo == null)
         {
             IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);

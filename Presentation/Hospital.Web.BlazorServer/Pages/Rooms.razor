@@ -6,6 +6,7 @@
 @using Hospital.Domain.Core.Entities;
 @using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth;
+@using Hospital.Web.BlazorServer.Models;
 @using MediatR
 @inject IMediator mediator;
 @inject IDialogService DialogService
@@ -55,7 +56,9 @@
                             <MudTd DataLabel="Name">@context.Name</MudTd>
                             <MudTd DataLabel="Name">@context.RoomTypeName</MudTd>
                             <MudTd DataLabel="Name">@context.Rest</MudTd>
-                            <MudTd DataLabel="Name">@context.Cost</MudTd>
+                            <MudTd DataLabel="Name">
+                                @String.Format(currencySetting.CurrencyGridCellFormat,context.Cost)
+                            </MudTd>
                             <MudTd DataLabel="Not In Use">
                                 @if (context.NotInUse)
                                 {
@@ -94,6 +97,8 @@
 @code {
     [CascadingParameter]
     public LoginedUser? userInfo { get; set; }
+    [CascadingParameter]
+    public CurrencySetting currencySetting { get; set; }
 
     private MudTable<RoomViewModel> _table;
     private List<RoomViewModel> Elements;
@@ -106,6 +111,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (currencySetting == null)
+        {
+            SettingHelper settingHelper = new SettingHelper(mediator);
+            currencySetting = await settingHelper.GetCurrencySetting();
+        }
+
         if (userInfo == null)
         {
             IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);

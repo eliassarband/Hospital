@@ -6,6 +6,7 @@
 @using Hospital.Domain.Core.Entities;
 @using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth;
+@using Hospital.Web.BlazorServer.Models;
 @using MediatR
 @inject IMediator mediator;
 @inject IDialogService DialogService
@@ -58,7 +59,9 @@
                             <MudTd DataLabel="OPDDiscountPercent">@context.OPDDiscountPercent</MudTd>
                             <MudTd DataLabel="IPDDiscountPercent">@context.IPDDiscountPercent</MudTd>
                             <MudTd DataLabel="AdvancePaymentPercent">@context.AdvancePaymentPercent</MudTd>
-                            <MudTd DataLabel="AdvancePaymentAmount">@context.AdvancePaymentAmount</MudTd>
+                            <MudTd DataLabel="AdvancePaymentAmount">
+                                @String.Format(currencySetting.CurrencyGridCellFormat,context.AdvancePaymentAmount)
+                            </MudTd>
                             <MudTd DataLabel="InsurancePaymentTypeName">@context.InsurancePaymentTypeName</MudTd>
                             <MudTd DataLabel="Viewable">
                                 @if (context.NotInUse)
@@ -98,6 +101,8 @@
 @code {
     [CascadingParameter]
     public LoginedUser? userInfo { get; set; }
+    [CascadingParameter]
+    public CurrencySetting currencySetting { get; set; }
 
     private MudTable<InsuranceViewModel> _table;
     private List<InsuranceViewModel> Elements;
@@ -110,6 +115,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if(currencySetting ==null)
+        {
+            SettingHelper settingHelper = new SettingHelper(mediator);
+            currencySetting = await settingHelper.GetCurrencySetting();
+        }
+
         if (userInfo == null)
         {
             IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);

@@ -8,6 +8,7 @@
 @using Hospital.Domain.Core.Entities;
 @using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth
+@using Hospital.Web.BlazorServer.Models;
 @using MediatR
 @using System.ComponentModel.DataAnnotations
 @inject IMediator mediator
@@ -91,6 +92,8 @@
     public int Id { get; set; }
     [CascadingParameter]
     public LoginedUser? userInfo { get; set; }
+    [CascadingParameter]
+    public CurrencySetting currencySetting { get; set; }
 
     private string caption = "Add Service";
     private ServiceViewModel service = new ServiceViewModel();
@@ -102,6 +105,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if(currencySetting ==null)
+        {
+            SettingHelper settingHelper = new SettingHelper(mediator);
+            currencySetting = await settingHelper.GetCurrencySetting();
+        }
+
         if (userInfo == null)
         {
             IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);

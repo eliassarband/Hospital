@@ -7,6 +7,7 @@
 @using Hospital.Domain.Core.Entities;
 @using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth;
+@using Hospital.Web.BlazorServer.Models;
 @using MediatR
 @inject IMediator mediator;
 @inject IDialogService DialogService
@@ -85,10 +86,18 @@
                             <MudTd DataLabel="Patient">@context.PatientName</MudTd>
                             <MudTd DataLabel="Date">@context.Date</MudTd>
                             <MudTd DataLabel="PaymentType">@context.PaymentTypeName</MudTd>
-                            <MudTd DataLabel="TotalAmount">@context.TotalAmount</MudTd>
-                            <MudTd DataLabel="PayableAmount">@context.PayableAmount</MudTd>
-                            <MudTd DataLabel="PaidAmount">@(context.PaidAmount+context.OPDBillPayments.Sum(p => p.Amount))</MudTd>
-                            <MudTd DataLabel="DebtAmount">@context.DebtAmount</MudTd>
+                            <MudTd DataLabel="TotalAmount">
+                                @String.Format(currencySetting.CurrencyGridCellFormat,context.TotalAmount)
+                            </MudTd>
+                            <MudTd DataLabel="PayableAmount">
+                                @String.Format(currencySetting.CurrencyGridCellFormat,context.PayableAmount)
+                            </MudTd>
+                            <MudTd DataLabel="PaidAmount">
+                                @String.Format(currencySetting.CurrencyGridCellFormat,context.PaidAmount+context.OPDBillPayments.Sum(p => p.Amount))
+                            </MudTd>
+                            <MudTd DataLabel="DebtAmount">
+                                @String.Format(currencySetting.CurrencyGridCellFormat,context.DebtAmount)
+                            </MudTd>
                             @if (String.IsNullOrEmpty(Mode))
                             {
                                 @if (paymentAccess)
@@ -176,6 +185,8 @@
 
     [CascadingParameter]
     public LoginedUser? userInfo { get; set; }
+    [CascadingParameter]
+    public CurrencySetting currencySetting { get; set; }
 
     private MudTable<OPDBillViewModel> _table;
     private List<OPDBillViewModel> Elements; 
@@ -197,6 +208,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if(currencySetting ==null)
+        {
+            SettingHelper settingHelper = new SettingHelper(mediator);
+            currencySetting = await settingHelper.GetCurrencySetting();
+        }
+
         if (userInfo == null)
         {
             IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);

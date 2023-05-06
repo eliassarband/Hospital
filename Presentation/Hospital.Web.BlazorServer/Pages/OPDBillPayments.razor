@@ -51,13 +51,13 @@
                         }
                     </EditorTemplate>
                 </GridColumn>
-                <GridColumn Field=@nameof(OPDBillPaymentViewModel.Amount) Title="Amount" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                <GridColumn Field=@nameof(OPDBillPaymentViewModel.Amount) Title="Amount" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat">
                     <EditorTemplate>
                         @{
                             var PaymentToEdit = context as OPDBillPaymentViewModel;
                             <TelerikNumericTextBox Placeholder="Amount"
                                                    @bind-Value="@PaymentToEdit.Amount"
-                                               Format="N0"
+                                               Format="@currencySetting.CurrencyTextBoxFormat"
                                                Decimals="0"></TelerikNumericTextBox>
                             <TelerikValidationMessage For="@(() => PaymentToEdit.Amount)" />
                         }
@@ -115,6 +115,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if(currencySetting ==null)
+        {
+            SettingHelper settingHelper = new SettingHelper(mediator);
+            currencySetting = await settingHelper.GetCurrencySetting();
+        }
+
         if (userInfo == null)
         {
             IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
