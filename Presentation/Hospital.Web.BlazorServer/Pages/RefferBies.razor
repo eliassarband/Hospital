@@ -4,20 +4,29 @@
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Helpers;
+@using Hospital.Web.BlazorServer.Models.Auth;
 @using MediatR
 @inject IMediator mediator;
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject NavigationManager navManager
+@inject IHttpContextAccessor accessor
 
-@attribute [Authorize(Roles = "Super,Admin")]
+@attribute [Authorize]
+
+<PageTitle>Reffer By List - HMIS System</PageTitle>
 
 <MudGrid Class="mt-2">
     <MudItem md="12">
         <MudPaper Class="mt-2" Elevation="10">
             <MudCard Class="pl-2 pr-2 mt-2">
-                <MudCardHeader>RefferBies</MudCardHeader>
+                <MudCardHeader>Reffer By List</MudCardHeader>
                 <MudCardActions>
-                    <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("RefferByDefine/0")>Add RefferBy</MudButton>
+                    @if (addAccess)
+                    {
+                        <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("RefferByDefine/0")>Add RefferBy</MudButton>
+                    }
                 </MudCardActions>
                 <MudCardContent>
                     <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<RefferByViewModel,bool>(FilterRefferByInit)">
@@ -35,8 +44,14 @@
                             <MudTh>Qualification</MudTh>
                             <MudTh>City</MudTh>
                             <MudTh>Area</MudTh>
-                            <MudTh>Edit</MudTh>
-                            <MudTh>Delete</MudTh>
+                            @if (editAccess)
+                            {
+                                <MudTh>Edit</MudTh>
+                            }
+                            @if (deleteAccess)
+                            {
+                                <MudTh>Delete</MudTh>
+                            }
                         </HeaderContent>
                         <RowTemplate>
                             <MudTd DataLabel="StaffTypeName">@context.StaffTypeName</MudTd>
@@ -48,12 +63,18 @@
                             <MudTd DataLabel="QualificationName">@context.QualificationName</MudTd>
                             <MudTd DataLabel="CityName">@context.CityName</MudTd>
                             <MudTd DataLabel="AreaName">@context.AreaName</MudTd>
-                            <MudTd DataLabel="Edit">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("RefferByDefine/{0}",context.Id)></MudIconButton>
-                            </MudTd>
-                            <MudTd DataLabel="Delete">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteRefferBy(@context.Id))"></MudIconButton>
-                            </MudTd>
+                            @if (editAccess)
+                            {
+                                <MudTd DataLabel="Edit">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("RefferByDefine/{0}",context.Id)></MudIconButton>
+                                </MudTd>
+                            }
+                            @if (deleteAccess)
+                            {
+                                <MudTd DataLabel="Delete">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteRefferBy(@context.Id))"></MudIconButton>
+                                </MudTd>
+                            }
                         </RowTemplate>
                         <PagerContent>
                             <MudPagination ShowFirstButton="true" ShowLastButton="true" SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
@@ -68,13 +89,34 @@
 
 
 @code {
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
     private MudTable<RefferByViewModel> _table;
     private List<RefferByViewModel> Elements;
     private bool loading = false;
     private string searchString = "";
 
+    private bool addAccess = false;
+    private bool editAccess = false;
+    private bool deleteAccess = false;
+
     protected override async Task OnInitializedAsync()
     {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("RefferBies", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/BasicInformationCategories/View");
+        }
+        addAccess = await mediator.Send(new CheckUserActionAccessQuery("RefferBies", "Add", userInfo.UserId));
+        editAccess = await mediator.Send(new CheckUserActionAccessQuery("RefferBies", "Edit", userInfo.UserId));
+        deleteAccess = await mediator.Send(new CheckUserActionAccessQuery("RefferBies", "Delete", userInfo.UserId));
+
         Elements = await mediator.Send(new GetAllRefferBiesQuery());
     }
 

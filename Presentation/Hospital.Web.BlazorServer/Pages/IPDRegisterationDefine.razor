@@ -15,8 +15,11 @@
 @inject NavigationManager navManager
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
+@inject IHttpContextAccessor accessor
 
-@attribute [Authorize(Roles = "Super,Admin,Operator")]
+@attribute [Authorize]
+
+<PageTitle>IPD Registeration Define - HMIS System</PageTitle>
 
 <h1>@caption</h1>
 
@@ -35,10 +38,18 @@
                         <TabStripTab Title="General Information">
                             <MudGrid Spacing="1">
                                 <MudItem md="12">
-                                    <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@NewPatient">Add New Patient</TelerikButton>
-                        
-                                    <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@SearchPatient">Search Patient</TelerikButton>
-                                    <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@SearchOPDPatient">Search Patient from OPD List</TelerikButton>
+                                    @if (addPatientAccess)
+                                    {
+                                        <TelerikButton Class="mr-1" ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@NewPatient">Add New Patient</TelerikButton>
+                                    }
+                                    @if (searchPatientAccess)
+                                    {
+                                        <TelerikButton Class="mr-1" ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@SearchPatient">Search Patient</TelerikButton>
+                                    }
+                                    @if (searchOPDAccess)
+                                    {
+                                        <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@SearchOPDPatient">Search Patient from OPD List</TelerikButton>
+                                    }
                                 </MudItem>
                                 <MudItem md="6">
                                     <TelerikFloatingLabel Text="Date" Class="custom-label w-100">
@@ -341,7 +352,10 @@
                                                  Height="300px" Pageable="true" PageSize="5"
                                                  OnDelete=@DeleteRoom OnCreate=@CreateRoom>
                                         <GridToolBar>
-                                            <GridCommandButton Command="Add">Add Room</GridCommandButton>
+                                            @if (addRoomAccess)
+                                            {
+                                                <GridCommandButton Command="Add">Add Room</GridCommandButton>
+                                            }
                                         </GridToolBar>
                                         <GridColumns>
                                             <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.Date) Title="Date" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
@@ -402,8 +416,10 @@
                                             <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.Amount) Title="Amount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
                                             <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.Description) Title="Description" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
                                             <GridCommandColumn Title="Action" Width="10vw" HeaderClass="k-text-center">
-
-                                                <GridCommandButton Command="Delete" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Delete</GridCommandButton>
+                                                @if (deleteRoomAccess)
+                                                {
+                                                    <GridCommandButton Command="Delete" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Delete</GridCommandButton>
+                                                }
                                                 <GridCommandButton Command="Save" ThemeColor="@ThemeConstants.Button.ThemeColor.Tertiary" ShowInEdit="true">Update</GridCommandButton>
                                                 <GridCommandButton Command="Cancel" ShowInEdit="true">Cancel</GridCommandButton>
                                             </GridCommandColumn>
@@ -419,7 +435,10 @@
                                                  Height="300px" Pageable="true" PageSize="5"
                                                  OnDelete=@DeleteService OnCreate=@CreateService>
                                         <GridToolBar>
-                                            <GridCommandButton Command="Add">Add Service</GridCommandButton>
+                                            @if (addServiceAccess)
+                                            {
+                                                <GridCommandButton Command="Add">Add Service</GridCommandButton>
+                                            }
                                         </GridToolBar>
                                         <GridColumns>
                                             <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Date) Title="Date" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
@@ -494,8 +513,10 @@
                                             </GridColumn>
                                             <GridColumn Field=@nameof(IPDRegisterationServiceViewModel.Amount) Title="Amount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
                                             <GridCommandColumn Title="Action" Width="10vw" HeaderClass="k-text-center">
-
-                                                <GridCommandButton Command="Delete" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Delete</GridCommandButton>
+                                                @if (deleteServiceAccess)
+                                                {
+                                                    <GridCommandButton Command="Delete" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Delete</GridCommandButton>
+                                                }
                                                 <GridCommandButton Command="Save" ThemeColor="@ThemeConstants.Button.ThemeColor.Tertiary" ShowInEdit="true">Update</GridCommandButton>
                                                 <GridCommandButton Command="Cancel" ShowInEdit="true">Cancel</GridCommandButton>
                                             </GridCommandColumn>
@@ -592,7 +613,10 @@
                                                  Height="300px" Pageable="true" PageSize="5"
                                                  OnDelete=@DeletePayment OnCreate=@CreatePayment>
                                         <GridToolBar>
-                                            <GridCommandButton Command="Add">Add Payment</GridCommandButton>
+                                            @if (addPaymentAccess)
+                                            {
+                                                <GridCommandButton Command="Add">Add Payment</GridCommandButton>
+                                            }
                                         </GridToolBar>
                                         <GridColumns>
                                             <GridColumn Field=@nameof(IPDRegisterationPaymentViewModel.Date) Title="Date" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
@@ -639,8 +663,14 @@
                                             <GridColumn Field=@nameof(IPDRegisterationPaymentViewModel.ChequeNumber) Title="Cheque Number" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
                                             <GridColumn Field=@nameof(IPDRegisterationPaymentViewModel.Description) Title="Description" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
                                             <GridCommandColumn Title="Action" Width="10vw" HeaderClass="k-text-center">
-                                                <GridCommandButton OnClick="@PrintPayment" ThemeColor="@ThemeConstants.Button.ThemeColor.Info">Print</GridCommandButton>
+                                                @if (printPaymentAccess)
+                                                {
+                                                    <GridCommandButton OnClick="@PrintPayment" ThemeColor="@ThemeConstants.Button.ThemeColor.Info">Print</GridCommandButton>
+                                                }
+                                                @if (deletePaymentAccess)
+                                                {
                                                 <GridCommandButton Command="Delete" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Delete</GridCommandButton>
+                                                }
                                                 <GridCommandButton Command="Save" ThemeColor="@ThemeConstants.Button.ThemeColor.Tertiary" ShowInEdit="true">Update</GridCommandButton>
                                                 <GridCommandButton Command="Cancel" ShowInEdit="true">Cancel</GridCommandButton>
                                             </GridCommandColumn>
@@ -660,13 +690,18 @@
                     
                 </FormItems>
                 <FormButtons>
-
-                    <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveIPDRegisteration">Save</MudButton>
-
-                    <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveAndPrintIPDRegisteration">Save/Print</MudButton>
-
-                    <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Print" Disabled="@(iPDRegisteration.Id==0)" OnClick="Print">Print</MudButton>
-
+                    @if (saveAccess)
+                    {
+                        <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveIPDRegisteration">Save</MudButton>
+                    }
+                    @if (saveAccess && printAccess)
+                    {
+                        <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveAndPrintIPDRegisteration">Save/Print</MudButton>
+                    }
+                    @if (printAccess)
+                    {
+                        <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Print" Disabled="@(iPDRegisteration.Id==0)" OnClick="Print">Print</MudButton>
+                    }
                     <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="IPDRegisterations">Return</MudButton>
                 </FormButtons>
             </TelerikForm>
@@ -683,7 +718,7 @@
         <WindowAction Name="Close" />
     </WindowActions>
     <WindowContent>
-        <PatientDefine Id="0" Mode="Modal" OnPatientAdded="PatientAdded"></PatientDefine>
+        <PatientDefine Id="0" Mode="Modal" From="IPD" OnPatientAdded="PatientAdded"></PatientDefine>
     </WindowContent>
 </TelerikWindow>
 
@@ -695,7 +730,7 @@
         <WindowAction Name="Close" />
     </WindowActions>
     <WindowContent>
-        <Patients Mode="Search" OnPatientSelected="PatientSelected"></Patients>
+        <Patients Mode="Search" From="IPD" OnPatientSelected="PatientSelected"></Patients>
     </WindowContent>
 </TelerikWindow>
 
@@ -775,8 +810,44 @@
     private bool selectPaymentReportTemplate = false;
     private int IPDPaymentId = 0;
 
+    private bool saveAccess = false;
+    private bool printAccess = false;
+    private bool addPatientAccess = false;
+    private bool searchPatientAccess = false;
+    private bool searchOPDAccess = false;
+    private bool addRoomAccess = false;
+    private bool deleteRoomAccess = false;
+    private bool addServiceAccess = false;
+    private bool deleteServiceAccess = false;
+    private bool addPaymentAccess = false;
+    private bool deletePaymentAccess = false;
+    private bool printPaymentAccess = false;
+
     protected override async Task OnInitializedAsync()
     {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterationDefine", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/IPDRegisterationDefine/View");
+        }
+        saveAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterationDefine", "Save", userInfo.UserId));
+        printAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterationDefine", "Print", userInfo.UserId));
+        addPatientAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterationDefine", "AddPatient", userInfo.UserId));
+        searchPatientAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterationDefine", "SearchPatient", userInfo.UserId));
+        searchOPDAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterationDefine", "SearchOPD", userInfo.UserId));
+        addRoomAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterationDefine", "AddRoom", userInfo.UserId));
+        deleteRoomAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterationDefine", "DeleteRoom", userInfo.UserId));
+        addServiceAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterationDefine", "AddService", userInfo.UserId));
+        deleteServiceAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterationDefine", "DeleteService", userInfo.UserId));
+        addPaymentAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterationDefine", "AddPayment", userInfo.UserId));
+        deletePaymentAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterationDefine", "DeletePayment", userInfo.UserId));
+        printPaymentAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterationDefine", "PrintPayment", userInfo.UserId));
+
         patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
         patients = await mediator.Send(new GetAllPatientsQuery());
         refferBies = await mediator.Send(new GetAllRefferBiesQuery());

@@ -4,18 +4,24 @@
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Helpers;
+@using Hospital.Web.BlazorServer.Models.Auth;
 @using MediatR
 @inject IMediator mediator;
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject NavigationManager navManager
+@inject IHttpContextAccessor accessor
 
 @attribute [Authorize(Roles = "Super,Admin")]
+
+<PageTitle>Report Template List - HMIS System</PageTitle>
 
 <MudGrid Class="mt-2">
     <MudItem md="12">
         <MudPaper Class="mt-2" Elevation="10">
             <MudCard Class="pl-2 pr-2 mt-2">
-                <MudCardHeader>Report Templates</MudCardHeader>
+                <MudCardHeader>Report Template List</MudCardHeader>
                 <MudCardActions>
                     
                 </MudCardActions>
@@ -28,14 +34,20 @@
                         <HeaderContent>
                             <MudTh>Code</MudTh>
                             <MudTh>Name</MudTh>
-                            <MudTh>Select</MudTh>
+                            @if (selectAccess)
+                            {
+                                <MudTh>Select</MudTh>
+                            }
                         </HeaderContent>
                         <RowTemplate>
                             <MudTd DataLabel="Code">@context.Code</MudTd>
                             <MudTd DataLabel="Name">@context.Name</MudTd>
-                            <MudTd DataLabel="Select">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.AddChart" Color="Color.Primary" Href=@String.Format("ReportShow/{0}/{1}",context.Id,Id) target="_blank"></MudIconButton>
-                            </MudTd>
+                            @if (selectAccess)
+                            {
+                                <MudTd DataLabel="Select">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.AddChart" Color="Color.Primary" Href=@String.Format("ReportShow/{0}/{1}",context.Id,Id) target="_blank"></MudIconButton>
+                                </MudTd>
+                            }
                         </RowTemplate>
                         <PagerContent>
                             <MudPagination ShowFirstButton="true" ShowLastButton="true" SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
@@ -54,13 +66,29 @@
     public string ReportCode { get; set; }
     [Parameter]
     public int Id { get; set; }
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
     private MudTable<ReportTemplateViewModel> _table;
     private List<ReportTemplateViewModel> Elements;
     private bool loading = false;
     private string searchString = "";
 
+    private bool selectAccess = false;
+
     protected override async Task OnInitializedAsync()
     {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("ReportTemplatesSelect", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/ReportTemplatesSelect/View");
+        }
+        selectAccess = await mediator.Send(new CheckUserActionAccessQuery("ReportTemplatesSelect", "Select", userInfo.UserId));
+
         Elements = await mediator.Send(new GetReportTemplateByCodeQuery(ReportCode));
     }
 

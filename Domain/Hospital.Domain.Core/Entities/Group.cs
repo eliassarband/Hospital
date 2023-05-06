@@ -11,7 +11,7 @@ namespace Hospital.Domain.Core.Entities
         public string Name { get; set; }
 
         [MaxLength(1000)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
         public virtual ICollection<GroupUser> GroupUsers { get; set; }
 
 	}

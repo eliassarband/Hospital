@@ -173,7 +173,7 @@ namespace Hospital.Application.Commands
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
-		public string Description { get; set; }
+		public string? Description { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public string? CreatedGroup { get; set; }
 
@@ -187,7 +187,7 @@ namespace Hospital.Application.Commands
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
-		public string Description { get; set; }
+		public string? Description { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public string? CreatedGroup { get; set; }
 		public DateTime ModifiedDate { get; set; }
@@ -411,8 +411,8 @@ namespace Hospital.Application.Commands
 	public class CreateFormActionAccessCommand : IRequest<CommandResponse>
 	{
 		public int Id { get; set; }
-		public int UserId { get; set; }
-		public int GroupId { get; set; }
+		public int? UserId { get; set; }
+		public int? GroupId { get; set; }
 		public int FormActionId { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public string? CreatedFormActionAccess { get; set; }

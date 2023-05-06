@@ -1,4 +1,4 @@
-﻿@page "/ServiceDefine/{Id}"
+﻿@page "/ServiceDefine/{Id:int}"
 
 @using Hospital.Application.Commands
 @using Hospital.Application.Mapper
@@ -6,14 +6,18 @@
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth
 @using MediatR
 @using System.ComponentModel.DataAnnotations
 @inject IMediator mediator
 @inject NavigationManager navManager
 @inject ISnackbar Snackbar
+@inject IHttpContextAccessor accessor
 
 @attribute [Authorize(Roles = "Super,Admin")]
+
+<PageTitle>Service Define - HMIS System</PageTitle>
 
 <MudGrid Class="mt-2">
     <MudItem md="2"></MudItem>
@@ -68,7 +72,10 @@
                         </MudGrid>
                     </MudCardContent>
                     <MudCardActions>
-                        <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveService" Disabled="@(!success)">Save</MudButton>
+                        @if (saveAccess)
+                        {
+                            <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveService" Disabled="@(!success)">Save</MudButton>
+                        }
                         <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="Services">Return</MudButton>
                     </MudCardActions>
                 </MudCard>
@@ -81,33 +88,46 @@
 
 @code {
     [Parameter]
-    public string Id { get; set; }
+    public int Id { get; set; }
     [CascadingParameter]
     public LoginedUser? userInfo { get; set; }
 
-    private string caption = "Add Department";
+    private string caption = "Add Service";
     private ServiceViewModel service = new ServiceViewModel();
     private List<DepartmentViewModel> departments;
     bool success;
     MudForm form;
 
+    private bool saveAccess = false;
+
     protected override async Task OnInitializedAsync()
     {
-        departments = await mediator.Send(new GetAllDepartmentsQuery());
-        if (!String.IsNullOrEmpty(Id))
+        if (userInfo == null)
         {
-            if (Convert.ToInt32(Id) > 0)
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("ServiceDefine", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/ServiceDefine/View");
+        }
+        saveAccess = await mediator.Send(new CheckUserActionAccessQuery("ServiceDefine", "Save", userInfo.UserId));
+
+        departments = await mediator.Send(new GetAllDepartmentsQuery());
+        
+        if (Id > 0)
+        {
+            caption = "Edit Service";
+
+            service = await mediator.Send(new GetServiceByIdQuery(Convert.ToInt32(Id)));
+
+            if (service != null)
             {
-                caption = "Edit Service";
 
-                service = await mediator.Send(new GetServiceByIdQuery(Convert.ToInt32(Id)));
-
-                if (service != null)
-                {
-
-                }
             }
         }
+        
 
     }
 

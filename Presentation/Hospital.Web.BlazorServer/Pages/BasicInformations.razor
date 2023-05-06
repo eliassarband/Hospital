@@ -4,28 +4,37 @@
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Helpers;
+@using Hospital.Web.BlazorServer.Models.Auth;
 @using MediatR
 @inject IMediator mediator;
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject IHttpContextAccessor accessor
+@inject NavigationManager navManager
 
-@attribute [Authorize(Roles = "Super,Admin")]
+@attribute [Authorize]
+
+<PageTitle>Basic Information List - HMIS System</PageTitle>
 
 <MudGrid Class="mt-2">
     <MudItem md="12">
         <MudPaper Class="mt-2" Elevation="10">
             <MudCard Class="pl-2 pr-2 mt-2">
-                <MudCardHeader>Basic Information</MudCardHeader>
+                <MudCardHeader>Basic Information List</MudCardHeader>
                 <MudCardActions>
-                    @if (String.IsNullOrEmpty(CategoryCode))
+                    @if(addAccess)
                     {
-                        <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("BasicInformationDefine/0")>Add Basic Information</MudButton>
-                    }
-                    else
-                    {
+                        @if (String.IsNullOrEmpty(CategoryCode))
+                        {
+                            <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("BasicInformationDefine/0")>Add Basic Information</MudButton>
+                        }
+                        else
+                        {
                         
-                        <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("BasicInformationDefine/0/{0}",CategoryCode)>Add Basic Information</MudButton>
+                            <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("BasicInformationDefine/0/{0}",CategoryCode)>Add Basic Information</MudButton>
                         
+                        }
                     }
                 </MudCardActions>
                 <MudCardContent>
@@ -45,8 +54,14 @@
                             <MudTh>Is Deleted</MudTh>
                             <MudTh>Editable</MudTh>
                             <MudTh>Deletable</MudTh>
-                            <MudTh>Edit</MudTh>
-                            <MudTh>Delete</MudTh>
+                            @if (editAccess)
+                            {
+                                <MudTh>Edit</MudTh>
+                            }
+                            @if (deleteAccess)
+                            {
+                                <MudTh>Delete</MudTh>
+                            }
                         </HeaderContent>
                         
                         <RowTemplate>
@@ -92,19 +107,25 @@
                                     <MudIcon Icon="@Icons.Material.Filled.Clear" Color="Color.Error" Title="Undeletable"></MudIcon>
                                 }
                             </MudTd>
-                            <MudTd DataLabel="Edit">
-                                @if (!String.IsNullOrEmpty(CategoryCode))
-                                {
-                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Disabled="!context.AllowChange" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("BasicInformationDefine/{0}/{1}",context.Id,context.CategoryCode)></MudIconButton>
-                                }
-                                else
-                                {
-                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Disabled="!context.AllowChange" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("BasicInformationDefine/{0}",context.Id)></MudIconButton>
-                                }
-                            </MudTd>
-                            <MudTd DataLabel="Delete">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Disabled="!context.AllowDelete" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteBasicInformation(@context.Id))"></MudIconButton>
-                            </MudTd>
+                            @if(editAccess)
+                            {
+                                <MudTd DataLabel="Edit">
+                                    @if (!String.IsNullOrEmpty(CategoryCode))
+                                    {
+                                        <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Disabled="!context.AllowChange" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("BasicInformationDefine/{0}/{1}",context.Id,context.CategoryCode)></MudIconButton>
+                                    }
+                                    else
+                                    {
+                                        <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Disabled="!context.AllowChange" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("BasicInformationDefine/{0}",context.Id)></MudIconButton>
+                                    }
+                                </MudTd>
+                            }
+                            @if (deleteAccess)
+                            {
+                                <MudTd DataLabel="Delete">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Disabled="!context.AllowDelete" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteBasicInformation(@context.Id))"></MudIconButton>
+                                </MudTd>
+                            }
                         </RowTemplate>
                         <PagerContent>
                             <MudPagination ShowFirstButton="true" ShowLastButton="true" SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
@@ -121,13 +142,35 @@
 @code {
     [Parameter]
     public string? CategoryCode { get; set; }
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
     private MudTable<BasicInformationViewModel> _table;
     private List<BasicInformationViewModel> Elements;
     private bool loading = false;
     private string searchString = "";
 
+    private bool addAccess = false;
+    private bool editAccess = false;
+    private bool deleteAccess = false;
+
     protected override async Task OnInitializedAsync()
     {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("BasicInformations", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/BasicInformations/View");
+        }
+        addAccess = await mediator.Send(new CheckUserActionAccessQuery("BasicInformations", "Add", userInfo.UserId));
+        editAccess = await mediator.Send(new CheckUserActionAccessQuery("BasicInformations", "Edit", userInfo.UserId));
+        deleteAccess = await mediator.Send(new CheckUserActionAccessQuery("BasicInformations", "Delete", userInfo.UserId));
+
+
         if (String.IsNullOrEmpty(CategoryCode))
         {
             Elements = await mediator.Send(new GetAllBasicInformationsQuery());

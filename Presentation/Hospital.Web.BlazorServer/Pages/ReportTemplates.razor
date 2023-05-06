@@ -4,20 +4,29 @@
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Helpers;
+@using Hospital.Web.BlazorServer.Models.Auth;
 @using MediatR
 @inject IMediator mediator;
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject NavigationManager navManager
+@inject IHttpContextAccessor accessor
 
-@attribute [Authorize(Roles = "Super,Admin")]
+@attribute [Authorize]
+
+<PageTitle>Report Template List - HMIS System</PageTitle>
 
 <MudGrid Class="mt-2">
     <MudItem md="12">
         <MudPaper Class="mt-2" Elevation="10">
             <MudCard Class="pl-2 pr-2 mt-2">
-                <MudCardHeader>Report Templates</MudCardHeader>
+                <MudCardHeader>Report Template List</MudCardHeader>
                 <MudCardActions>
-                    <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("ReportTemplateDefine/0")>Add ReportTemplate</MudButton>
+                    @if (addAccess)
+                    {
+                        <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("ReportTemplateDefine/0")>Add Report Template</MudButton>
+                    }
                 </MudCardActions>
                 <MudCardContent>
                     <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<ReportTemplateViewModel,bool>(FilterReportTemplateInit)">
@@ -28,22 +37,40 @@
                         <HeaderContent>
                             <MudTh>Code</MudTh>
                             <MudTh>Name</MudTh>
-                            <MudTh>Edit</MudTh>
-                            <MudTh>Design</MudTh>
-                            <MudTh>Delete</MudTh>
+                            @if (designAccess)
+                            {
+                                <MudTh>Design</MudTh>
+                            }
+                            @if (editAccess)
+                            {
+                                <MudTh>Edit</MudTh>
+                            }
+                            @if (deleteAccess)
+                            {
+                                <MudTh>Delete</MudTh>
+                            }
                         </HeaderContent>
                         <RowTemplate>
                             <MudTd DataLabel="Code">@context.Code</MudTd>
                             <MudTd DataLabel="Name">@context.Name</MudTd>
-                            <MudTd DataLabel="Edit">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("ReportTemplateDefine/{0}",context.Id)></MudIconButton>
-                            </MudTd>
-                            <MudTd DataLabel="Design">
+                            @if (designAccess)
+                            {
+                                <MudTd DataLabel="Design">
                                 <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.DesignServices" Color="Color.Primary" Href=@String.Format("ReportTemplateDesign/{0}",context.Id)></MudIconButton>
-                            </MudTd>
-                            <MudTd DataLabel="Delete">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteReportTemplate(@context.Id))"></MudIconButton>
-                            </MudTd>
+                                </MudTd>                                
+                            }
+                            @if (editAccess)
+                            {
+                                <MudTd DataLabel="Edit">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("ReportTemplateDefine/{0}",context.Id)></MudIconButton>
+                                </MudTd>
+                            }
+                            @if (deleteAccess)
+                            {
+                                <MudTd DataLabel="Delete">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteReportTemplate(@context.Id))"></MudIconButton>
+                                </MudTd>
+                            }
                         </RowTemplate>
                         <PagerContent>
                             <MudPagination ShowFirstButton="true" ShowLastButton="true" SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
@@ -58,13 +85,36 @@
 
 
 @code {
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
     private MudTable<ReportTemplateViewModel> _table;
     private List<ReportTemplateViewModel> Elements;
     private bool loading = false;
     private string searchString = "";
 
+    private bool addAccess = false;
+    private bool editAccess = false;
+    private bool deleteAccess = false;
+    private bool designAccess = false;
+
     protected override async Task OnInitializedAsync()
     {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("ReportTemplates", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/ReportTemplates/View");
+        }
+        addAccess = await mediator.Send(new CheckUserActionAccessQuery("ReportTemplates", "Add", userInfo.UserId));
+        editAccess = await mediator.Send(new CheckUserActionAccessQuery("ReportTemplates", "Edit", userInfo.UserId));
+        deleteAccess = await mediator.Send(new CheckUserActionAccessQuery("ReportTemplates", "Delete", userInfo.UserId));
+        designAccess = await mediator.Send(new CheckUserActionAccessQuery("ReportTemplates", "Design", userInfo.UserId));
+
         Elements = await mediator.Send(new GetAllReportTemplatesQuery());
     }
 

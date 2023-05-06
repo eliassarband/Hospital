@@ -6,20 +6,28 @@
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
 @using Hospital.Web.BlazorServer.Helpers;
+@using Hospital.Web.BlazorServer.Models.Auth;
 @using MediatR
 @inject IMediator mediator;
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject NavigationManager navManager
+@inject IHttpContextAccessor accessor
 
-@attribute [Authorize(Roles = "Super,Admin,Operator")]
+@attribute [Authorize]
+
+<PageTitle>Admited Patinet List - HMIS System</PageTitle>
 
 <MudGrid Class="mt-2">
     <MudItem md="12">
         <MudPaper Class="mt-2" Elevation="10">
             <MudCard Class="pl-2 pr-2 mt-2">
-                <MudCardHeader>Admited Patient List</MudCardHeader>
+                <MudCardHeader>Admited Patinet List</MudCardHeader>
                 <MudCardActions>
-                    <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("IPDRegisterationDefine/0")>Add IPD Registeration</MudButton>
+                    @if (addAccess)
+                    {
+                        <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("IPDRegisterationDefine/0")>Add IPD Registeration</MudButton>
+                    }
                 </MudCardActions>
                 <MudCardContent>
                     <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<IPDRegisterationViewModel,bool>(FilterIPDRegisterationInit)">
@@ -46,10 +54,22 @@
                             <MudTh>Room</MudTh>
                             <MudTh>R-Type</MudTh>
                             <MudTh>Bed</MudTh>
-                            <MudTh>Edit</MudTh>
-                            <MudTh>Print</MudTh>
-                            <MudTh>Discharge</MudTh>
-                            <MudTh>Cancel</MudTh>
+                            @if (dischargeAccess)
+                            {
+                                <MudTh>Discharge</MudTh>
+                            }
+                            @if (printAccess)
+                            {
+                                <MudTh>Print</MudTh>
+                            }
+                            @if (editAccess)
+                            {
+                                <MudTh>Edit</MudTh>
+                            }
+                            @if (cancelAccess)
+                            {
+                                <MudTh>Cancel</MudTh>
+                            }
                         </HeaderContent>
                         <RowTemplate>
                             <MudTd DataLabel="PatientId">
@@ -70,23 +90,35 @@
                             <MudTd DataLabel="Room">@context.RoomName</MudTd>
                             <MudTd DataLabel="RoomType">@context.RoomTypeName</MudTd>
                             <MudTd DataLabel="Bed">@context.BedName</MudTd>
-                            <MudTd DataLabel="Edit">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("IPDRegisterationDefine/{0}",context.Id)></MudIconButton>
-                            </MudTd>
-                            <MudTd DataLabel="Print">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Print" Color="Color.Tertiary" OnClick="@(()=> Print(@context.Id))"></MudIconButton>
-                            </MudTd>
-                            <MudTd DataLabel="Discharge">
-                            @if (context.PayableAmount == context.IPDRegisterationPayments.Sum(p => p.Amount) && !(context.Discharged??false))
+                            @if (dischargeAccess)
                             {
+                                <MudTd DataLabel="Discharge">
+                                @if (context.PayableAmount == context.IPDRegisterationPayments.Sum(p => p.Amount) && !(context.Discharged??false))
+                                {
 
-                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.NewReleases" Color="Color.Info" OnClick="@(()=> Discharge(@context.Id))"></MudIconButton>
+                                        <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.NewReleases" Color="Color.Info" OnClick="@(()=> Discharge(@context.Id))"></MudIconButton>
                                 
+                                }
+                                </MudTd>
                             }
-                            </MudTd>
-                            <MudTd DataLabel="Cancel">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Cancel" Color="Color.Secondary" OnClick="@(()=> DeleteIPDRegisteration(@context.Id))"></MudIconButton>
-                            </MudTd>
+                            @if (printAccess)
+                            {
+                                <MudTd DataLabel="Print">
+                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Print" Color="Color.Tertiary" OnClick="@(()=> Print(@context.Id))"></MudIconButton>
+                                </MudTd>
+                            }
+                            @if (editAccess)
+                            {
+                                <MudTd DataLabel="Edit">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("IPDRegisterationDefine/{0}",context.Id)></MudIconButton>
+                                </MudTd>
+                            }
+                            @if (cancelAccess)
+                            {
+                                <MudTd DataLabel="Cancel">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Cancel" Color="Color.Secondary" OnClick="@(()=> DeleteIPDRegisteration(@context.Id))"></MudIconButton>
+                                </MudTd>
+                            }
                         </RowTemplate>
                         <PagerContent>
                             <MudPagination ShowFirstButton="true" ShowLastButton="true" SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
@@ -113,6 +145,10 @@
 @code {
     [CascadingParameter]
     public DialogFactory Dialogs { get; set; }
+
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
     private MudTable<IPDRegisterationViewModel> _table;
     private List<IPDRegisterationViewModel> Elements;
     private bool loading = false;
@@ -125,8 +161,30 @@
     private SettingViewModel patientIdPrefix;
     private SettingViewModel iPDNoPrefix;
 
+    private bool addAccess = false;
+    private bool editAccess = false;
+    private bool cancelAccess = false;
+    private bool dischargeAccess = false;
+    private bool printAccess = false;
+    
     protected override async Task OnInitializedAsync()
     {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterations", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/IPDRegisterations/View");
+        }
+        addAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterations", "Add", userInfo.UserId));
+        editAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterations", "Edit", userInfo.UserId));
+        cancelAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterations", "Cancel", userInfo.UserId));
+        dischargeAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterations", "Discharge", userInfo.UserId));
+        printAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterations", "Print", userInfo.UserId));
+
         patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
         iPDNoPrefix = await mediator.Send(new GetSettingByKeyQuery("IPDNoPrefix"));
 

@@ -6,14 +6,18 @@
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth
 @using MediatR
 @using System.ComponentModel.DataAnnotations
 @inject IMediator mediator
 @inject NavigationManager navManager
 @inject ISnackbar Snackbar
+@inject IHttpContextAccessor accessor
 
 @attribute [Authorize(Roles = "Super,Admin")]
+
+<PageTitle>Room Type Define - HMIS System</PageTitle>
 
 <MudGrid Class="mt-2">
     <MudItem md="3"></MudItem>
@@ -47,7 +51,10 @@
                         </MudGrid>
                     </MudCardContent>
                     <MudCardActions>
-                        <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveRoomType" Disabled="@(!success)">Save</MudButton>
+                        @if (saveAccess)
+                        {
+                            <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveRoomType" Disabled="@(!success)">Save</MudButton>
+                        }
                         <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="RoomTypes">Return</MudButton>
                     </MudCardActions>
                 </MudCard>
@@ -70,8 +77,22 @@
     bool success;
     MudForm form;
 
+    private bool saveAccess = false;
+
     protected override async Task OnInitializedAsync()
     {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("RoomTypeDefine", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/RoomTypeDefine/View");
+        }
+        saveAccess = await mediator.Send(new CheckUserActionAccessQuery("RoomTypeDefine", "Save", userInfo.UserId));
+
         wards = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Ward"));
 
         if (!String.IsNullOrEmpty(Id))

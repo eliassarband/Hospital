@@ -5,18 +5,23 @@
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
 @using Hospital.Web.BlazorServer.Helpers;
+@using Hospital.Web.BlazorServer.Models.Auth;
 @using MediatR
 @inject IMediator mediator;
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject NavigationManager navManager
+@inject IHttpContextAccessor accessor
 
-@attribute [Authorize(Roles = "Super,Admin,Operator")]
+@attribute [Authorize]
+
+<PageTitle>Receive Balance Payment List - HMIS System</PageTitle>
 
 <MudGrid Class="mt-2">
     <MudItem md="12">
         <MudPaper Class="mt-2" Elevation="10">
             <MudCard Class="pl-2 pr-2 mt-2">
-                <MudCardHeader>Debtor OPD Bills</MudCardHeader>
+                <MudCardHeader>Receive Balance Payment List</MudCardHeader>
                 <MudCardActions>
                     
                 </MudCardActions>
@@ -36,8 +41,10 @@
                             <MudTh>Payable Amount</MudTh>
                             <MudTh>Paid Amount</MudTh>
                             <MudTh>Debt Amount</MudTh>
-                            <MudTh>Payment</MudTh>
-                            
+                            @if (paymentAccess)
+                            {
+                                <MudTh>Payment</MudTh>
+                            }
                         </HeaderContent>
                         <RowTemplate>
                             <MudTd DataLabel="ReceiptNo">
@@ -53,12 +60,15 @@
                             <MudTd DataLabel="PayableAmount">@context.PayableAmount</MudTd>
                             <MudTd DataLabel="PaidAmount">@(context.PaidAmount + context.OPDBillPayments.Sum(p => p.Amount))</MudTd>
                             <MudTd DataLabel="DebtAmount">@context.DebtAmount</MudTd>
-                            <MudTd DataLabel="Payment">
-                                @if (context.DebtAmount > 0)
-                                {
-                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Payment" Color="Color.Tertiary" OnClick="@(()=> OPDPayment(@context.Id))"></MudIconButton>
-                                }
-                            </MudTd>
+                            @if (paymentAccess)
+                            {
+                                <MudTd DataLabel="Payment">
+                                    @if (context.DebtAmount > 0)
+                                    {
+                                        <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Payment" Color="Color.Tertiary" OnClick="@(()=> OPDPayment(@context.Id))"></MudIconButton>
+                                    }
+                                </MudTd>
+                            }
                         </RowTemplate>
                         <PagerContent>
                             <MudPagination ShowFirstButton="true" ShowLastButton="true" SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
@@ -83,7 +93,8 @@
 </TelerikWindow>
 
 @code {
-
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
 
     private MudTable<OPDBillViewModel> _table;
     private List<OPDBillViewModel> Elements;
@@ -95,9 +106,22 @@
     private bool showPayments = false;
     private int OPDId = 0;
 
+    private bool paymentAccess = false;
 
     protected override async Task OnInitializedAsync()
     {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("DebtorOPDBills", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/DebtorOPDBills/View");
+        }
+        paymentAccess = await mediator.Send(new CheckUserActionAccessQuery("DebtorOPDBills", "Payment", userInfo.UserId));
+
         patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
         receiptNoPrefix = await mediator.Send(new GetSettingByKeyQuery("OPDReceiptNoPrefix"));
 

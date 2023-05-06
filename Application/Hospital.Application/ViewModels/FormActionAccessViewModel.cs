@@ -11,11 +11,11 @@ namespace Hospital.Application.ViewModels
     public class FormActionAccessViewModel
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
         public string Username { get; set; }
         public string UserFulleName { get; set; }
         public UserViewModel User { get; set; }
-        public int GroupId { get; set; }
+        public int? GroupId { get; set; }
         public string GroupName { get; set; }
         public GroupViewModel Group { get; set; }
 		public int FormActionId { get; set; }

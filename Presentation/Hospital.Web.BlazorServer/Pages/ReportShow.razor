@@ -18,8 +18,11 @@
 @inject IMediator mediator
 @inject NavigationManager navManager
 @inject ISnackbar Snackbar
+@inject IHttpContextAccessor accessor
 
-@attribute [Authorize(Roles = "Super,Admin,User")]
+@attribute [Authorize]
+
+<PageTitle>Report Show - HMIS System</PageTitle>
 
 <MudPaper Class="mt-4 pr-2 pl-2" Elevation="10">
     <MudGrid Class="mt-2">
@@ -45,6 +48,17 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("ReportShow", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/ReportShow/View");
+        }
+
         if(ReportId > 0)
         {
             reportTemplate = await mediator.Send(new GetReportTemplateByIdQuery(ReportId));

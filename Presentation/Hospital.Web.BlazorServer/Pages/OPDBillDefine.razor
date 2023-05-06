@@ -13,15 +13,15 @@
 @using MediatR
 @using System.ComponentModel.DataAnnotations
 @using System.Globalization;
-
 @inject IMediator mediator
 @inject NavigationManager navManager
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
+@inject IHttpContextAccessor accessor
 
-@attribute [Authorize(Roles = "Super,Admin,Operator")]
+@attribute [Authorize]
 
-
+<PageTitle>OPD Billing Define - HMIS System</PageTitle>
 
 <h1>@caption</h1>
 
@@ -38,10 +38,14 @@
                 <FormItems>
                     <MudGrid Spacing="1">
                         <MudItem md="12">
-                            <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@NewPatient">Add New Patient</TelerikButton>
-                        
-                            <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@SearchPatient">Search Patient</TelerikButton>
-                            
+                            @if (addPatientAccess)
+                            {
+                                <TelerikButton Class="mr-1" ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@NewPatient">Add New Patient</TelerikButton>
+                            }
+                            @if (searchPatientAccess)
+                            {
+                                <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" OnClick="@SearchPatient">Search Patient</TelerikButton>
+                            }
                                 
                             
                         </MudItem>
@@ -176,7 +180,10 @@
                                             Height="300px" Pageable="true" PageSize="5"
                                             OnDelete=@DeleteItem OnCreate=@CreateItem>
                                 <GridToolBar>
-                                    <GridCommandButton Command="Add">Add Service</GridCommandButton>
+                                    @if (addServiceAccess)
+                                    {
+                                        <GridCommandButton Command="Add">Add Service</GridCommandButton>
+                                    }
                                 </GridToolBar>
                                 <GridColumns>
                                     <GridColumn Field=@nameof(OPDBillServiceViewModel.ServiceName) Title="Service Name" Editable="true" Width="30vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
@@ -259,8 +266,10 @@
                                     </GridColumn>
                                     <GridColumn Field=@nameof(OPDBillServiceViewModel.Amount) Title="Amount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat" />
                                     <GridCommandColumn Title="Action" Width="10vw" HeaderClass="k-text-center">
-
-                                        <GridCommandButton Command="Delete" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Delete</GridCommandButton>
+                                        @if (deleteServiceAccess)
+                                        {
+                                            <GridCommandButton Command="Delete" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Delete</GridCommandButton>
+                                        }
                                         <GridCommandButton Command="Save" ThemeColor="@ThemeConstants.Button.ThemeColor.Tertiary" ShowInEdit="true">Update</GridCommandButton>
                                         <GridCommandButton Command="Cancel" ShowInEdit="true">Cancel</GridCommandButton>
                                     </GridCommandColumn>
@@ -351,12 +360,18 @@
                         
                 </FormItems>
                 <FormButtons>
-                    <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveOPDBill">Save</MudButton>
-
-                    <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveAndPrintOPDBill">Save/Print</MudButton>
-
-                    <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Print" Disabled="@(oPDBill.Id==0)" OnClick="Print">Print</MudButton>
-
+                    @if (saveAccess)
+                    {
+                        <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveOPDBill">Save</MudButton>
+                    }
+                    @if (saveAccess && printAccess)
+                    {
+                        <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveAndPrintOPDBill">Save/Print</MudButton>
+                    }
+                    @if (printAccess)
+                    {
+                        <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Print" Disabled="@(oPDBill.Id==0)" OnClick="Print">Print</MudButton>
+                    }
                     <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="OPDBills">Return</MudButton>
 
                     <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" OnClick="PrintPDF">Print PDF</MudButton>
@@ -375,7 +390,7 @@
         <WindowAction Name="Close" />
     </WindowActions>
     <WindowContent>
-        <PatientDefine Id="0" Mode="Modal" OnPatientAdded="PatientAdded"></PatientDefine>
+        <PatientDefine Id="0" Mode="Modal" From="OPD" OnPatientAdded="PatientAdded"></PatientDefine>
     </WindowContent>
 </TelerikWindow>
 
@@ -387,7 +402,7 @@
         <WindowAction Name="Close" />
     </WindowActions>
     <WindowContent>
-        <Patients Mode="Search" OnPatientSelected="PatientSelected"></Patients>
+        <Patients Mode="Search" From="OPD" OnPatientSelected="PatientSelected"></Patients>
     </WindowContent>
 </TelerikWindow>
 
@@ -411,7 +426,7 @@
     [CascadingParameter]
     public CurrencySetting currencySetting { get; set; }
 
-    private string caption = "Add OPD Bill";
+    private string caption = "Add OPD Billing";
     private OPDBillViewModel oPDBill = new OPDBillViewModel();
     private PatientViewModel patient = new PatientViewModel();
     private List<PatientViewModel> patients;
@@ -429,11 +444,31 @@
     private bool searchPatientWindowState = false;
     private bool selectReportTemplate = false;
 
-
-
+    private bool saveAccess = false;
+    private bool printAccess = false;
+    private bool addPatientAccess = false;
+    private bool searchPatientAccess = false;
+    private bool addServiceAccess = false;
+    private bool deleteServiceAccess = false;
 
     protected override async Task OnInitializedAsync()
     {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("OPDBillDefine", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/OPDBillDefine/View");
+        }
+        saveAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDBillDefine", "Save", userInfo.UserId));
+        printAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDBillDefine", "Print", userInfo.UserId));
+        addPatientAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDBillDefine", "AddPatient", userInfo.UserId));
+        searchPatientAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDBillDefine", "SearchPatient", userInfo.UserId));
+        addServiceAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDBillDefine", "AddService", userInfo.UserId));
+        deleteServiceAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDBillDefine", "DeleteService", userInfo.UserId));
 
         patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
         receiptNoPrefix = await mediator.Send(new GetSettingByKeyQuery("OPDReceiptNoPrefix"));
@@ -446,7 +481,7 @@
 
         if (Id > 0)
         {
-            caption = "Edit OPD Bill";
+            caption = "Edit OPD Billing";
 
             oPDBill = await mediator.Send(new GetOPDBillByIdQuery(Convert.ToInt32(Id)));
 

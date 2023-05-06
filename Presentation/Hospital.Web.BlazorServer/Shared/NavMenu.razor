@@ -1,8 +1,26 @@
-﻿<MudImage Src="images/HMISSystem.png" Class="mr-1" Height="50"></MudImage>
-<AuthorizeView Roles="Super">
+﻿@using Hospital.Application.Queries;
+@using Hospital.Application.ViewModels;
+@using Hospital.Web.BlazorServer.Helpers;
+@using Hospital.Web.BlazorServer.Models.Auth;
+@using MediatR;
+@inject IMediator mediator;
+@inject NavigationManager navManager
+@inject IHttpContextAccessor accessor
+
+<MudImage Src="images/HMISSystem.png" Class="mr-1" Height="50"></MudImage>
+<AuthorizeView>
 
     <Authorized>
-        <MudNavGroup Icon="@Icons.Material.Filled.Dashboard" IconColor="Color.Inherit" Title="Dashboard">
+        @foreach (var category in menuCategories.OrderBy(c => c.Priority))
+        {
+            <MudNavGroup Icon="@Icons.Material.Filled.ViewList" IconColor="Color.Inherit" Title="@category.Name">
+                @foreach (var form in category.FormViewModels.OrderBy(f => f.Priority))
+                {
+                    <MudNavLink Href="@form.Url" Match="NavLinkMatch.Prefix">@form.Name</MudNavLink>
+                }
+            </MudNavGroup>
+        }
+        @*<MudNavGroup Icon="@Icons.Material.Filled.Dashboard" IconColor="Color.Inherit" Title="Dashboard">
             <MudNavLink Href="Desktop" Icon="@Icons.Material.Filled.DesktopWindows" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Main Dashboard</MudNavLink>
             <MudNavLink Href="AppointmentDashboard" Icon="@Icons.Material.Filled.DesktopWindows" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Appointment Dashboard</MudNavLink>
             <MudNavLink Href="OPDIPDDashboard" Icon="@Icons.Material.Filled.DesktopWindows" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">OPD/IPD Dashboard</MudNavLink>
@@ -48,7 +66,8 @@
             <MudNavLink Href="ReportTemplates" Icon="@Icons.Material.Filled.Report" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Report Templates</MudNavLink>
         </MudNavGroup>
         <MudNavGroup Icon="@Icons.Material.Filled.Security" IconColor="Color.Inherit" Title="Security">
-            <MudNavLink Href="Users" Icon="@Icons.Material.Filled.People" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Users</MudNavLink>
+            <MudNavLink Href="Users" Icon="@Icons.Material.Filled.People" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">User List</MudNavLink>
+            <MudNavLink Href="Groups" Icon="@Icons.Material.Filled.SpeakerGroup" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Group List</MudNavLink>
             <MudNavLink Href="ChangePassword" Icon="@Icons.Material.Filled.Password" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Change Password</MudNavLink>
 
         </MudNavGroup>
@@ -70,9 +89,48 @@
             <MudNavLink Href="Settings" Icon="@Icons.Material.Filled.Settings" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Setting</MudNavLink>
             <MudNavLink Href="BasicInformationCategories" Icon="@Icons.Material.Sharp.Category" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Basic Information Category</MudNavLink>
             <MudNavLink Href="BasicInformations" Icon="@Icons.Material.Filled.Workspaces" IconColor="Color.Inherit" Match="NavLinkMatch.Prefix">Basic Information</MudNavLink>
-        </MudNavGroup>
+        </MudNavGroup>*@
     </Authorized>
     <NotAuthorized>
         <MudNavLink Href="Identity/account/login" Icon="@Icons.Filled.Login" IconColor="Color.Surface" Match="NavLinkMatch.Prefix">Log in</MudNavLink>
     </NotAuthorized>
 </AuthorizeView>
+
+@code {
+    [Parameter]
+    public LoginedUser userInfo { get; set; }
+
+    private List<FormCategoryViewModel> categories = new List<FormCategoryViewModel>();
+    private List<FormCategoryViewModel> menuCategories = new List<FormCategoryViewModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        categories = await mediator.Send(new GetAllFormCategorysQuery());
+
+        foreach(var category in categories)
+        {
+            List<FormViewModel> menuForms = new List<FormViewModel>();
+
+            var forms = await mediator.Send(new GetFormByFormCategoryIdQuery(category.Id));
+            foreach(var form in forms.Where(f => f.ShowInMenu))
+            {
+                if (await mediator.Send(new CheckUserActionAccessQuery(form.Code, "View", userInfo.UserId)))
+                {
+                    menuForms.Add(form);
+                }
+            }
+
+            if (menuForms.Count > 0)
+            {
+                category.FormViewModels = menuForms;
+                menuCategories.Add(category);
+            }
+        }
+    }
+}

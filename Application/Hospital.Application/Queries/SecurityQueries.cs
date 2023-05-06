@@ -370,5 +370,19 @@ namespace Hospital.Application.Queries
 
 	}
 
-	#endregion
+    public record CheckGroupActionAccessQuery : IRequest<bool>
+    {
+        public string FormCode { get; }
+        public string FormActionCode { get; }
+        public int GroupId { get; }
+        public CheckGroupActionAccessQuery(string FormCode, string FormActionCode, int GroupId)
+        {
+            this.FormCode = FormCode;
+            this.FormActionCode = FormActionCode;
+            this.GroupId = GroupId;
+        }
+
+    }
+
+    #endregion
 }

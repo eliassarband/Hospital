@@ -1,4 +1,4 @@
-﻿@page "/BasicInformationDefine/{Id}/{CategoryCode?}"
+﻿@page "/BasicInformationDefine/{Id:int}/{CategoryCode?}"
 
 @using Hospital.Application.Commands
 @using Hospital.Application.Mapper
@@ -6,14 +6,18 @@
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth
 @using MediatR
 @using System.ComponentModel.DataAnnotations
 @inject IMediator mediator
 @inject NavigationManager navManager
 @inject ISnackbar Snackbar
+@inject IHttpContextAccessor accessor
 
-@attribute [Authorize(Roles = "Super,Admin")]
+@attribute [Authorize]
+
+<PageTitle>Basic Information Define - HMIS System</PageTitle>
 
 <MudGrid Class="mt-2">
     <MudItem md="3"></MudItem>
@@ -45,8 +49,10 @@
                         <MudSwitch T="bool" Class="mt-3" @bind-Checked="@basicInformation.AllowDelete" Label="Deletable" Color="Color.Success" UnCheckedColor="Color.Dark"></MudSwitch>
                     </MudCardContent>
                     <MudCardActions>
-                        <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveBasicInformation" Disabled="@(!success)">Save</MudButton>
-
+                        @if (saveAccess)
+                        {
+                            <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveBasicInformation" Disabled="@(!success)">Save</MudButton>
+                        }
                         @if (String.IsNullOrEmpty(CategoryCode))
                         {
                             <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="basicInformations">Return</MudButton>
@@ -66,7 +72,7 @@
 
 @code {
     [Parameter]
-    public string Id { get; set; }
+    public int Id { get; set; }
 
     [Parameter]
     public string? CategoryCode { get; set; }
@@ -81,37 +87,50 @@
     bool success;
     MudForm form;
 
+    private bool saveAccess = false;
+
     protected override async Task OnInitializedAsync()
     {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("BasicInformationDefine", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/BasicInformationDefine/View");
+        }
+        saveAccess = await mediator.Send(new CheckUserActionAccessQuery("BasicInformationDefine", "Save", userInfo.UserId));
+
         categories = await mediator.Send(new GetAllBasicInformationCategoriesQuery());
 
         basicInformations = await mediator.Send(new GetAllBasicInformationsQuery());
 
-        if (!String.IsNullOrEmpty(Id))
+        
+        if (Id > 0)
         {
-            if (Convert.ToInt32(Id) > 0)
+            caption = "Edit Basic Information";
+
+            basicInformation = await mediator.Send(new GetBasicInformationByIdQuery(Convert.ToInt32(Id)));
+
+            if (basicInformation != null)
             {
-                caption = "Edit Basic Information";
-
-                basicInformation = await mediator.Send(new GetBasicInformationByIdQuery(Convert.ToInt32(Id)));
-
-                if (basicInformation != null)
-                {
-                    CategoryChanged(basicInformation.CategoryId);
-                }
-            }
-            else
-            {
-                if (!String.IsNullOrEmpty(CategoryCode))
-                {
-                    var category = await mediator.Send(new GetBasicInformationCategoryByCodeQuery(CategoryCode));
-
-                    basicInformation.CategoryId = category.Id;
-
-                    CategoryChanged(basicInformation.CategoryId);
-                }
+                CategoryChanged(basicInformation.CategoryId);
             }
         }
+        else
+        {
+            if (!String.IsNullOrEmpty(CategoryCode))
+            {
+                var category = await mediator.Send(new GetBasicInformationCategoryByCodeQuery(CategoryCode));
+
+                basicInformation.CategoryId = category.Id;
+
+                CategoryChanged(basicInformation.CategoryId);
+            }
+        }
+        
 
     }
 

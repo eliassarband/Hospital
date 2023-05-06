@@ -1,0 +1,203 @@
+﻿@page "/Groups"
+@using Hospital.Application.Commands
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Helpers;
+@using Hospital.Web.BlazorServer.Models.Auth;
+@using MediatR
+@inject IMediator mediator;
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@inject NavigationManager navManager
+@inject IHttpContextAccessor accessor
+
+@attribute [Authorize]
+
+<PageTitle>Group List - HMIS System</PageTitle>
+
+<MudGrid Class="mt-2">
+    <MudItem md="12">
+        <MudPaper Class="mt-2" Elevation="10">
+            <MudCard Class="pl-2 pr-2 mt-2">
+                <MudCardHeader>Group List</MudCardHeader>
+                <MudCardActions>
+                    @if (addAccess)
+                    {
+                        <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("GroupDefine/0")>Add Group</MudButton>
+                    }
+                </MudCardActions>
+                <MudCardContent>
+                    <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<GroupViewModel,bool>(FilterGroupInit)">
+                        <ToolBarContent>
+                            <MudSpacer />
+                            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Clearable></MudTextField>
+                        </ToolBarContent>
+                        <HeaderContent>
+                            <MudTh>Name</MudTh>
+                            <MudTh>User Count</MudTh>
+                            <MudTh>Description</MudTh>
+                            @if (accessAccess)
+                            {
+                                <MudTh>Access</MudTh>
+                            }
+                            @if (editAccess)
+                            {
+                                <MudTh>Edit</MudTh>
+                            }
+                            @if (deleteAccess)
+                            {
+                                <MudTh>Delete</MudTh>
+                            }
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Name">@context.Name</MudTd>
+                            <MudTd DataLabel="UserCount">@context.GroupUsers.Count</MudTd>
+                            <MudTd DataLabel="Description">@context.Description</MudTd>
+                            @if (accessAccess)
+                            {
+                                <MudTd DataLabel="Access">
+
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.SettingsAccessibility" Color="Color.Tertiary" Href=@String.Format("GroupAccess/{0}",context.Id)></MudIconButton>
+
+                                </MudTd>
+                            }
+                            @if (editAccess)
+                            {
+                                <MudTd DataLabel="Edit">
+
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("GroupDefine/{0}",context.Id)></MudIconButton>
+
+                                </MudTd>
+                            }
+                            @if (deleteAccess)
+                            {
+                                <MudTd DataLabel="Delete">
+
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteGroup(@context.Id))"></MudIconButton>
+
+                                </MudTd>
+                            }
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudPagination ShowFirstButton="true" ShowLastButton="true" SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
+                        </PagerContent>
+                    </MudTable>
+                </MudCardContent>
+
+            </MudCard>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+
+@code {
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
+    private MudTable<GroupViewModel> _table;
+    private List<GroupViewModel> Elements;
+    private bool loading = false;
+    private string searchString = "";
+
+    private bool addAccess = false;
+    private bool editAccess = false;
+    private bool deleteAccess = false;
+    private bool accessAccess = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if(!(await mediator.Send(new CheckUserActionAccessQuery("Groups","View",userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/Groups/View");
+        }
+
+        addAccess = await mediator.Send(new CheckUserActionAccessQuery("Groups", "Add", userInfo.UserId));
+        editAccess = await mediator.Send(new CheckUserActionAccessQuery("Groups", "Edit", userInfo.UserId));
+        deleteAccess = await mediator.Send(new CheckUserActionAccessQuery("Groups", "Delete", userInfo.UserId));
+        accessAccess = await mediator.Send(new CheckUserActionAccessQuery("Groups", "Access", userInfo.UserId));
+
+
+        addAccess=true;
+        editAccess = true;
+        deleteAccess = true;
+        accessAccess = true;
+
+        Elements = await mediator.Send(new GetAllGroupsQuery());
+
+    }
+
+    private void PageChanged(int i)
+    {
+        _table.NavigateTo(i - 1);
+    }
+
+    private bool FilterGroupInit(GroupViewModel element) => FilterGroup(element, searchString);
+
+    private bool FilterGroup(GroupViewModel element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Description.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if ($"{element.Name} {element.Description}".Contains(searchString))
+            return true;
+        return false;
+    }
+
+    protected async Task DeleteGroup(int Id)
+    {
+
+        bool? dialogResult = await DialogService.ShowMessageBox(
+            "Delete Group",
+            "Are You Sure?",
+            yesText: "Delete!", cancelText: "No");
+
+        if (dialogResult == true)
+        {
+            loading = true;
+            try
+            {
+                CommandResponse result;
+
+                result = await mediator.Send(new DeleteGroupCommand(Id));
+
+                if (result.ResultType == ResultType.Success)
+                {
+                    Elements = await mediator.Send(new GetAllGroupsQuery());
+                    Snackbar.Add(result.ResultMessage, Severity.Success);
+                }
+                else if (result.ResultType == ResultType.Warning)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Warning);
+                }
+                else if (result.ResultType == ResultType.Error)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Error);
+                }
+
+
+
+            }
+            catch (Exception exp)
+            {
+                Snackbar.Add(exp.Message, Severity.Error);
+            }
+            loading = false;
+
+        }
+
+
+    }
+
+
+}

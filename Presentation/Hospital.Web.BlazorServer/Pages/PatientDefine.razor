@@ -1,4 +1,4 @@
-﻿@page "/PatientDefine/{Id}/{Mode?}"
+﻿@page "/PatientDefine/{Id:int}/{From?}/{Mode?}"
 
 @using Hospital.Application.Commands
 @using Hospital.Application.Mapper
@@ -16,7 +16,9 @@
 @inject NavigationManager navManager
 @inject ISnackbar Snackbar
 
-@attribute [Authorize(Roles = "Super,Admin")]
+@attribute [Authorize]
+
+<PageTitle>Patient Define - HMIS System</PageTitle>
 
 <MudGrid Class="mt-2">
     
@@ -286,11 +288,13 @@
                     </MudGrid>
                 </FormItems>
                 <FormButtons>
-                   <MudButton Class="mr-2 mt-3" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SavePatient">Save</MudButton>
-
+                    @if (saveAccess)
+                    {
+                        <MudButton Class="mr-2 mt-3" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SavePatient">Save</MudButton>
+                    }
                    @if(String.IsNullOrEmpty(Mode))
                    {
-                        <MudButton Class="mt-3" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="Patients">Return</MudButton>
+                        <MudButton Class="mt-3" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="@String.Format("Patients/{0}",From)">Return</MudButton>
                    }
                 </FormButtons>
             </TelerikForm>
@@ -302,9 +306,11 @@
 
 @code {
     [Parameter]
-    public string Id { get; set; }
+    public int Id { get; set; }
     [Parameter]
     public string? Mode { get; set; }
+    [Parameter]
+    public string? From { get; set; }
     [Parameter]
     public EventCallback<int> OnPatientAdded { get; set; }
 
@@ -328,12 +334,31 @@
     private bool attachmentChanged = false;
     private string patientAge = "";
 
+    private bool saveAccess = false;
+
     protected override async Task OnInitializedAsync()
     {
         if(userInfo == null)
         {
             IdentityHelper identityHelper=new IdentityHelper(accessor,mediator);
             userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (From == "OPD")
+        {
+            if (!(await mediator.Send(new CheckUserActionAccessQuery("OPDPatientDefine", "View", userInfo.UserId))))
+            {
+                navManager.NavigateTo("AccessDenied/OPDPatientDefine/View");
+            }
+            saveAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDPatientDefine", "Save", userInfo.UserId));
+        }
+        else if (From == "IPD")
+        {
+            if (!(await mediator.Send(new CheckUserActionAccessQuery("IPDPatientDefine", "View", userInfo.UserId))))
+            {
+                navManager.NavigateTo("AccessDenied/IPDPatientDefine/View");
+            }
+            saveAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDPatientDefine", "Save", userInfo.UserId));
         }
 
         patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
@@ -344,22 +369,21 @@
         refferBies = await mediator.Send(new GetAllRefferBiesQuery());
         insurances = await mediator.Send(new GetAllInsurancesQuery());
 
-        if (!String.IsNullOrEmpty(Id))
+        
+        if (Id > 0)
         {
-            if (Convert.ToInt32(Id) > 0)
+            caption = "Edit Patient";
+
+            patient = await mediator.Send(new GetPatientByIdQuery(Convert.ToInt32(Id)));
+
+            if (patient != null)
             {
-                caption = "Edit Patient";
-
-                patient = await mediator.Send(new GetPatientByIdQuery(Convert.ToInt32(Id)));
-
-                if (patient != null)
-                {
-                    DateOfBirthChanged();
-                    photo = Convert.ToBase64String(patient.AttachmentContent);
-                    photoContentType = patient.AttachmentContentType;
-                }
+                DateOfBirthChanged();
+                photo = Convert.ToBase64String(patient.AttachmentContent);
+                photoContentType = patient.AttachmentContentType;
             }
         }
+        
 
     }
 

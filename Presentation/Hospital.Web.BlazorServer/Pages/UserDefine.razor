@@ -1,4 +1,4 @@
-﻿@page "/UserDefine/{Id}"
+﻿@page "/UserDefine/{Id:int}"
 @using Hospital.Application.Commands
 @using Hospital.Application.Mapper
 @using Hospital.Application.Queries
@@ -6,14 +6,17 @@
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
 @using Hospital.Domain.Core.Helpers;
+@using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth
 @using MediatR
 @using System.ComponentModel.DataAnnotations
 @inject IMediator mediator
 @inject NavigationManager navManager
 @inject ISnackbar Snackbar
+@inject IHttpContextAccessor accessor
 
-@attribute [Authorize(Roles = "Super,Admin")]
+@attribute [Authorize]
+<PageTitle>User Define - HMIS System</PageTitle>
 
 
 <MudGrid Class="mt-2">
@@ -74,7 +77,10 @@
                         </MudGrid>
                     </MudCardContent>
                     <MudCardActions>
-                        <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveUser" Disabled="@(!success)">Save</MudButton>
+                        @if (saveAccess)
+                        {
+                            <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveUser" Disabled="@(!success)">Save</MudButton>
+                        }
                         <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="Users">Return</MudButton>
                     </MudCardActions>
 
@@ -86,7 +92,7 @@
 
 @code {
     [Parameter]
-    public string Id { get; set; }
+    public int Id { get; set; }
     [CascadingParameter]
     public LoginedUser? userInfo { get; set; }
 
@@ -102,41 +108,53 @@
     private bool userAccess = false;
     private bool attachmentChanged = false;
 
+    private bool saveAccess = false;
+
     protected override async Task OnInitializedAsync()
     {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("UserDefine", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/UserDefine/View");
+        }
+        saveAccess = await mediator.Send(new CheckUserActionAccessQuery("UserDefine", "Save", userInfo.UserId));
 
         roles = await mediator.Send(new GetAllRolesQuery());
 
-        if (!String.IsNullOrEmpty(Id))
+        
+        if (Id > 0)
         {
-            if (Convert.ToInt32(Id) > 0)
+            caption = "Edit User";
+
+            user = await mediator.Send(new GetUserByIdQuery(Convert.ToInt32(Id)));
+
+            if (user != null)
             {
-                caption = "ویرایش کاربر";
-
-                user = await mediator.Send(new GetUserByIdQuery(Convert.ToInt32(Id)));
-
-                if (user != null)
+                foreach (var r in user.UserRoles)
                 {
-                    foreach (var r in user.UserRoles)
-                    {
-                        if (r.RoleCode == "Super")
-                            superAccess = true;
+                    if (r.RoleCode == "Super")
+                        superAccess = true;
 
-                        if (r.RoleCode == "User")
-                            userAccess = true;
+                    if (r.RoleCode == "User")
+                        userAccess = true;
 
-                    }
-
-                    if (user.Active)
-                        activeLabel = "Active";
-                    else
-                        activeLabel = "InActive";
-
-                    photo = Convert.ToBase64String(user.AttachmentContent);
-                    photoContentType = user.AttachmentContentType;
                 }
+
+                if (user.Active)
+                    activeLabel = "Active";
+                else
+                    activeLabel = "InActive";
+
+                photo = Convert.ToBase64String(user.AttachmentContent);
+                photoContentType = user.AttachmentContentType;
             }
         }
+        
 
     }
 

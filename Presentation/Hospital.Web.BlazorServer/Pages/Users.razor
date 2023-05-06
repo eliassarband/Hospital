@@ -5,20 +5,29 @@
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
 @using Hospital.Domain.Core.Helpers;
+@using Hospital.Web.BlazorServer.Helpers;
+@using Hospital.Web.BlazorServer.Models.Auth;
 @using MediatR
 @inject IMediator mediator;
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject NavigationManager navManager
+@inject IHttpContextAccessor accessor
 
-@attribute [Authorize(Roles = "Super,Admin")]
+@attribute [Authorize]
+
+<PageTitle>User List - HMIS System</PageTitle>
 
 <MudGrid Class="mt-2">
     <MudItem md="12">
         <MudPaper Class="mt-2" Elevation="10">
             <MudCard Class="pl-2 pr-2 mt-2">
-                <MudCardHeader>Users</MudCardHeader>
+                <MudCardHeader>User List</MudCardHeader>
                 <MudCardActions>
-                    <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("UserDefine/0")>Add User</MudButton>
+                    @if (addAccess)
+                    {
+                        <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("UserDefine/0")>Add User</MudButton>
+                    }
                 </MudCardActions>
                 <MudCardContent>
                     <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<UserViewModel,bool>(FilterUserInit)">
@@ -34,9 +43,22 @@
                             <MudTh>Email</MudTh>
                             <MudTh>Mobile</MudTh>
                             <MudTh>Active</MudTh>
-                            <MudTh>Reset Password</MudTh>
-                            <MudTh>Edit</MudTh>
-                            <MudTh>Delete</MudTh>
+                            @if (resetAccess)
+                            {
+                                <MudTh>Reset Password</MudTh>
+                            }
+                            @if (accessAccess)
+                            {
+                                <MudTh>Access</MudTh>
+                            }
+                            @if (editAccess)
+                            {
+                                <MudTh>Edit</MudTh>
+                            }
+                            @if (deleteAccess)
+                            {
+                                <MudTh>Delete</MudTh>
+                            }
                         </HeaderContent>
                         <RowTemplate>
                             <MudTd DataLabel="Photo">
@@ -64,15 +86,30 @@
                                     <MudIcon Icon="@Icons.Material.Filled.Clear" Color="Color.Error" Title="Inactive"></MudIcon>
                                 }
                             </MudTd>
-                            <MudTd DataLabel="ResetPassword">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.LockReset" Color="Color.Error" OnClick="@(()=> ResetPassword(@context.Id))"></MudIconButton>
-                            </MudTd>
-                            <MudTd DataLabel="Edit">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("UserDefine/{0}",context.Id)></MudIconButton>
-                            </MudTd>
-                            <MudTd DataLabel="Delete">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteUser(@context.Id))"></MudIconButton>
-                            </MudTd>
+                            @if (resetAccess)
+                            {
+                                <MudTd DataLabel="ResetPassword">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.LockReset" Color="Color.Error" OnClick="@(()=> ResetPassword(@context.Id))"></MudIconButton>
+                                </MudTd>
+                            }
+                            @if (accessAccess)
+                            {
+                                <MudTd DataLabel="Access">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.SettingsAccessibility" Color="Color.Tertiary" Href=@String.Format("UserAccess/{0}",context.Id)></MudIconButton>
+                                </MudTd>
+                            }
+                            @if (editAccess)
+                            {
+                                <MudTd DataLabel="Edit">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("UserDefine/{0}",context.Id)></MudIconButton>
+                                </MudTd>
+                            }
+                            @if (deleteAccess)
+                            {
+                                <MudTd DataLabel="Delete">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteUser(@context.Id))"></MudIconButton>
+                                </MudTd>
+                            }
                         </RowTemplate>
                         <PagerContent>
                             <MudPagination ShowFirstButton="true" ShowLastButton="true" SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
@@ -88,14 +125,38 @@
 
 
 @code {
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
     private MudTable<UserViewModel> _table;
     private List<UserViewModel> Elements;
     private bool loading = false;
     private string searchString = "";
 
+    private bool addAccess = false;
+    private bool editAccess = false;
+    private bool deleteAccess = false;
+    private bool resetAccess = false;
+    private bool accessAccess = false;
 
     protected override async Task OnInitializedAsync()
     {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("Users", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/BasicInformationCategories/View");
+        }
+        addAccess = await mediator.Send(new CheckUserActionAccessQuery("Users", "Add", userInfo.UserId));
+        editAccess = await mediator.Send(new CheckUserActionAccessQuery("Users", "Edit", userInfo.UserId));
+        deleteAccess = await mediator.Send(new CheckUserActionAccessQuery("Users", "Delete", userInfo.UserId));
+        resetAccess = await mediator.Send(new CheckUserActionAccessQuery("Users", "Reset", userInfo.UserId));
+        accessAccess = await mediator.Send(new CheckUserActionAccessQuery("Users", "Access", userInfo.UserId));
+
         Elements = await mediator.Send(new GetAllUsersQuery());
     }
 

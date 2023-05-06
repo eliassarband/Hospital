@@ -4,20 +4,29 @@
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Helpers;
+@using Hospital.Web.BlazorServer.Models.Auth;
 @using MediatR
 @inject IMediator mediator;
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject NavigationManager navManager
+@inject IHttpContextAccessor accessor
 
-@attribute [Authorize(Roles = "Super,Admin")]
+@attribute [Authorize]
+
+<PageTitle>Bed List - HMIS System</PageTitle>
 
 <MudGrid Class="mt-2">
     <MudItem md="12">
         <MudPaper Class="mt-2" Elevation="10">
             <MudCard Class="pl-2 pr-2 mt-2">
-                <MudCardHeader>Beds</MudCardHeader>
+                <MudCardHeader>Bed List</MudCardHeader>
                 <MudCardActions>
-                    <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("BedDefine/0")>Add Bed</MudButton>
+                    @if (addAccess)
+                    {
+                        <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("BedDefine/0")>Add Bed</MudButton>
+                    }
                 </MudCardActions>
                 <MudCardContent>
                     <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<BedViewModel,bool>(FilterBedInit)">
@@ -30,8 +39,14 @@
                             <MudTh>Name</MudTh>
                             <MudTh>Room</MudTh>
                             <MudTh>Not In Use</MudTh>
-                            <MudTh>Edit</MudTh>
-                            <MudTh>Delete</MudTh>
+                            @if (editAccess)
+                            {
+                                <MudTh>Edit</MudTh>
+                            }
+                            @if (deleteAccess)
+                            {
+                                <MudTh>Delete</MudTh>
+                            }
                         </HeaderContent>
                         <RowTemplate>
                             <MudTd DataLabel="Code">@context.Code</MudTd>
@@ -47,12 +62,18 @@
                                     <MudIcon Icon="@Icons.Material.Filled.Clear" Color="Color.Error" Title="No"></MudIcon>
                                 }
                             </MudTd>
-                            <MudTd DataLabel="Edit">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("BedDefine/{0}",context.Id)></MudIconButton>
-                            </MudTd>
-                            <MudTd DataLabel="Delete">
-                                <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteBed(@context.Id))"></MudIconButton>
-                            </MudTd>
+                            @if (editAccess)
+                            {
+                                <MudTd DataLabel="Edit">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("BedDefine/{0}",context.Id)></MudIconButton>
+                                </MudTd>
+                            }
+                            @if (deleteAccess)
+                            {
+                                <MudTd DataLabel="Delete">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Delete" Color="Color.Secondary" OnClick="@(()=> DeleteBed(@context.Id))"></MudIconButton>
+                                </MudTd>
+                            }
                         </RowTemplate>
                         <PagerContent>
                             <MudPagination ShowFirstButton="true" ShowLastButton="true" SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
@@ -67,13 +88,34 @@
 
 
 @code {
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
     private MudTable<BedViewModel> _table;
     private List<BedViewModel> Elements;
     private bool loading = false;
     private string searchString = "";
 
+    private bool addAccess = false;
+    private bool editAccess = false;
+    private bool deleteAccess = false;
+
     protected override async Task OnInitializedAsync()
     {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("Beds", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/Beds/View");
+        }
+        addAccess = await mediator.Send(new CheckUserActionAccessQuery("Beds", "Add", userInfo.UserId));
+        editAccess = await mediator.Send(new CheckUserActionAccessQuery("Beds", "Edit", userInfo.UserId));
+        deleteAccess = await mediator.Send(new CheckUserActionAccessQuery("Beds", "Delete", userInfo.UserId));
+
         Elements = await mediator.Send(new GetAllBedsQuery());
     }
 

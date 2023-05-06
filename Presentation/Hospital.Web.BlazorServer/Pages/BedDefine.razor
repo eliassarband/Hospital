@@ -1,4 +1,4 @@
-﻿@page "/BedDefine/{Id}"
+﻿@page "/BedDefine/{Id:int}"
 
 @using Hospital.Application.Commands
 @using Hospital.Application.Mapper
@@ -6,14 +6,18 @@
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth
 @using MediatR
 @using System.ComponentModel.DataAnnotations
 @inject IMediator mediator
 @inject NavigationManager navManager
 @inject ISnackbar Snackbar
+@inject IHttpContextAccessor accessor
 
-@attribute [Authorize(Roles = "Super,Admin")]
+@attribute [Authorize]
+
+<PageTitle>Bed Define - HMIS System</PageTitle>
 
 <MudGrid Class="mt-2">
     <MudItem md="3"></MudItem>
@@ -44,7 +48,10 @@
                         </MudGrid>
                     </MudCardContent>
                     <MudCardActions>
-                        <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveBed" Disabled="@(!success)">Save</MudButton>
+                        @if (saveAccess)
+                        {
+                            <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveBed" Disabled="@(!success)">Save</MudButton>
+                        }
                         <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="Beds">Return</MudButton>
                     </MudCardActions>
                 </MudCard>
@@ -57,7 +64,7 @@
 
 @code {
     [Parameter]
-    public string Id { get; set; }
+    public int Id { get; set; }
     [CascadingParameter]
     public LoginedUser? userInfo { get; set; }
 
@@ -67,24 +74,37 @@
     bool success;
     MudForm form;
 
+    private bool saveAccess = false;
+
     protected override async Task OnInitializedAsync()
     {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("BedDefine", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/BedDefine/View");
+        }
+        saveAccess = await mediator.Send(new CheckUserActionAccessQuery("BedDefine", "Save", userInfo.UserId));
+
         rooms = await mediator.Send(new GetAllRoomsQuery());
 
-        if (!String.IsNullOrEmpty(Id))
+        
+        if (Id > 0)
         {
-            if (Convert.ToInt32(Id) > 0)
+            caption = "Edit Bed";
+
+            bed = await mediator.Send(new GetBedByIdQuery(Convert.ToInt32(Id)));
+
+            if (bed != null)
             {
-                caption = "Edit Bed";
 
-                bed = await mediator.Send(new GetBedByIdQuery(Convert.ToInt32(Id)));
-
-                if (bed != null)
-                {
-
-                }
             }
         }
+        
 
     }
 

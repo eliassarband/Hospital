@@ -1,0 +1,324 @@
+﻿@page "/UserAccess/{Id:int}"
+@using Hospital.Application.Commands
+@using Hospital.Application.Mapper
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using Hospital.Domain.Core.Helpers;
+@using Hospital.Web.BlazorServer.Helpers;
+@using Hospital.Web.BlazorServer.Models.Auth
+@using Hospital.Web.BlazorServer.Models;
+@using MediatR
+@using System.ComponentModel.DataAnnotations
+@inject IMediator mediator
+@inject NavigationManager navManager
+@inject ISnackbar Snackbar
+@inject IHttpContextAccessor accessor
+
+@attribute [Authorize]
+
+<PageTitle>User Access - HMIS System</PageTitle>
+
+<MudGrid Class="mt-2">
+    <MudItem md="12">
+        <MudPaper Class="mt-2" Elevation="10">
+            <MudForm @ref="form" @bind-IsValid="@success">
+                <MudCard Class="mt-2">
+                    <MudCardHeader>@caption</MudCardHeader>
+                    <MudCardContent>
+                        <MudGrid>
+                            <MudItem md="4">
+                                <MudText>@String.Format("Edit {0} Access",user.FullName())</MudText>
+                            </MudItem>
+                            <MudItem md="2">
+                                <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.DoneAll" OnClick="CheckAll">Check All</MudButton>
+                            </MudItem>
+                            <MudItem md="2">
+                                <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Material.Filled.ClearAll" OnClick="UncheckAll">Uncheck All</MudButton>
+                            </MudItem>
+                            <MudItem md="2">
+                                <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.ExpandMore" OnClick="ExpandAll">Expand All</MudButton>
+                            </MudItem>
+                            <MudItem md="2">
+                                <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Close" OnClick="CollapseAll">Collapse All</MudButton>
+                            </MudItem>
+                            <MudItem md="12" Style="height:60vh;overflow:auto">
+                                <MudTreeView Items="@AccessItems">
+                                    <ItemTemplate>
+                                        <MudTreeViewItem @bind-Expanded="@context.IsExpanded" Items="@context.TreeItems">
+                                            <Content>
+                                                <MudTreeViewItemToggleButton @bind-Expanded="@context.IsExpanded" Visible="@context.HasChild" />
+                                                @switch (context.Type)
+                                                {
+                                                    case AccessNodeType.FormCategory:
+                                                        <MudIcon Class="ml-1 mr-1" Icon="@Icons.Material.Filled.ViewList" Title="Form Category"></MudIcon>
+                                                        <MudText Class="mt-4">@context.Name</MudText>
+                                                        break;
+                                                    case AccessNodeType.Form:
+                                                        <MudIcon Class="ml-1 mr-1" Icon="@Icons.Material.Filled.ViewTimeline" Color="Color.Primary" Title="Form"></MudIcon>
+                                                        <MudText Class="mt-4" Color="Color.Primary">@context.Name</MudText>
+                                                        break;
+                                                    case AccessNodeType.FormAction:
+                                                        <MudCheckBox T="bool" Color="Color.Success" @bind-Checked="@context.IsChecked"></MudCheckBox>
+                                                        <MudIcon Class="ml-1 mr-1" Icon="@Icons.Material.Filled.Rule" Color="Color.Success" Title="Action"></MudIcon>
+                                                        <MudText Class="mt-4" Color="Color.Success">@context.Name</MudText>
+                                                        break;
+                                                }
+                                                
+                                            </Content>
+                                        </MudTreeViewItem>
+                                    </ItemTemplate>
+                                </MudTreeView>
+                            </MudItem>
+                        </MudGrid>
+                    </MudCardContent>
+                    <MudCardActions>
+                        @if (saveAccess)
+                        {
+                            <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveUserAccess" Disabled="@(!success)">Save</MudButton>
+                        }
+                        <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="Users">Return</MudButton>
+                    </MudCardActions>
+
+                </MudCard>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
+    public UserViewModel user = new UserViewModel();
+    private HashSet<AccessModel> AccessItems { get; set; } = new HashSet<AccessModel>();
+
+    private string caption = "User Access";
+
+    bool success;
+    MudForm form;
+
+    private bool saveAccess = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("UserAccess", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/UserAccess/View");
+        }
+        saveAccess = await mediator.Send(new CheckUserActionAccessQuery("UserAccess", "Save", userInfo.UserId));
+
+        if (Id > 0)
+        {
+            caption = "User Access";
+
+            user = await mediator.Send(new GetUserByIdQuery(Id));
+            if(user != null)
+            {
+                var formCategories = await mediator.Send(new GetAllFormCategorysQuery());
+                foreach(var category in formCategories)
+                {
+                    AccessModel categoryItem = new AccessModel(category.Id, category.Code, AccessNodeType.FormCategory, category.Name);
+
+                    var forms = await mediator.Send(new GetFormByFormCategoryIdQuery(category.Id));
+                    foreach(var form in forms)
+                    {
+                        AccessModel formItem = new AccessModel(form.Id,form.Code,AccessNodeType.Form,form.Name);
+
+                        var actions = await mediator.Send(new GetFormActionByFormIdQuery(form.Id));
+                        foreach(var action in actions)
+                        {
+                            AccessModel actionItem = new AccessModel(action.Id,action.Code, AccessNodeType.FormAction, action.Name);
+
+                            if (await mediator.Send(new CheckUserActionAccessQuery(form.Code, action.Code, user.Id)))
+                            {
+                                actionItem.IsChecked = true;
+
+                            }
+
+                            formItem.AddChild(actionItem);
+                        }
+
+                        categoryItem.AddChild(formItem);
+                    }
+
+                    AccessItems.Add(categoryItem);
+                }
+
+            }
+
+        }
+
+
+    }
+
+    protected async Task CheckAll()
+    {
+        foreach (var category in AccessItems)
+        {
+            if(category.HasChild)
+            {
+                foreach(var form in category.TreeItems)
+                {
+                    if(form.HasChild)
+                    {
+                        foreach(var action in form.TreeItems)
+                        {
+                            action.IsChecked = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    protected async Task UncheckAll()
+    {
+        foreach (var category in AccessItems)
+        {
+            if (category.HasChild)
+            {
+                foreach (var form in category.TreeItems)
+                {
+                    if (form.HasChild)
+                    {
+                        foreach (var action in form.TreeItems)
+                        {
+                            action.IsChecked = false;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    protected async Task ExpandAll()
+    {
+        foreach (var category in AccessItems)
+        {
+            if (category.HasChild)
+            {
+                category.IsExpanded = true;
+                foreach (var form in category.TreeItems)
+                {
+                    if (form.HasChild)
+                    {
+                        form.IsExpanded = true;
+                    }
+                }
+            }
+        }
+    }
+
+    protected async Task CollapseAll()
+    {
+        foreach (var category in AccessItems)
+        {
+            if (category.HasChild)
+            {
+                category.IsExpanded = false;
+                foreach (var form in category.TreeItems)
+                {
+                    if (form.HasChild)
+                    {
+                        form.IsExpanded = false;
+                    }
+                }
+            }
+        }
+    }
+
+    protected async Task SaveUserAccess()
+    {
+        form.Validate();
+
+        if (form.IsValid)
+        {
+            CommandResponse result = new CommandResponse()
+            {
+                ResultType = ResultType.Success,
+                ResultMessage = String.Format("{0}'s Accesses are saved",user.FullName())
+            };
+
+            CommandResponse res = new CommandResponse();
+
+
+            foreach (var category in AccessItems)
+            {
+                if(category.HasChild)
+                {
+                    foreach(var form in category.TreeItems)
+                    {
+                        if(form.HasChild)
+                        {
+                            foreach(var action in form.TreeItems)
+                            {
+                                var formActionAccess = await mediator.Send(new GetFormActionAccessByFormCodeFormActionCodeUserIdQuery(form.Code, action.Code, user.Id));
+
+                                if(action.IsChecked)
+                                {
+                                    if (formActionAccess == null)
+                                    {
+                                        FormActionAccessViewModel actionAccess = new FormActionAccessViewModel()
+                                            {
+                                                Id = 0,
+                                                UserId = user.Id,
+                                                GroupId = null,
+                                                FormActionId = action.Id
+                                            };
+
+                                        var command = MapperConfig.Mapper.Map<CreateFormActionAccessCommand>(actionAccess);
+                                        res = await mediator.Send(command);
+                                    }
+                                }
+                                else
+                                {
+                                    if (formActionAccess != null)
+                                    {
+                                        res = await mediator.Send(new DeleteFormActionAccessCommand(formActionAccess.Id));
+                                    }
+                                }
+
+                                if (result.ResultType != ResultType.Success)
+                                {
+                                    result = res;
+                                }
+
+                                
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (result.ResultType == ResultType.Success)
+            {
+                Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                navManager.NavigateTo("/Users");
+            }
+            else if (result.ResultType == ResultType.Warning)
+            {
+                Snackbar.Add(result.ResultMessage, Severity.Warning);
+            }
+            else if (result.ResultType == ResultType.Error)
+            {
+                Snackbar.Add(result.ResultMessage, Severity.Error);
+            }
+
+            
+        }
+
+    }
+
+
+}

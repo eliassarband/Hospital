@@ -634,7 +634,7 @@ namespace Hospital.Application.Handlers.QueryHandlers
 			{
 				foreach(var groupUser in groupUsers)
 				{
-					var groupFormAction = await _FormActionAccessQueryRepository.GetByFormCodeFormActionCodeGroupIdAsync(request.FormCode, request.FormActionCode, groupUser.Id);
+					var groupFormAction = await _FormActionAccessQueryRepository.GetByFormCodeFormActionCodeGroupIdAsync(request.FormCode, request.FormActionCode, groupUser.GroupId);
 					if(groupFormAction!=null)
 					{
 						return true;
@@ -647,5 +647,29 @@ namespace Hospital.Application.Handlers.QueryHandlers
 		}
 	}
 
-	#endregion
+    public class CheckGroupActionAccessHandler : IRequestHandler<CheckGroupActionAccessQuery, bool>
+    {
+        private readonly IFormActionAccessQueryRepository _FormActionAccessQueryRepository;
+
+        public CheckGroupActionAccessHandler(IFormActionAccessQueryRepository FormActionAccessQueryRepository)
+        {
+            _FormActionAccessQueryRepository = FormActionAccessQueryRepository;
+        }
+
+
+
+        public async Task<bool> Handle(CheckGroupActionAccessQuery request, CancellationToken cancellationToken)
+        {
+            var groupFormAction = await _FormActionAccessQueryRepository.GetByFormCodeFormActionCodeGroupIdAsync(request.FormCode, request.FormActionCode, request.GroupId);
+            if (groupFormAction != null)
+            {
+                return true;
+
+            }
+
+            return false;
+        }
+    }
+
+    #endregion
 }

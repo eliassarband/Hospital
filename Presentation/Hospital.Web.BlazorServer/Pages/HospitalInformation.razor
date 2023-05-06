@@ -6,14 +6,18 @@
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth
 @using MediatR
 @using System.ComponentModel.DataAnnotations
 @inject IMediator mediator
 @inject NavigationManager navManager
 @inject ISnackbar Snackbar
+@inject IHttpContextAccessor accessor
 
-@attribute [Authorize(Roles = "Super,Admin")]
+@attribute [Authorize]
+
+<PageTitle>Hospital Information - HMIS System</PageTitle>
 
 <MudGrid Class="mt-2">
     <MudItem md="1"></MudItem>
@@ -97,7 +101,10 @@
                         </MudGrid>
                     </MudCardContent>
                     <MudCardActions>
-                        <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveHospitalInformation" Disabled="@(!success)">Save</MudButton>
+                        @if (saveAccess)
+                        {
+                            <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveHospitalInformation" Disabled="@(!success)">Save</MudButton>
+                        }
                     </MudCardActions>
                 </MudCard>
             </MudForm>
@@ -112,7 +119,7 @@
     [CascadingParameter]
     public LoginedUser? userInfo { get; set; }
 
-    private string caption = "Define Hospital Information";
+    private string caption = "Hospital Information";
     private HospitalInformationViewModel hospitalInformation = new HospitalInformationViewModel();
     bool success;
     MudForm form;
@@ -120,9 +127,24 @@
     private string image;
     private string whiteImage;
 
+    private bool saveAccess = false;
+
     protected override async Task OnInitializedAsync()
     {
-        caption = "Edit Hospital Information";
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("HospitalInformation", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/HospitalInformation/View");
+        }
+        saveAccess = await mediator.Send(new CheckUserActionAccessQuery("HospitalInformation", "Save", userInfo.UserId));
+
+
+        caption = "Hospital Information";
 
         hospitalInformation = await mediator.Send(new GetHospitalInformationByIdQuery(Convert.ToInt32(1)));
 

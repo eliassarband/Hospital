@@ -6,20 +6,28 @@
 @using Hospital.Application.ViewModels
 @using Hospital.Domain.Core.Entities;
 @using Hospital.Web.BlazorServer.Helpers;
+@using Hospital.Web.BlazorServer.Models.Auth;
 @using MediatR
 @inject IMediator mediator;
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject NavigationManager navManager
+@inject IHttpContextAccessor accessor
 
-@attribute [Authorize(Roles = "Super,Admin,Operator")]
+@attribute [Authorize]
+
+<PageTitle>OPD Billing List - HMIS System</PageTitle>
 
 <MudGrid Class="mt-2">
     <MudItem md="12">
         <MudPaper Class="mt-2" Elevation="10">
             <MudCard Class="pl-2 pr-2 mt-2">
-                <MudCardHeader>OPD Bills</MudCardHeader>
+                <MudCardHeader>OPD Billing List</MudCardHeader>
                 <MudCardActions>
-                    <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("OPDBillDefine/0")>Add OPD Bill</MudButton>
+                    @if (addAccess)
+                    {
+                        <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href=@String.Format("OPDBillDefine/0")>Add OPD Billing</MudButton>
+                    }
                 </MudCardActions>
                 <MudCardContent>
                     <MudTable @ref="@_table" Items="@Elements" RowsPerPage="5" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info" Filter="new Func<OPDBillViewModel,bool>(FilterOPDBillInit)">
@@ -39,16 +47,31 @@
                             <MudTh>Debt Amount</MudTh>
                             @if (String.IsNullOrEmpty(Mode))
                             {
-                                <MudTh>Edit</MudTh>
-                                <MudTh>Payment</MudTh>
-                                <MudTh>Print</MudTh>
-                                <MudTh>Cancel</MudTh>
+                                @if (paymentAccess)
+                                {
+                                    <MudTh>Payment</MudTh>
+                                }
+                                @if (printAccess)
+                                {
+                                    <MudTh>Print</MudTh>
+                                }
+                                @if (editAccess)
+                                {
+                                    <MudTh>Edit</MudTh>
+                                }
+                                @if (cancelAccess)
+                                {
+                                    <MudTh>Cancel</MudTh>
+                                }
                             }
                             else
                             {
-                                if (Mode == "Search")
+                                @if (selectAccess)
                                 {
-                                    <MudTh>Select</MudTh>
+                                    if (Mode == "Search")
+                                    {
+                                        <MudTh>Select</MudTh>
+                                    }
                                 }
                             }
                         </HeaderContent>
@@ -68,27 +91,42 @@
                             <MudTd DataLabel="DebtAmount">@context.DebtAmount</MudTd>
                             @if (String.IsNullOrEmpty(Mode))
                             {
-                                <MudTd DataLabel="Edit">
-                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("OPDBillDefine/{0}",context.Id)></MudIconButton>
-                                </MudTd>
-                                <MudTd DataLabel="Payment">
-                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Payment" Color="Color.Tertiary" OnClick="@(()=> OPDPayment(@context.Id))"></MudIconButton>
+                                @if (paymentAccess)
+                                {
+                                    <MudTd DataLabel="Payment">
+                                        <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Payment" Color="Color.Tertiary" OnClick="@(()=> OPDPayment(@context.Id))"></MudIconButton>
                                     
-                                </MudTd>
-                                <MudTd DataLabel="Print">
-                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Print" Color="Color.Tertiary" OnClick="@(()=> Print(@context.Id))"></MudIconButton>
-                                </MudTd>
-                                <MudTd DataLabel="Cancel">
-                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Cancel" Color="Color.Secondary" OnClick="@(()=> DeleteOPDBill(@context.Id))"></MudIconButton>
-                                </MudTd>
+                                    </MudTd>
+                                }
+                                @if (printAccess)
+                                {
+                                    <MudTd DataLabel="Print">
+                                        <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Print" Color="Color.Tertiary" OnClick="@(()=> Print(@context.Id))"></MudIconButton>
+                                    </MudTd>
+                                }
+                                @if (editAccess)
+                                {
+                                    <MudTd DataLabel="Edit">
+                                        <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("OPDBillDefine/{0}",context.Id)></MudIconButton>
+                                    </MudTd>
+                                }
+                                @if (cancelAccess)
+                                {
+                                    <MudTd DataLabel="Cancel">
+                                        <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Cancel" Color="Color.Secondary" OnClick="@(()=> DeleteOPDBill(@context.Id))"></MudIconButton>
+                                    </MudTd>
+                                }
                             }
                             else
                             {
-                                if (Mode == "Search")
+                                @if (selectAccess)
                                 {
-                                    <MudTd DataLabel="Select">
-                                        <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.PersonAdd" Color="Color.Tertiary" OnClick="@(()=> SelectPatient(@context.Id))"></MudIconButton>
-                                    </MudTd>
+                                    if (Mode == "Search")
+                                    {
+                                        <MudTd DataLabel="Select">
+                                            <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.PersonAdd" Color="Color.Tertiary" OnClick="@(()=> SelectPatient(@context.Id))"></MudIconButton>
+                                        </MudTd>
+                                    }
                                 }
                             }
                         </RowTemplate>
@@ -136,6 +174,9 @@
     [CascadingParameter]
     public DialogFactory Dialogs { get; set; }
 
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
     private MudTable<OPDBillViewModel> _table;
     private List<OPDBillViewModel> Elements; 
     private SettingViewModel patientIdPrefix;
@@ -147,8 +188,32 @@
     private bool showPayments = false;
     private int OPDId = 0;
 
+    private bool addAccess = false;
+    private bool editAccess = false;
+    private bool cancelAccess = false;
+    private bool selectAccess = false;
+    private bool printAccess = false;
+    private bool paymentAccess = false;
+
     protected override async Task OnInitializedAsync()
     {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("OPDBills", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/OPDBills/View");
+        }
+        addAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDBills", "Add", userInfo.UserId));
+        editAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDBills", "Edit", userInfo.UserId));
+        cancelAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDBills", "Cancel", userInfo.UserId));
+        selectAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDBills", "Select", userInfo.UserId));
+        printAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDBills", "Print", userInfo.UserId));
+        paymentAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDBills", "Payment", userInfo.UserId));
+
         patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
         receiptNoPrefix = await mediator.Send(new GetSettingByKeyQuery("OPDReceiptNoPrefix"));
 

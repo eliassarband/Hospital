@@ -1,15 +1,17 @@
 ﻿@page "/identity/account/login"
 @model LoginModel
 
+@{
+    ViewData["Title"] = @Model.hospitalInformation?.Name;
+}
 
-
-<div class="container">
-    <div class="row mt-5">
+<div class="container-fluid">
+    <div class="row mt-3">
         <div class="col col-lg-4 col-md-2">
         </div>
-        <div class="col col-lg-4 col-md-8 col-sm-12 col-12">
+        <div class="col col-lg-4 col-md-8 col-sm-12 col-12 bg-light rounded shadow">
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 p-4">
                     <form method="POST">
                         <div class="row">
                             <div class="col-12">
@@ -26,7 +28,7 @@
                                 @*<img src="~/images/loginLogo.png" alt="Afghan Hospital" title="Afghan Hospital" />*@
                                 @if (Model.hospitalInformation != null)
                                 {
-                                    <img src=@String.Format("data:image/png;base64,{0}",Convert.ToBase64String(Model.hospitalInformation.Logo)) alt="@Model.hospitalInformation.Name" title="@Model.hospitalInformation.Name" height="100px" />
+                                    <img src=@String.Format("data:image/png;base64,{0}",Convert.ToBase64String(Model.hospitalInformation.Logo)) alt="@Model.hospitalInformation.Name" title="@Model.hospitalInformation.Name" height="80px" />
                                 }
                                 else
                                 {
@@ -34,7 +36,7 @@
                                 }
                             </div>
                             <div class="col-12 text-center text-secondary mb-3">
-                               <h2>@Model.hospitalInformation?.Name</h2>
+                               <h3>@Model.hospitalInformation?.Name</h3>
                             </div>
                             <div class="col-12 mb-3">
                                 <div class="row">

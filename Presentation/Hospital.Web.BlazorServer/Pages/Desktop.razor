@@ -1,10 +1,17 @@
-﻿@page "/desktop"
+﻿@page "/Desktop"
+@using Hospital.Application.Queries;
+@using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth
 @using System.Threading
+@using MediatR;
 @implements IDisposable
+@inject IMediator mediator;
 @inject NavigationManager navManager
+@inject IHttpContextAccessor accessor
 
 @attribute [Authorize]
+
+<PageTitle>Desktop - HMIS System</PageTitle>
 
 <style>
 .zoom {
@@ -94,6 +101,19 @@
     string theDate;
     Timer aTimer;
 
+    protected override async Task OnInitializedAsync()
+    {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("Desktop", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/Desktop/View");
+        }
+    }
     protected override void OnInitialized()
     {
         aTimer = new Timer(Tick, null, 0, 1000);

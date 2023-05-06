@@ -8,7 +8,6 @@
 @using Hospital.Domain.Core.Helpers;
 @using Hospital.Web.BlazorServer.Helpers;
 @using Hospital.Web.BlazorServer.Models.Auth;
-
 @using Stimulsoft.Base
 @using Stimulsoft.Report
 @using Stimulsoft.Report.Blazor
@@ -18,8 +17,11 @@
 @inject IMediator mediator
 @inject NavigationManager navManager
 @inject ISnackbar Snackbar
+@inject IHttpContextAccessor accessor
 
-@attribute [Authorize(Roles = "Super,Admin")]
+@attribute [Authorize]
+
+<PageTitle>Report Template Design - HMIS System</PageTitle>
 
 @*<MudPaper Style="background-color:red" Class="p-2" Elevation="10" Height="90vh">*@
 <StiBlazorDesigner Report="@report"
@@ -36,6 +38,17 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("ReportTemplateDesign", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/ReportTemplateDesign/View");
+        }
+
         if(Id > 0)
         {
             reportTemplate = await mediator.Send(new GetReportTemplateByIdQuery(Id));

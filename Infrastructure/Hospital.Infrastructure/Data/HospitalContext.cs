@@ -92,15 +92,15 @@ namespace Hospital.Infrastructure.Data
                 new Form() { Id = 109, FormCategoryId = 1, Code = "HR", Name = "Human Resources", ShowInMenu = true, Priority = 9, Url = "HRDashboard" },
                 new Form() { Id = 110, FormCategoryId = 1, Code = "Reports", Name = "Reports", ShowInMenu = true, Priority = 10, Url = "ReportsDashboard" },
 
-				new Form() { Id = 301, FormCategoryId = 3, Code = "OPDPatients", Name = "Patinet List", ShowInMenu = true, Priority = 1, Url = "Patients" },
-				new Form() { Id = 302, FormCategoryId = 3, Code = "OPDPatinetDefine", Name = "Patinet Define", ShowInMenu = false, Priority = 2, Url = "PatinetDefine" },
+				new Form() { Id = 301, FormCategoryId = 3, Code = "OPDPatients", Name = "Patinet List", ShowInMenu = true, Priority = 1, Url = "Patients/OPD" },
+				new Form() { Id = 302, FormCategoryId = 3, Code = "OPDPatientDefine", Name = "Patinet Define", ShowInMenu = false, Priority = 2, Url = "PatientDefine" },
 				new Form() { Id = 303, FormCategoryId = 3, Code = "OPDBills", Name = "OPD Billing List", ShowInMenu = true, Priority = 3, Url = "OPDBills" },
 				new Form() { Id = 304, FormCategoryId = 3, Code = "OPDBillDefine", Name = "OPD Billing Define", ShowInMenu = true, Priority = 4, Url = "OPDBillDefine" },
 				new Form() { Id = 305, FormCategoryId = 3, Code = "OPDBillPayments", Name = "OPD Billing Payment", ShowInMenu = false, Priority = 5, Url = "OPDBillPayments" },
 				new Form() { Id = 306, FormCategoryId = 3, Code = "DebtorOPDBills", Name = "Receive Balance Payment", ShowInMenu = true, Priority = 6, Url = "DebtorOPDBills" },
 
-				new Form() { Id = 401, FormCategoryId = 4, Code = "IPDPatients", Name = "Patinet List", ShowInMenu = true, Priority = 1, Url = "Patients" },
-				new Form() { Id = 402, FormCategoryId = 4, Code = "IPDPatinetDefine", Name = "Patinet Define", ShowInMenu = false, Priority = 2, Url = "PatinetDefine" },
+				new Form() { Id = 401, FormCategoryId = 4, Code = "IPDPatients", Name = "Patinet List", ShowInMenu = true, Priority = 1, Url = "Patients/IPD" },
+				new Form() { Id = 402, FormCategoryId = 4, Code = "IPDPatientDefine", Name = "Patinet Define", ShowInMenu = false, Priority = 2, Url = "PatientDefine" },
 				new Form() { Id = 403, FormCategoryId = 4, Code = "IPDRegisterations", Name = "Admited Patinet List", ShowInMenu = true, Priority = 3, Url = "IPDRegisterations" },
 				new Form() { Id = 404, FormCategoryId = 4, Code = "IPDRegisterationDefine", Name = "IPD Registeration", ShowInMenu = true, Priority = 1, Url = "IPDRegisterationDefine" },
 
@@ -108,8 +108,9 @@ namespace Hospital.Infrastructure.Data
 				new Form() { Id = 1002, FormCategoryId = 10, Code = "ReportTemplateDefine", Name = "Report Template Define", ShowInMenu = false, Priority = 2, Url = "ReportTemplateDefine" },
 				new Form() { Id = 1003, FormCategoryId = 10, Code = "ReportTemplateDesign", Name = "Report Template Design", ShowInMenu = false, Priority = 3, Url = "ReportTemplateDesign" },
 				new Form() { Id = 1004, FormCategoryId = 10, Code = "ReportShow", Name = "Report Show", ShowInMenu = false, Priority = 4, Url = "ReportShow" },
+                new Form() { Id = 1005, FormCategoryId = 10, Code = "ReportTemplatesSelect", Name = "Report Template Select", ShowInMenu = false, Priority = 5, Url = "ReportTemplatesSelect" },
 
-				new Form() { Id = 1101, FormCategoryId = 11, Code = "HospitalInformation", Name = "Hospital Information", ShowInMenu = true, Priority = 1, Url = "HospitalInformation" },
+                new Form() { Id = 1101, FormCategoryId = 11, Code = "HospitalInformation", Name = "Hospital Information", ShowInMenu = true, Priority = 1, Url = "HospitalInformation" },
 				new Form() { Id = 1102, FormCategoryId = 11, Code = "Departments", Name = "Department List", ShowInMenu = true, Priority = 2, Url = "Departments" },
 				new Form() { Id = 1103, FormCategoryId = 11, Code = "DepartmentDefine", Name = "Department Define", ShowInMenu = false, Priority = 3, Url = "DepartmentDefine" },
 				new Form() { Id = 1104, FormCategoryId = 11, Code = "Services", Name = "Service List", ShowInMenu = true, Priority = 4, Url = "Services" },
@@ -144,9 +145,14 @@ namespace Hospital.Infrastructure.Data
 
 				new Form() { Id = 1201, FormCategoryId = 12, Code = "Users", Name = "User List", ShowInMenu = true, Priority = 1, Url = "Users" },
 				new Form() { Id = 1202, FormCategoryId = 12, Code = "UserDefine", Name = "User Define", ShowInMenu = false, Priority = 2, Url = "UserDefine" },
-				new Form() { Id = 1203, FormCategoryId = 12, Code = "ChangePassword", Name = "Change Password", ShowInMenu = true, Priority = 3, Url = "ChangePassword" }
+				new Form() { Id = 1203, FormCategoryId = 12, Code = "ChangePassword", Name = "Change Password", ShowInMenu = true, Priority = 3, Url = "ChangePassword" },
+                new Form() { Id = 1204, FormCategoryId = 12, Code = "Groups", Name = "Group List", ShowInMenu = true, Priority = 4, Url = "Groups" },
+                new Form() { Id = 1205, FormCategoryId = 12, Code = "GroupDefine", Name = "Group Define", ShowInMenu = false, Priority = 5, Url = "GroupDefine" },
+                new Form() { Id = 1206, FormCategoryId = 12, Code = "UserAccess", Name = "User Access", ShowInMenu = false, Priority = 6, Url = "UserAccess" },
+                new Form() { Id = 1207, FormCategoryId = 12, Code = "GroupAccess", Name = "Group Access", ShowInMenu = false, Priority = 7, Url = "GroupAccess" }
 
-			);
+
+            );
 
             modelBuilder.Entity<FormAction>().HasData(
                 new FormAction() { Id = 10101, FormId = 101, Code = "View", Name = "View", Priority = 1 },
@@ -236,7 +242,10 @@ namespace Hospital.Infrastructure.Data
 
 				new FormAction() { Id = 100401, FormId = 1004, Code = "View", Name = "View", Priority = 1 },
 
-				new FormAction() { Id = 110101, FormId = 1101, Code = "View", Name = "View", Priority = 1 },
+                new FormAction() { Id = 100501, FormId = 1005, Code = "View", Name = "View", Priority = 1 },
+                new FormAction() { Id = 100502, FormId = 1005, Code = "Select", Name = "Select", Priority = 2 },
+
+                new FormAction() { Id = 110101, FormId = 1101, Code = "View", Name = "View", Priority = 1 },
                 new FormAction() { Id = 110102, FormId = 1101, Code = "Save", Name = "Save", Priority = 2 },
 
                 new FormAction() { Id = 110201, FormId = 1102, Code = "View", Name = "View", Priority = 1 },
@@ -367,12 +376,28 @@ namespace Hospital.Infrastructure.Data
                 new FormAction() { Id = 120103, FormId = 1201, Code = "Edit", Name = "Edit", Priority = 3 },
                 new FormAction() { Id = 120104, FormId = 1201, Code = "Delete", Name = "Delete", Priority = 4 },
 				new FormAction() { Id = 120105, FormId = 1201, Code = "Reset", Name = "Reset Password", Priority = 5 },
+                new FormAction() { Id = 120106, FormId = 1201, Code = "Access", Name = "User Access", Priority = 6 },
 
-				new FormAction() { Id = 120201, FormId = 1202, Code = "View", Name = "View", Priority = 1 },
+                new FormAction() { Id = 120201, FormId = 1202, Code = "View", Name = "View", Priority = 1 },
                 new FormAction() { Id = 120202, FormId = 1202, Code = "Save", Name = "Save", Priority = 2 },
 
                 new FormAction() { Id = 120301, FormId = 1203, Code = "View", Name = "View", Priority = 1 },
-                new FormAction() { Id = 120302, FormId = 1203, Code = "Change", Name = "Change Password", Priority = 2 }
+                new FormAction() { Id = 120302, FormId = 1203, Code = "Change", Name = "Change Password", Priority = 2 },
+
+                new FormAction() { Id = 120401, FormId = 1204, Code = "View", Name = "View", Priority = 1 },
+                new FormAction() { Id = 120402, FormId = 1204, Code = "Add", Name = "Add", Priority = 2 },
+                new FormAction() { Id = 120403, FormId = 1204, Code = "Edit", Name = "Edit", Priority = 3 },
+                new FormAction() { Id = 120404, FormId = 1204, Code = "Delete", Name = "Delete", Priority = 4 },
+                new FormAction() { Id = 120405, FormId = 1204, Code = "Access", Name = "Group Access", Priority = 5 },
+
+                new FormAction() { Id = 120501, FormId = 1205, Code = "View", Name = "View", Priority = 1 },
+                new FormAction() { Id = 120502, FormId = 1205, Code = "Save", Name = "Save", Priority = 2 },
+
+                new FormAction() { Id = 120601, FormId = 1206, Code = "View", Name = "View", Priority = 1 },
+                new FormAction() { Id = 120602, FormId = 1206, Code = "Save", Name = "Save", Priority = 2 },
+
+                new FormAction() { Id = 120701, FormId = 1207, Code = "View", Name = "View", Priority = 1 },
+                new FormAction() { Id = 120702, FormId = 1207, Code = "Save", Name = "Save", Priority = 2 }
 
             );
 

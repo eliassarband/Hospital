@@ -1,0 +1,20 @@
+﻿@page "/AccessDenied/{FormCode}/{FormActionCode}"
+
+@attribute [Authorize]
+
+<h3>Access Denied</h3>
+
+<MudGrid>
+    <MudItem md="3"></MudItem>
+    <MudItem md="6">
+        <MudText Class="h4">@String.Format("You are not authorized to view {0} form.",FormCode)</MudText>
+    </MudItem>
+    <MudItem md="3"></MudItem>
+</MudGrid>
+
+@code {
+    [Parameter]
+    public string FormCode { get; set; }
+    [Parameter]
+    public string FormActionCode { get; set; }
+}

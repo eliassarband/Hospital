@@ -1,0 +1,299 @@
+﻿@page "/GroupDefine/{Id:int}"
+
+@using Hospital.Application.Commands
+@using Hospital.Application.Mapper
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Helpers;
+@using Hospital.Web.BlazorServer.Models.Auth
+@using MediatR
+@using System.ComponentModel.DataAnnotations
+@inject IMediator mediator
+@inject NavigationManager navManager
+@inject ISnackbar Snackbar
+@inject IHttpContextAccessor accessor
+
+@attribute [Authorize]
+
+<PageTitle>Group Define - HMIS System</PageTitle>
+
+<MudGrid Class="mt-2">
+    <MudItem md="3"></MudItem>
+    <MudItem md="6">
+        <MudPaper Class="mt-2" Elevation="10">
+            <MudForm @ref="form" @bind-IsValid="@success">
+                <MudCard Class="mt-2">
+                    <MudCardHeader>@caption</MudCardHeader>
+                    <MudCardContent>
+                        <MudGrid Spacing="1">
+                            <MudItem md="12">
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@group.Name" Required="true" RequiredError="Please Enter Group Name" MaxLength="100" Label="Name" Placeholder="Group Name" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="12">
+                                <MudTextField T="string" Class="mt-3" @bind-Value="@group.Description" MaxLength="1000" Label="Description" Placeholder="Group Description" Variant="Variant.Outlined" Clearable></MudTextField>
+                            </MudItem>
+                            <MudItem md="12">
+                                <TelerikGrid Data=@groupUsers EditMode="@GridEditMode.Inline"
+                                             Height="300px" Pageable="true" PageSize="5"
+                                             OnDelete=@DeleteItem OnCreate=@CreateItem>
+                                    <GridToolBar>
+                                        <GridCommandButton Command="Add">Add User</GridCommandButton>
+                                    </GridToolBar>
+                                    <GridColumns>
+                                        <GridColumn Field=@nameof(GroupUserViewModel.UserFulleName) Title="User Name" Editable="true" Width="70vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                            <EditorTemplate>
+                                                @{
+                                                    var UserToEdit = context as GroupUserViewModel;
+                                                    <TelerikMultiColumnComboBox Data="@users"
+                                                                            TextField="@nameof(UserViewModel.Username)"
+                                                                            ValueField="@nameof(UserViewModel.Id)"
+                                                                            Filterable="true"
+                                                                                @bind-Value="@UserToEdit.UserId"
+                                                                            Id="user"
+                                                                            ListHeight="250px"
+                                                                            Placeholder="Hint: You can filter by the User Name">
+                                                        <MultiColumnComboBoxColumns>
+                                                            <MultiColumnComboBoxColumn Field="@nameof(UserViewModel.FirstName)" Title="First Name" Width="100px" />
+                                                            <MultiColumnComboBoxColumn Field="@nameof(UserViewModel.LastName)" Title="Last Name" Width="150px" />
+                                                            <MultiColumnComboBoxColumn Field="@nameof(UserViewModel.Username)" Title="UserName" Width="150px" />
+                                                        </MultiColumnComboBoxColumns>
+                                                        <FooterTemplate>
+                                                            <span class="combobox-footer k-display-flex k-align-items-center k-justify-content-center">
+                                                                Total: @users.Count() records
+                                                            </span>
+                                                        </FooterTemplate>
+                                                    </TelerikMultiColumnComboBox>
+
+                                                    <TelerikValidationMessage For="@(() => UserToEdit.UserId)" />
+                                                }
+                                            </EditorTemplate>
+                                        </GridColumn>
+                                        
+                                        <GridCommandColumn Title="Action" Width="30vw" HeaderClass="k-text-center">
+
+                                            <GridCommandButton Command="Delete" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">Delete</GridCommandButton>
+                                            <GridCommandButton Command="Save" ThemeColor="@ThemeConstants.Button.ThemeColor.Tertiary" ShowInEdit="true">Update</GridCommandButton>
+                                            <GridCommandButton Command="Cancel" ShowInEdit="true">Cancel</GridCommandButton>
+                                        </GridCommandColumn>
+                                    </GridColumns>
+                                </TelerikGrid>
+                            </MudItem>
+                        </MudGrid>
+                        
+                        
+                    </MudCardContent>
+                    <MudCardActions>
+                        @if (saveAccess)
+                        {
+                            <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveGroup" Disabled="@(!success)">Save</MudButton>
+                        }
+                        <MudButton ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardReturn" Href="Groups">Return</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+    <MudItem md="3"></MudItem>
+</MudGrid>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
+    private string caption = "Add Group";
+    private GroupViewModel group = new GroupViewModel();
+    private List<GroupUserViewModel> groupUsers = new List<GroupUserViewModel>();
+    private List<UserViewModel> users = new List<UserViewModel>();
+    private bool showNotification = false;
+    private string notificationMessage = "";
+    private Severity notificationSeverity = Severity.Success;
+    bool success;
+    MudForm form;
+
+    private bool saveAccess = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("GroupDefine", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/GroupDefine/View");
+        }
+        saveAccess = await mediator.Send(new CheckUserActionAccessQuery("GroupDefine", "Save", userInfo.UserId));
+
+        users = await mediator.Send(new GetAllUsersQuery());
+
+        
+        if (Id > 0)
+        {
+            caption = "Edit Group";
+
+            group = await mediator.Send(new GetGroupByIdQuery(Convert.ToInt32(Id)));
+
+            if (group != null)
+            {
+                groupUsers = await mediator.Send(new GetGroupUserByGroupIdQuery(group.Id));
+
+            }
+        }
+        
+
+    }
+
+    private async void CreateItem(GridCommandEventArgs args)
+    {
+        GroupUserViewModel groupUser = (GroupUserViewModel)args.Item;
+
+        var user = await mediator.Send(new GetUserByIdQuery(groupUser.UserId));
+
+        if (user != null)
+        {
+            groupUser.Username = user.Username;
+            groupUser.UserFulleName = user.FullName();
+        }
+
+        groupUsers.Add(groupUser);
+
+    }
+
+    private void DeleteItem(GridCommandEventArgs args)
+    {
+
+        GroupUserViewModel groupUser = (GroupUserViewModel)args.Item;
+
+        groupUsers.Remove(groupUser);
+
+    }
+
+    protected async Task SaveGroup()
+    {
+        form.Validate();
+
+        if (form.IsValid)
+        {
+            CommandResponse result;
+
+
+            if (group.Id > 0)
+            {
+                try
+                {
+                    group.ModifiedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<EditGroupCommand>(group);
+
+                    if (command.Id > 0)
+                    {
+                        result = await mediator.Send(command);
+
+                        if (result.ResultType == ResultType.Success)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                            group.Id = result.Id;
+
+                            SaveGroups();
+
+                            navManager.NavigateTo("/Groups");
+                        }
+                        else if (result.ResultType == ResultType.Warning)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Warning);
+                        }
+                        else if (result.ResultType == ResultType.Error)
+                        {
+                            Snackbar.Add(result.ResultMessage, Severity.Error);
+                        }
+
+                    }
+                    else
+                    {
+                        Snackbar.Add("There is a problem with the selected Group information.", Severity.Success);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+            else
+            {
+                try
+                {
+                    group.CreatedUser = userInfo?.Username;
+                    var command = MapperConfig.Mapper.Map<CreateGroupCommand>(group);
+
+                    result = await mediator.Send(command);
+
+                    if (result.ResultType == ResultType.Success)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Success);
+
+                        group.Id = result.Id;
+
+                        SaveGroups();
+
+                        navManager.NavigateTo("/Groups");
+                    }
+                    else if (result.ResultType == ResultType.Warning)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Warning);
+                    }
+                    else if (result.ResultType == ResultType.Error)
+                    {
+                        Snackbar.Add(result.ResultMessage, Severity.Error);
+                    }
+                }
+                catch (Exception exp)
+                {
+                    Snackbar.Add(exp.Message, Severity.Error);
+                }
+            }
+        }
+
+    }
+
+    protected async Task SaveGroups()
+    {
+        var savedGroupUsers = await mediator.Send(new GetGroupUserByGroupIdQuery(group.Id));
+
+        foreach (var groupUser in groupUsers)
+        {
+            groupUser.GroupId = group.Id;
+            if (savedGroupUsers.Exists(b => b.UserId == groupUser.UserId))
+            {
+                var editCommand = MapperConfig.Mapper.Map<EditGroupUserCommand>(groupUser);
+
+                await mediator.Send(editCommand);
+            }
+            else
+            {
+                var addCommand = MapperConfig.Mapper.Map<CreateGroupUserCommand>(groupUser);
+
+                await mediator.Send(addCommand);
+            }
+        }
+
+        foreach (var groupUser in savedGroupUsers)
+        {
+            if (!groupUsers.Exists(b => b.UserId == groupUser.UserId))
+            {
+                await mediator.Send(new DeleteGroupUserCommand(groupUser.Id));
+            }
+
+        }
+
+
+    }
+
+}
+

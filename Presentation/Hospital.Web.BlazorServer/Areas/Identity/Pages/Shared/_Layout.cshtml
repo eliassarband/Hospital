@@ -1,29 +1,27 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="background: #F7F7F7;background-image : url('../../../images/Background/3.jpg');">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - HMIS System</title>
     <link rel="stylesheet" href="~/css/bootstrap/bootstrap.min.css" />
     <style>
         .Login {
-            background: #F7F7F7;
+            
         }
     </style>
-			<link href="@Url.Content("lib/blazor-ui/swatches/default-turquoise.css")" rel="stylesheet" type="text/css" />
+	<link href="@Url.Content("lib/blazor-ui/swatches/default-turquoise.css")" rel="stylesheet" type="text/css" />
 
 
-			<script src="_content/Telerik.UI.for.Blazor/js/telerik-blazor.js" defer></script>
+	<script src="_content/Telerik.UI.for.Blazor/js/telerik-blazor.js" defer></script>
 
 
 </head>
-<body class="Login">
-@*<nav class="navbar navbar-dark bg-primary">
-    <div class="container-fluid">
-        <span class="navbar-brand mb-0 h1">Hospital</span>
-    </div>
-</nav>*@
-@RenderBody()
+<body style="background-color : transparent !important">
 
+    <div class="container">
+        @RenderBody()
+    </div>
     
 </body>
 </html>
