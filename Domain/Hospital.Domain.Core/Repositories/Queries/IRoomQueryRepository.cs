@@ -12,6 +12,7 @@ namespace Hospital.Domain.Core.Repositories.Queries
     {
         //Custom operation which is not generic
         Task<IReadOnlyList<Room>> GetAllAsync();
+        Task<IReadOnlyList<Room>> GetByRoomTypeId(int roomTypeId);
         Task<Room> GetByIdAsync(int id);
         Task<Room> GetByCodeAsync(string code);
         Task<Room> GetByNameAsync(string name);

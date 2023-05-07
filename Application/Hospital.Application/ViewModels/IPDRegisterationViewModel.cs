@@ -42,17 +42,17 @@ namespace Hospital.Application.ViewModels
         public virtual StaffViewModel ThirdConsultant { get; set; }
 
         [Required]
-        public int? WardId { get; set; }
+        public int WardId { get; set; }
         public string WardName { get; set; }
         public virtual BasicInformationViewModel Ward { get; set; }
 
         [Required]
-        public int? RoomTypeId { get; set; }
+        public int RoomTypeId { get; set; }
         public string RoomTypeName { get; set; }
         public virtual RoomTypeViewModel RoomType { get; set; }
 
         [Required]
-        public int? RoomId { get; set; }
+        public int RoomId { get; set; }
         public string RoomName { get; set; }
         public virtual RoomViewModel Room { get; set; }
 

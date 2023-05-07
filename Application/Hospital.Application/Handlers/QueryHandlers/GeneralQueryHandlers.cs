@@ -468,6 +468,23 @@ namespace Hospital.Application.Handlers.QueryHandlers
         }
     }
 
+    public class GetRoomsByRoomTypeIdHandler : IRequestHandler<GetRoomByRoomTypeIdQuery, List<RoomViewModel>>
+    {
+        private readonly IRoomQueryRepository _RoomQueryRepository;
+
+        public GetRoomsByRoomTypeIdHandler(IRoomQueryRepository RoomQueryRepository)
+        {
+            _RoomQueryRepository = RoomQueryRepository;
+        }
+
+        public async Task<List<RoomViewModel>> Handle(GetRoomByRoomTypeIdQuery request, CancellationToken cancellationToken)
+        {
+            List<Room> Rooms = (List<Room>)await _RoomQueryRepository.GetByRoomTypeId(request.RoomTypeId);
+
+            return MapperConfig.Mapper.Map<List<RoomViewModel>>(Rooms);
+        }
+    }
+
     public class GetRoomByIdHandler : IRequestHandler<GetRoomByIdQuery, RoomViewModel>
     {
         private readonly IRoomQueryRepository _RoomQueryRepository;

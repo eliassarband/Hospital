@@ -266,6 +266,15 @@ namespace Hospital.Application.Queries
 
     }
 
+    public record GetRoomByRoomTypeIdQuery : IRequest<List<RoomViewModel>>
+    {
+        public int RoomTypeId { get; private set; }
+
+        public GetRoomByRoomTypeIdQuery(int RoomTypeId)
+        {
+            this.RoomTypeId = RoomTypeId;
+        }
+    }
 
     public record GetRoomByIdQuery : IRequest<RoomViewModel>
     {

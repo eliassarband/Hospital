@@ -79,7 +79,8 @@
                                 <MudTextField T="string" Class="mt-3" @bind-Value="@refferBy.Email" MaxLength="100" Label="Email" Placeholder="Email" InputType="InputType.Email" Variant="Variant.Outlined" Validation="@(new EmailAddressAttribute() {ErrorMessage = "Wrong Email Format"})" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="6">
-                                <MudSelect Class="mt-1" T="int" Label="City" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="City" @bind-value="@refferBy.CityId" @bind-Text="@refferBy.CityName" Clearable>
+                                <MudSelect Class="mt-1" T="int" Label="City" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="City" Value="@refferBy.CityId" Text="@refferBy.CityName" ValueChanged="@( (int c)=>
+                                    CityChanged(c) )" Clearable>
                                     @foreach (var c in cities)
                                     {
                                         <MudSelectItem T="int" Value="@c.Id">@c.Name</MudSelectItem>
@@ -181,6 +182,26 @@
         }
         
 
+    }
+
+    protected async Task CityChanged(int CityId)
+    {
+        if (CityId > 0)
+        {
+            var city = await mediator.Send(new GetBasicInformationByIdQuery(CityId));
+            refferBy.CityId = CityId;
+            refferBy.CityName = city.Name;
+
+            areas = await mediator.Send(new GetBasicInformationsByRelatedBasicInformationIdQuery(CityId));
+            refferBy.AreaId = 0;
+            refferBy.AreaName = null;
+        }
+        else
+        {
+            areas = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Area"));
+            refferBy.AreaId = 0;
+            refferBy.AreaName = null;
+        }
     }
 
     protected async Task SaveRefferBy()

@@ -135,12 +135,14 @@
                                 <MudItem md="4" Class="pl-1 pr-1">
                                     <TelerikFloatingLabel Text="City" Class="custom-label w-100">
                                         <div class="k-form-field-wrap">
-                                            <TelerikComboBox @bind-Value="@patient.CityId"
+                                            <TelerikComboBox Value="@patient.CityId"
                                                              Data="@cities"
                                                              Placeholder="Select City"
                                                              TextField="@nameof(BasicInformationViewModel.Name)"
                                                              ValueField="@nameof(BasicInformationViewModel.Id)"
                                                              Filterable="true"
+                                                             ValueExpression="@( () => patient.CityId)"
+                                                             ValueChanged="@( (int c) => CityChanged(c) )"
                                                              Id="city">
                                             </TelerikComboBox>
                                         </div>
@@ -441,6 +443,26 @@
 
         attachmentChanged = true;
 
+    }
+
+    protected async Task CityChanged(int CityId)
+    {
+        if (CityId > 0)
+        {
+            var city = await mediator.Send(new GetBasicInformationByIdQuery(CityId));
+            patient.CityId = CityId;
+            patient.CityName = city.Name;
+
+            areas = await mediator.Send(new GetBasicInformationsByRelatedBasicInformationIdQuery(CityId));
+            patient.AreaId = 0;
+            patient.AreaName = null;
+        }
+        else
+        {
+            areas = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Area"));
+            patient.AreaId = 0;
+            patient.AreaName = null;
+        }
     }
 
     protected async Task SavePatient()

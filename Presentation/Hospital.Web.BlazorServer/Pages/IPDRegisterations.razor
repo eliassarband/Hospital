@@ -166,7 +166,7 @@
     private bool cancelAccess = false;
     private bool dischargeAccess = false;
     private bool printAccess = false;
-    
+
     protected override async Task OnInitializedAsync()
     {
         if (userInfo == null)
@@ -203,6 +203,54 @@
             Elements = Elements.Where(e => e.Canceled != true && e.Discharged == true).ToList();
         else if (admitedCheched == false && dischargeCheched == false)
             Elements = Elements.Where(e => e.Canceled != true && 1 == 2).ToList();
+
+        foreach(var item in Elements)
+        {
+            CalculateRoomDays(item.IPDRegisterationRooms);
+            CalculateAmount(item);
+        }
+    }
+
+    protected async Task CalculateRoomDays(IEnumerable<IPDRegisterationRoomViewModel> iPDRegisterationRooms)
+    {
+        foreach (var room in iPDRegisterationRooms)
+        {
+            DateTime toDate;
+
+            if (room.ToDate == null)
+            {
+                toDate = DateTime.Now;
+            }
+            else
+            {
+                toDate = room.ToDate ?? DateTime.Now;
+            }
+
+            TimeSpan span = toDate.Subtract(room.Date);
+
+            room.Days = span.Days + 1;
+
+            room.Amount = room.Days * room.Rate;
+        }
+    }
+
+    private async void CalculateAmount(IPDRegisterationViewModel iPDReg)
+    {
+        var serviceTotal = iPDReg.IPDRegisterationServices.Sum(b => b.Rate * b.Quantity);
+        var servicePayable = iPDReg.IPDRegisterationServices.Sum(b => b.Amount);
+
+        var roomTotal = iPDReg.IPDRegisterationRooms.Sum(b => b.Rate * b.Days);
+        var roomPayable = iPDReg.IPDRegisterationRooms.Sum(b => b.Amount);
+
+        iPDReg.TotalAmount = serviceTotal + roomTotal;
+        iPDReg.PayableAmount = servicePayable + roomPayable;
+        int totalDiscount = (serviceTotal + roomTotal) - (servicePayable + roomPayable);
+
+        int roomAmount = roomTotal;
+        int serviceAmount = serviceTotal;
+        int medicineAmount = 0;
+        int paidAmount = iPDReg.IPDRegisterationPayments.Sum(p => p.Amount);
+        int remainAmount = iPDReg.PayableAmount - paidAmount;
     }
 
     private void PageChanged(int i)

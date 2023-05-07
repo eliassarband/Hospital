@@ -691,6 +691,7 @@ namespace Hospital.Application.Commands
         public int Id { get; set; }
         public int? IPDRegisterationId { get; set; }
         public DateTime Date { get; set; }
+        public DateTime? ToDate { get; set; }
         public int? BedId { get; set; }
         public int Days { get; set; }
         public int Rate { get; set; }
@@ -710,6 +711,7 @@ namespace Hospital.Application.Commands
         public int Id { get; set; }
         public int? IPDRegisterationId { get; set; }
         public DateTime Date { get; set; }
+        public DateTime? ToDate { get; set; }
         public int? BedId { get; set; }
         public int Days { get; set; }
         public int Rate { get; set; }

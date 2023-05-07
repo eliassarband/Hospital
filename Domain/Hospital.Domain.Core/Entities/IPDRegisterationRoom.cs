@@ -15,6 +15,8 @@ namespace Hospital.Domain.Core.Entities
         [Required]
         public DateTime Date { get; set; }
 
+        public DateTime? ToDate { get; set; }
+
         [Required]
         [ForeignKey("BedId")]
         public int? BedId { get; set; }

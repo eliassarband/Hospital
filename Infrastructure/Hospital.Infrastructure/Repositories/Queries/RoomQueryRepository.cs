@@ -31,6 +31,18 @@ namespace Hospital.Infrastructure.Repositories.Queries
             }
         }
 
+        public async Task<IReadOnlyList<Room>> GetByRoomTypeId(int roomTypeId)
+        {
+            try
+            {
+                return _context.Rooms.Where(r => r.RoomTypeId == roomTypeId).Include(s => s.RoomType).ToList();
+            }
+            catch (Exception exp)
+            {
+                throw new Exception(exp.Message, exp);
+            }
+        }
+
         public async Task<Room> GetByIdAsync(int id)
         {
             try

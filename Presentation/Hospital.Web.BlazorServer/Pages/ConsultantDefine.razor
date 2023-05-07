@@ -79,7 +79,8 @@
                                 <MudTextField T="string" Class="mt-3" @bind-Value="@staff.Email" MaxLength="100" Label="Email" Placeholder="Email" InputType="InputType.Email" Variant="Variant.Outlined" Validation="@(new EmailAddressAttribute() {ErrorMessage = "Wrong Email Format"})" Clearable></MudTextField>
                             </MudItem>
                             <MudItem md="6">
-                                <MudSelect Class="mt-1" T="int" Label="City" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="City" @bind-value="@staff.CityId" @bind-Text="@staff.CityName" Clearable>
+                                <MudSelect Class="mt-1" T="int" Label="City" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Placeholder="City" Value="@staff.CityId" Text="@staff.CityName" ValueChanged="@( (int c)=>
+                                    CityChanged(c) )" Clearable>
                                     @foreach (var c in cities)
                                     {
                                         <MudSelectItem T="int" Value="@c.Id">@c.Name</MudSelectItem>
@@ -167,7 +168,7 @@
         cities = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("City"));
         areas = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Area"));
 
-       
+
         if (Id > 0)
         {
             caption = "Edit Consultant";
@@ -179,8 +180,28 @@
 
             }
         }
-        
 
+
+    }
+
+    protected async Task CityChanged(int CityId)
+    {
+        if(CityId>0)
+        {
+            var city = await mediator.Send(new GetBasicInformationByIdQuery(CityId));
+            staff.CityId = CityId;
+            staff.CityName = city.Name;
+
+            areas = await mediator.Send(new GetBasicInformationsByRelatedBasicInformationIdQuery(CityId));
+            staff.AreaId=0;
+            staff.AreaName = null;
+        }
+        else
+        {
+            areas = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Area"));
+            staff.AreaId = 0;
+            staff.AreaName = null;
+        }
     }
 
     protected async Task SaveStaff()

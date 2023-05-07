@@ -20,6 +20,8 @@ namespace Hospital.Application.ViewModels
         [Required]
         public DateTime Date { get; set; }=DateTime.Now;
 
+        public DateTime? ToDate { get; set; }
+
         [Required]
         public int? BedId { get; set; }
         public string BedCode { get; set; }

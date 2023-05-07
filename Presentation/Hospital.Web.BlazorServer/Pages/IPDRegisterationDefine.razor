@@ -220,13 +220,16 @@
                                 <MudItem md="6">
                                     <TelerikFloatingLabel Text="Ward" Class="custom-label w-100">
                                         <div class="k-form-field-wrap">
-                                            <TelerikComboBox @bind-Value="@iPDRegisteration.WardId"
+                                            <TelerikComboBox Value="@iPDRegisteration.WardId"
                                                              Data="@wards"
                                                              Placeholder="Select Ward"
                                                              TextField="@nameof(BasicInformationViewModel.Name)"
                                                              ValueField="@nameof(BasicInformationViewModel.Id)"
                                                              Filterable="true"
-                                                             Id="ward">
+                                                             ValueExpression="@( () => iPDRegisteration.WardId)"
+                                                             ValueChanged="@( (int c) => WardChanged(c) )"
+                                                             Id="ward"
+                                                             Enabled="@(iPDRegisteration.Id == 0)">
                                             </TelerikComboBox>
                                         </div>
                                     </TelerikFloatingLabel>
@@ -235,13 +238,15 @@
                                 <MudItem md="6">
                                     <TelerikFloatingLabel Text="Room Type" Class="custom-label w-100">
                                         <div class="k-form-field-wrap">
-                                            <TelerikComboBox @bind-Value="@iPDRegisteration.RoomTypeId"
+                                            <TelerikComboBox Value="@iPDRegisteration.RoomTypeId"
                                                              Data="@roomTypes"
                                                              Placeholder="Select Room Type"
                                                              TextField="@nameof(RoomTypeViewModel.Name)"
                                                              ValueField="@nameof(RoomTypeViewModel.Id)"
                                                              Filterable="true"
-                                                             Enabled="@(iPDRegisteration.WardId > 0)"
+                                                             ValueExpression="@( () => iPDRegisteration.RoomTypeId)"
+                                                             ValueChanged="@( (int c) => RoomTypeChanged(c) )"
+                                                             Enabled="@(iPDRegisteration.Id == 0)"
                                                              Id="roomtype">
                                             </TelerikComboBox>
                                         </div>
@@ -251,13 +256,15 @@
                                 <MudItem md="6">
                                     <TelerikFloatingLabel Text="Room" Class="custom-label w-100">
                                         <div class="k-form-field-wrap">
-                                            <TelerikComboBox @bind-Value="@iPDRegisteration.RoomId"
+                                            <TelerikComboBox Value="@iPDRegisteration.RoomId"
                                                              Data="@rooms"
                                                              Placeholder="Select Room"
                                                              TextField="@nameof(RoomViewModel.Name)"
                                                              ValueField="@nameof(RoomViewModel.Id)"
                                                              Filterable="true"
-                                                             Enabled="@(iPDRegisteration.RoomTypeId > 0)"
+                                                             ValueExpression="@( () => iPDRegisteration.RoomId)"
+                                                             ValueChanged="@( (int c) => RoomChanged(c) )"
+                                                             Enabled="@(iPDRegisteration.Id == 0)"
                                                              Id="room">
                                             </TelerikComboBox>
                                         </div>
@@ -273,7 +280,7 @@
                                                              TextField="@nameof(BedViewModel.Name)"
                                                              ValueField="@nameof(BedViewModel.Id)"
                                                              Filterable="true"
-                                                             Enabled="@(iPDRegisteration.RoomId > 0)"
+                                                             Enabled="@(iPDRegisteration.Id == 0)"
                                                              Id="bed">
                                             </TelerikComboBox>
                                         </div>
@@ -346,7 +353,7 @@
                                 </MudItem>
                             </MudGrid>
                         </TabStripTab>
-                        <TabStripTab Title="Room(s)">
+                        <TabStripTab Title="Room(s)" Disabled="@(iPDRegisteration.Id == 0)">
                             <MudGrid Spacing="1">
                                 <MudItem md="12">
                                     <TelerikGrid Data=@iPDRegisterationRooms EditMode="@GridEditMode.Inline"
@@ -355,7 +362,7 @@
                                         <GridToolBar>
                                             @if (addRoomAccess)
                                             {
-                                                <GridCommandButton Command="Add">Add Room</GridCommandButton>
+                                                <GridCommandButton Command="Add">Change Room</GridCommandButton>
                                             }
                                         </GridToolBar>
                                         <GridColumns>
@@ -402,16 +409,7 @@
                                                     }
                                                 </EditorTemplate>
                                             </GridColumn>
-                                            <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.Days) Title="Days" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
-                                                <EditorTemplate>
-                                                    @{
-                                                        var RoomToEdit = context as IPDRegisterationRoomViewModel;
-                                                        <TelerikNumericTextBox Placeholder="Days"
-                                                                               @bind-Value="@RoomToEdit.Days"
-                                                                           Decimals="0"></TelerikNumericTextBox>
-                                                        <TelerikValidationMessage For="@(() => RoomToEdit.Days)" />
-                                                    }
-                                                </EditorTemplate>
+                                            <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.Days) Title="Days" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
                                             </GridColumn>
                                             <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.Rate) Title="Rate" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat" />
                                             <GridColumn Field=@nameof(IPDRegisterationRoomViewModel.Amount) Title="Amount" Editable="false" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat" />
@@ -884,6 +882,8 @@
                 patient = await mediator.Send(new GetPatientByIdQuery(iPDRegisteration.PatientId));
 
                 iPDRegisterationRooms = await mediator.Send(new GetIPDRegisterationRoomsByIPDRegisterationIdQuery(iPDRegisteration.Id));
+                CalculateRoomDays();
+
                 iPDRegisterationServices = await mediator.Send(new GetIPDRegisterationServicesByIPDRegisterationIdQuery(iPDRegisteration.Id));
                 iPDRegisterationPayments = await mediator.Send(new GetIPDRegisterationPaymentsByIPDRegisterationIdQuery(iPDRegisteration.Id));
 
@@ -923,6 +923,66 @@
 
     }
 
+    protected async Task WardChanged(int WardId)
+    {
+        if (WardId > 0)
+        {
+            var ward = await mediator.Send(new GetBasicInformationByIdQuery(WardId));
+            iPDRegisteration.WardId = WardId;
+            iPDRegisteration.WardName = ward.Name;
+
+            roomTypes = await mediator.Send(new GetRoomTypeByWardIdQuery(WardId));
+            iPDRegisteration.RoomTypeId = 0;
+            iPDRegisteration.RoomTypeName = null;
+        }
+        else
+        {
+            roomTypes = await mediator.Send(new GetAllRoomTypesQuery());
+            iPDRegisteration.RoomTypeId = 0;
+            iPDRegisteration.RoomTypeName = null;
+        }
+    }
+
+    protected async Task RoomTypeChanged(int RoomTypeId)
+    {
+        if (RoomTypeId > 0)
+        {
+            var roomType = await mediator.Send(new GetRoomTypeByIdQuery(RoomTypeId));
+            iPDRegisteration.RoomTypeId = RoomTypeId;
+            iPDRegisteration.RoomTypeName = roomType.Name;
+
+            rooms = await mediator.Send(new GetRoomByRoomTypeIdQuery(RoomTypeId));
+            iPDRegisteration.RoomId = 0;
+            iPDRegisteration.RoomName = null;
+        }
+        else
+        {
+            rooms = await mediator.Send(new GetAllRoomsQuery());
+            iPDRegisteration.RoomId = 0;
+            iPDRegisteration.RoomName = null;
+        }
+    }
+
+    protected async Task RoomChanged(int RoomId)
+    {
+        if (RoomId > 0)
+        {
+            var room = await mediator.Send(new GetRoomByIdQuery(RoomId));
+            iPDRegisteration.RoomId = RoomId;
+            iPDRegisteration.RoomName = room.Name;
+
+            beds = await mediator.Send(new GetBedByRoomIdQuery(RoomId));
+            iPDRegisteration.BedId = 0;
+            iPDRegisteration.BedName = null;
+        }
+        else
+        {
+            roomTypes = await mediator.Send(new GetAllRoomTypesQuery());
+            iPDRegisteration.BedId = 0;
+            iPDRegisteration.BedName = null;
+        }
+    }
+
     public bool ValidSubmit { get; set; } = false;
 
     async void HandleValidSubmit()
@@ -945,6 +1005,17 @@
     {
         IPDRegisterationRoomViewModel iPDRoom = (IPDRegisterationRoomViewModel)args.Item;
 
+        DateTime date = new DateTime(iPDRoom.Date.Year, iPDRoom.Date.Month, iPDRoom.Date.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+        var prevRoom = iPDRegisterationRooms.FirstOrDefault(r => r.ToDate == null);
+        iPDRoom.Date=date;
+
+        if(prevRoom != null)
+        {
+            prevRoom.ToDate = iPDRoom.Date;
+
+        }
+
         var bed = await mediator.Send(new GetBedByIdQuery(iPDRoom.BedId ?? 0));
 
         if (bed != null)
@@ -952,6 +1023,7 @@
             iPDRoom.BedCode = bed.Code;
             iPDRoom.BedName = bed.Name;
             iPDRoom.Rate = bed.Room.Cost;
+            iPDRoom.Days = 1;
 
             iPDRoom.Amount = iPDRoom.Days * bed.Room.Cost;
         }
@@ -959,6 +1031,7 @@
 
         iPDRegisterationRooms.Add(iPDRoom);
 
+        CalculateRoomDays();
         CalculateAmount();
         //ProductService.CreateProduct((ProductDto)args.Item);
         //LoadData();
@@ -971,9 +1044,37 @@
 
         iPDRegisterationRooms.Remove(iPDRoom);
 
+        var lastRoom = iPDRegisterationRooms.OrderByDescending(r => r.Date).FirstOrDefault();
+        if(lastRoom != null)
+            lastRoom.ToDate = null;
+
+        CalculateRoomDays();
         CalculateAmount();
         //ProductService.DeleteProduct((ProductDto)args.Item);
         //LoadData();
+    }
+
+    protected async Task CalculateRoomDays()
+    {
+        foreach(var room in iPDRegisterationRooms)
+        {
+            DateTime toDate;
+
+            if(room.ToDate == null)
+            {
+                toDate = DateTime.Now;
+            }
+            else
+            {
+                toDate = room.ToDate ?? DateTime.Now;
+            }
+
+            TimeSpan span = toDate.Subtract(room.Date);
+
+            room.Days = span.Days + 1;
+
+            room.Amount = room.Days * room.Rate;
+        }
     }
 
     private async void CreateService(GridCommandEventArgs args)
@@ -1241,6 +1342,7 @@
 
                         SaveServices();
 
+                        AddRoom();
                         SaveRooms();
 
                         SavePayments();
@@ -1345,6 +1447,7 @@
 
                         SaveServices();
 
+                        AddRoom();
                         SaveRooms();
 
                         SavePayments();
@@ -1372,6 +1475,34 @@
             }
         }
 
+    }
+
+    protected async Task AddRoom()
+    {
+        IPDRegisterationRoomViewModel iPDRoom = new IPDRegisterationRoomViewModel();
+
+        var bed = await mediator.Send(new GetBedByIdQuery(iPDRegisteration.BedId ?? 0));
+
+        if (bed != null)
+        {
+            iPDRoom.IPDRegisterationId = iPDRegisteration.Id;
+            iPDRoom.Date = iPDRegisteration.Date;
+            iPDRoom.BedId = iPDRegisteration.BedId;
+            iPDRoom.BedCode = bed.Code;
+            iPDRoom.BedName = bed.Name;
+            iPDRoom.Days = 1;
+            iPDRoom.Rate = bed.Room.Cost;
+
+            iPDRoom.Amount = iPDRoom.Days * bed.Room.Cost;
+
+            iPDRoom.CreatedUser = userInfo?.Username;
+
+        }
+
+
+        iPDRegisterationRooms.Add(iPDRoom);
+
+        CalculateAmount();        
     }
 
     protected async Task SaveRooms()
