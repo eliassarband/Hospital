@@ -147,6 +147,12 @@
     {
         OPDBillPaymentViewModel oPDPayment = (OPDBillPaymentViewModel)args.Item;
 
+        if (oPDBill.PayableAmount < (payments.Sum(p => p.Amount) + oPDBill.PaidAmount + oPDPayment.Amount))
+        {
+            Snackbar.Add("The amount entered is more than the total payable amount calculated", Severity.Warning);
+            return;
+        }
+
         oPDPayment.OPDBillId = OPDId;
 
         if (oPDPayment.Amount <= oPDBill.DebtAmount)

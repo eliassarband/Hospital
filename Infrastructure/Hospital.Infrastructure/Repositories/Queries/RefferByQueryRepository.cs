@@ -47,7 +47,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.RefferBies.Where(t => t.Id == id).Include(s => s.StaffType).Include(s => s.NamePrefix).Include(s => s.Speciality).Include(s => s.Qualification).Include(s => s.City).Include(s => s.Area).FirstOrDefault();
+                return _context.RefferBies.Where(t => t.Id == id).Include(s => s.StaffType).Include(s => s.NamePrefix).Include(s => s.Speciality).Include(s => s.Qualification).Include(s => s.City).Include(s => s.Area).Include(s => s.Patients).Include(s => s.IPDRegisterations).FirstOrDefault();
             }
             catch (Exception exp)
             {

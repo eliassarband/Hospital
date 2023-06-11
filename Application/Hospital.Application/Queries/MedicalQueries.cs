@@ -200,6 +200,18 @@ namespace Hospital.Application.Queries
 
     }
 
+    public record GetOPDBillsByDateRangeQuery : IRequest<List<OPDBillViewModel>>
+    {
+        public GetOPDBillsByDateRangeQuery(DateTime FromDate,DateTime ToDate)
+        {
+            this.FromDate = FromDate;
+            this.ToDate = ToDate;
+        }
+
+        public DateTime FromDate { get; }
+        public DateTime ToDate { get; }
+    }
+
 
     public class GetOPDBillByIdQuery : IRequest<OPDBillViewModel>
     {
@@ -247,6 +259,22 @@ namespace Hospital.Application.Queries
 
     }
 
+    public record GetAllAdmitedIPDRegisterationsQuery : IRequest<List<IPDRegisterationViewModel>>
+    {
+
+    }
+
+    public record GetIPDRegisterationsByDateRangeQuery : IRequest<List<IPDRegisterationViewModel>>
+    {
+        public GetIPDRegisterationsByDateRangeQuery(DateTime FromDate,DateTime ToDate)
+        {
+            this.FromDate = FromDate;
+            this.ToDate = ToDate;
+        }
+
+        public DateTime FromDate { get; }
+        public DateTime ToDate { get; }
+    }
 
     public class GetIPDRegisterationByIdQuery : IRequest<IPDRegisterationViewModel>
     {

@@ -59,7 +59,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.BasicInformationCategories.Where(b => b.Id == id).Include(b => b.BasicInformations).Include(b => b.RelatedCategory).FirstOrDefault();
+                return _context.BasicInformationCategories.Where(b => b.Id == id).Include(b => b.BasicInformations).Include(b => b.BasicInformationCategories).Include(b => b.RelatedCategory).FirstOrDefault();
             }
             catch (Exception exp)
             {

@@ -223,7 +223,25 @@ namespace Hospital.Application.Mapper
 
             #endregion
 
+            #region FreeBed
 
+            CreateMap<BasicInformationViewModel, FreeBedViewModel>()
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => "Ward"))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
+
+            CreateMap<RoomTypeViewModel, FreeBedViewModel>()
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => "RoomType"))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
+
+            CreateMap<RoomViewModel, FreeBedViewModel>()
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => "Room"))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
+
+            CreateMap<BedViewModel, FreeBedViewModel>()
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => "Bed"))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
+
+            #endregion
         }
     }
 }

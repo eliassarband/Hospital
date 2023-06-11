@@ -1,0 +1,571 @@
+﻿@page "/DailyReport"
+@using Hospital.Application.Queries;
+@using Hospital.Application.ViewModels;
+@using Hospital.Web.BlazorServer.Helpers;
+@using Hospital.Web.BlazorServer.Models.Auth;
+@using MediatR;
+@inject IMediator mediator;
+@inject IHttpContextAccessor accessor
+@inject NavigationManager navManager
+
+@attribute [Authorize]
+
+<PageTitle>Daily Report - HMIS System</PageTitle>
+
+<MudPaper Elevation="10" Class="mt-1 p-2">
+    <MudGrid>
+        <MudItem md="12">
+            <MudText Typo="Typo.h4">Daily Report</MudText>
+        </MudItem>
+        <MudItem md="12">
+            <MudExpansionPanels>
+                <MudExpansionPanel Text="Filter Parameters" IsInitiallyExpanded="true">
+                    <MudGrid Spacing="1" Class="m-2">
+                        <MudItem md="6">
+                            <TelerikFloatingLabel Text="From Date" Class="custom-label w-100">
+                                <div class="k-form-field-wrap">
+                                    <TelerikDatePicker @bind-Value="@fromDate"
+                                                       Format="dddd, dd MMMM, yyyy"
+                                                       Id="from-date" Enabled="true">
+                                    </TelerikDatePicker>
+                                </div>
+                            </TelerikFloatingLabel>
+                        </MudItem>
+                        <MudItem md="6">
+                            <TelerikFloatingLabel Text="To Date" Class="custom-label w-100">
+                                <div class="k-form-field-wrap">
+                                    <TelerikDatePicker @bind-Value="@toDate"
+                                                       Format="dddd, dd MMMM, yyyy"
+                                                       Id="to-date" Enabled="true">
+                                    </TelerikDatePicker>
+                                </div>
+                            </TelerikFloatingLabel>
+                        </MudItem>
+                        <MudItem md="4">
+                            <TelerikFloatingLabel Text="Type" Class="custom-label w-100">
+                                <div class="k-form-field-wrap">
+                                    <TelerikComboBox Data="@TypeList" @bind-Value="@selectedType" TextField="Name" ValueField="Code">
+                                    </TelerikComboBox>
+                                </div>
+                            </TelerikFloatingLabel>
+                        </MudItem>
+                        <MudItem md="4">
+                            <TelerikFloatingLabel Text="Consultant" Class="custom-label w-100">
+                                <div class="k-form-field-wrap">
+                                    <TelerikComboBox Data="@consultants" @bind-Value="@selectedConsultant" TextField="Name" ValueField="Id">
+                                    </TelerikComboBox>
+                                </div>
+                            </TelerikFloatingLabel>
+                        </MudItem>
+                        <MudItem md="4">
+                            <TelerikFloatingLabel Text="Reffer By" Class="custom-label w-100">
+                                <div class="k-form-field-wrap">
+                                    <TelerikComboBox Data="@refferBies" @bind-Value="@selectedRefferBy" TextField="Name" ValueField="Id">
+                                    </TelerikComboBox>
+                                </div>
+                            </TelerikFloatingLabel>
+                        </MudItem>
+                        <MudItem md="3" Class="pt-4">
+                            <TelerikCheckBox Id="showCancelReceipts" @bind-Value="@showCancelReceipts">
+                            </TelerikCheckBox>
+                            <label for="showCancelReceipts">Show Canceled Receipts</label>
+                        </MudItem>
+                        <MudItem md="3" Class="pt-4">
+                            <TelerikCheckBox Id="showCollection" @bind-Value="@showCollection">
+                            </TelerikCheckBox>
+                            <label for="showCollection">Show Collection</label>
+                        </MudItem>
+                        <MudItem md="3" Class="pt-4">
+                            <TelerikCheckBox Id="showRevenue" @bind-Value="@showRevenue">
+                            </TelerikCheckBox>
+                            <label for="showRevenue">Show Revenue</label>
+                        </MudItem>
+                        <MudItem md="3" Class="pt-3">
+                            <MudButton Class="mr-2" ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Filter" Color="Color.Primary" Variant="Variant.Filled" OnClick="FilterData">Filter</MudButton>
+                            <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Refresh" Color="Color.Secondary" Variant="Variant.Filled" OnClick="ResetFilters">Reset</MudButton>
+                        </MudItem>
+                    </MudGrid>
+                </MudExpansionPanel>
+            </MudExpansionPanels>
+        </MudItem>
+        <MudItem md="12">
+            @if(ipds.Count == 0 && opds.Count == 0)
+            {
+                <MudText Typo="Typo.h6" Class="d-flex align-start justify-center mud-width-full py-8">
+                    There is no data to display
+                </MudText>
+            }
+            else
+            {
+                int sno = 1;
+
+                <MudSimpleTable Style="overflow-x: auto;">
+                    <thead>
+                        <tr>
+                            <th>SNO</th>
+                            <th>Type</th>
+                            <th>IPD/OPD No</th>
+                            <th>Date</th>
+                            <th>Patient Id</th>
+                            <th>Patient Name</th>
+                            <th>Total Amount</th>
+                            <th>Payable Amount</th>
+                            <th>Paid Amount</th>
+                            <th>Debt Amount</th>
+                            <th>Canceled</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var date in DateRange)
+                        {
+                            var curIPDs = ipds.Where(i => i.Date >= date && i.Date < date.AddDays(1)).ToList();
+                            var curOPDs = opds.Where(i => i.Date >= date && i.Date < date.AddDays(1)).ToList();
+
+                            if (curIPDs.Count > 0 || curOPDs.Count > 0)
+                            {
+                                <tr style="background-color : #B2DFDB">
+                                    <td colspan="11">
+                                        <MudText Typo="Typo.subtitle1">
+                                            Date : @date.ToShortDateString()
+                                        </MudText>
+                                    </td>
+                                </tr>
+
+                                if (curIPDs.Count > 0)
+                                {
+                                    <tr style="background-color : #CFD8DC">
+                                        <td colspan="11">
+                                            <MudText Typo="Typo.subtitle2">
+                                                IPDs
+                                            </MudText>
+                                        </td>
+                                    </tr>
+
+                                    foreach (var ipd in curIPDs)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @(sno++)
+                                            </td>
+                                            <td>
+                                                IPD
+                                            </td>
+                                            <td>
+                                                @UtilityHelper.GenerateIdentifier(iPDNoPrefix.Value,ipd.Id)
+                                            </td>
+                                            <td>
+                                                @ipd.Date
+                                            </td>
+                                            <td>
+                                                @UtilityHelper.GenerateIdentifier(patientIdPrefix.Value,ipd.PatientId)
+                                            </td>
+                                            <td>
+                                                @ipd.Patient.Name
+                                            </td>
+                                            <td>
+                                                @ipd.TotalAmount
+                                            </td>
+                                            <td>
+                                                @ipd.PayableAmount
+                                            </td>
+                                            <td>
+                                                @ipd.IPDRegisterationPayments.Sum(p => p.Amount)
+                                            </td>
+                                            <td>
+                                                @(ipd.PayableAmount - ipd.IPDRegisterationPayments.Sum(p => p.Amount))
+                                            </td>
+                                            <td>
+                                                @(ipd.Canceled ? "Canceled" : "")
+                                            </td>
+
+                                        </tr>
+                                    }
+
+                                    <tr style="background-color : #CFD8DC">
+                                        <td colspan="6">
+                                            <MudText Typo="Typo.subtitle2">
+                                                IPD Summary :
+                                            </MudText>
+                                        </td>
+                                        <td>
+                                            @(curIPDs.Sum(i => i.TotalAmount))
+                                        </td>
+                                        <td>
+                                            @(curIPDs.Sum(i => i.PayableAmount))
+                                        </td>
+                                        <td>
+                                            @(curIPDs.Sum(i => i.IPDRegisterationPayments.Sum(p => p.Amount)))
+                                        </td>
+                                        <td>
+                                            @((curIPDs.Sum(i => i.PayableAmount)) - (curIPDs.Sum(i => i.IPDRegisterationPayments.Sum(p => p.Amount))))
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                }
+
+                                if (curOPDs.Count > 0)
+                                {
+                                    <tr style="background-color : #F0F4C3">
+                                        <td colspan="11">
+                                            <MudText Typo="Typo.subtitle2">
+                                                OPDs
+                                            </MudText>
+                                        </td>
+                                    </tr>
+
+                                    foreach (var opd in curOPDs)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @(sno++)
+                                            </td>
+                                            <td>
+                                                OPD
+                                            </td>
+                                            <td>
+                                                @UtilityHelper.GenerateIdentifier(oPDNoPrefix.Value,opd.Id)
+                                            </td>
+                                            <td>
+                                                @opd.Date
+                                            </td>
+                                            <td>
+                                                @UtilityHelper.GenerateIdentifier(patientIdPrefix.Value,opd.PatientId)
+                                            </td>
+                                            <td>
+                                                @opd.Patient.Name
+                                            </td>
+                                            <td>
+                                                @opd.TotalAmount
+                                            </td>
+                                            <td>
+                                                @opd.PayableAmount
+                                            </td>
+                                            <td>
+                                                @(opd.OPDBillPayments.Sum(p => p.Amount) + opd.PaidAmount)
+                                            </td>
+                                            <td>
+                                                @(opd.PayableAmount - (opd.OPDBillPayments.Sum(p => p.Amount) + opd.PaidAmount))
+                                            </td>
+                                            <td>
+                                                @(opd.Canceled ? "Canceled" : "")
+                                            </td>
+
+                                        </tr>
+                                    }
+
+                                    <tr style="background-color : #F0F4C3">
+                                        <td colspan="6">
+                                            <MudText Typo="Typo.subtitle2">
+                                                OPD Summary :
+                                            </MudText>
+                                        </td>
+                                        <td>
+                                            @(curOPDs.Sum(i => i.TotalAmount))
+                                        </td>
+                                        <td>
+                                            @(curOPDs.Sum(i => i.PayableAmount))
+                                        </td>
+                                        <td>
+                                            @(curOPDs.Sum(i => i.OPDBillPayments.Sum(p => p.Amount)) + curOPDs.Sum(o => o.PaidAmount))
+                                        </td>
+                                        <td>
+                                            @(curOPDs.Sum(i => i.PayableAmount) - (curOPDs.Sum(i => i.OPDBillPayments.Sum(p => p.Amount)) + curOPDs.Sum(o => o.PaidAmount)))
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                }
+
+                                <tr style="background-color : #B2DFDB">
+                                    <td colspan="6">
+                                        <MudText Typo="Typo.subtitle1">
+                                            Date Summary : 
+                                        </MudText>
+                                    </td>
+                                    <td>
+                                        @(curIPDs.Sum(i => i.TotalAmount) + curOPDs.Sum(o => o.TotalAmount))
+                                    </td>
+                                    <td>
+                                        @(curIPDs.Sum(i => i.PayableAmount) + curOPDs.Sum(o => o.PayableAmount))
+                                    </td>
+                                    <td>
+                                        @(curIPDs.Sum(i => i.IPDRegisterationPayments.Sum(p => p.Amount)) + curOPDs.Sum(o => o.OPDBillPayments.Sum(p => p.Amount) + curOPDs.Sum(o => o.PaidAmount)))
+                                    </td>
+                                    <td>
+                                        @((curIPDs.Sum(i => i.PayableAmount) + curOPDs.Sum(o => o.PayableAmount)) - (curIPDs.Sum(i => i.IPDRegisterationPayments.Sum(p => p.Amount)) + curOPDs.Sum(o => o.OPDBillPayments.Sum(p => p.Amount) + curOPDs.Sum(o => o.PaidAmount))))
+                                    </td>
+                                    <td>
+                                        
+                                    </td>
+                                </tr>
+
+                                
+                            }
+
+                            
+                        }
+                        <tr style="background-color : #FFCC80">
+                            <td colspan="6">
+                                <MudText Typo="Typo.h6">
+                                    Total Summary :
+                                </MudText>
+                            </td>
+                            <td>
+                                @(ipds.Sum(i => i.TotalAmount) + opds.Sum(o => o.TotalAmount))
+                            </td>
+                            <td>
+                                @(ipds.Sum(i => i.PayableAmount) + opds.Sum(o => o.PayableAmount))
+                            </td>
+                            <td>
+                                @(ipds.Sum(i => i.IPDRegisterationPayments.Sum(p => p.Amount)) + opds.Sum(o => o.OPDBillPayments.Sum(p => p.Amount) + opds.Sum(o => o.PaidAmount)))
+                            </td>
+                            <td>
+                                @((ipds.Sum(i => i.PayableAmount) + opds.Sum(o => o.PayableAmount)) - (ipds.Sum(i => i.IPDRegisterationPayments.Sum(p => p.Amount)) + opds.Sum(o => o.OPDBillPayments.Sum(p => p.Amount) + opds.Sum(o => o.PaidAmount))))
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                    </tbody>
+                </MudSimpleTable>
+                
+            }
+
+        </MudItem>
+        
+    </MudGrid>
+</MudPaper>
+
+
+@code {
+    [CascadingParameter]
+    public DialogFactory Dialogs { get; set; }
+
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
+    private List<IPDRegisterationViewModel> ipds;
+    private List<OPDBillViewModel> opds; 
+    private List<StaffViewModel> consultants;
+    private List<RefferByViewModel> refferBies;
+
+    private SettingViewModel patientIdPrefix;
+    private SettingViewModel iPDNoPrefix;
+    private SettingViewModel oPDNoPrefix;
+
+    List<ReceiptType> TypeList { get; set; } = new List<ReceiptType>
+{
+        new ReceiptType { Code = "Both", Name = "Both" },
+        new ReceiptType { Code = "IPD", Name = "IPD Registeration" },
+        new ReceiptType { Code = "OPD", Name = "OPD Billing" }
+    };
+
+    private DateTime fromDate;
+    private DateTime toDate;
+    private string? selectedType = "Both";
+    private int? selectedConsultant;
+    private int? selectedRefferBy;
+    private bool showCancelReceipts = false;
+    private bool showCollection = true;
+    private bool showRevenue = false;
+
+
+    public DateTime[] DateRange;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("DailyReport", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/DailyReport/View");
+        }
+        //showAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDIPD", "Show", userInfo.UserId));
+
+        consultants = await mediator.Send(new GetAllStaffsQuery());
+        refferBies = await mediator.Send(new GetAllRefferBiesQuery());
+
+        patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
+        iPDNoPrefix = await mediator.Send(new GetSettingByKeyQuery("IPDNoPrefix"));
+        oPDNoPrefix = await mediator.Send(new GetSettingByKeyQuery("OPDReceiptNoPrefix"));
+
+        ResetFilters(); 
+        LoadData();
+    }
+
+    protected async Task ResetFilters()
+    {
+        fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
+        toDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
+        selectedType = "Both";
+        selectedConsultant = null;
+        selectedRefferBy = null;
+        showCancelReceipts = false;
+        showCollection = true;
+        showRevenue = false;
+
+        LoadData();
+    }
+
+    protected async Task LoadData()
+    {
+        if (selectedType == "Both" || selectedType == "IPD")
+        {
+            var ipdRegs = await mediator.Send(new GetIPDRegisterationsByDateRangeQuery(fromDate, toDate));
+            ipds = ipdRegs.ToList();
+
+            if (selectedConsultant > 0)
+            {
+                ipds = ipds.Where(i => i.ConsultantInchargeId == selectedConsultant).ToList();
+            }
+
+            if (selectedRefferBy > 0)
+            {
+                ipds = ipds.Where(i => i.RefferById == selectedRefferBy).ToList();
+            }
+
+            if (!showCancelReceipts)
+            {
+                ipds = ipds.Where(i => i.Canceled == false).ToList();
+            }
+
+            if (showCollection && !showRevenue)
+            {
+                ipds = ipds.Where(i => i.PayableAmount == i.IPDRegisterationPayments.Sum(p => p.Amount)).ToList();
+            }
+
+            if (showRevenue && !showCollection)
+            {
+                ipds = ipds.Where(i => i.PayableAmount > i.IPDRegisterationPayments.Sum(p => p.Amount)).ToList();
+            }
+
+            foreach (var item in ipds)
+            {
+                CalculateRoomDays(item.IPDRegisterationRooms);
+                CalculateAmount(item);
+            }
+        }
+        else
+        {
+            ipds = new List<IPDRegisterationViewModel>();
+        }
+
+
+        if (selectedType == "Both" || selectedType == "OPD")
+        {
+            var opdBills = await mediator.Send(new GetOPDBillsByDateRangeQuery(fromDate, toDate));
+            opds = opdBills.ToList();
+
+            if (selectedConsultant > 0)
+            {
+                opds = opds.Where(o => o.OPDBillServices.Count(s => s.StaffId == selectedConsultant) > 0).ToList();
+            }
+
+            if (selectedRefferBy > 0)
+            {
+                //opds = opds.Where(o => o.RefferById == selectedRefferBy).ToList();
+            }
+
+            if (!showCancelReceipts)
+            {
+                opds = opds.Where(o => o.Canceled == false).ToList();
+            }
+
+            if (showCollection && !showRevenue)
+            {
+                opds = opds.Where(o => o.PayableAmount == (o.OPDBillPayments.Sum(p => p.Amount) + o.PaidAmount)).ToList();
+            }
+
+            if (showRevenue && !showCollection)
+            {
+                opds = opds.Where(o => o.PayableAmount > (o.OPDBillPayments.Sum(p => p.Amount) + o.PaidAmount)).ToList();
+            }
+        }
+        else
+        {
+            opds = new List<OPDBillViewModel>();
+        }
+
+        CalculateDateArray();
+    }
+
+    protected async Task CalculateDateArray()
+    {
+
+        if (DateRange != null)
+        {
+            Array.Clear(DateRange, 0, DateRange.Length);
+        }
+
+        //List<string> dates = new List<string>();
+        List<DateTime> dateRanges = new List<DateTime>();
+        for (DateTime date = fromDate; date <= toDate; date = date.AddDays(1))
+        {
+            //dates.Add(date.ToShortDateString());
+            dateRanges.Add(new DateTime(date.Year, date.Month, date.Day, 0, 0, 0));
+        }
+
+        DateRange = dateRanges.ToArray();
+    }
+
+    protected async Task FilterData()
+    {
+        fromDate = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day, 0, 0, 0);
+        toDate = new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 59);
+
+        LoadData();
+    }
+
+    protected async Task CalculateRoomDays(IEnumerable<IPDRegisterationRoomViewModel> iPDRegisterationRooms)
+    {
+        foreach (var room in iPDRegisterationRooms)
+        {
+            DateTime toDate;
+
+            if (room.ToDate == null)
+            {
+                toDate = DateTime.Now;
+            }
+            else
+            {
+                toDate = room.ToDate ?? DateTime.Now;
+            }
+
+            TimeSpan span = toDate.Subtract(room.Date);
+
+            room.Days = span.Days + 1;
+
+            room.Amount = room.Days * room.Rate;
+        }
+    }
+
+    private async void CalculateAmount(IPDRegisterationViewModel iPDReg)
+    {
+        var serviceTotal = iPDReg.IPDRegisterationServices.Sum(b => b.Rate * b.Quantity);
+        var servicePayable = iPDReg.IPDRegisterationServices.Sum(b => b.Amount);
+
+        var roomTotal = iPDReg.IPDRegisterationRooms.Sum(b => b.Rate * b.Days);
+        var roomPayable = iPDReg.IPDRegisterationRooms.Sum(b => b.Amount);
+
+        iPDReg.TotalAmount = serviceTotal + roomTotal;
+        iPDReg.PayableAmount = servicePayable + roomPayable;
+        int totalDiscount = (serviceTotal + roomTotal) - (servicePayable + roomPayable);
+
+        int roomAmount = roomTotal;
+        int serviceAmount = serviceTotal;
+        int medicineAmount = 0;
+        int paidAmount = iPDReg.IPDRegisterationPayments.Sum(p => p.Amount);
+        int remainAmount = iPDReg.PayableAmount - paidAmount;
+    }
+
+    public class ReceiptType
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+    }
+}

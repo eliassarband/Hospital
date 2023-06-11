@@ -31,5 +31,9 @@ namespace Hospital.Domain.Core.Entities
 
         public bool NotInUse { get; set; }
 
+        public virtual ICollection<IPDRegisteration> IPDRegisterations { get; set; }
+
+        public virtual ICollection<Room> Rooms { get; set; }
+
     }
 }

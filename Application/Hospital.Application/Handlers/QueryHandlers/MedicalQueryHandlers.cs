@@ -365,6 +365,23 @@ namespace Hospital.Application.Handlers.QueryHandlers
         }
     }
 
+    public class GetOPDBillsByDateRangeHandler : IRequestHandler<GetOPDBillsByDateRangeQuery, List<OPDBillViewModel>>
+    {
+        private readonly IOPDBillQueryRepository _OPDBillQueryRepository;
+
+        public GetOPDBillsByDateRangeHandler(IOPDBillQueryRepository OPDBillQueryRepository)
+        {
+            _OPDBillQueryRepository = OPDBillQueryRepository;
+        }
+
+        public async Task<List<OPDBillViewModel>> Handle(GetOPDBillsByDateRangeQuery request, CancellationToken cancellationToken)
+        {
+            var BIs = (List<OPDBill>)await _OPDBillQueryRepository.GetByDateRangeAsync(request.FromDate,request.ToDate);
+
+            return MapperConfig.Mapper.Map<List<OPDBillViewModel>>(BIs);
+        }
+    }
+
     public class GetOPDBillByIdHandler : IRequestHandler<GetOPDBillByIdQuery, OPDBillViewModel>
     {
         private readonly IOPDBillQueryRepository _OPDBillQueryRepository;
@@ -453,6 +470,41 @@ namespace Hospital.Application.Handlers.QueryHandlers
             return MapperConfig.Mapper.Map<List<IPDRegisterationViewModel>>(BIs);
         }
     }
+
+    public class GetAllAdmitedIPDRegisterationsHandler : IRequestHandler<GetAllAdmitedIPDRegisterationsQuery, List<IPDRegisterationViewModel>>
+    {
+        private readonly IIPDRegisterationQueryRepository _IPDRegisterationQueryRepository;
+
+        public GetAllAdmitedIPDRegisterationsHandler(IIPDRegisterationQueryRepository IPDRegisterationQueryRepository)
+        {
+            _IPDRegisterationQueryRepository = IPDRegisterationQueryRepository;
+        }
+
+        public async Task<List<IPDRegisterationViewModel>> Handle(GetAllAdmitedIPDRegisterationsQuery request, CancellationToken cancellationToken)
+        {
+            var BIs = (List<IPDRegisteration>)await _IPDRegisterationQueryRepository.GetAllAsync();
+
+            return MapperConfig.Mapper.Map<List<IPDRegisterationViewModel>>(BIs);
+        }
+    }
+
+    public class GetIPDRegisterationsByDateRangeHandler : IRequestHandler<GetIPDRegisterationsByDateRangeQuery, List<IPDRegisterationViewModel>>
+    {
+        private readonly IIPDRegisterationQueryRepository _IPDRegisterationQueryRepository;
+
+        public GetIPDRegisterationsByDateRangeHandler(IIPDRegisterationQueryRepository IPDRegisterationQueryRepository)
+        {
+            _IPDRegisterationQueryRepository = IPDRegisterationQueryRepository;
+        }
+
+        public async Task<List<IPDRegisterationViewModel>> Handle(GetIPDRegisterationsByDateRangeQuery request, CancellationToken cancellationToken)
+        {
+            var BIs = (List<IPDRegisteration>)await _IPDRegisterationQueryRepository.GetByDateRangeAsync(request.FromDate,request.ToDate);
+
+            return MapperConfig.Mapper.Map<List<IPDRegisterationViewModel>>(BIs);
+        }
+    }
+
 
     public class GetIPDRegisterationByIdHandler : IRequestHandler<GetIPDRegisterationByIdQuery, IPDRegisterationViewModel>
     {

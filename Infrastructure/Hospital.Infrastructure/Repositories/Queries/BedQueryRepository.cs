@@ -23,7 +23,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.Beds.Include(s => s.Room).ThenInclude(r => r.RoomType).ThenInclude(r => r.Ward).ToList();
+                return _context.Beds.Include(s => s.Room).ThenInclude(r => r.RoomType).ThenInclude(r => r.Ward).Include(r => r.IPDRegisterations).Include(r => r.IPDRegisterationRooms).ToList();
             }
             catch (Exception exp)
             {
@@ -35,7 +35,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.Beds.Where(t => t.RoomId == roomId).Include(s => s.Room).ThenInclude(r => r.RoomType).ThenInclude(r => r.Ward).ToList();
+                return _context.Beds.Where(t => t.RoomId == roomId).Include(s => s.Room).ThenInclude(r => r.RoomType).ThenInclude(r => r.Ward).Include(r => r.IPDRegisterations).Include(r => r.IPDRegisterationRooms).ToList();
             }
             catch (Exception exp)
             {
@@ -47,7 +47,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.Beds.Where(t => t.Id == id).Include(s => s.Room).ThenInclude(r => r.RoomType).ThenInclude(r => r.Ward).FirstOrDefault();
+                return _context.Beds.Where(t => t.Id == id).Include(s => s.Room).ThenInclude(r => r.RoomType).ThenInclude(r => r.Ward).Include(r => r.IPDRegisterations).Include(r => r.IPDRegisterationRooms).FirstOrDefault();
             }
             catch (Exception exp)
             {
@@ -59,7 +59,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.Beds.Where(t => t.Code == code).Include(s => s.Room).ThenInclude(r => r.RoomType).ThenInclude(r => r.Ward).FirstOrDefault();
+                return _context.Beds.Where(t => t.Code == code).Include(s => s.Room).ThenInclude(r => r.RoomType).ThenInclude(r => r.Ward).Include(r => r.IPDRegisterations).Include(r => r.IPDRegisterationRooms).FirstOrDefault();
             }
             catch (Exception exp)
             {

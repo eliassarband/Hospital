@@ -71,5 +71,8 @@ namespace Hospital.Domain.Core.Entities
 
         public int? IPDAmount { get; set; }
 
+        public virtual ICollection<Patient> Patients { get; set; }
+        public virtual ICollection<IPDRegisteration> IPDRegisterations { get; set; }
+
     }
 }

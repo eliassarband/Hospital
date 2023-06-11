@@ -30,6 +30,8 @@ namespace Hospital.Application.ViewModels
         public virtual BasicInformationViewModel? Ward { get; set; }
 
         public bool NotInUse { get; set; }
+
+        public virtual ICollection<IPDRegisterationRoomViewModel> IPDRegisterationRooms { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? CreatedUser { get; set; }
         public DateTime ModifiedDate { get; set; }

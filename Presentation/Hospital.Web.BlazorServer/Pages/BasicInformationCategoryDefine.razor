@@ -95,12 +95,18 @@
 
             if (category != null)
             {
-
+                
 
             }
         }
         
 
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        form.Validate();
+        return base.OnAfterRenderAsync(firstRender);
     }
 
     protected async Task SaveBasicInformationCategory()

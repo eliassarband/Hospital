@@ -47,7 +47,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.RoomTypes.Where(t => t.Id == id).Include(r => r.Ward).FirstOrDefault();
+                return _context.RoomTypes.Where(t => t.Id == id).Include(r => r.Ward).Include(r => r.Rooms).Include(r => r.IPDRegisterations).FirstOrDefault();
             }
             catch (Exception exp)
             {

@@ -1,0 +1,15 @@
+﻿@page "/ReportShow/{ReportId:int}/{Id:int}"
+@using Stimulsoft.Report.Web;
+@using Stimulsoft.Report.Mvc;
+@model Hospital.Web.BlazorServer.Pages.ReportShowModel
+@{
+}
+
+@Html.StiNetCoreViewer(new StiNetCoreViewerOptions()
+{
+	Actions =
+	{
+		GetReport = "GetReport",
+		ViewerEvent = "ViewerEvent"
+	}
+})

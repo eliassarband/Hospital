@@ -26,6 +26,12 @@ namespace Hospital.Application.ViewModels
         public string PaymentTypeName { get; set; }
         public virtual BasicInformationViewModel PaymentType { get; set; }
 
+        
+        public int? DepartmentId { get; set; }
+        public string DepartmentCode { get; set; }
+        public string DepartmentName { get; set; }
+        public virtual DepartmentViewModel Department { get; set; }
+
         [Required]
         [Range(1, int.MaxValue)]
         public int Amount { get; set; }

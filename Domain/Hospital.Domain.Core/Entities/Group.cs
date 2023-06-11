@@ -13,6 +13,6 @@ namespace Hospital.Domain.Core.Entities
         [MaxLength(1000)]
         public string? Description { get; set; }
         public virtual ICollection<GroupUser> GroupUsers { get; set; }
-
-	}
+        public virtual ICollection<FormActionAccess> FormActionAccesses { get; set; }
+    }
 }

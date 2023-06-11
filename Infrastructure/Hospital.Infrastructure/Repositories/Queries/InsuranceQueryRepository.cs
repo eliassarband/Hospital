@@ -47,7 +47,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.Insurances.Where(t => t.Id == id).Include(i => i.InsurancePaymentType).FirstOrDefault();
+                return _context.Insurances.Where(t => t.Id == id).Include(i => i.Patients).Include(i => i.InsuranceAgreements).Include(i => i.InsurancePaymentType).FirstOrDefault();
             }
             catch (Exception exp)
             {

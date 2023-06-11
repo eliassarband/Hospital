@@ -23,7 +23,19 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.OPDBills.Include(b => b.Patient).Include(b => b.PaymentType).Include(b => b.OPDBillServices).Include(b => b.OPDBillPayments).ToList();
+                return _context.OPDBills.Include(b => b.Patient).ThenInclude(b => b.Gender).Include(b => b.PaymentType).Include(b => b.OPDBillServices).Include(b => b.OPDBillPayments).ToList();
+            }
+            catch (Exception exp)
+            {
+                throw new Exception(exp.Message, exp);
+            }
+        }
+
+        public async Task<IReadOnlyList<OPDBill>> GetByDateRangeAsync(DateTime fromDate, DateTime toDate)
+        {
+            try
+            {
+                return _context.OPDBills.Where(b => b.Date >= fromDate && b.Date<= toDate).Include(b => b.Patient).ThenInclude(b => b.Gender).Include(b => b.PaymentType).Include(b => b.OPDBillServices).Include(b => b.OPDBillPayments).ToList();
             }
             catch (Exception exp)
             {
@@ -35,7 +47,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.OPDBills.Where(t => t.Id == id).Include(b => b.Patient).Include(b => b.PaymentType).Include(b => b.OPDBillServices).Include(b => b.OPDBillPayments).FirstOrDefault();
+                return _context.OPDBills.Where(t => t.Id == id).Include(b => b.Patient).ThenInclude(b => b.Gender).Include(b => b.PaymentType).Include(b => b.OPDBillServices).Include(b => b.OPDBillPayments).Include(b => b.IPDRegisterations).FirstOrDefault();
             }
             catch (Exception exp)
             {

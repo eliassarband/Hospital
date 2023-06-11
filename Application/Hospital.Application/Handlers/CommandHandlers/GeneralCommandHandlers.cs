@@ -8,6 +8,7 @@ using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -158,6 +159,26 @@ namespace Hospital.Application.Handlers.CommandHandlers
             try
             {
                 var CategoryEntity = await _BasicInformationCategoryQueryRepository.GetByIdAsync(request.Id);
+
+                if (CategoryEntity.BasicInformations.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Category due to registration Basic Information"
+                    };
+                }
+
+                if (CategoryEntity.BasicInformationCategories.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Category due to registration Related Category"
+                    };
+                }
 
                 if (CategoryEntity.BasicInformations != null && CategoryEntity.BasicInformations.Count > 0)
                 {
@@ -543,6 +564,15 @@ namespace Hospital.Application.Handlers.CommandHandlers
             {
                 var DepartmentEntity = await _DepartmentQueryRepository.GetByIdAsync(request.Id);
 
+                if (DepartmentEntity.Services.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Department due to registration Service"
+                    };
+                }
 
                 await _DepartmentCommandRepository.DeleteAsync(DepartmentEntity);
 
@@ -716,6 +746,25 @@ namespace Hospital.Application.Handlers.CommandHandlers
             {
                 var ServiceEntity = await _ServiceQueryRepository.GetByIdAsync(request.Id);
 
+                if (ServiceEntity.OPDBillServices.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Service due to registration OPD"
+                    };
+                }
+
+                if (ServiceEntity.IPDRegisterationServices.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Service due to registration IPD"
+                    };
+                }
 
                 await _ServiceCommandRepository.DeleteAsync(ServiceEntity);
 
@@ -889,6 +938,25 @@ namespace Hospital.Application.Handlers.CommandHandlers
             {
                 var RoomTypeEntity = await _RoomTypeQueryRepository.GetByIdAsync(request.Id);
 
+                if (RoomTypeEntity.Rooms.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Room Type due to registration Room"
+                    };
+                }
+
+                if (RoomTypeEntity.IPDRegisterations.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Room Type due to registration IPD"
+                    };
+                }
 
                 await _RoomTypeCommandRepository.DeleteAsync(RoomTypeEntity);
 
@@ -1062,6 +1130,25 @@ namespace Hospital.Application.Handlers.CommandHandlers
             {
                 var RoomEntity = await _RoomQueryRepository.GetByIdAsync(request.Id);
 
+                if (RoomEntity.Beds.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Room due to registration Bed"
+                    };
+                }
+
+                if (RoomEntity.IPDRegisterations.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Room due to registration IPD"
+                    };
+                }
 
                 await _RoomCommandRepository.DeleteAsync(RoomEntity);
 
@@ -1926,6 +2013,15 @@ namespace Hospital.Application.Handlers.CommandHandlers
             try
             {
                 var BedEntity = await _BedQueryRepository.GetByIdAsync(request.Id);
+
+                if(BedEntity.IPDRegisterations.Count > 0 || BedEntity.IPDRegisterationRooms.Count > 0) {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected bed due to registration IPD"
+                    };
+                }
 
 
                 await _BedCommandRepository.DeleteAsync(BedEntity);

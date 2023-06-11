@@ -40,5 +40,7 @@ namespace Hospital.Domain.Core.Entities
 
         public virtual ICollection<OPDBillService> OPDBillServices { get; set; }
         public virtual ICollection<OPDBillPayment> OPDBillPayments { get; set; }
+
+        public virtual ICollection<IPDRegisteration> IPDRegisterations { get; set; }
     }
 }

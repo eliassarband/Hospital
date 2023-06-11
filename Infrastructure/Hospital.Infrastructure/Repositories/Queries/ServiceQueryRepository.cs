@@ -35,7 +35,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.Services.Where(t => t.Id == id).Include(s => s.Department).FirstOrDefault();
+                return _context.Services.Where(t => t.Id == id).Include(s => s.Department).Include(s => s.OPDBillServices).Include(s => s.IPDRegisterationServices).FirstOrDefault();
             }
             catch (Exception exp)
             {

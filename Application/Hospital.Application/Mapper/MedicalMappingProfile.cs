@@ -413,18 +413,23 @@ namespace Hospital.Application.Mapper
 
             CreateMap<IPDRegisterationPayment, CreateIPDRegisterationPaymentCommand>().ReverseMap()
                 .ForMember(dest => dest.IPDRegisterationId, opt => opt.MapFrom(src => (src.IPDRegisterationId == 0 ? null : src.IPDRegisterationId)))
-                .ForMember(dest => dest.PaymentTypeId, opt => opt.MapFrom(src => (src.PaymentTypeId == 0 ? null : src.PaymentTypeId)));
+                .ForMember(dest => dest.PaymentTypeId, opt => opt.MapFrom(src => (src.PaymentTypeId == 0 ? null : src.PaymentTypeId)))
+                .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => (src.DepartmentId == 0 ? null : src.DepartmentId)));
 
             CreateMap<IPDRegisterationPayment, EditIPDRegisterationPaymentCommand>().ReverseMap()
                 .ForMember(dest => dest.IPDRegisterationId, opt => opt.MapFrom(src => (src.IPDRegisterationId == 0 ? null : src.IPDRegisterationId)))
-                .ForMember(dest => dest.PaymentTypeId, opt => opt.MapFrom(src => (src.PaymentTypeId == 0 ? null : src.PaymentTypeId)));
+                .ForMember(dest => dest.PaymentTypeId, opt => opt.MapFrom(src => (src.PaymentTypeId == 0 ? null : src.PaymentTypeId)))
+                .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => (src.DepartmentId == 0 ? null : src.DepartmentId)));
 
             CreateMap<IPDRegisterationPayment, IPDRegisterationPaymentViewModel>()
                 .ForMember(dest => dest.IPDRegisterationId, opt => opt.MapFrom(src => (src.IPDRegisteration != null ? src.IPDRegisteration.Id : 0)))
                 .ForMember(dest => dest.PaymentTypeId, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.Id : 0)))
                 .ForMember(dest => dest.PaymentTypeCode, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.Code : 0)))
                 .ForMember(dest => dest.PaymentTypeStrCode, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.StrCode : "")))
-                .ForMember(dest => dest.PaymentTypeName, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.Name : "")));
+                .ForMember(dest => dest.PaymentTypeName, opt => opt.MapFrom(src => (src.PaymentType != null ? src.PaymentType.Name : "")))
+                .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => (src.Department != null ? src.Department.Id : 0)))
+                .ForMember(dest => dest.DepartmentCode, opt => opt.MapFrom(src => (src.Department != null ? src.Department.Code : "")))
+                .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => (src.Department != null ? src.Department.Name : "")));
 
             CreateMap<IPDRegisterationPaymentViewModel, IPDRegisterationPayment>();
 

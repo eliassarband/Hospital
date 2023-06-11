@@ -176,28 +176,37 @@
             userInfo = await identityHelper.GetUserInfo();
         }
 
-        if (From == "OPD")
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("Patients", "View", userInfo.UserId))))
         {
-            if (!(await mediator.Send(new CheckUserActionAccessQuery("OPDPatients", "View", userInfo.UserId))))
-            {
-                navManager.NavigateTo("AccessDenied/OPDPatients/View");
-            }
-            addAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDPatients", "Add", userInfo.UserId));
-            editAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDPatients", "Edit", userInfo.UserId));
-            deleteAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDPatients", "Delete", userInfo.UserId));
-            selectAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDPatients", "Select", userInfo.UserId));
+            navManager.NavigateTo("AccessDenied/Patients/View");
         }
-        else if (From == "IPD")
-        {
-            if (!(await mediator.Send(new CheckUserActionAccessQuery("IPDPatients", "View", userInfo.UserId))))
-            {
-                navManager.NavigateTo("AccessDenied/IPDPatients/View");
-            }
-            addAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDPatients", "Add", userInfo.UserId));
-            editAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDPatients", "Edit", userInfo.UserId));
-            deleteAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDPatients", "Delete", userInfo.UserId));
-            selectAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDPatients", "Select", userInfo.UserId));
-        }
+        addAccess = await mediator.Send(new CheckUserActionAccessQuery("Patients", "Add", userInfo.UserId));
+        editAccess = await mediator.Send(new CheckUserActionAccessQuery("Patients", "Edit", userInfo.UserId));
+        deleteAccess = await mediator.Send(new CheckUserActionAccessQuery("Patients", "Delete", userInfo.UserId));
+        selectAccess = await mediator.Send(new CheckUserActionAccessQuery("Patients", "Select", userInfo.UserId));
+
+        //if (From == "OPD")
+        //{
+        //    if (!(await mediator.Send(new CheckUserActionAccessQuery("OPDPatients", "View", userInfo.UserId))))
+        //    {
+        //        navManager.NavigateTo("AccessDenied/OPDPatients/View");
+        //    }
+        //    addAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDPatients", "Add", userInfo.UserId));
+        //    editAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDPatients", "Edit", userInfo.UserId));
+        //    deleteAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDPatients", "Delete", userInfo.UserId));
+        //    selectAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDPatients", "Select", userInfo.UserId));
+        //}
+        //else if (From == "IPD")
+        //{
+        //    if (!(await mediator.Send(new CheckUserActionAccessQuery("IPDPatients", "View", userInfo.UserId))))
+        //    {
+        //        navManager.NavigateTo("AccessDenied/IPDPatients/View");
+        //    }
+        //    addAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDPatients", "Add", userInfo.UserId));
+        //    editAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDPatients", "Edit", userInfo.UserId));
+        //    deleteAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDPatients", "Delete", userInfo.UserId));
+        //    selectAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDPatients", "Select", userInfo.UserId));
+        //}
 
         patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
 

@@ -346,22 +346,28 @@
             userInfo = await identityHelper.GetUserInfo();
         }
 
-        if (From == "OPD")
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("PatientDefine", "View", userInfo.UserId))))
         {
-            if (!(await mediator.Send(new CheckUserActionAccessQuery("OPDPatientDefine", "View", userInfo.UserId))))
-            {
-                navManager.NavigateTo("AccessDenied/OPDPatientDefine/View");
-            }
-            saveAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDPatientDefine", "Save", userInfo.UserId));
+            navManager.NavigateTo("AccessDenied/PatientDefine/View");
         }
-        else if (From == "IPD")
-        {
-            if (!(await mediator.Send(new CheckUserActionAccessQuery("IPDPatientDefine", "View", userInfo.UserId))))
-            {
-                navManager.NavigateTo("AccessDenied/IPDPatientDefine/View");
-            }
-            saveAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDPatientDefine", "Save", userInfo.UserId));
-        }
+        saveAccess = await mediator.Send(new CheckUserActionAccessQuery("PatientDefine", "Save", userInfo.UserId));
+
+        //if (From == "OPD")
+        //{
+        //    if (!(await mediator.Send(new CheckUserActionAccessQuery("OPDPatientDefine", "View", userInfo.UserId))))
+        //    {
+        //        navManager.NavigateTo("AccessDenied/OPDPatientDefine/View");
+        //    }
+        //    saveAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDPatientDefine", "Save", userInfo.UserId));
+        //}
+        //else if (From == "IPD")
+        //{
+        //    if (!(await mediator.Send(new CheckUserActionAccessQuery("IPDPatientDefine", "View", userInfo.UserId))))
+        //    {
+        //        navManager.NavigateTo("AccessDenied/IPDPatientDefine/View");
+        //    }
+        //    saveAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDPatientDefine", "Save", userInfo.UserId));
+        //}
 
         patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
         namePrefixes = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("NamePrefix"));

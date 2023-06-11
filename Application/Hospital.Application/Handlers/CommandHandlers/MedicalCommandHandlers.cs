@@ -159,6 +159,26 @@ namespace Hospital.Application.Handlers.CommandHandlers
             {
                 var InsuranceEntity = await _InsuranceQueryRepository.GetByIdAsync(request.Id);
 
+                if (InsuranceEntity.Patients.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Insurance due to registration Patient"
+                    };
+                }
+
+                if (InsuranceEntity.InsuranceAgreements.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Insurance due to registration Insurance Agreement"
+                    };
+                }
+
                 await _InsuranceCommandRepository.DeleteAsync(InsuranceEntity);
 
                 response = new CommandResponse()
@@ -498,6 +518,37 @@ namespace Hospital.Application.Handlers.CommandHandlers
             try
             {
                 var StaffEntity = await _StaffQueryRepository.GetByIdAsync(request.Id);
+
+                if (StaffEntity.StaffTimings.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Consultant due to registration Consultant Timing"
+                    };
+                }
+
+                if (StaffEntity.OPDBillServices.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Consultant due to registration OPD"
+                    };
+                }
+
+
+                if (StaffEntity.IPDRegisterationServices.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Consultant due to registration IPD"
+                    };
+                }
 
                 await _StaffCommandRepository.DeleteAsync(StaffEntity);
 
@@ -839,6 +890,26 @@ namespace Hospital.Application.Handlers.CommandHandlers
             {
                 var RefferByEntity = await _RefferByQueryRepository.GetByIdAsync(request.Id);
 
+                if (RefferByEntity.Patients.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Reffer By due to registration Patient"
+                    };
+                }
+
+                if (RefferByEntity.IPDRegisterations.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Reffer By due to registration IPD"
+                    };
+                }
+
                 await _RefferByCommandRepository.DeleteAsync(RefferByEntity);
 
                 response = new CommandResponse()
@@ -1009,6 +1080,26 @@ namespace Hospital.Application.Handlers.CommandHandlers
             {
                 var PatientEntity = await _PatientQueryRepository.GetByIdAsync(request.Id);
 
+                if (PatientEntity.OPDBills.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Patient due to registration OPD"
+                    };
+                }
+
+                if (PatientEntity.IPDRegisterations.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Patient due to registration IPD"
+                    };
+                }
+
                 await _PatientCommandRepository.DeleteAsync(PatientEntity);
 
                 response = new CommandResponse()
@@ -1178,6 +1269,16 @@ namespace Hospital.Application.Handlers.CommandHandlers
             try
             {
                 var OPDBillEntity = await _OPDBillQueryRepository.GetByIdAsync(request.Id);
+
+                if (OPDBillEntity.IPDRegisterations.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected OPD Billing due to registration IPD"
+                    };
+                }
 
                 await _OPDBillCommandRepository.DeleteAsync(OPDBillEntity);
 

@@ -31,6 +31,30 @@ namespace Hospital.Infrastructure.Repositories.Queries
             }
         }
 
+        public async Task<IReadOnlyList<IPDRegisteration>> GetAllAdmitedAsync()
+        {
+            try
+            {
+                return _context.IPDRegisterations.Where(i => i.Discharged != true).Include(b => b.Patient).ThenInclude(p => p.Gender).Include(b => b.RefferBy).Include(b => b.ConsultantIncharge).Include(b => b.SecondConsultant).Include(b => b.ThirdConsultant).Include(b => b.Ward).Include(b => b.RoomType).Include(b => b.Room).Include(b => b.Bed).Include(b => b.CaseType).Include(b => b.Relationship).Include(b => b.IPDRegisterationServices).Include(b => b.IPDRegisterationRooms).Include(b => b.IPDRegisterationPayments).ToList();
+            }
+            catch (Exception exp)
+            {
+                throw new Exception(exp.Message, exp);
+            }
+        }
+
+        public async Task<IReadOnlyList<IPDRegisteration>> GetByDateRangeAsync(DateTime fromDate, DateTime toDate)
+        {
+            try
+            {
+                return _context.IPDRegisterations.Where(b => b.Date >= fromDate && b.Date <= toDate).Include(b => b.Patient).ThenInclude(p => p.Gender).Include(b => b.RefferBy).Include(b => b.ConsultantIncharge).Include(b => b.SecondConsultant).Include(b => b.ThirdConsultant).Include(b => b.Ward).Include(b => b.RoomType).Include(b => b.Room).Include(b => b.Bed).Include(b => b.CaseType).Include(b => b.Relationship).Include(b => b.IPDRegisterationServices).Include(b => b.IPDRegisterationRooms).Include(b => b.IPDRegisterationPayments).ToList();
+            }
+            catch (Exception exp)
+            {
+                throw new Exception(exp.Message, exp);
+            }
+        }
+
         public async Task<IPDRegisteration> GetByIdAsync(int id)
         {
             try

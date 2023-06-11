@@ -286,6 +286,14 @@
 
     protected async Task DeleteOPDBill(int Id)
     {
+        var oPD = await mediator.Send(new GetOPDBillByIdQuery(Id));
+
+        if(oPD.OPDBillPayments.Count>0)
+        {
+            Snackbar.Add("It cannot be deleted or canceled due to the registration of payment", Severity.Warning);
+            return;
+        }
+
         string input;
 
         input = await Dialogs.PromptAsync("Please, enter your Reason.", "Cancel Reason");

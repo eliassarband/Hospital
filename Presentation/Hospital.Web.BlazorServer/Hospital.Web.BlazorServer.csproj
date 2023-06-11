@@ -15,7 +15,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MudBlazor" Version="6.1.7" />
-    <PackageReference Include="Stimulsoft.Reports.Blazor" Version="2023.2.2" />
+    <PackageReference Include="Stimulsoft.Reports.Web.NetCore" Version="2023.1.1" />
     <PackageReference Include="Telerik.FontIcons" Version="1.0.2" />
     <PackageReference Include="Telerik.UI.for.Blazor" Version="3.6.0" />
   </ItemGroup>
@@ -23,6 +23,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Application\Hospital.Application\Hospital.Application.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Hospital.Infrastructure\Hospital.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>..\..\..\..\Dlls\System.Windows.Forms.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties UseCdnSupport="False" /></VisualStudio></ProjectExtensions>

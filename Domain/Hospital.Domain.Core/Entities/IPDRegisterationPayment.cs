@@ -20,6 +20,11 @@ namespace Hospital.Domain.Core.Entities
         public int? PaymentTypeId { get; set; }
         public virtual BasicInformation PaymentType { get; set; }
 
+        
+        [ForeignKey("DepartmentId")]
+        public int? DepartmentId { get; set; }
+        public virtual Department Department { get; set; }
+
         [Required]
         public int Amount { get; set; }
 

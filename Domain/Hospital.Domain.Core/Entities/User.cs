@@ -37,8 +37,8 @@ namespace Hospital.Domain.Core.Entities
 
         public virtual ICollection<UserRole> UserRoles { get; set; }
 		public virtual ICollection<GroupUser> GroupUsers { get; set; }
-
-		public string FullName()
+        public virtual ICollection<FormActionAccess> FormActionAccesses { get; set; }
+        public string FullName()
         {
             return FirstName + " " + LastName;
         }

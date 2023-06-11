@@ -12,6 +12,7 @@ namespace Hospital.Domain.Core.Repositories.Queries
     {
         //Custom operation which is not generic
         Task<IReadOnlyList<OPDBill>> GetAllAsync();
+        Task<IReadOnlyList<OPDBill>> GetByDateRangeAsync(DateTime fromDate,DateTime toDate);
         Task<OPDBill> GetByIdAsync(int id);
     }
 }

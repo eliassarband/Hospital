@@ -1,5 +1,6 @@
 ﻿@page "/BasicInformations/{CategoryCode?}"
 @using Hospital.Application.Commands
+@using Hospital.Application.Mapper;
 @using Hospital.Application.Queries
 @using Hospital.Application.Responses
 @using Hospital.Application.ViewModels
@@ -209,6 +210,14 @@
 
     protected async Task DeleteBasicInformation(int Id)
     {
+        var basicInformation = await mediator.Send(new GetBasicInformationByIdQuery(Id));
+
+        if (!basicInformation.AllowDelete)
+        {
+            Snackbar.Add("You are not allowed to delete selected Basic Information", Severity.Warning);
+            return;
+        }
+        
         bool? dialogResult = await DialogService.ShowMessageBox(
             "Delete Basic Information",
             "Are You Sure?",
@@ -221,7 +230,10 @@
             {
                 CommandResponse result;
 
-                result = await mediator.Send(new DeleteBasicInformationCommand(Id));
+                basicInformation.ModifiedUser = userInfo?.Username;
+                var command = MapperConfig.Mapper.Map<EditBasicInformationCommand>(basicInformation);
+
+                result = await mediator.Send(command);
 
                 if (result.ResultType == ResultType.Success)
                 {

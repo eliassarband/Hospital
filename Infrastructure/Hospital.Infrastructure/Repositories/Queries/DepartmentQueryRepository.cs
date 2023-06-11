@@ -23,7 +23,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.Departments.Include(d => d.MainDepartment).ToList();
+                return _context.Departments.Include(d => d.MainDepartment).Include(d =>d.Services).ToList();
             }
             catch (Exception exp)
             {
@@ -35,7 +35,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.Departments.Where(d => d.MainDepartmentId == departmentId).Include(d => d.MainDepartment).ToList();
+                return _context.Departments.Where(d => d.MainDepartmentId == departmentId).Include(d => d.MainDepartment).Include(d => d.Services).ToList();
             }
             catch (Exception exp)
             {
@@ -47,7 +47,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.Departments.Where(t => t.Id == id).Include(t => t.MainDepartment).FirstOrDefault();
+                return _context.Departments.Where(t => t.Id == id).Include(t => t.MainDepartment).Include(d => d.Services).FirstOrDefault();
             }
             catch (Exception exp)
             {
@@ -59,7 +59,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.Departments.Where(t => t.Code == code).Include(t => t.MainDepartment).FirstOrDefault();
+                return _context.Departments.Where(t => t.Code == code).Include(t => t.MainDepartment).Include(d => d.Services).FirstOrDefault();
             }
             catch (Exception exp)
             {
@@ -71,7 +71,7 @@ namespace Hospital.Infrastructure.Repositories.Queries
         {
             try
             {
-                return _context.Departments.Where(t => t.Name == name).Include(t => t.MainDepartment).FirstOrDefault();
+                return _context.Departments.Where(t => t.Name == name).Include(t => t.MainDepartment).Include(d => d.Services).FirstOrDefault();
             }
             catch (Exception exp)
             {

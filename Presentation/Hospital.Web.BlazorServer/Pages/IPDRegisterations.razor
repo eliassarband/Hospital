@@ -42,7 +42,7 @@
                         <HeaderContent>
                             <MudTh>Patient Id</MudTh>
                             <MudTh>IPD No</MudTh>
-                            <MudTh>admition Date</MudTh>
+                            <MudTh>Admition Date</MudTh>
                             <MudTh>Discharge Date</MudTh>
                             <MudTh>Gender</MudTh>
                             <MudTh>Patient</MudTh>
@@ -78,7 +78,7 @@
                             <MudTd DataLabel="IPDNO">
                                 @UtilityHelper.GenerateIdentifier(iPDNoPrefix.Value,context.Id)
                             </MudTd>
-                            <MudTd DataLabel="admitionDate">@context.Date</MudTd>
+                            <MudTd DataLabel="AdmitionDate">@context.Date</MudTd>
                             <MudTd DataLabel="DischargeDate">@context.DischargeDate</MudTd>
                             <MudTd DataLabel="Gender">@context.Patient.Gender.Name</MudTd>
                             <MudTd DataLabel="Patient">@context.PatientName</MudTd>
@@ -261,6 +261,7 @@
     protected async Task AdmitedChanged(bool admited)
     {
         admitedCheched = admited;
+        dischargeCheched = !admited;
 
         LoadData();
     }
@@ -268,6 +269,7 @@
     protected async Task DischargeChanged(bool discharge)
     {
         dischargeCheched = discharge;
+        admitedCheched = !discharge;
 
         LoadData();
     }
@@ -301,9 +303,16 @@
 
     protected async Task Discharge(int IPDRegisterationId)
     {
-        //string input;
+        var iPD=await mediator.Send(new GetIPDRegisterationByIdQuery(IPDRegisterationId));
 
-        //input = await Dialogs.PromptAsync("Please, enter your Reason.", "Cancel Reason");
+        CalculateRoomDays(iPD.IPDRegisterationRooms);
+        CalculateAmount(iPD);
+
+        if (iPD.PayableAmount != iPD.IPDRegisterationPayments.Sum(p => p.Amount))
+        {
+            Snackbar.Add("Due to debt, it is not possibile to discharge ", Severity.Warning);
+            return;
+        }
 
         bool? dialogResult = await DialogService.ShowMessageBox(
             "Discharge IPD Registeration",
@@ -316,7 +325,7 @@
             try
             {
                 CommandResponse result;
-                var iPD = await mediator.Send(new GetIPDRegisterationByIdQuery(IPDRegisterationId));
+                //var iPD = await mediator.Send(new GetIPDRegisterationByIdQuery(IPDRegisterationId));
                 iPD.Discharged = true;
                 iPD.DischargeDate = DateTime.Now;
 
@@ -327,6 +336,17 @@
                 if (result.ResultType == ResultType.Success)
                 {
                     LoadData();
+
+                    foreach(var room in iPD.IPDRegisterationRooms)
+                    {
+                        room.ToDate = iPD.DischargeDate;
+
+                        var roomCommand = MapperConfig.Mapper.Map<EditIPDRegisterationRoomCommand>(room);
+
+                        await mediator.Send(roomCommand);
+
+                    }
+
                     Snackbar.Add(result.ResultMessage, Severity.Success);
                 }
                 else if (result.ResultType == ResultType.Warning)
@@ -352,6 +372,13 @@
 
     protected async Task DeleteIPDRegisteration(int Id)
     {
+        var iPD = await mediator.Send(new GetIPDRegisterationByIdQuery(Id));
+
+        if (iPD.IPDRegisterationPayments.Count > 0)
+        {
+            Snackbar.Add("It cannot be deleted or canceled due to the registration of payment", Severity.Warning);
+            return;
+        }
         string input;
 
         input = await Dialogs.PromptAsync("Please, enter your Reason.", "Cancel Reason");
@@ -367,7 +394,7 @@
             try
             {
                 CommandResponse result;
-                var iPD = await mediator.Send(new GetIPDRegisterationByIdQuery(Id));
+                //var iPD = await mediator.Send(new GetIPDRegisterationByIdQuery(Id));
                 iPD.Canceled = true;
                 iPD.CancelReason = input;
 

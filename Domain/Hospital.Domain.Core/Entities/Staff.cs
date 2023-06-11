@@ -73,5 +73,8 @@ namespace Hospital.Domain.Core.Entities
 
         public virtual ICollection<StaffTiming> StaffTimings { get; set; }
 
+        public virtual ICollection<OPDBillService> OPDBillServices { get; set; }
+
+        public virtual ICollection<IPDRegisterationService> IPDRegisterationServices { get; set; }
     }
 }

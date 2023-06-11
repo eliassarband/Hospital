@@ -747,6 +747,7 @@ namespace Hospital.Application.Commands
         public int? IPDRegisterationId { get; set; }
         public DateTime Date { get; set; }
         public int? PaymentTypeId { get; set; }
+        public int? DepartmentId { get; set; }
         public int Amount { get; set; }
         public string ChequeNumber { get; set; }
         public string Description { get; set; }
@@ -765,6 +766,7 @@ namespace Hospital.Application.Commands
         public int? IPDRegisterationId { get; set; }
         public DateTime Date { get; set; }
         public int? PaymentTypeId { get; set; }
+        public int? DepartmentId { get; set; }
         public int Amount { get; set; }
         public string ChequeNumber { get; set; }
         public string Description { get; set; }

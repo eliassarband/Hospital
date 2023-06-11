@@ -1,0 +1,690 @@
+﻿@page "/OPDIPDDashboard"
+@using Hospital.Application.Commands
+@using Hospital.Application.Mapper;
+@using Hospital.Application.Queries
+@using Hospital.Application.Responses
+@using Hospital.Application.ViewModels
+@using Hospital.Domain.Core.Entities;
+@using Hospital.Web.BlazorServer.Helpers;
+@using Hospital.Web.BlazorServer.Models.Auth;
+@using Hospital.Web.BlazorServer.Models;
+@using MediatR
+@inject IMediator mediator;
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@inject NavigationManager navManager
+@inject IHttpContextAccessor accessor
+
+@attribute [Authorize]
+
+<PageTitle>OPD/IPD Dashboard - HMIS System</PageTitle>
+
+<MudGrid Class="mt-1">
+    <MudItem md="12">
+        <MudPaper Elevation="10">
+            <MudGrid Class="pt-1" Spacing="0">
+                <MudItem md="2" Class="d-flex flex-column align-center justify-center mud-width-full">
+                    @if (showAccess)
+                    {
+                        <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.ShowChart" Color="Color.Tertiary" Variant="Variant.Filled" OnClick="Show">Show</MudButton>
+                    }
+                </MudItem>
+                <MudItem md="8">
+                    <MudText Typo="Typo.h4" Class="d-flex align-start justify-center mud-width-full">
+                        OPD / IPD Dashboard
+                    </MudText>
+                </MudItem>
+                <MudItem md="2" Class="d-flex flex-column align-center justify-center mud-width-full">
+                    @if (resetAccess)
+                    {
+                        <MudButton ButtonType="MudBlazor.ButtonType.Button" StartIcon="@Icons.Material.Filled.Refresh" Color="Color.Secondary" Variant="Variant.Filled" OnClick="Reset">Reset</MudButton>
+                    }
+                </MudItem>
+                <MudItem md="3">
+                    
+                </MudItem>
+                <MudItem md="3">
+                    <MudText Class="d-flex align-start justify-center mud-width-full py-8">
+                        <TelerikFloatingLabel Text="From Date" Class="custom-label w-100">
+                            <div class="k-form-field-wrap">
+                                <TelerikDatePicker @bind-Value="@fromDate"
+                                                   Format="dddd, dd MMMM, yyyy"
+                                                   Id="from-date" Enabled="true">
+                                </TelerikDatePicker>
+                            </div>
+                        </TelerikFloatingLabel>
+                    </MudText>
+                </MudItem>
+                <MudItem md="3">
+                    <MudText Class="d-flex align-start justify-center mud-width-full py-8">
+                        <TelerikFloatingLabel Text="To Date" Class="custom-label w-100">
+                            <div class="k-form-field-wrap">
+                                <TelerikDatePicker @bind-Value="@toDate"
+                                                   Format="dddd, dd MMMM, yyyy"
+                                                   Id="to-date" Enabled="true">
+                                </TelerikDatePicker>
+                            </div>
+                        </TelerikFloatingLabel>
+                    </MudText>
+                </MudItem>
+                <MudItem md="3">
+                    
+                </MudItem>
+                <MudItem md="12">
+                    <MudGrid Spacing="0">
+                        <MudItem md="2">
+
+                        </MudItem>
+                        <MudItem md="1">
+                            <MudPaper Elevation="2" Class="m-1">
+                                <MudText Class="d-flex align-start justify-center mud-width-full">
+                                    Male
+                                </MudText>
+                                <MudText Class="d-flex align-start justify-center mud-width-full">
+                                    @(ipds.Count(i => i.Patient.Gender.StrCode == "Male") + ipds.Count(i => i.Patient.Gender.StrCode == "Male"))
+                                </MudText>
+                            </MudPaper>
+                        </MudItem>
+                        <MudItem md="1">
+                            <MudPaper Elevation="2" Class="m-1">
+                                <MudText Class="d-flex align-start justify-center mud-width-full">
+                                    Female
+                                </MudText>
+                                <MudText Class="d-flex align-start justify-center mud-width-full">
+                                    @(opds.Count(i => i.Patient.Gender.StrCode == "Female") + opds.Count(i => i.Patient.Gender.StrCode == "Female"))
+                                </MudText>
+                            </MudPaper>
+                        </MudItem>
+                        <MudItem md="1">
+                            <MudPaper Elevation="2" Class="m-1">
+                                <MudText Class="d-flex align-start justify-center mud-width-full">
+                                    OPD
+                                </MudText>
+                                <MudText Class="d-flex align-start justify-center mud-width-full">
+                                    @opds.Count()
+                                </MudText>
+                            </MudPaper>
+                        </MudItem>
+                        <MudItem md="1">
+                            <MudPaper Elevation="2" Class="m-1">
+                                <MudText Class="d-flex align-start justify-center mud-width-full">
+                                    Admition
+                                </MudText>
+                                <MudText Class="d-flex align-start justify-center mud-width-full">
+                                    @ipds.Count()
+                                </MudText>
+                            </MudPaper>
+                        </MudItem>
+                        <MudItem md="1">
+                            <MudPaper Elevation="2" Class="m-1">
+                                <MudText Class="d-flex align-start justify-center mud-width-full">
+                                    Discharge
+                                </MudText>
+                                <MudText Class="d-flex align-start justify-center mud-width-full">
+                                    @ipds.Count(i => i.Discharged == true)
+                                </MudText>
+                            </MudPaper>
+                        </MudItem>
+                        <MudItem md="1">
+                            <MudPaper Elevation="2" Class="m-1">
+                                <MudText Class="d-flex align-start justify-center mud-width-full">
+                                    New
+                                </MudText>
+                                <MudText Class="d-flex align-start justify-center mud-width-full">
+                                    @(ipds.Count(i => i.Patient.CreatedDate >= fromDate && i.Patient.CreatedDate <= toDate) + opds.Count(i => i.Patient.CreatedDate >= fromDate && i.Patient.CreatedDate <= toDate))
+                                </MudText>
+                            </MudPaper>
+                        </MudItem>
+                        <MudItem md="1">
+                            <MudPaper Elevation="2" Class="m-1">
+                                <MudText Class="d-flex align-start justify-center mud-width-full">
+                                    Old
+                                </MudText>
+                                <MudText Class="d-flex align-start justify-center mud-width-full">
+                                    @(ipds.Count(i => i.Patient.CreatedDate < fromDate && i.Patient.CreatedDate > toDate) + opds.Count(i => i.Patient.CreatedDate < fromDate && i.Patient.CreatedDate > toDate))
+                                </MudText>
+                            </MudPaper>
+                        </MudItem>
+                        <MudItem md="3">
+
+                        </MudItem>
+                    </MudGrid>
+                </MudItem>
+                <MudItem md="4" Class="d-flex flex-column align-center justify-center mud-width-full">
+                    <MudPaper Elevation="5">
+                        <TelerikChart Height="250px">
+                            <ChartTitle Text="Total Gender Amount per Day"></ChartTitle>
+                            <ChartCategoryAxes>
+                                <ChartCategoryAxis BaseUnit="@ChartCategoryAxisBaseUnit.Days"
+                                                   Type="@ChartCategoryAxisType.Date">
+                                </ChartCategoryAxis>
+                            </ChartCategoryAxes>
+
+                            <ChartSeriesItems>
+                                <ChartSeries Type="@ChartSeriesType.Column"
+                                             Aggregate="@ChartSeriesAggregate.Sum"
+                                             Data="@genderChartData"
+                                             Field="@nameof(GenderChartModel.Male)"
+                                             CategoryField="@nameof(GenderChartModel.Date)"
+                                             Name="Male">
+                                    <ChartSeriesTooltip Visible="true">
+                                        <Template>
+                                            @{
+                                                var DateCategory = DateTime.Parse(context.Category.ToString());
+
+                                                <div>
+                                                    Total Male Amount: @((context.DataItem as GenderChartModel).Male.ToString("N0")) AFN.
+                                                </div>
+                                            }
+                                        </Template>
+                                    </ChartSeriesTooltip>
+                                </ChartSeries>
+                                <ChartSeries Type="@ChartSeriesType.Column"
+                                             Aggregate="@ChartSeriesAggregate.Sum"
+                                             Data="@genderChartData"
+                                             Field="@nameof(GenderChartModel.Female)"
+                                             CategoryField="@nameof(GenderChartModel.Date)"
+                                             Name="Female">
+                                    <ChartSeriesTooltip Visible="true">
+                                        <Template>
+                                            @{
+                                                var DateCategory = DateTime.Parse(context.Category.ToString());
+
+                                                <div>
+                                                    Total Female Amount: @((context.DataItem as GenderChartModel).Female.ToString("N0")) AFN.
+                                                </div>
+                                            }
+                                        </Template>
+                                    </ChartSeriesTooltip>
+                                </ChartSeries>
+                                
+                            </ChartSeriesItems>
+
+                            <ChartValueAxes>
+                                <ChartValueAxis>
+                                    <ChartValueAxisLabels Format="{0:N}AFN"></ChartValueAxisLabels>
+                                </ChartValueAxis>
+                            </ChartValueAxes>
+
+                        </TelerikChart>
+                    </MudPaper>
+                </MudItem>
+                <MudItem md="4">
+                    <MudText Class="d-flex align-start justify-center mud-width-full py-8">
+                        @hospitalInformation.Name
+                    </MudText>
+                </MudItem>
+                <MudItem md="4" Class="d-flex flex-column align-center justify-center mud-width-full">
+                    <MudPaper Elevation="5">
+                        <TelerikChart Height="250px">
+                            <ChartTitle Text="Total Patient Reg Time Amount per Day"></ChartTitle>
+                            <ChartCategoryAxes>
+                                <ChartCategoryAxis BaseUnit="@ChartCategoryAxisBaseUnit.Days"
+                                                   Type="@ChartCategoryAxisType.Date">
+                                </ChartCategoryAxis>
+                            </ChartCategoryAxes>
+
+                            <ChartSeriesItems>
+                                <ChartSeries Type="@ChartSeriesType.Column"
+                                             Aggregate="@ChartSeriesAggregate.Sum"
+                                             Data="@patientRegTimeChartData"
+                                             Field="@nameof(PatientRegTimeChartModel.New)"
+                                             CategoryField="@nameof(PatientRegTimeChartModel.Date)"
+                                             Name="New">
+                                    <ChartSeriesTooltip Visible="true">
+                                        <Template>
+                                            @{
+                                                var DateCategory = DateTime.Parse(context.Category.ToString());
+
+                                                <div>
+                                                    Total New Amount: @((context.DataItem as PatientRegTimeChartModel).New.ToString("N0")) AFN.
+                                                </div>
+                                            }
+                                        </Template>
+                                    </ChartSeriesTooltip>
+                                </ChartSeries>
+                                <ChartSeries Type="@ChartSeriesType.Column"
+                                             Aggregate="@ChartSeriesAggregate.Sum"
+                                             Data="@patientRegTimeChartData"
+                                             Field="@nameof(PatientRegTimeChartModel.Old)"
+                                             CategoryField="@nameof(PatientRegTimeChartModel.Date)"
+                                             Name="Old">
+                                    <ChartSeriesTooltip Visible="true">
+                                        <Template>
+                                            @{
+                                                var DateCategory = DateTime.Parse(context.Category.ToString());
+
+                                                <div>
+                                                    Total Old Amount: @((context.DataItem as PatientRegTimeChartModel).Old.ToString("N0")) AFN.
+                                                </div>
+                                            }
+                                        </Template>
+                                    </ChartSeriesTooltip>
+                                </ChartSeries>
+
+                            </ChartSeriesItems>
+
+                            <ChartValueAxes>
+                                <ChartValueAxis>
+                                    <ChartValueAxisLabels Format="{0:N}AFN"></ChartValueAxisLabels>
+                                </ChartValueAxis>
+                            </ChartValueAxes>
+
+                        </TelerikChart>
+                    </MudPaper>
+                </MudItem>
+                <MudItem md="12" Class="mt-2">
+                    <MudTable @ref="@_table" Items="@Elements" Hover="true" FixedHeader="true" FixedFooter="true" Striped="true" Breakpoint="Breakpoint.Sm" Class="" Loading="@loading" LoadingProgressColor="Color.Info">
+                        <HeaderContent>
+                            <MudTh>Patient Id</MudTh>
+                            <MudTh>IPD No</MudTh>
+                            <MudTh>Admition Date</MudTh>
+                            <MudTh>Gender</MudTh>
+                            <MudTh>Patient</MudTh>
+                            <MudTh>F-Name</MudTh>
+                            <MudTh>Mob</MudTh>
+                            <MudTh>Reffer By</MudTh>
+                            <MudTh>Consultant</MudTh>
+                            <MudTh>Ward</MudTh>
+                            <MudTh>Room</MudTh>
+                            <MudTh>R-Type</MudTh>
+                            <MudTh>Bed</MudTh>
+                            @if (dischargeAccess)
+                            {
+                                <MudTh>Discharge</MudTh>
+                            }
+                            @if (printAccess)
+                            {
+                                <MudTh>Print</MudTh>
+                            }
+                            @if (editAccess)
+                            {
+                                <MudTh>Edit</MudTh>
+                            }
+                            @if (cancelAccess)
+                            {
+                                <MudTh>Cancel</MudTh>
+                            }
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="PatientId">
+                                @UtilityHelper.GenerateIdentifier(patientIdPrefix.Value,context.PatientId)
+                            </MudTd>
+                            <MudTd DataLabel="IPDNO">
+                                @UtilityHelper.GenerateIdentifier(iPDNoPrefix.Value,context.Id)
+                            </MudTd>
+                            <MudTd DataLabel="AdmitionDate">@context.Date</MudTd>
+                            <MudTd DataLabel="Gender">@context.Patient.Gender.Name</MudTd>
+                            <MudTd DataLabel="Patient">@context.PatientName</MudTd>
+                            <MudTd DataLabel="Father Name">@context.Patient.FatherName</MudTd>
+                            <MudTd DataLabel="Mobile">@context.Patient.Mobile</MudTd>
+                            <MudTd DataLabel="RefferBy">@context.RefferByName</MudTd>
+                            <MudTd DataLabel="Consultant">@context.ConsultantInchargeName</MudTd>
+                            <MudTd DataLabel="Ward">@context.WardName</MudTd>
+                            <MudTd DataLabel="Room">@context.RoomName</MudTd>
+                            <MudTd DataLabel="RoomType">@context.RoomTypeName</MudTd>
+                            <MudTd DataLabel="Bed">@context.BedName</MudTd>
+                            @if (dischargeAccess)
+                            {
+                                <MudTd DataLabel="Discharge">
+                                    @if (context.PayableAmount == context.IPDRegisterationPayments.Sum(p => p.Amount) && !(context.Discharged ?? false))
+                                    {
+
+                                        <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.NewReleases" Color="Color.Info" OnClick="@(()=> Discharge(@context.Id))"></MudIconButton>
+
+                                    }
+                                </MudTd>
+                            }
+                            @if (printAccess)
+                            {
+                                <MudTd DataLabel="Print">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Print" Color="Color.Tertiary" OnClick="@(()=> Print(@context.Id))"></MudIconButton>
+                                </MudTd>
+                            }
+                            @if (editAccess)
+                            {
+                                <MudTd DataLabel="Edit">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@String.Format("IPDRegisterationDefine/{0}",context.Id)></MudIconButton>
+                                </MudTd>
+                            }
+                            @if (cancelAccess)
+                            {
+                                <MudTd DataLabel="Cancel">
+                                    <MudIconButton ButtonType="MudBlazor.ButtonType.Button" Icon="@Icons.Material.Filled.Cancel" Color="Color.Secondary" OnClick="@(()=> DeleteIPDRegisteration(@context.Id))"></MudIconButton>
+                                </MudTd>
+                            }
+                        </RowTemplate>
+                    </MudTable>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+<TelerikWindow Class="demo-window" Width="40vw" Height="70vh" Centered="true" @bind-Visible=@selectReportTemplate Modal="true">
+    <WindowTitle>
+        <strong>Select Report Template</strong>
+    </WindowTitle>
+    <WindowActions>
+        <WindowAction Name="Close" />
+    </WindowActions>
+    <WindowContent>
+        <ReportTemplatesSelect Id="@IPDId" ReportCode="IPD"></ReportTemplatesSelect>
+    </WindowContent>
+</TelerikWindow>
+
+@code {
+    [CascadingParameter]
+    public DialogFactory Dialogs { get; set; }
+
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+
+    private List<IPDRegisterationViewModel> ipds;
+    private List<OPDBillViewModel> opds;
+    private HospitalInformationViewModel hospitalInformation;
+    private MudTable<IPDRegisterationViewModel> _table;
+    private List<IPDRegisterationViewModel> Elements;
+    private bool loading = false;
+    private SettingViewModel patientIdPrefix;
+    private SettingViewModel iPDNoPrefix;
+    private DateTime fromDate;
+    private DateTime toDate;
+
+    public List<GenderChartModel> genderChartData = new List<GenderChartModel>();
+    public List<PatientRegTimeChartModel> patientRegTimeChartData = new List<PatientRegTimeChartModel>();
+
+    public DateTime[] DateRange;
+
+    private bool selectReportTemplate = false;
+    private int IPDId = 0;
+
+    private bool showAccess = false;
+    private bool resetAccess = false;
+    private bool editAccess = false;
+    private bool cancelAccess = false;
+    private bool printAccess = false;
+    private bool dischargeAccess = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("OPDIPD", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/OPDIPD/View");
+        }
+        showAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDIPD", "Show", userInfo.UserId));
+        resetAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDIPD", "Reset", userInfo.UserId));
+        editAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDIPD", "Edit", userInfo.UserId));
+        cancelAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDIPD", "Cancel", userInfo.UserId));
+        printAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDIPD", "Print", userInfo.UserId));
+        dischargeAccess = await mediator.Send(new CheckUserActionAccessQuery("OPDIPD", "Discharge", userInfo.UserId));
+
+        patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
+        iPDNoPrefix = await mediator.Send(new GetSettingByKeyQuery("IPDNoPrefix"));
+
+        fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
+        toDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
+        LoadData();
+    }
+
+    protected async Task LoadData()
+    {
+
+        ipds = await mediator.Send(new GetAllAdmitedIPDRegisterationsQuery());
+        Elements = ipds.ToList();
+
+        foreach (var item in Elements)
+        {
+            CalculateRoomDays(item.IPDRegisterationRooms);
+            CalculateAmount(item);
+        }
+
+        opds = await mediator.Send(new GetOPDBillsByDateRangeQuery(fromDate,toDate));
+
+        hospitalInformation = await mediator.Send(new GetHospitalInformationByIdQuery(1));
+
+        CalculateDateArray();
+        CalculateChartData();
+    }
+
+    protected async Task CalculateRoomDays(IEnumerable<IPDRegisterationRoomViewModel> iPDRegisterationRooms)
+    {
+        foreach (var room in iPDRegisterationRooms)
+        {
+            DateTime toDate;
+
+            if (room.ToDate == null)
+            {
+                toDate = DateTime.Now;
+            }
+            else
+            {
+                toDate = room.ToDate ?? DateTime.Now;
+            }
+
+            TimeSpan span = toDate.Subtract(room.Date);
+
+            room.Days = span.Days + 1;
+
+            room.Amount = room.Days * room.Rate;
+        }
+    }
+
+    private async void CalculateAmount(IPDRegisterationViewModel iPDReg)
+    {
+        var serviceTotal = iPDReg.IPDRegisterationServices.Sum(b => b.Rate * b.Quantity);
+        var servicePayable = iPDReg.IPDRegisterationServices.Sum(b => b.Amount);
+
+        var roomTotal = iPDReg.IPDRegisterationRooms.Sum(b => b.Rate * b.Days);
+        var roomPayable = iPDReg.IPDRegisterationRooms.Sum(b => b.Amount);
+
+        iPDReg.TotalAmount = serviceTotal + roomTotal;
+        iPDReg.PayableAmount = servicePayable + roomPayable;
+        int totalDiscount = (serviceTotal + roomTotal) - (servicePayable + roomPayable);
+
+        int roomAmount = roomTotal;
+        int serviceAmount = serviceTotal;
+        int medicineAmount = 0;
+        int paidAmount = iPDReg.IPDRegisterationPayments.Sum(p => p.Amount);
+        int remainAmount = iPDReg.PayableAmount - paidAmount;
+    }
+
+    protected async Task CalculateDateArray()
+    {
+
+        if(DateRange != null)
+        {
+            Array.Clear(DateRange, 0, DateRange.Length);
+        }
+
+        List<string> dates = new List<string>();
+        List<DateTime> dateRanges = new List<DateTime>();
+        for (DateTime date = fromDate; date <= toDate; date = date.AddDays(1))
+        {
+            dates.Add(date.ToShortDateString());
+            dateRanges.Add(new DateTime(date.Year,date.Month,date.Day,0,0,0));
+        }
+
+        DateRange = dateRanges.ToArray();
+    }
+
+    protected async Task CalculateChartData()
+    {
+        genderChartData.Clear();
+        patientRegTimeChartData.Clear();
+
+        foreach (var date in DateRange)
+        {
+            genderChartData.Add(new GenderChartModel()
+            {
+                Date = date,
+                Male = ipds.Where(i => i.Date.ToShortDateString() == date.ToShortDateString() && i.Patient.Gender.StrCode == "Male").Sum(i => i.PayableAmount) + opds.Where(i => i.Date?.ToShortDateString() == date.ToShortDateString() && i.Patient.Gender.StrCode == "Male").Sum(i => i.PayableAmount),
+                Female = ipds.Where(i => i.Date.ToShortDateString() == date.ToShortDateString() && i.Patient.Gender.StrCode == "Female").Sum(i => i.PayableAmount) + opds.Where(i => i.Date?.ToShortDateString() == date.ToShortDateString() && i.Patient.Gender.StrCode == "Female").Sum(i => i.PayableAmount)
+            });
+
+            patientRegTimeChartData.Add(new PatientRegTimeChartModel()
+            {
+                Date = date,
+                    New = ipds.Where(i => i.Date.ToShortDateString() == date.ToShortDateString() && i.Patient.CreatedDate >= date && i.Patient.CreatedDate < date.AddDays(1)).Sum(i => i.PayableAmount) + opds.Where(i => i.Date?.ToShortDateString() == date.ToShortDateString() && i.Patient.CreatedDate >= date && i.Patient.CreatedDate < date.AddDays(1)).Sum(i => i.PayableAmount),
+                    Old = ipds.Where(i => i.Date.ToShortDateString() == date.ToShortDateString() && i.Patient.CreatedDate < date).Sum(i => i.PayableAmount) + opds.Where(i => i.Date?.ToShortDateString() == date.ToShortDateString() && i.Patient.CreatedDate < date).Sum(i => i.PayableAmount)
+            });
+        }
+    }
+
+    protected async Task Show()
+    {
+        fromDate = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day, 0, 0, 0);
+        toDate = new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 59);
+
+        LoadData();
+    }
+
+    protected async Task Reset()
+    {
+        fromDate = DateTime.Now;
+        toDate = DateTime.Now;
+
+        Show();
+    }
+
+    protected async Task Print(int IPDRegisterationId)
+    {
+        IPDId = IPDRegisterationId;
+        selectReportTemplate = true;
+    }
+
+    protected async Task DeleteIPDRegisteration(int Id)
+    {
+        var iPD = await mediator.Send(new GetIPDRegisterationByIdQuery(Id));
+
+        if (iPD.IPDRegisterationPayments.Count > 0)
+        {
+            Snackbar.Add("It cannot be deleted or canceled due to the registration of payment", Severity.Warning);
+            return;
+        }
+        string input;
+
+        input = await Dialogs.PromptAsync("Please, enter your Reason.", "Cancel Reason");
+
+        //bool? dialogResult = await DialogService.ShowMessageBox(
+        //    "Cancel IPD Registeration",
+        //    "Are you sure?",
+        //    yesText: "Cancel!", cancelText: "No");
+
+        if (!String.IsNullOrWhiteSpace(input))
+        {
+            loading = true;
+            try
+            {
+                CommandResponse result;
+                //var iPD = await mediator.Send(new GetIPDRegisterationByIdQuery(Id));
+                iPD.Canceled = true;
+                iPD.CancelReason = input;
+
+                var command = MapperConfig.Mapper.Map<EditIPDRegisterationCommand>(iPD);
+
+                result = await mediator.Send(command);
+
+                if (result.ResultType == ResultType.Success)
+                {
+                    LoadData();
+                    Snackbar.Add(result.ResultMessage, Severity.Success);
+                }
+                else if (result.ResultType == ResultType.Warning)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Warning);
+                }
+                else if (result.ResultType == ResultType.Error)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Error);
+                }
+
+
+
+            }
+            catch (Exception exp)
+            {
+                Snackbar.Add(exp.Message, Severity.Error);
+            }
+            loading = false;
+
+        }
+
+
+    }
+
+    protected async Task Discharge(int IPDRegisterationId)
+    {
+        var iPD = await mediator.Send(new GetIPDRegisterationByIdQuery(IPDRegisterationId));
+
+        CalculateRoomDays(iPD.IPDRegisterationRooms);
+        CalculateAmount(iPD);
+
+        if (iPD.PayableAmount != iPD.IPDRegisterationPayments.Sum(p => p.Amount))
+        {
+            Snackbar.Add("Due to debt, it is not possibile to discharge ", Severity.Warning);
+            return;
+        }
+
+        bool? dialogResult = await DialogService.ShowMessageBox(
+            "Discharge IPD Registeration",
+            "Are you sure?",
+            yesText: "Discharge!", cancelText: "No");
+
+        if (dialogResult == true)
+        {
+            loading = true;
+            try
+            {
+                CommandResponse result;
+                //var iPD = await mediator.Send(new GetIPDRegisterationByIdQuery(IPDRegisterationId));
+                iPD.Discharged = true;
+                iPD.DischargeDate = DateTime.Now;
+
+                var command = MapperConfig.Mapper.Map<EditIPDRegisterationCommand>(iPD);
+
+                result = await mediator.Send(command);
+
+                if (result.ResultType == ResultType.Success)
+                {
+                    LoadData();
+
+                    foreach (var room in iPD.IPDRegisterationRooms)
+                    {
+                        room.ToDate = iPD.DischargeDate;
+
+                        var roomCommand = MapperConfig.Mapper.Map<EditIPDRegisterationRoomCommand>(room);
+
+                        await mediator.Send(roomCommand);
+
+                    }
+
+                    Snackbar.Add(result.ResultMessage, Severity.Success);
+                }
+                else if (result.ResultType == ResultType.Warning)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Warning);
+                }
+                else if (result.ResultType == ResultType.Error)
+                {
+                    Snackbar.Add(result.ResultMessage, Severity.Error);
+                }
+
+
+
+            }
+            catch (Exception exp)
+            {
+                Snackbar.Add(exp.Message, Severity.Error);
+            }
+            loading = false;
+
+        }
+    }
+}

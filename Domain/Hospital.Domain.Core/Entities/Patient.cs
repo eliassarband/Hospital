@@ -77,5 +77,9 @@ namespace Hospital.Domain.Core.Entities
         public int? AttachmentId { get; set; }
 
         public virtual Attachment Attachment { get; set; }
+
+        public virtual ICollection<OPDBill> OPDBills { get; set; }
+
+        public virtual ICollection<IPDRegisteration> IPDRegisterations { get; set; }
     }
 }

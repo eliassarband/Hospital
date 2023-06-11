@@ -43,6 +43,10 @@ namespace Hospital.Domain.Core.Entities
 
         public bool NotInUse { get; set; }
 
+        public virtual ICollection<Patient> Patients { get; set; }
+
+        public virtual ICollection<InsuranceAgreement> InsuranceAgreements { get; set; }
+
 
     }
 }

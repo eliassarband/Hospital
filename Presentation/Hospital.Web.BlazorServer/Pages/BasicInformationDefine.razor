@@ -117,6 +117,7 @@
             if (basicInformation != null)
             {
                 CategoryChanged(basicInformation.CategoryId);
+                
             }
         }
         else
@@ -132,6 +133,12 @@
         }
         
 
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        form.Validate();
+        return base.OnAfterRenderAsync(firstRender);
     }
 
     protected async Task CategoryChanged(int categoryId)
@@ -170,6 +177,12 @@
 
                     if (command.Id > 0)
                     {
+                        if (!basicInformation.AllowChange)
+                        {
+                            Snackbar.Add("You are not allowed to edit selected Basic Information", Severity.Warning);
+                            return;
+                        }
+
                         result = await mediator.Send(command);
 
                         if (result.ResultType == ResultType.Success)

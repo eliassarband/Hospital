@@ -130,6 +130,13 @@
         
 
     }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        form.Validate();
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
     protected async Task UploadFile(IBrowserFile file)
     {
         long maxFileSize = 1024 * 1024 * 5; // 5 MB or whatever, don't just use max int

@@ -189,6 +189,35 @@ namespace Hospital.Application.Handlers.CommandHandlers
             {
                 var UserEntity = await _UserQueryRepository.GetByIdAsync(request.Id);
 
+                if (UserEntity.UserRoles.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected User due to registration Role"
+                    };
+                }
+
+                if (UserEntity.GroupUsers.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected User due to registration Group"
+                    };
+                }
+
+                if (UserEntity.FormActionAccesses.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected User due to registration Form Access"
+                    };
+                }
 
                 await _UserCommandRepository.DeleteAsync(UserEntity);
 
@@ -753,8 +782,27 @@ namespace Hospital.Application.Handlers.CommandHandlers
 			{
 				var GroupEntity = await _GroupQueryRepository.GetByIdAsync(request.Id);
 
+                if (GroupEntity.GroupUsers.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Group due to registration User"
+                    };
+                }
 
-				await _GroupCommandRepository.DeleteAsync(GroupEntity);
+                if (GroupEntity.FormActionAccesses.Count > 0)
+                {
+                    return new CommandResponse()
+                    {
+                        Id = request.Id,
+                        ResultType = ResultType.Warning,
+                        ResultMessage = "It is not possible to delete the selected Group due to registration Form Access"
+                    };
+                }
+
+                await _GroupCommandRepository.DeleteAsync(GroupEntity);
 
 				response = new CommandResponse()
 				{

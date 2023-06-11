@@ -150,6 +150,12 @@
 
     }
 
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        form.Validate();
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
     private async void CreateItem(GridCommandEventArgs args)
     {
         GroupUserViewModel groupUser = (GroupUserViewModel)args.Item;

@@ -1,0 +1,296 @@
+﻿@page "/FreeBed/{Mode?}"
+@using Hospital.Application.Mapper;
+@using Hospital.Application.Queries;
+@using Hospital.Application.ViewModels;
+@using Hospital.Web.BlazorServer.Helpers;
+@using Hospital.Web.BlazorServer.Models.Auth;
+@using MediatR;
+@inject IMediator mediator;
+@inject ISnackbar Snackbar
+@inject IHttpContextAccessor accessor
+@inject NavigationManager navManager
+
+@attribute [Authorize]
+
+<PageTitle>Free Bed - HMIS System</PageTitle>
+
+<MudGrid Class="mt-2">
+  
+    <MudItem md="12">
+        <MudBreadcrumbs Items="@breadcrumbItems">
+        </MudBreadcrumbs>
+    </MudItem>
+    <MudItem md="12">
+        <MudGrid>
+            @if(items != null)
+            {
+                foreach(var item in items)
+                {
+                    if (item.Type == "Ward")
+                    {
+                        var paperStyle = "";
+                        if (item.FreeBeds == 0)
+                            paperStyle = "background-color : #EF9A9A";
+
+                        <MudItem md="4">
+                            <MudPaper Height="20vh" Class="pa-5" Style="@paperStyle" @onclick="() => WardOnClick(item.Id)">
+                                <MudText Typo="Typo.h6">Ward : @item.Name</MudText>
+                                <MudText>Busy Beds : @item.BusyBeds</MudText>
+                                <MudText>Free Beds : @item.FreeBeds</MudText>
+                            </MudPaper>
+                        </MudItem>
+                    }
+                    else if(item.Type == "RoomType")
+                    {
+                        var paperStyle = "";
+                        if (item.FreeBeds == 0)
+                            paperStyle = "background-color : #EF9A9A";
+
+                        <MudItem md="4">
+                            <MudPaper Height="20vh" Class="pa-5" Style="@paperStyle" @onclick="() => RoomTypeOnClick(item.Id)">
+                                <MudText Typo="Typo.h6">Room Type : @item.Name</MudText>
+                                <MudText>Busy Beds : @item.BusyBeds</MudText>
+                                <MudText>Free Beds : @item.FreeBeds</MudText>
+                            </MudPaper>
+                        </MudItem>
+                    }
+                    else if (item.Type == "Room")
+                    {
+                        var paperStyle = "";
+                        if (item.FreeBeds == 0)
+                            paperStyle = "background-color : #EF9A9A";
+
+                        <MudItem md="3">
+                            <MudPaper Height="20vh" Class="pa-5" Style="@paperStyle" @onclick="() => RoomOnClick(item.Id)">
+                                <MudText Typo="Typo.h6">Room : @item.Name</MudText>
+                                <MudText>Busy Beds : @item.BusyBeds</MudText>
+                                <MudText>Free Beds : @item.FreeBeds</MudText>
+                            </MudPaper>
+                        </MudItem>
+                    }
+                    else if (item.Type == "Bed")
+                    {
+                        var paperStyle = "";
+                        if (item.Busy)
+                            paperStyle = "background-color : #EF9A9A";
+                        else
+                            paperStyle = "background-color : #81D4FA";
+
+                        <MudItem md="3">
+                            <MudPaper Height="15vh" Class="pa-5" Style="@paperStyle" @onclick="() => BedOnClick(item.Id)">
+                                <MudText Typo="Typo.h6">Bed : @item.Name</MudText>
+                                @if(item.Busy)
+                                {
+                                    <MudText>Busy</MudText>
+                                }
+                                else
+                                {
+                                    <MudText>Free</MudText>
+                                }
+                            </MudPaper>
+                        </MudItem>
+                    }
+                }
+            }
+        </MudGrid>
+    </MudItem>
+                   
+</MudGrid>
+
+
+
+@code {
+    [Parameter]
+    public string? Mode { get; set; }
+    [CascadingParameter]
+    public LoginedUser? userInfo { get; set; }
+    [Parameter]
+    public EventCallback<int> OnBedSelected { get; set; }
+
+    private List<BreadcrumbItem> breadcrumbItems = new List<BreadcrumbItem>();
+    private List<FreeBedViewModel> items = new ();
+    private List<BasicInformationViewModel> wards = new();
+    private List<RoomTypeViewModel> roomTypes = new();
+    private List<RoomViewModel> rooms = new();
+    private List<BedViewModel> beds = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (userInfo == null)
+        {
+            IdentityHelper identityHelper = new IdentityHelper(accessor, mediator);
+            userInfo = await identityHelper.GetUserInfo();
+        }
+
+        if (!(await mediator.Send(new CheckUserActionAccessQuery("FreeBed", "View", userInfo.UserId))))
+        {
+            navManager.NavigateTo("AccessDenied/FreeBed/View");
+        }
+
+        LoadWards();
+
+    }
+
+    protected async Task LoadWards()
+    {
+        wards = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Ward"));
+
+        items.Clear();
+        items = MapperConfig.Mapper.Map<List<FreeBedViewModel>>(wards);
+
+        foreach(var item in items)
+        {
+            var result = GetBusyBedsCount(item);
+
+            item.BusyBeds = result.Result.Item1;
+            item.FreeBeds = result.Result.Item2;
+            item.Busy = result.Result.Item3;
+        }
+    }
+
+    protected async Task WardOnClick(int WardId)
+    {
+        roomTypes = await mediator.Send(new GetRoomTypeByWardIdQuery(WardId));
+
+        items.Clear();
+        items = MapperConfig.Mapper.Map<List<FreeBedViewModel>>(roomTypes);
+
+        foreach (var item in items)
+        {
+            var result = GetBusyBedsCount(item);
+
+            item.BusyBeds = result.Result.Item1;
+            item.FreeBeds = result.Result.Item2;
+            item.Busy = result.Result.Item3;
+        }
+
+        var ward = await mediator.Send(new GetBasicInformationByIdQuery(WardId));
+        breadcrumbItems.Add(new BreadcrumbItem(ward.Name, href: "#", disabled: true));
+    }
+
+    protected async Task RoomTypeOnClick(int RoomTypeId)
+    {
+        rooms = await mediator.Send(new GetRoomByRoomTypeIdQuery(RoomTypeId));
+
+        items.Clear();
+        items = MapperConfig.Mapper.Map<List<FreeBedViewModel>>(rooms);
+
+        foreach (var item in items)
+        {
+            var result = GetBusyBedsCount(item);
+
+            item.BusyBeds = result.Result.Item1;
+            item.FreeBeds = result.Result.Item2;
+            item.Busy = result.Result.Item3;
+        }
+
+        var roomType = await mediator.Send(new GetRoomTypeByIdQuery(RoomTypeId));
+        breadcrumbItems.Add(new BreadcrumbItem(roomType.Name, href: "#", disabled: true));
+    }
+
+    protected async Task RoomOnClick(int RoomId)
+    {
+        beds = await mediator.Send(new GetBedByRoomIdQuery(RoomId));
+
+        items.Clear();
+        items = MapperConfig.Mapper.Map<List<FreeBedViewModel>>(beds);
+
+        foreach (var item in items)
+        {
+            var result = GetBusyBedsCount(item);
+
+            item.BusyBeds = result.Result.Item1;
+            item.FreeBeds = result.Result.Item2;
+            item.Busy = result.Result.Item3;
+        }
+
+        var room = await mediator.Send(new GetRoomByIdQuery(RoomId));
+        breadcrumbItems.Add(new BreadcrumbItem(room.Name, href: "#", disabled: true));
+    }
+
+    protected async Task BedOnClick(int BedId)
+    {
+        if(Mode == "Select")
+            await OnBedSelected.InvokeAsync(BedId);
+        else
+            await OnBedSelected.InvokeAsync(0);
+    }
+
+    protected async Task<Tuple<int, int, bool>> GetBusyBedsCount(FreeBedViewModel item)
+    {
+        var ipdRooms = await mediator.Send(new GetAllIPDRegisterationRoomsQuery());
+
+        int freeCount = 0;
+        int bedsCount = 0;
+        bool busy = false;
+
+        if(item.Type == "Ward")
+        {
+            var rts = await mediator.Send(new GetRoomTypeByWardIdQuery(item.Id));
+            foreach(var rt in rts)
+            {
+                var rs = await mediator.Send(new GetRoomByRoomTypeIdQuery(rt.Id));
+                foreach(var r in rs)
+                {
+                    var bs = await mediator.Send(new GetBedByRoomIdQuery(r.Id));
+                    bedsCount += bs.Count;
+
+                    foreach(var b in bs)
+                    {
+                        if (!ipdRooms.Exists(r => r.BedId == b.Id && r.ToDate == null && r.IPDRegisteration.Discharged == false))
+                        {
+                            freeCount += 1;
+                        }
+                    }
+                }
+            }
+        }
+        else if (item.Type == "RoomType")
+        {
+            var rs = await mediator.Send(new GetRoomByRoomTypeIdQuery(item.Id));
+            foreach (var r in rs)
+            {
+                var bs = await mediator.Send(new GetBedByRoomIdQuery(r.Id));
+                bedsCount += bs.Count;
+
+                foreach (var b in bs)
+                {
+                    if (!ipdRooms.Exists(r => r.BedId == b.Id && r.ToDate == null && r.IPDRegisteration.Discharged == false))
+                    {
+                        freeCount += 1;
+                    }
+                }
+            }
+        }
+        else if (item.Type == "Room")
+        {
+            var bs = await mediator.Send(new GetBedByRoomIdQuery(item.Id));
+            bedsCount += bs.Count;
+
+            foreach (var b in bs)
+            {
+                if (!ipdRooms.Exists(r => r.BedId == b.Id && r.ToDate == null && r.IPDRegisteration.Discharged == false))
+                {
+                    freeCount += 1;
+                }
+            }
+        }
+        else if (item.Type == "Bed")
+        {
+            bedsCount = 1;
+            if (!ipdRooms.Exists(r => r.BedId == item.Id && r.ToDate == null && r.IPDRegisteration.Discharged == false))
+            {
+                freeCount = 1;
+                busy = false;
+            }
+            else
+            {
+                freeCount = 0;
+                busy = true;
+            }
+        }
+
+        return Tuple.Create(bedsCount - freeCount, freeCount, busy);
+    }
+}
+

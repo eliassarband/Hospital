@@ -271,7 +271,7 @@
                                     </TelerikFloatingLabel>
                                     <TelerikValidationMessage For="@(() => iPDRegisteration.RoomId)" />
                                 </MudItem>
-                                <MudItem md="6">
+                                <MudItem md="4">
                                     <TelerikFloatingLabel Text="Bed" Class="custom-label w-100">
                                         <div class="k-form-field-wrap">
                                             <TelerikComboBox @bind-Value="@iPDRegisteration.BedId"
@@ -286,6 +286,12 @@
                                         </div>
                                     </TelerikFloatingLabel>
                                     <TelerikValidationMessage For="@(() => iPDRegisteration.BedId)" />
+                                </MudItem>
+                                <MudItem md="2">
+                                    @if (selectBedAccess)
+                                    {
+                                        <MudButton Class="mr-2 mt-5" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.Bed" OnClick="SelectBed" Disabled="@(iPDRegisteration.Id > 0)">Select Bed</MudButton>
+                                    }
                                 </MudItem>
                                 <MudItem md="4">
                                     <TelerikFloatingLabel Text="Case Type" Class="custom-label w-100">
@@ -363,6 +369,10 @@
                                             @if (addRoomAccess)
                                             {
                                                 <GridCommandButton Command="Add">Change Room</GridCommandButton>
+                                            }
+                                            @if (selectBedAccess)
+                                            {
+                                                <MudButton Class="ml-2" ButtonType="MudBlazor.ButtonType.Button" Variant="Variant.Filled" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.Bed" OnClick="SelectBed" Disabled="@(iPDRegisteration.Id == 0)">Beds Status</MudButton>
                                             }
                                         </GridToolBar>
                                         <GridColumns>
@@ -618,19 +628,6 @@
                                             }
                                         </GridToolBar>
                                         <GridColumns>
-                                            <GridColumn Field=@nameof(IPDRegisterationPaymentViewModel.Date) Title="Date" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
-                                                <EditorTemplate>
-                                                    @{
-                                                        var RoomToEdit = context as IPDRegisterationPaymentViewModel;
-
-                                                        <TelerikDatePicker @bind-Value="@RoomToEdit.Date"
-                                                                       Format="dddd, dd MMMM, yyyy"
-                                                                       Id="ipd-payment-date">
-                                                        </TelerikDatePicker>
-                                                        <TelerikValidationMessage For="@(() => RoomToEdit.Date)" />
-                                                    }
-                                                </EditorTemplate>
-                                            </GridColumn>
                                             <GridColumn Field=@nameof(IPDRegisterationPaymentViewModel.PaymentTypeName) Title="Payment Type" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
                                                 <EditorTemplate>
                                                     @{
@@ -647,6 +644,22 @@
                                                     }
                                                 </EditorTemplate>
                                             </GridColumn>
+                                            <GridColumn Field=@nameof(IPDRegisterationPaymentViewModel.DepartmentName) Title="Department" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center">
+                                                <EditorTemplate>
+                                                    @{
+                                                        var PaymentToEdit = context as IPDRegisterationPaymentViewModel;
+                                                        <TelerikComboBox @bind-Value="@PaymentToEdit.DepartmentId"
+                                                                     Data="@departments"
+                                                                     Placeholder="Select Department"
+                                                                     TextField="@nameof(DepartmentViewModel.Name)"
+                                                                     ValueField="@nameof(DepartmentViewModel.Id)"
+                                                                     Filterable="true"
+                                                                     Id="department">
+                                                        </TelerikComboBox>
+                                                        <TelerikValidationMessage For="@(() => PaymentToEdit.DepartmentId)" />
+                                                    }
+                                                </EditorTemplate>
+                                            </GridColumn>
                                             <GridColumn Field=@nameof(IPDRegisterationPaymentViewModel.Amount) Title="Amount" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" DisplayFormat="@currencySetting.CurrencyGridCellFormat">
                                                 <EditorTemplate>
                                                     @{
@@ -659,7 +672,6 @@
                                                     }
                                                 </EditorTemplate>
                                             </GridColumn>
-                                            <GridColumn Field=@nameof(IPDRegisterationPaymentViewModel.ChequeNumber) Title="Cheque Number" Editable="true" Width="10vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
                                             <GridColumn Field=@nameof(IPDRegisterationPaymentViewModel.Description) Title="Description" Editable="true" Width="20vw" TextAlign="ColumnTextAlign.Center" HeaderClass="k-text-center" />
                                             <GridCommandColumn Title="Action" Width="10vw" HeaderClass="k-text-center">
                                                 @if (printPaymentAccess)
@@ -733,6 +745,18 @@
     </WindowContent>
 </TelerikWindow>
 
+<TelerikWindow Class="demo-window" Width="80vw" Height="80vh" Centered="true" @bind-Visible=@searchBedWindowState Modal="true">
+    <WindowTitle>
+        <strong>Free Bed</strong>
+    </WindowTitle>
+    <WindowActions>
+        <WindowAction Name="Close" />
+    </WindowActions>
+    <WindowContent>
+        <FreeBed Mode="@freeBedMode" OnBedSelected="BedSelected"></FreeBed>
+    </WindowContent>
+</TelerikWindow>
+
 <TelerikWindow Class="demo-window" Width="80vw" Height="80vh" Centered="true" @bind-Visible=@searchOPDPatientWindowState Modal="true">
     <WindowTitle>
         <strong>Search Patient from OPD List</strong>
@@ -788,7 +812,8 @@
     private List<BasicInformationViewModel> wards;
     private List<RoomTypeViewModel> roomTypes;
     private List<RoomViewModel> rooms;
-    private List<BedViewModel> beds;
+    private List<BedViewModel> beds = new List<BedViewModel>();
+    private List<DepartmentViewModel> departments;
     private List<BasicInformationViewModel> caseTypes;
     private List<BasicInformationViewModel> relationships;
     private List<IPDRegisterationServiceViewModel> iPDRegisterationServices = new List<IPDRegisterationServiceViewModel>();
@@ -807,9 +832,11 @@
     private bool addPatientWindowState = false;
     private bool searchPatientWindowState = false;
     private bool searchOPDPatientWindowState = false;
+    private bool searchBedWindowState = false;
     private bool selectReportTemplate = false;
     private bool selectPaymentReportTemplate = false;
     private int IPDPaymentId = 0;
+    private string freeBedMode = "Select";
 
     private bool saveAccess = false;
     private bool printAccess = false;
@@ -823,6 +850,7 @@
     private bool addPaymentAccess = false;
     private bool deletePaymentAccess = false;
     private bool printPaymentAccess = false;
+    private bool selectBedAccess = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -854,6 +882,7 @@
         addPaymentAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterationDefine", "AddPayment", userInfo.UserId));
         deletePaymentAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterationDefine", "DeletePayment", userInfo.UserId));
         printPaymentAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterationDefine", "PrintPayment", userInfo.UserId));
+        selectBedAccess = await mediator.Send(new CheckUserActionAccessQuery("IPDRegisterationDefine", "SelectBed", userInfo.UserId));
 
         patientIdPrefix = await mediator.Send(new GetSettingByKeyQuery("PatientIdPrefix"));
         patients = await mediator.Send(new GetAllPatientsQuery());
@@ -864,7 +893,18 @@
         wards = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Ward"));
         roomTypes = await mediator.Send(new GetAllRoomTypesQuery());
         rooms = await mediator.Send(new GetAllRoomsQuery());
-        beds = await mediator.Send(new GetAllBedsQuery());
+
+        var allBeds = await mediator.Send(new GetAllBedsQuery());
+        var ipdRooms = await mediator.Send(new GetAllIPDRegisterationRoomsQuery());
+        foreach (var bed in allBeds)
+        {
+            if (!ipdRooms.Exists(r => r.BedId == bed.Id && r.ToDate == null && r.IPDRegisteration.Discharged == false))
+            {
+                beds.Add(bed);
+            }
+        }
+
+        departments = await mediator.Send(new GetAllDepartmentsQuery());
         caseTypes = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("CaseType"));
         relationships = await mediator.Send(new GetBasicInformationsByCategoryCodeQuery("Relationship"));
 
@@ -965,19 +1005,39 @@
 
     protected async Task RoomChanged(int RoomId)
     {
+        beds.Clear();
+
         if (RoomId > 0)
         {
             var room = await mediator.Send(new GetRoomByIdQuery(RoomId));
             iPDRegisteration.RoomId = RoomId;
             iPDRegisteration.RoomName = room.Name;
 
-            beds = await mediator.Send(new GetBedByRoomIdQuery(RoomId));
+            var allBeds = await mediator.Send(new GetAllBedsQuery());
+            var ipdRooms = await mediator.Send(new GetAllIPDRegisterationRoomsQuery());
+            foreach (var bed in allBeds)
+            {
+                if(!ipdRooms.Exists(r => r.BedId == bed.Id && r.ToDate == null && r.IPDRegisteration.Discharged == false))
+                {
+                    beds.Add(bed);
+                }
+            }
+
             iPDRegisteration.BedId = 0;
             iPDRegisteration.BedName = null;
         }
         else
         {
-            roomTypes = await mediator.Send(new GetAllRoomTypesQuery());
+            var allBeds = await mediator.Send(new GetAllBedsQuery());
+            var ipdRooms = await mediator.Send(new GetAllIPDRegisterationRoomsQuery());
+            foreach (var bed in allBeds)
+            {
+                if (!ipdRooms.Exists(r => r.BedId == bed.Id && r.ToDate == null && r.IPDRegisteration.Discharged == false))
+                {
+                    beds.Add(bed);
+                }
+            }
+
             iPDRegisteration.BedId = 0;
             iPDRegisteration.BedName = null;
         }
@@ -1128,6 +1188,12 @@
     {
         IPDRegisterationPaymentViewModel iPDPayment = (IPDRegisterationPaymentViewModel)args.Item;
 
+        if(iPDRegisteration.PayableAmount < (iPDRegisterationPayments.Sum(p => p.Amount)+iPDPayment.Amount))
+        {
+            Snackbar.Add("The amount entered is more than the total payable amount calculated", Severity.Warning);
+            return;
+        }
+
         var payment = await mediator.Send(new GetBasicInformationByIdQuery(iPDPayment.PaymentTypeId ?? 0));
 
         if (payment != null)
@@ -1135,6 +1201,15 @@
             iPDPayment.PaymentTypeCode = payment.Code;
             iPDPayment.PaymentTypeStrCode = payment.StrCode;
             iPDPayment.PaymentTypeName = payment.Name;
+
+        }
+
+        var department = await mediator.Send(new GetDepartmentByIdQuery(iPDPayment.DepartmentId ?? 0));
+
+        if (department != null)
+        {
+            iPDPayment.DepartmentCode = department.Code;
+            iPDPayment.DepartmentName = department.Name;
 
         }
 
@@ -1148,7 +1223,10 @@
 
     private void DeletePayment(GridCommandEventArgs args)
     {
-
+        if(iPDRegisteration.Discharged == true)
+        {
+            Snackbar.Add("Due to the discharge, it is not possible to remove the payment", Severity.Warning);
+        }
         IPDRegisterationPaymentViewModel iPDPayment = (IPDRegisterationPaymentViewModel)args.Item;
 
         iPDRegisterationPayments.Remove(iPDPayment);
@@ -1216,6 +1294,39 @@
         patient = await mediator.Send(new GetPatientByIdQuery(iPDRegisteration.PatientId));
 
         searchPatientWindowState = false;
+    }
+
+    protected async Task SelectBed()
+    {
+        searchBedWindowState = true;
+
+    }
+
+    protected async Task BedSelected(int BedId)
+    {
+        if (BedId > 0)
+        {
+            var bed = await mediator.Send(new GetBedByIdQuery(BedId));
+            if (bed != null)
+            {
+                iPDRegisteration.WardId = bed.Room.RoomType.Ward.Id;
+                iPDRegisteration.WardName = bed.Room.RoomType.Ward.Name;
+                WardChanged(iPDRegisteration.WardId);
+
+                iPDRegisteration.RoomTypeId = bed.Room.RoomType.Id;
+                iPDRegisteration.RoomTypeName = bed.Room.RoomType.Name;
+                RoomTypeChanged(iPDRegisteration.RoomTypeId);
+
+                iPDRegisteration.RoomId = bed.Room.Id;
+                iPDRegisteration.RoomName = bed.Room.Name;
+                RoomChanged(iPDRegisteration.RoomId);
+
+                iPDRegisteration.BedId = bed.Id;
+                iPDRegisteration.BedName = bed.Name;
+
+            }
+        }
+        searchBedWindowState = false;
     }
 
     protected async Task SearchOPDPatient()
@@ -1611,5 +1722,7 @@
         selectReportTemplate = true;
 
     }
+
+    
 }
 
